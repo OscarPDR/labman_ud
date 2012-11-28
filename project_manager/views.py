@@ -17,4 +17,4 @@ def home(request):
 	else:
 		form = ProjectForm()
 	
-	return render_to_response("index.html", {"form": form, }, context_instance = RequestContext(request))
+	return render_to_response("projects_morelab/index.html", {"form": form, }, context_instance = RequestContext(request))
