@@ -1,0 +1,22 @@
+[
+	{
+		"model": "employee_manager.employee",
+		"pk": 1,
+		"fields": {
+			"employee_name": "Oscar",
+			"first_surname": "Peña",
+			"second_surname": "del Rio",
+			"foaf_link": "www.google.es"
+		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 2,
+		"fields": {
+			"employee_name": "Perico",
+			"first_surname": "de los",
+			"second_surname": "Palotes",
+			"foaf_link": "www.google.es"
+		}
+	}
+]

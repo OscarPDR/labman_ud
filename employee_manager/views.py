@@ -10,6 +10,8 @@ from employee_manager.forms import *
 def home(request):
 	form = EmployeeForm()
 
+	employees = Employee.objects.all()
+
 	if request.POST:
 		form = EmployeeForm(request.POST)
 		if form.is_valid():
@@ -17,4 +19,8 @@ def home(request):
 	else:
 		form = EmployeeForm()
 	
-	return render_to_response("index.html", {"form": form, }, context_instance = RequestContext(request))
+	return render_to_response("index.html", {
+			"form": form, 
+			"employees": employees, 
+		}, 
+		context_instance = RequestContext(request))

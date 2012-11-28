@@ -1,0 +1,12 @@
+[
+	{
+		"model": "employee_manager.Employee",
+		"pk": 1,
+		"fields": {
+			"employee_name": "Oscar",
+			"first_surname": "Peña",
+			"second_surname": "del Rio",
+			"foaf_link": "http://google.es",
+		}
+	},
+]
