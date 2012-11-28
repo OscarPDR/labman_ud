@@ -19,7 +19,7 @@ def index(request):
 	else:
 		form = EmployeeForm()
 	
-	return render_to_response("projects_morelab/index.html", {
+	return render_to_response("employee_manager/index.html", {
 			"form": form, 
 			"employees": employees, 
 		}, 

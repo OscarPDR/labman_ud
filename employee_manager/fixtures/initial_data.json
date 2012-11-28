@@ -1,12 +1,42 @@
 [
 	{
-		"model": "employee_manager.Employee",
+		"model": "employee_manager.employee",
 		"pk": 1,
 		"fields": {
-			"employee_name": "Oscar",
+			"name": "Oscar",
 			"first_surname": "Peña",
 			"second_surname": "del Rio",
-			"foaf_link": "http://google.es",
+			"foaf_link": "http://google.es"
 		}
 	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 2,
+		"fields": {
+			"name": "Mikel",
+			"first_surname": "Emaldi",
+			"second_surname": "Manrique",
+			"foaf_link": "http://google.es"
+		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 3,
+		"fields": {
+			"name": "Jon",
+			"first_surname": "Lázaro",
+			"second_surname": "Aduna",
+			"foaf_link": "http://google.es"
+		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 4,
+		"fields": {
+			"name": "Eduardo",
+			"first_surname": "Castillejo",
+			"second_surname": "Gil",
+			"foaf_link": "http://google.es"
+		}
+	}
 ]

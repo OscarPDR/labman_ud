@@ -9,7 +9,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 class Employee(models.Model):
-	employee_name = models.CharField(max_length = 25, verbose_name = 'Nombre')
+	name = models.CharField(max_length = 25, verbose_name = 'Nombre')
 	first_surname = models.CharField(max_length = 25, verbose_name = 'Primer Apellido')
 	second_surname = models.CharField(max_length = 25, verbose_name = 'Segundo Apellido')
 	foaf_link = models.URLField(max_length = 200, verbose_name = 'Perfil FOAF')
