@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from employee_manager.models import *
 from employee_manager.forms import *
 
-def home(request):
+def index(request):
 	form = EmployeeForm()
 
 	employees = Employee.objects.all()
@@ -19,7 +19,7 @@ def home(request):
 	else:
 		form = EmployeeForm()
 	
-	return render_to_response("index.html", {
+	return render_to_response("projects_morelab/index.html", {
 			"form": form, 
 			"employees": employees, 
 		}, 
