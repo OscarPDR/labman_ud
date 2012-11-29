@@ -11,8 +11,8 @@ def index(request):
     employees = Employee.objects.all()
 
     return render_to_response("employee_manager/index.html", {
-            "employees": employees, 
-        }, 
+            "employees": employees,
+        },
         context_instance = RequestContext(request))
 
 def add_employee(request):
@@ -22,7 +22,7 @@ def add_employee(request):
             return HttpResponseRedirect("/added")
     else:
         form = EmployeeForm()
-        
+
     return render_to_response("employee_manager/add.html", {
             "form": form,
         },
@@ -35,6 +35,5 @@ def delete_employee(request, employeeID):
 
     return render_to_response("employee_manager/index.html", {
             "employees": employees,
-            "form": form,
         },
         context_instance = RequestContext(request))
