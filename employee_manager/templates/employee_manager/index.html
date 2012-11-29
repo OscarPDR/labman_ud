@@ -3,23 +3,34 @@
 
 {% block content %}
 
-	<ul>
-		{% for employee in employees %}
-			<li>
-				{{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Link FOAF</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
 
-				<a target="_blank" href="{{ employee.foaf_link }}">FOAF</a>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.first_surname }} {{ employee.second_surname }}</td>
+                    <td><a class="btn btn-mini" target="_blank" href="{{ employee.foaf_link }}">FOAF</a></td>
+                    <td><a class="btn btn-mini" href="editar/{{ employee.slug }}">Editar</a></td>
+                    <td><a class="btn btn-mini" href="eliminar/{{ employee.slug }}">Borrar</a></td>
+                </tr>
+            
+            {% empty %}
+                <tr>No hay ningún empleado</tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-				<a href="editar/{{ employee.slug }}">Editar</a>
-
-				<a href="eliminar/{{ employee.slug }}">Borrar</a>
-			</li>
-		{% empty %}
-			<h2>No hay ningún empleado</h2>
-		{% endfor %}
-	</ul>
-
-	<a class="btn" href="{% url add_employee %}">Añadir empleado</a>
+    <a class="btn" href="{% url add_employee %}">Añadir empleado</a>
 
 {% endblock %}
 
