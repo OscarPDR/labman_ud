@@ -9,11 +9,17 @@
 				{{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
 
 				<a target="_blank" href="{{ employee.foaf_link }}">FOAF</a>
+
+				<!-- <a href='eliminar/{{ employee.id }}'>Borrar</a> -->
+
+				<a href="{% url delete_employee employee.pk %}/">Borrar</a>
 			</li>
 		{% empty %}
 			<h2>No hay ningún empleado</h2>
 		{% endfor %}
 	</ul>
+
+	<a class="btn" href="{% url add_employee %}">Añadir empleado</a>
 
 {% endblock %}
 
