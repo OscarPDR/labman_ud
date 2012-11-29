@@ -45,6 +45,38 @@ def add_employee(request):
         },
         context_instance = RequestContext(request))
 
+def edit_employee(request, slug):
+    employee = get_object_or_404(Employee, slug = slug)
+
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+
+            cd = form.cleaned_data
+
+            employee.name = cd['name'].encode('utf-8')
+            employee.first_surname = cd['first_surname'].encode('utf-8')
+            employee.second_surname = cd['second_surname'].encode('utf-8')
+
+            employee.save()
+
+            return HttpResponseRedirect("/personas")
+    else:
+        data = {
+            'name': employee.name,
+            'first_surname': employee.first_surname,
+            'second_surname': employee.second_surname,
+            'foaf_link': employee.foaf_link
+        }
+
+        form = EmployeeForm(initial = data)
+
+    return render_to_response("employee_manager/edit.html", {
+            "employee": employee,
+            "form": form,
+        },
+        context_instance = RequestContext(request))
+
 def delete_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
     employee.delete()
