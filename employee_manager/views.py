@@ -1,6 +1,6 @@
 # Create your views here.
 
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
@@ -29,11 +29,8 @@ def add_employee(request):
         context_instance = RequestContext(request))
 
 def delete_employee(request, employeeID):
-    e = get_object_or_404(Employee, pk = employeeID)
-    e.delete()
+    employee = get_object_or_404(Employee, pk = employeeID)
+    employee.delete()
     employees = Employee.objects.all()
 
-    return render_to_response("employee_manager/index.html", {
-            "employees": employees,
-        },
-        context_instance = RequestContext(request))
+    return redirect('employee_index')
