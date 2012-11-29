@@ -1,0 +1,32 @@
+{% extends "projects_morelab/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+	<form action="" method="post" class="form-horizontal">
+		{% csrf_token %}
+		
+		<legend>Editar el empleado: {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}</legend>
+		
+		<fieldset>
+			{% for field in form %}
+				<div class="control-group">
+					<label class="control-label">{{ field.label }}</label>
+					<div class="controls">
+						{{ field }}
+					</div>
+				</div>
+			{% endfor %}
+
+			<div class="form-actions">
+				<button type="submit" name="submit" class="btn btn-primary">Añadir</button>
+				<button type="reset" class="btn">Limpiar</button>
+				<a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
+			</div>
+		</fieldset>
+	</form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
