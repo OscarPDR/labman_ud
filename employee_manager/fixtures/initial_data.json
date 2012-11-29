@@ -6,7 +6,8 @@
 			"name": "Oscar",
 			"first_surname": "Peña",
 			"second_surname": "del Rio",
-			"foaf_link": "http://google.es"
+			"foaf_link": "http://google.es",
+			"slug": "oscar-pena-del-rio"
 		}
 	},
 	{
@@ -16,7 +17,8 @@
 			"name": "Mikel",
 			"first_surname": "Emaldi",
 			"second_surname": "Manrique",
-			"foaf_link": "http://google.es"
+			"foaf_link": "http://google.es",
+			"slug": "mikel-emaldi-manrique"
 		}
 	},
 	{
@@ -26,7 +28,8 @@
 			"name": "Jon",
 			"first_surname": "Lázaro",
 			"second_surname": "Aduna",
-			"foaf_link": "http://google.es"
+			"foaf_link": "http://google.es",
+			"slug": "jon-lazaro-aduna"
 		}
 	},
 	{
@@ -36,7 +39,8 @@
 			"name": "Eduardo",
 			"first_surname": "Castillejo",
 			"second_surname": "Gil",
-			"foaf_link": "http://google.es"
+			"foaf_link": "http://google.es",
+			"slug": "eduardo-castillejo-gil"
 		}
 	}
 ]

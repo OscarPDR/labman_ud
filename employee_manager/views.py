@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # Create your views here.
 
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -19,7 +21,22 @@ def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect("/added")
+
+            cd = form.cleaned_data
+
+            name = cd['name']
+            first_surname = cd['first_surname']
+            second_surname = cd['second_surname']
+
+            emp = Employee(
+                name = name.encode('utf-8'), 
+                first_surname = first_surname.encode('utf-8'), 
+                second_surname = second_surname.encode('utf-8')
+            )
+
+            emp.save()
+
+            return HttpResponseRedirect("/personas")
     else:
         form = EmployeeForm()
 
@@ -28,8 +45,8 @@ def add_employee(request):
         },
         context_instance = RequestContext(request))
 
-def delete_employee(request, employeeID):
-    employee = get_object_or_404(Employee, pk = employeeID)
+def delete_employee(request, slug):
+    employee = get_object_or_404(Employee, slug = slug)
     employee.delete()
     employees = Employee.objects.all()
 

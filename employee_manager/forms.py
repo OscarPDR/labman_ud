@@ -1,3 +1,4 @@
+# coding: utf-8
 
 from django import forms
 from django.forms import ModelForm
@@ -7,7 +8,7 @@ from django.forms.models import inlineformset_factory
 
 from employee_manager.models import *
 
-# Create the form class.
+# Create your forms here.
 
 class URLInput(widgets.Input):
     input_type = 'url'
@@ -18,3 +19,4 @@ class EmployeeForm(forms.ModelForm):
         widgets = {
             'foaf_link': URLInput(attrs = {'placeholder': 'http://'}),
         }
+        exclude = ('slug')
