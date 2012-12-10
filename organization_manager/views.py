@@ -50,17 +50,18 @@ def edit_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
 
     if request.method == 'POST':
-        form = OrganizationForm(request.POST)
+        form = OrganizationForm(request.POST, request.FILES)
         if form.is_valid():
 
             cd = form.cleaned_data
+
+            organization.update()
+            print "image deleted"
 
             organization.name = cd['name'].encode('utf-8')
             organization.country = cd['country'].encode('utf-8')
             organization.homepage = cd['homepage'].encode('utf-8')
             organization.logo = request.FILES['logo']
-
-            print organization.logo
 
             organization.save()
 

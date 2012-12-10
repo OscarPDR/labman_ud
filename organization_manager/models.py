@@ -33,3 +33,15 @@ class Organization(models.Model):
         super(Organization, self).delete(*args, **kwargs)
         # Delete the file after the model
         storage.delete(path)
+
+    def update(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        storage = self.logo.storage
+        path = self.logo.path
+
+        print "Path update: " + path
+
+        os.remove(path)
+        
+        # Delete the file after the model
+        storage.delete(path)
