@@ -5,12 +5,25 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from employee_manager.models import *
 from employee_manager.forms import *
 
 def index(request):
     employees = Employee.objects.all()
+    paginator = Paginator(employees, 3) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    
+    try:
+        employees = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        employees = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        employees = paginator.page(paginator.num_pages)
 
     return render_to_response("employee_manager/index.html", {
             "employees": employees,

@@ -42,5 +42,38 @@
 			"foaf_link": "http://google.es",
 			"slug": "eduardo-castillejo-gil"
 		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 5,
+		"fields": {
+			"name": "Aitor",
+			"first_surname": "Almeida",
+			"second_surname": "",
+			"foaf_link": "http://google.es",
+			"slug": "aitor-almeida"
+		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 6,
+		"fields": {
+			"name": "Unai",
+			"first_surname": "Aguilera",
+			"second_surname": "",
+			"foaf_link": "http://google.es",
+			"slug": "unai-aguilera"
+		}
+	},
+	{
+		"model": "employee_manager.employee",
+		"pk": 7,
+		"fields": {
+			"name": "Pablo",
+			"first_surname": "Orduña",
+			"second_surname": "",
+			"foaf_link": "http://google.es",
+			"slug": "pablo-orduna"
+		}
 	}
 ]
