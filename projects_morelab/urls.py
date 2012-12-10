@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+import settings
+
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -16,9 +18,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
 
-    # (r'^organizaciones/', include('organization_manager.urls')),
+    (r'^organizaciones/', include('organization_manager.urls')),
     (r'^personas/', include('employee_manager.urls')),
     # (r'^proyectos/', include('project_manager.urls')),
+
+    # Just for development purposes, serve in another way in production
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()
