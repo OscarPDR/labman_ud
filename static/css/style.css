@@ -1,0 +1,100 @@
+
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.accordion-toggle {
+	text-decoration: none;
+}
+
+.accordion-toggle:hover {
+	text-decoration: none;
+}
+
+h3 {
+	text-align: center;
+}
+
+h4 {
+	padding-top: 1em;
+}
+
+.container {
+	display: block;
+	min-height: 500px;
+	margin-top: 3em;
+}
+
+.edit-organization-logo {
+	margin: 1em;
+	width: 25%;
+}
+
+.center {
+	display: block;
+	text-align: center;
+	width: 100%;
+}
+
+header {
+	text-align: center;
+	width: 100%;
+	line-height: 8em;
+	background-color: #bbeeff;
+	border-bottom: #0055bb 0.5em solid;
+	margin: 0 auto;
+}
+
+header img {
+	margin: 0 1em;
+}
+
+.dynamic-form {
+	margin-bottom: 20px;
+	display: block;
+}
+
+.dynamic-form th {
+	width: 100px;
+	padding-top: 5px;
+	padding-right: 10px;
+	text-align: right;
+}
+
+.dynamic-form td {
+	margin-left: 180px;
+}
+
+.delete-formset-row {
+	margin-left: 1em;
+}
+
+.form-actions button, a {
+	margin: 0 1em;
+}
+
+.left {
+	float: left;
+	width: 50%;
+	text-align: center;
+}
+
+.left a {
+	margin-top: 6em;
+}
+
+.right {
+	float: right;
+	width: 50%;
+	text-align: center;
+}
+
+footer {
+	text-align: center;
+	width: 100%;
+	line-height: 5em;
+	min-height: 5em;
+	background-color: #bbeeff;
+	border-top: #0055bb 0.5em solid;
+	margin: 0 auto;
+}

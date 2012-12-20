@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"fo",
+				"foaf_link"
+			],
+			[
+				"employ",
+				"employee"
+			],
+			[
+				"E",
+				"Employee"
+			],
+			[
+				"cl",
+				"cleaned_data"
+			],
+			[
+				"se",
+				"second_surname"
+			],
+			[
+				"re",
+				"request"
+			],
+			[
+				"cont",
+				"context_instance"
+			],
+			[
+				"add",
+				"add_employee"
+			],
+			[
+				"render",
+				"render_to_response"
+			],
+			[
+				"Employ",
+				"EmployeeForm"
+			],
+			[
 				"employe",
 				"employee_manager"
 			]
@@ -12,46 +52,60 @@
 	"buffers":
 	[
 		{
-			"file": "projects_morelab/urls.py",
+			"file": "organization_manager/urls.py",
 			"settings":
 			{
-				"buffer_size": 764,
+				"buffer_size": 583,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "templates/projects_morelab/index.html",
+			"file": "organization_manager/templates/organization_manager/edit.html",
 			"settings":
 			{
-				"buffer_size": 331,
+				"buffer_size": 720,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "employee_manager/urls.py",
+			"file": "organization_manager/views.py",
 			"settings":
 			{
-				"buffer_size": 326,
+				"buffer_size": 2464,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "employee_manager/views.py",
+			"file": "organization_manager/templates/organization_manager/index.html",
 			"settings":
 			{
-				"buffer_size": 629,
+				"buffer_size": 1165,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "{% extends \"projects_morelab/base.html\" %}\n{% load i18n %}\n\n{% block content %}\n\n	<ul>\n		{% for employee in employees %}\n			<li>{{ employee.employee_name }} {{ employee.first_surname }} {{ employee.second_surname }}</li>\n		{% empty %}\n			<h2>No hay ningún empleado</h2>\n		{% endfor %}\n	</ul>\n\n{% endblock %}\n\n{% block scripts %}\n{% endblock %}\n\nblock",
-			"file": "employee_manager/templates/employee_manager/index.html",
-			"file_size": 344,
-			"file_write_time": 1354095700000000,
+			"file": "organization_manager/templates/organization_manager/add.html",
 			"settings":
 			{
-				"buffer_size": 350,
+				"buffer_size": 756,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "organization_manager/models.py",
+			"settings":
+			{
+				"buffer_size": 697,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "organization_manager/forms.py",
+			"settings":
+			{
+				"buffer_size": 534,
+				"line_ending": "Unix",
+				"name": "forms.py"
 			}
 		}
 	],
@@ -79,8 +133,16 @@
 	},
 	"file_history":
 	[
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/urls.py",
+		"/home/oscar/Proyectos/projects_morelab/templates/projects_morelab/index.html",
+		"/home/oscar/Proyectos/projects_morelab/projects_morelab/urls.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/models.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/forms.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/add.html",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/index.html",
 		"/home/oscar/Proyectos/projects_morelab/employee_manager/views.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/edit.html",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/urls.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/fixtures/initial_data.json",
 		"/home/oscar/Proyectos/projects_morelab/organization_manager/urls.py",
 		"/home/oscar/Proyectos/projects_morelab/project_manager/views.py",
 		"/home/oscar/Proyectos/projects_morelab/project_manager/urls.py",
@@ -105,6 +167,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"second_surname",
+			"first_surname",
+			"employee",
+			"small",
 			"python",
 			"java",
 			"xml",
@@ -116,6 +182,10 @@
 		"regex": false,
 		"replace_history":
 		[
+			"homepage",
+			"country",
+			"organization",
+			"mini",
 			"sublime.desktop"
 		],
 		"reverse": false,
@@ -127,30 +197,28 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "projects_morelab/urls.py",
+					"file": "organization_manager/urls.py",
 					"settings":
 					{
-						"buffer_size": 764,
+						"buffer_size": 583,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								649,
-								649
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -160,23 +228,24 @@
 				},
 				{
 					"buffer": 1,
-					"file": "templates/projects_morelab/index.html",
+					"file": "organization_manager/templates/organization_manager/edit.html",
 					"settings":
 					{
-						"buffer_size": 331,
+						"buffer_size": 720,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								94,
-								94
+								216,
+								216
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -186,18 +255,18 @@
 				},
 				{
 					"buffer": 2,
-					"file": "employee_manager/urls.py",
+					"file": "organization_manager/views.py",
 					"settings":
 					{
-						"buffer_size": 326,
+						"buffer_size": 2464,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								90,
-								90
+								711,
+								711
 							]
 						],
 						"settings":
@@ -212,24 +281,23 @@
 				},
 				{
 					"buffer": 3,
-					"file": "employee_manager/views.py",
+					"file": "organization_manager/templates/organization_manager/index.html",
 					"settings":
 					{
-						"buffer_size": 629,
+						"buffer_size": 1165,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								629,
-								629
+								1085,
+								1085
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -239,23 +307,78 @@
 				},
 				{
 					"buffer": 4,
-					"file": "employee_manager/templates/employee_manager/index.html",
+					"file": "organization_manager/templates/organization_manager/add.html",
 					"settings":
 					{
-						"buffer_size": 350,
+						"buffer_size": 756,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								350,
-								350
+								198,
+								198
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "organization_manager/models.py",
+					"settings":
+					{
+						"buffer_size": 697,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								697,
+								697
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "organization_manager/forms.py",
+					"settings":
+					{
+						"buffer_size": 534,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								449,
+								449
+							]
+						],
+						"settings":
+						{
+							"auto_name": "forms.py",
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

@@ -1,0 +1,46 @@
+{% extends "projects_morelab/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+	<form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+		{% csrf_token %}
+		
+		<legend>Editar la organización: {{ organization.name }}</legend>
+		
+		<fieldset>
+			{% for field in form %}
+				<div class="control-group">
+					<label class="control-label">{{ field.label }}</label>
+					<div class="controls">
+						{{ field }}
+					</div>
+				</div>
+			{% endfor %}
+
+			<div class="center">
+				<img class="edit-organization-logo" src="{{ MEDIA_PREFIX }}{{ organization.logo.name }}"/>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" name="submit" class="btn btn-primary">Añadir</button>
+				<a class="btn btn-danger" href="{% url organization_index %}">Cancelar</a>
+			</div>
+		</fieldset>
+	</form>
+
+	{% if form.errors %}
+		<div id="form-error">
+			<p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+			<ul>
+			{% for field in form %}
+			<li>{{ field.errors|striptags }}</li>
+			{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

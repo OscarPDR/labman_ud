@@ -9,6 +9,7 @@
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Link FOAF</th>
+                <th>Más información</th>
                 <th>Editar</th>
                 <th>Borrar</th>
             </tr>
@@ -20,15 +21,31 @@
                     <td>{{ employee.name }}</td>
                     <td>{{ employee.first_surname }} {{ employee.second_surname }}</td>
                     <td><a class="btn btn-mini" target="_blank" href="{{ employee.foaf_link }}">FOAF</a></td>
+                    <td><a class="btn btn-mini" href="info/{{ employee.slug }}">Ver</a></td>
                     <td><a class="btn btn-mini" href="editar/{{ employee.slug }}">Editar</a></td>
                     <td><a class="btn btn-mini" href="eliminar/{{ employee.slug }}">Borrar</a></td>
                 </tr>
-            
             {% empty %}
                 <tr>No hay ningún empleado</tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if employees.has_previous %}
+                <a href="?page={{ employees.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ employees.number }} of {{ employees.paginator.num_pages }}.
+            </span>
+
+            {% if employees.has_next %}
+                <a href="?page={{ employees.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
 
     <a class="btn" href="{% url add_employee %}">Añadir empleado</a>
 

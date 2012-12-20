@@ -21,8 +21,8 @@ class Employee(models.Model):
         self.slug = slugify(str(self.name) + str(" ") + str(self.first_surname) + str(" ") + str(self.second_surname))
         super(Employee, self).save(*args, **kwargs)
 
-class Job(models.Model):
-    employee = models.ForeignKey(Employee)
-    # start_date = models.CharField(max_length = 25, verbose_name = 'Ataque')
+# class Job(models.Model):
+    # employee = models.ForeignKey(Employee)
+    # start_month = models.CharField(validators = [MinValueValidator(1), MaxValueValidator(100)], verbose_name = 'Ataque')
     # end_date = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(100)], verbose_name = 'Nivel')
     # place = models.ForeignKey(Organization)
