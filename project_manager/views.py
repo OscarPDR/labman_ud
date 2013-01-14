@@ -7,14 +7,15 @@ from django.http import HttpResponseRedirect
 from project_manager.models import *
 from project_manager.forms import *
 
-def home(request):
-	form = ProjectForm()
 
-	if request.POST:
-		form = ProjectForm(request.POST)
-		if form.is_valid():
-			return HttpResponseRedirect("/added")
-	else:
-		form = ProjectForm()
-	
-	return render_to_response("projects_morelab/index.html", {"form": form, }, context_instance = RequestContext(request))
+def project_index(request):
+    form = ProjectForm()
+
+    if request.POST:
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect("/added")
+        else:
+            form = ProjectForm()
+
+    return render_to_response("projects_morelab/index.html", {"form": form, }, context_instance=RequestContext(request))
