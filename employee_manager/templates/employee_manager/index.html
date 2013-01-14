@@ -22,8 +22,8 @@
                     <td>{{ employee.first_surname }} {{ employee.second_surname }}</td>
                     <td><a class="btn btn-mini" target="_blank" href="{{ employee.foaf_link }}">FOAF</a></td>
                     <td><a class="btn btn-mini" href="info/{{ employee.slug }}">Ver</a></td>
-                    <td><a class="btn btn-mini" href="editar/{{ employee.slug }}">Editar</a></td>
-                    <td><a class="btn btn-mini" href="eliminar/{{ employee.slug }}">Borrar</a></td>
+                    <td><a class="btn btn-mini" href="edit/{{ employee.slug }}">Editar</a></td>
+                    <td><a class="btn btn-mini" href="delete/{{ employee.slug }}">Borrar</a></td>
                 </tr>
             {% empty %}
                 <tr>No hay ningún empleado</tr>

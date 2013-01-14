@@ -4,7 +4,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
 
-from managers.organization_manager.models import Organization
+from organization_manager.models import Organization
 
 # Create your models here.
 
@@ -24,7 +24,7 @@ class Employee(models.Model):
 class Job(models.Model):
     employee = models.ForeignKey(Employee)
     place = models.ForeignKey(Organization)
-    start_month = models.CharField(validators=[MinValueValidator(1), MaxValueValidator(12)], verbose_name='Mes de inicio')
-    start_year = models.CharField(validators=[MinValueValidator(1990), MaxValueValidator(2020)], verbose_name='Año de inicio')
-    end_month = models.CharField(validators=[MinValueValidator(1), MaxValueValidator(12)], verbose_name='Mes de fin')
-    start_year = models.CharField(validators=[MinValueValidator(1990), MaxValueValidator(2020)], verbose_name='Año de fin')
+    start_month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)], verbose_name='Mes de inicio')
+    start_year = models.IntegerField(validators=[MinValueValidator(1990), MaxValueValidator(2020)], verbose_name='Año de inicio')
+    end_month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)], verbose_name='Mes de fin')
+    start_year = models.IntegerField(validators=[MinValueValidator(1990), MaxValueValidator(2020)], verbose_name='Año de fin')

@@ -61,6 +61,15 @@ def add_employee(request):
         context_instance=RequestContext(request))
 
 
+def info_employee(request, slug):
+    employee = get_object_or_404(Employee, slug=slug)
+
+    return render_to_response("employee_manager/info.html", {
+            "employee": employee,
+        },
+        context_instance=RequestContext(request))
+
+
 def edit_employee(request, slug):
     employee = get_object_or_404(Employee, slug=slug)
 
