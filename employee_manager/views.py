@@ -10,12 +10,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from employee_manager.models import *
 from employee_manager.forms import *
 
+
 def index(request):
     employees = Employee.objects.all()
-    paginator = Paginator(employees, 3) # Show 25 contacts per page
+    paginator = Paginator(employees, 3)
 
     page = request.GET.get('page')
-    
+
     try:
         employees = paginator.page(page)
     except PageNotAnInteger:
@@ -28,7 +29,8 @@ def index(request):
     return render_to_response("employee_manager/index.html", {
             "employees": employees,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
+
 
 def add_employee(request):
     if request.method == 'POST':
@@ -42,9 +44,9 @@ def add_employee(request):
             second_surname = cd['second_surname']
 
             emp = Employee(
-                name = name.encode('utf-8'), 
-                first_surname = first_surname.encode('utf-8'), 
-                second_surname = second_surname.encode('utf-8')
+                name=name.encode('utf-8'),
+                first_surname=first_surname.encode('utf-8'),
+                second_surname=second_surname.encode('utf-8')
             )
 
             emp.save()
@@ -56,10 +58,11 @@ def add_employee(request):
     return render_to_response("employee_manager/add.html", {
             "form": form,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
+
 
 def edit_employee(request, slug):
-    employee = get_object_or_404(Employee, slug = slug)
+    employee = get_object_or_404(Employee, slug=slug)
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -82,16 +85,17 @@ def edit_employee(request, slug):
             'foaf_link': employee.foaf_link
         }
 
-        form = EmployeeForm(initial = data)
+        form = EmployeeForm(initial=data)
 
     return render_to_response("employee_manager/edit.html", {
             "employee": employee,
             "form": form,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
+
 
 def delete_employee(request, slug):
-    employee = get_object_or_404(Employee, slug = slug)
+    employee = get_object_or_404(Employee, slug=slug)
     employee.delete()
     employees = Employee.objects.all()
 

@@ -5,9 +5,9 @@
 
 	<form action="" method="post" class="form-horizontal">
 		{% csrf_token %}
-		
+
 		<legend>Editar el empleado: {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}</legend>
-		
+
 		<fieldset>
 			{% for field in form %}
 				<div class="control-group">
