@@ -1,0 +1,51 @@
+{% extends "projects_morelab/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend>Añadir un nuevo proyecto</legend>
+
+        <fieldset>
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab1" data-toggle="tab">Section 1</a></li>
+                    <li><a href="#tab2" data-toggle="tab">Section 2</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        <div class="control-group">
+                            <label class="control-label">{{ form.project_type.label }}</label>
+                            <div class="controls">
+                                {{ form.project_type }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="tab2">
+                        <div class="control-group">
+                            <label class="control-label">{{ form.title.label }}</label>
+                            <div class="controls">
+                                {{ form.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Añadir</button>
+                <button type="reset" class="btn">Limpiar</button>
+                <a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
+            </div>
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
