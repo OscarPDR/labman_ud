@@ -6,8 +6,9 @@
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Nombre</th>
-                <th>País</th>
+                <th>Título</th>
+                <th>Duración</th>
+                <th>Estado</th>
                 <th>Homepage</th>
                 <th>Editar</th>
                 <th>Borrar</th>
@@ -15,16 +16,17 @@
         </thead>
 
         <tbody>
-            {% for organization in organizations %}
+            {% for project in projects %}
                 <tr>
-                    <td><img src="{{ MEDIA_PREFIX }}{{ organization.logo.name }}" width="75"/>{{ organization.name }}</td>
-                    <td>{{ organization.country }}</td>
-                    <td><a class="btn btn-mini" target="_blank" href="{{ organization.homepage }}">URL</a></td>
-                    <td><a class="btn btn-mini" href="editar/{{ organization.slug }}">Editar</a></td>
-                    <td><a class="btn btn-mini" href="eliminar/{{ organization.slug }}">Borrar</a></td>
+                    <td>{{ project.title }}</td>
+                    <td>{{ project.start_year }} - {{ project.end_year }}</td>
+                    <td>{{ project.status }}</td>
+                    <td><a class="btn btn-mini" target="_blank" href="{{ project.homepage }}">URL</a></td>
+                    <td><a class="btn btn-mini" href="edit/{{ project.slug }}">Editar</a></td>
+                    <td><a class="btn btn-mini" href="delete/{{ project.slug }}">Borrar</a></td>
                 </tr>
             {% empty %}
-                <tr>No hay ningun proyecto.</tr>
+                <tr>No hay ningún proyecto.</tr>
             {% endfor %}
         </tbody>
     </table>

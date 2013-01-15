@@ -69,9 +69,6 @@ class Project(models.Model):
         verbose_name = 'Web'
     )
 
-    # additional_info
-    # tag
-
     start_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
         verbose_name = 'Año de comienzo'
@@ -89,7 +86,7 @@ class Project(models.Model):
         verbose_name = 'Estado'
     )
 
-    total_funds =
+    # total_funds =
 
     currency = models.CharField(
         max_length = 25,
@@ -98,14 +95,19 @@ class Project(models.Model):
         verbose_name = 'Moneda'
     )
 
-    observations = models.CharField(
-        max_length = 100,
-        verbose_name = 'Título'
+    # additional_info
+    # tag
+
+    observations = models.TextField(
+        max_length = 500,
+        verbose_name = 'Observaciones'
     )
 
     logo = models.ImageField(
         upload_to = logo_path,
-        verbose_name = 'Logotipo'
+        verbose_name = 'Logotipo',
+        blank = True,
+        null = True,
     )
 
     slug = models.SlugField()

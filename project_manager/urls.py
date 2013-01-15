@@ -6,7 +6,7 @@ urlpatterns = patterns('',
     url(r'^new/$', 'project_manager.views.add_project', name='add_project'),
     # url(r'^info/$', 'project_manager.views.add_project', name='add_project'),
     # url(r'^edit/(\S+)$', 'project_manager.views.edit_project', name='edit_project'),
-    # url(r'^delete/(\S+)$', 'project_manager.views.delete_project', name='delete_project'),
+    url(r'^delete/(\S+)$', 'project_manager.views.delete_project', name='delete_project'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

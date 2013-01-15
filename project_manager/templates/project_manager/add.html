@@ -3,34 +3,101 @@
 
 {% block content %}
 
-    <form action="" method="post" class="form-horizontal">
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
         {% csrf_token %}
 
         <legend>Añadir un nuevo proyecto</legend>
+
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.label }} - {{ field.errors }}
+            </div>
+        {% endfor %}
 
         <fieldset>
 
             <div class="tabbable">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Section 1</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Section 2</a></li>
+                    <li class="active"><a href="#general" data-toggle="tab">General</a></li>
+                    <li><a href="#additional" data-toggle="tab">Información adicional</a></li>
                 </ul>
 
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
+
+                    <!-- General form fields -->
+
+                    <div class="tab-pane active" id="general">
                         <div class="control-group">
                             <label class="control-label">{{ form.project_type.label }}</label>
                             <div class="controls">
                                 {{ form.project_type }}
                             </div>
                         </div>
-                    </div>
 
-                    <div class="tab-pane" id="tab2">
                         <div class="control-group">
                             <label class="control-label">{{ form.title.label }}</label>
                             <div class="controls">
                                 {{ form.title }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.description.label }}</label>
+                            <div class="controls">
+                                {{ form.description }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.homepage.label }}</label>
+                            <div class="controls">
+                                {{ form.homepage }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.start_year.label }}</label>
+                            <div class="controls">
+                                {{ form.start_year }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.end_year.label }}</label>
+                            <div class="controls">
+                                {{ form.end_year }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.status.label }}</label>
+                            <div class="controls">
+                                {{ form.status }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observations, logos and more -->
+
+                    <div class="tab-pane" id="additional">
+                        <div class="control-group">
+                            <label class="control-label">{{ form.currency.label }}</label>
+                            <div class="controls">
+                                {{ form.currency }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.observations.label }}</label>
+                            <div class="controls">
+                                {{ form.observations }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ form.logo.label }}</label>
+                            <div class="controls">
+                                {{ form.logo }}
                             </div>
                         </div>
                     </div>
