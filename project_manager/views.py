@@ -18,20 +18,29 @@ def project_index(request):
 
 
 def add_project(request):
-    if request.method == 'POST':
-        form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid():
-            cd = form.cleaned_data
+    project_form = ProjectForm(prefix = 'project_form')
+    funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
 
-            project_type = cd['project_type']
-            title = cd['title']
-            description = cd['description']
-            homepage = cd['homepage']
-            start_year = cd['start_year']
-            end_year = cd['end_year']
-            status = cd['status']
-            currency = cd['currency']
-            observations = cd['observations']
+    if request.method == 'POST':
+        project_form = ProjectForm(request.POST, request.FILES, prefix = 'project_form')
+        if project_form.is_valid():
+            project = project_form.save(commit = False)
+
+            print "Commit = False"
+
+            funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
+
+            cd_p = project_form.cleaned_data
+
+            project_type = cd_p['project_type']
+            title = cd_p['title']
+            description = cd_p['description']
+            homepage = cd_p['homepage']
+            start_year = cd_p['start_year']
+            end_year = cd_p['end_year']
+            status = cd_p['status']
+            currency = cd_p['currency']
+            observations = cd_p['observations']
 
             project = Project(
                 project_type = project_type.encode('utf-8'),
@@ -45,16 +54,52 @@ def add_project(request):
                 observations = observations.encode('utf-8'),
             )
 
-            if request.FILES['logo']:
-                project.logo = request.FILES['logo']
+            # if request.FILES['logo']:
+            #     project.logo = request.FILES['logo']
 
             project.save()
 
+            print "project.save()"
+
+            if funding_program_form.is_valid():
+                cd_f = funding_program_form.cleaned_data
+
+                name = cd_f['name']
+                project_code = cd_f['project_code']
+                start_month = cd_f['start_month']
+                start_year = cd_f['start_year']
+                end_month = cd_f['end_month']
+                end_year = cd_f['end_year']
+                concession_year = cd_f['concession_year']
+                geographical_scope = cd_f['geographical_scope']
+
+                funding_program = FundingProgram(
+                    name = name.encode('utf-8'),
+                    project_code = project_code.encode('utf-8'),
+                    start_month = start_month,
+                    start_year = start_year,
+                    end_month = end_month,
+                    end_year = end_year,
+                    concession_year = concession_year,
+                    geographical_scope = geographical_scope.encode('utf-8'),
+                )
+
+                funding_program.project = project
+
+                funding_program.save()
+
+                print "funding_program.save()"
+
             return HttpResponseRedirect("/correct")
     else:
-        form = ProjectForm()
+        project_form = ProjectForm(prefix = 'project_form')
+        funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
 
-    return render_to_response("project_manager/add.html", {"form": form, }, context_instance=RequestContext(request))
+    return render_to_response("project_manager/add.html", {
+            "project_form": project_form,
+            "funding_program_form": funding_program_form,
+        },
+        context_instance=RequestContext(request))
 
 
 def delete_project(request, slug):

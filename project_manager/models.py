@@ -32,12 +32,9 @@ CURRENCIES = (
 )
 
 GEOGRAPHICAL_SCOPE = (
-    ('Project', 'Proyecto'),
-    ('DevelopmentProject', 'Proyecto'),
-    ('InnovationProject', 'Proyecto'),
-    ('ResearchProject', 'Proyecto'),
-    ('BasicResearchProject', 'Proyecto'),
-    ('AppliedResearchProject', 'Proyecto'),
+    ('Province', 'Provincia'),
+    ('State', 'Comunidad autónoma'),
+    ('Country', 'País'),
 )
 
 # Create your models here.
@@ -114,14 +111,89 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title))
+        print "Proyecto guardado"
         super(Project, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        if self.logo:
+            storage = self.logo.storage
+            path = self.logo.path
+            # Delete the model before the file
+            super(Project, self).delete(*args, **kwargs)
+            # Delete the file after the model
+            storage.delete(path)
+        else:
+            super(Project, self).delete(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        storage = self.logo.storage
+        path = self.logo.path
+
+        os.remove(path)
+
+        # Delete the file after the model
+        storage.delete(path)
+
+class FundingProgram(models.Model):
+    project = models.ForeignKey(Project)
+
+    name = models.CharField(
+        max_length = 25,
+        verbose_name = 'Nombre del programa',
+    )
+
+    project_code = models.CharField(
+        max_length = 25,
+        verbose_name = 'Código del proyecto',
+    )
+
+    start_month = models.IntegerField(
+        validators = [MinValueValidator(1), MaxValueValidator(12)],
+        verbose_name = 'Mes de comienzo'
+    )
+
+    start_year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'Año de comienzo'
+    )
+
+    end_month = models.IntegerField(
+        validators = [MinValueValidator(1), MaxValueValidator(12)],
+        verbose_name = 'Mes de fin'
+    )
+
+    end_year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'Año de fin'
+    )
+
+    concession_year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'Año de concesión'
+    )
+
+    geographical_scope = models.CharField(
+        max_length = 25,
+        choices = GEOGRAPHICAL_SCOPE,
+        default = 'Province',
+        verbose_name = 'Tipo de proyecto'
+    )
+
+    # logo = models.ImageField(
+    #     upload_to = logo_path,
+    #     verbose_name = 'Logotipo',
+    #     blank = True,
+    #     null = True,
+    # )
 
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
         storage = self.logo.storage
         path = self.logo.path
         # Delete the model before the file
-        super(Project, self).delete(*args, **kwargs)
+        super(FundingProgram, self).delete(*args, **kwargs)
         # Delete the file after the model
         storage.delete(path)
 
@@ -135,16 +207,6 @@ class Project(models.Model):
         # Delete the file after the model
         storage.delete(path)
 
-# class FundingProgram(models.Model):
-# 	funding_name =
-# 	funding_project_code =
-# 	funding_start_month =
-# 	funding_start_year =
-# 	funding_end_month =
-# 	funding_end_year =
-# 	funding_concession_year =
-# 	funding_geographical_scope =
-# 	funding_logo =
 
 # class FundingAmount(models.Model):
 # 	funding_amount =

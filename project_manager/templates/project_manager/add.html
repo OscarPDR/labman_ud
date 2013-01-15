@@ -8,11 +8,13 @@
 
         <legend>Añadir un nuevo proyecto</legend>
 
-        {% for field in form %}
-            <div class="fieldWrapper">
-                {{ field.label }} - {{ field.errors }}
-            </div>
-        {% endfor %}
+        {% if project_form.errors %}
+            {% for field in project_form %}
+                <div class="fieldWrapper">
+                    {{ field.label }} - {{ field.errors }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <fieldset>
 
@@ -20,6 +22,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab">General</a></li>
                     <li><a href="#additional" data-toggle="tab">Información adicional</a></li>
+                    <li><a href="#funding-program" data-toggle="tab">Programa de financiación</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -28,79 +31,99 @@
 
                     <div class="tab-pane active" id="general">
                         <div class="control-group">
-                            <label class="control-label">{{ form.project_type.label }}</label>
+                            <label class="control-label">{{ project_form.project_type.label }}</label>
                             <div class="controls">
-                                {{ form.project_type }}
+                                {{ project_form.project_type }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.title.label }}</label>
+                            <label class="control-label">{{ project_form.title.label }}</label>
                             <div class="controls">
-                                {{ form.title }}
+                                {{ project_form.title }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.description.label }}</label>
+                            <label class="control-label">{{ project_form.description.label }}</label>
                             <div class="controls">
-                                {{ form.description }}
+                                {{ project_form.description }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.homepage.label }}</label>
+                            <label class="control-label">{{ project_form.homepage.label }}</label>
                             <div class="controls">
-                                {{ form.homepage }}
+                                {{ project_form.homepage }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.start_year.label }}</label>
+                            <label class="control-label">{{ project_form.start_year.label }}</label>
                             <div class="controls">
-                                {{ form.start_year }}
+                                {{ project_form.start_year }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.end_year.label }}</label>
+                            <label class="control-label">{{ project_form.end_year.label }}</label>
                             <div class="controls">
-                                {{ form.end_year }}
+                                {{ project_form.end_year }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.status.label }}</label>
+                            <label class="control-label">{{ project_form.status.label }}</label>
                             <div class="controls">
-                                {{ form.status }}
+                                {{ project_form.status }}
                             </div>
                         </div>
                     </div>
+
+                    <!-- End #general tab-pane -->
 
                     <!-- Observations, logos and more -->
 
                     <div class="tab-pane" id="additional">
                         <div class="control-group">
-                            <label class="control-label">{{ form.currency.label }}</label>
+                            <label class="control-label">{{ project_form.currency.label }}</label>
                             <div class="controls">
-                                {{ form.currency }}
+                                {{ project_form.currency }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.observations.label }}</label>
+                            <label class="control-label">{{ project_form.observations.label }}</label>
                             <div class="controls">
-                                {{ form.observations }}
+                                {{ project_form.observations }}
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label">{{ form.logo.label }}</label>
+                            <label class="control-label">{{ project_form.logo.label }}</label>
                             <div class="controls">
-                                {{ form.logo }}
+                                {{ project_form.logo }}
                             </div>
                         </div>
                     </div>
+
+                    <!-- End #additional tab-pane -->
+
+                    <!-- Funding program information -->
+
+                    <div class="tab-pane" id="funding-program">
+                        {% for funding_field in funding_program_form %}
+                            <div class="control-group">
+                                <label class="control-label">{{ funding_field.label }}</label>
+                                <div class="controls">
+                                    {{ funding_field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- End #funding-program tab-pane -->
+
                 </div>
             </div>
 
