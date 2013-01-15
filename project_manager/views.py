@@ -20,6 +20,7 @@ def project_index(request):
 def add_project(request):
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
+    funding_amount_form = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_form')
 
     if request.method == 'POST':
         project_form = ProjectForm(request.POST, request.FILES, prefix = 'project_form')
@@ -29,6 +30,7 @@ def add_project(request):
             print "Commit = False"
 
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
+            funding_amount_form = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_form')
 
             cd_p = project_form.cleaned_data
 
@@ -90,14 +92,32 @@ def add_project(request):
 
                 print "funding_program.save()"
 
+            for i in range(start_year, end_year + 1):
+                if funding_amount_formset.is_valid():
+                    for funding_amount_form in funding_amount_formset:
+                        if (i <= end_year) and (len(funding_amount_form.cleaned_data) > 0):
+                            cd_fa = funding_amount_form.cleaned_data
+
+                            funding_amount_form.amount = cd_fa['amount']
+                            funding_amount_form.year = i
+
+                            funding_amount_form.save()
+
+                        else:
+                            print "No fundings amounts to save"
+
+                    funding_amount_formset.save()
+
             return HttpResponseRedirect("/correct")
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
+        funding_amount_form = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_form')
 
     return render_to_response("project_manager/add.html", {
             "project_form": project_form,
             "funding_program_form": funding_program_form,
+            "funding_amount_form": funding_amount_form,
         },
         context_instance=RequestContext(request))
 

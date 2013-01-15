@@ -208,7 +208,13 @@ class FundingProgram(models.Model):
         storage.delete(path)
 
 
-# class FundingAmount(models.Model):
-# 	funding_amount =
-# 	funding_year =
-# 	# currency
+class FundingAmount(models.Model):
+    amount = models.DecimalField(
+        max_digits = 5,
+        decimal_places = 2,
+    )
+
+    year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'Año de concesión'
+    )
