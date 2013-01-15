@@ -23,6 +23,7 @@
                     <li class="active"><a href="#general" data-toggle="tab">General</a></li>
                     <li><a href="#additional" data-toggle="tab">Información adicional</a></li>
                     <li><a href="#funding-program" data-toggle="tab">Programa de financiación</a></li>
+                    <li><a href="#funding-amount" data-toggle="tab">Desglose de financiación</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -123,6 +124,22 @@
                     </div>
 
                     <!-- End #funding-program tab-pane -->
+
+                    <!-- Funding amount information -->
+
+                    <div class="tab-pane" id="funding-amount">
+                        {% for funding_amount_form in funding_amount_formset.forms %}
+                            <div class="control-group">
+                                <label class="control-label">{{ funding_amount_form.amount.label }}</label>
+                                <div class="controls">
+                                    {{ funding_amount_form.amount }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {{ funding_amount_formset.management_form }}
+                    </div>
+
+                    <!-- End #funding-amount tab-pane -->
 
                 </div>
             </div>

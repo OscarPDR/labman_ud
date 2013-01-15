@@ -209,6 +209,8 @@ class FundingProgram(models.Model):
 
 
 class FundingAmount(models.Model):
+    project = models.ForeignKey(Project)
+
     amount = models.DecimalField(
         max_digits = 5,
         decimal_places = 2,

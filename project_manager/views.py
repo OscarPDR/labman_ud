@@ -20,7 +20,7 @@ def project_index(request):
 def add_project(request):
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
-    funding_amount_form = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_form')
+    funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
 
     if request.method == 'POST':
         project_form = ProjectForm(request.POST, request.FILES, prefix = 'project_form')
@@ -30,7 +30,7 @@ def add_project(request):
             print "Commit = False"
 
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
-            funding_amount_form = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_form')
+            funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
 
             cd_p = project_form.cleaned_data
 
@@ -112,12 +112,12 @@ def add_project(request):
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
-        funding_amount_form = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_form')
+        funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
 
     return render_to_response("project_manager/add.html", {
             "project_form": project_form,
             "funding_program_form": funding_program_form,
-            "funding_amount_form": funding_amount_form,
+            "funding_amount_formset": funding_amount_formset,
         },
         context_instance=RequestContext(request))
 
