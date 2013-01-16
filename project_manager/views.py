@@ -27,8 +27,6 @@ def add_project(request):
         if project_form.is_valid():
             project = project_form.save(commit = False)
 
-            print "Commit = False"
-
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
 
@@ -61,8 +59,6 @@ def add_project(request):
 
             project.save()
 
-            print "project.save()"
-
             if funding_program_form.is_valid():
                 cd_f = funding_program_form.cleaned_data
 
@@ -90,25 +86,28 @@ def add_project(request):
 
                 funding_program.save()
 
-                print "funding_program.save()"
+                current_year = start_year
 
-            for i in range(start_year, end_year + 1):
                 if funding_amount_formset.is_valid():
                     for funding_amount_form in funding_amount_formset:
-                        if (i <= end_year) and (len(funding_amount_form.cleaned_data) > 0):
-                            cd_fa = funding_amount_form.cleaned_data
+                            if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= end_year):
+                                cd_fa = funding_amount_form.cleaned_data
 
-                            funding_amount_form.amount = cd_fa['amount']
-                            funding_amount_form.year = i
+                                funding_amount = FundingAmount(
+                                    amount = cd_fa['amount'],
+                                    year = current_year,
+                                )
 
-                            funding_amount_form.save()
+                                funding_amount.project = project
 
-                        else:
-                            print "No fundings amounts to save"
+                                funding_amount.save()
 
-                    funding_amount_formset.save()
+                                current_year += 1
 
-            return HttpResponseRedirect("/correct")
+                            else:
+                                print "No fundings amounts to save"
+
+            return HttpResponseRedirect("/proyectos")
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')

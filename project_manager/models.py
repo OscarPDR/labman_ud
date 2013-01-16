@@ -212,11 +212,13 @@ class FundingAmount(models.Model):
     project = models.ForeignKey(Project)
 
     amount = models.DecimalField(
-        max_digits = 5,
+        max_digits = 10,
         decimal_places = 2,
+        blank = True
     )
 
     year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de concesión'
+        verbose_name = 'Año de concesión',
+        blank = True
     )
