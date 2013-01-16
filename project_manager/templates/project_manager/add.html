@@ -137,6 +137,21 @@
                     <!-- End #assigned-employees tab-pane -->
 
                     <div class="tab-pane" id="assigned-employees">
+                        <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                {% for assigned_employee_form in assigned_employee_formset.forms %}
+                                    <tr>
+                                        <th>{{ assigned_employee_form.employee.label }}</th>
+                                        <td>{{ assigned_employee_form.employee }}</td>
+                                        <th>{{ assigned_employee_form.role.label }}</th>
+                                        <td>{{ assigned_employee_form.role }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {{ assigned_employee_formset.management_form }}
+                            </tbody>
+                        </table>
+
+                        <!--
                         {% for assigned_employee_form in assigned_employee_formset.forms %}
                             <div class="control-group">
                                 <label class="control-label" id="label">{{ assigned_employee_form.employee.label }}</label>
@@ -152,7 +167,7 @@
                                 </div>
                             </div>
                         {% endfor %}
-                        {{ assigned_employee_formset.management_form }}
+                        {{ assigned_employee_formset.management_form }} -->
                     </div>
 
                     <!-- End #assigned-employees tab-pane -->
@@ -171,6 +186,20 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
+
+    <script>
+        $(function() {
+            $('#assigned_employee_formset tbody tr').formset({
+                prefix: '{{ assigned_employee_formset.prefix }}',
+                addText: 'Añadir empleado',
+                addCssClass: 'btn btn-info',
+                deleteText: ' Eliminar',
+                deleteCssClass: 'btn',
+            });
+        });
+    </script>
 
     <script>
         function sortFundingAmountForms() {

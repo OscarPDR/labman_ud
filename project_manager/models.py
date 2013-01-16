@@ -40,8 +40,8 @@ GEOGRAPHICAL_SCOPE = (
 ROLES = (
     ('Researcher', 'Investigador'),
     ('PrincipalResearcher', 'Investigador principal'),
-    ('ProjectManager', 'Gestor del proyecto'),
     ('LocalPrincipalResearcher', 'Investigador principal (local)'),
+    ('ProjectManager', 'Gestor del proyecto'),
     ('LocalProjectManager', 'Gestor del proyecto (local)'),
 )
 
@@ -235,11 +235,11 @@ class FundingAmount(models.Model):
 
 class AssignedEmployee(models.Model):
     project = models.ForeignKey(Project)
-    employee = models.ForeignKey(Employee)
+    employee = models.ForeignKey(Employee, verbose_name = "Empleado")
 
     role = models.CharField(
         max_length = 50,
         choices = ROLES,
         default = 'Researcher',
-        verbose_name = 'Rol desempeñado'
+        verbose_name = 'Rol'
     )
