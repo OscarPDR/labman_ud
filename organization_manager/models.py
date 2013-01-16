@@ -21,6 +21,9 @@ class Organization(models.Model):
 
     slug = models.SlugField()
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
         super(Organization, self).save(*args, **kwargs)
@@ -42,6 +45,6 @@ class Organization(models.Model):
         print "Path update: " + path
 
         os.remove(path)
-        
+
         # Delete the file after the model
         storage.delete(path)

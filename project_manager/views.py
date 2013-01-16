@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from project_manager.models import *
 from project_manager.forms import *
 
-
 def project_index(request):
     projects = Project.objects.all()
 

@@ -8,7 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 
-# from organization_manager.models import Organization
+from organization_manager.models import Organization
 # from employee_manager.models import Employee
 
 PROJECT_TYPES = (
@@ -35,6 +35,14 @@ GEOGRAPHICAL_SCOPE = (
     ('Province', 'Provincia'),
     ('State', 'Comunidad autónoma'),
     ('Country', 'País'),
+)
+
+ROLES = (
+    ('Researcher', 'Investigador'),
+    ('PrincipalResearcher', 'Investigador principal'),
+    ('ProjectManager', 'Gestor del proyecto'),
+    ('LocalPrincipalResearcher', 'Investigador principal (local)'),
+    ('LocalProjectManager', 'Gestor del proyecto (local)'),
 )
 
 # Create your models here.
@@ -138,6 +146,7 @@ class Project(models.Model):
 
 class FundingProgram(models.Model):
     project = models.ForeignKey(Project)
+    organization = models.ForeignKey(Organization, verbose_name = 'Organización que lo otorga')
 
     name = models.CharField(
         max_length = 25,
@@ -178,7 +187,7 @@ class FundingProgram(models.Model):
         max_length = 25,
         choices = GEOGRAPHICAL_SCOPE,
         default = 'Province',
-        verbose_name = 'Tipo de proyecto'
+        verbose_name = 'Ámbito geográfico'
     )
 
     # logo = models.ImageField(
@@ -221,4 +230,16 @@ class FundingAmount(models.Model):
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
         verbose_name = 'Año de concesión',
         blank = True
+    )
+
+
+class AssignedEmployee(models.Model):
+    project = models.ForeignKey(Project)
+    employee = models.ForeignKey(Employee)
+
+    role = models.CharField(
+        max_length = 50,
+        choices = ROLES,
+        default = 'Researcher',
+        verbose_name = 'Rol desempeñado'
     )

@@ -8,22 +8,14 @@
 
         <legend>Añadir un nuevo proyecto</legend>
 
-        {% if project_form.errors %}
-            {% for field in project_form %}
-                <div class="fieldWrapper">
-                    {{ field.label }} - {{ field.errors }}
-                </div>
-            {% endfor %}
-        {% endif %}
-
         <fieldset>
 
             <div class="tabbable">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#general" data-toggle="tab">General</a></li>
-                    <li><a href="#additional" data-toggle="tab">Información adicional</a></li>
-                    <li><a href="#funding-program" data-toggle="tab">Programa de financiación</a></li>
-                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();">Desglose de financiación</a></li>
+                    <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General</a></li>
+                    <li><a href="#additional" data-toggle="tab"><span class="badge">2</span> Información adicional</a></li>
+                    <li><a href="#funding-program" data-toggle="tab"><span class="badge">3</span> Programa de financiación</a></li>
+                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
                 </ul>
 
                 <div class="tab-content">
