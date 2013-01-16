@@ -23,7 +23,7 @@
                     <li class="active"><a href="#general" data-toggle="tab">General</a></li>
                     <li><a href="#additional" data-toggle="tab">Información adicional</a></li>
                     <li><a href="#funding-program" data-toggle="tab">Programa de financiación</a></li>
-                    <li><a href="#funding-amount" data-toggle="tab">Desglose de financiación</a></li>
+                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();">Desglose de financiación</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -115,7 +115,7 @@
                     <div class="tab-pane" id="funding-program">
                         {% for funding_field in funding_program_form %}
                             <div class="control-group">
-                                <label class="control-label">{{ funding_field.label }}</label>
+                                <label class="control-label" id="label">{{ funding_field.label }}</label>
                                 <div class="controls">
                                     {{ funding_field }}
                                 </div>
@@ -155,4 +155,22 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        function sortFundingAmountForms() {
+            var amount_forms = document.getElementById("funding-amount");
+            amount_forms.style.visibility = 'hidden';
+            var start_year = parseInt(document.getElementById("id_funding_program_form-start_year").value);
+            var end_year = parseInt(document.getElementById("id_funding_program_form-end_year").value);
+            if (end_year >= start_year) {
+                for (var i = 0; i <= (end_year - start_year); i++) {
+                    var amount_form = amount_forms.children[i];
+                    amount_form.style.visibility = 'visible';
+                    var label = amount_form.children[0];
+                    label.innerHTML = "Año " + (start_year + i);
+                }
+            }
+        }
+    </script>
+
 {% endblock %}
