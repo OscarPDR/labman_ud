@@ -16,6 +16,7 @@
                     <li><a href="#additional" data-toggle="tab"><span class="badge">2</span> Información adicional</a></li>
                     <li><a href="#funding-program" data-toggle="tab"><span class="badge">3</span> Programa de financiación</a></li>
                     <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
+                    <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">5</span> Personas asignadas</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -132,6 +133,29 @@
                     </div>
 
                     <!-- End #funding-amount tab-pane -->
+
+                    <!-- End #assigned-employees tab-pane -->
+
+                    <div class="tab-pane" id="assigned-employees">
+                        {% for assigned_employee_form in assigned_employee_formset.forms %}
+                            <div class="control-group">
+                                <label class="control-label" id="label">{{ assigned_employee_form.employee.label }}</label>
+                                <div class="controls">
+                                    {{ assigned_employee_form.employee }}
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" id="label">{{ assigned_employee_form.role.label }}</label>
+                                <div class="controls">
+                                    {{ assigned_employee_form.role }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {{ assigned_employee_formset.management_form }}
+                    </div>
+
+                    <!-- End #assigned-employees tab-pane -->
 
                 </div>
             </div>

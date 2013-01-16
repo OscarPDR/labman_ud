@@ -20,6 +20,7 @@ def add_project(request):
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
+    assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
 
     if request.method == 'POST':
         project_form = ProjectForm(request.POST, request.FILES, prefix = 'project_form')
@@ -28,6 +29,7 @@ def add_project(request):
 
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
+            assigned_employee_formset = AssignedEmployeeFormSet(instance = project, prefix = 'assigned_employee_formset')
 
             cd_p = project_form.cleaned_data
 
@@ -106,16 +108,33 @@ def add_project(request):
                             else:
                                 print "No fundings amounts to save"
 
+            if assigned_employee_formset.is_valid():
+                for assigned_employee_form in assigned_employee_formset:
+                        if (len(assigned_employee_form.cleaned_data) > 0):
+                            cd_ae = assigned_employee_form.cleaned_data
+
+                            assigned_employee = AssignedEmployee(
+                            )
+
+                            assigned_employee.project = project
+
+                            assigned_employee.save()
+
+                        else:
+                            print "No assigned employees to save"
+
             return HttpResponseRedirect("/proyectos")
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
         funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
+        assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'funding_amount_formset')
 
     return render_to_response("project_manager/add.html", {
             "project_form": project_form,
             "funding_program_form": funding_program_form,
             "funding_amount_formset": funding_amount_formset,
+            "assigned_employee_formset": assigned_employee_formset,
         },
         context_instance=RequestContext(request))
 

@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 
 from organization_manager.models import Organization
-# from employee_manager.models import Employee
+from employee_manager.models import Employee
 
 PROJECT_TYPES = (
     ('Project', 'Proyecto'),
