@@ -1,0 +1,35 @@
+[
+    {
+        "model": "organization_manager.organization",
+        "pk": 1,
+        "fields": {
+            "name": "Ministerio de Industria",
+            "country": "Spain",
+            "homepage": "https://www.mityc.es",
+            "logo": "",
+            "slug": "ministerio-de-industria"
+        }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 2,
+        "fields": {
+            "name": "Universidad de Deusto",
+            "country": "Spain",
+            "homepage": "https://www.deusto.es",
+            "logo": "",
+            "slug": "universidad-de-deusto"
+        }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 3,
+        "fields": {
+            "name": "Treelogic",
+            "country": "Spain",
+            "homepage": "https://www.treelogic.com",
+            "logo": "",
+            "slug": "treelogic"
+        }
+    }
+]

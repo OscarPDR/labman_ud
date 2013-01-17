@@ -40,13 +40,21 @@ header {
 	text-align: center;
 	width: 100%;
 	line-height: 8em;
-	background-color: #bbeeff;
-	border-bottom: #0055bb 0.5em solid;
+	background-color: whiteSmoke;
+	border-bottom: #e5e5e5 0.5em solid;
 	margin: 0 auto;
 }
 
 header img {
 	margin: 0 1em;
+}
+
+.tab-content {
+	min-height: 500px;
+}
+
+ul.nav.nav-tabs {
+	min-height: 500px;
 }
 
 .dynamic-form {
@@ -94,7 +102,7 @@ footer {
 	width: 100%;
 	line-height: 5em;
 	min-height: 5em;
-	background-color: #bbeeff;
-	border-top: #0055bb 0.5em solid;
+	background-color: whiteSmoke;
+	border-top: #999 0.5em solid;
 	margin: 0 auto;
 }

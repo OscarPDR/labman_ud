@@ -9,6 +9,7 @@ from project_manager.models import *
 
 FundingAmountFormSet = inlineformset_factory(Project, FundingAmount, extra = 10)
 AssignedEmployeeFormSet = inlineformset_factory(Project, AssignedEmployee, extra = 1)
+ConsortiumMemberFormSet = inlineformset_factory(Project, ConsortiumMember, extra = 1)
 
 class URLInput(widgets.Input):
     input_type = 'url'

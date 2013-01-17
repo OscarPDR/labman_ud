@@ -8,15 +8,19 @@
 
         <legend>Añadir un nuevo proyecto</legend>
 
+        <br />
+
         <fieldset>
 
-            <div class="tabbable">
+            <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General</a></li>
                     <li><a href="#additional" data-toggle="tab"><span class="badge">2</span> Información adicional</a></li>
                     <li><a href="#funding-program" data-toggle="tab"><span class="badge">3</span> Programa de financiación</a></li>
                     <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
                     <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">5</span> Personas asignadas</a></li>
+                    <li><a href="#consortium-members" data-toggle="tab"><span class="badge">6</span> Miembros del consorcio</a></li>
+                    <li><a href="#submit" data-toggle="tab"><span class="badge">7</span> Archivar proyecto</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -154,14 +158,39 @@
 
                     <!-- End #assigned-employees tab-pane -->
 
+                    <!-- End #consortium-members tab-pane -->
+
+                    <div class="tab-pane" id="consortium-members">
+                        <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                {% for consortium_member_form in consortium_member_formset.forms %}
+                                    <tr>
+                                        <th>{{ consortium_member_form.organization.label }}</th>
+                                        <td>{{ consortium_member_form.organization }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {{ consortium_member_formset.management_form }}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- End #consortium-members tab-pane -->
+
+                    <!-- End #submit tab-pane -->
+
+                    <div class="tab-pane" id="submit">
+                        <div class="form-actions">
+                            <button type="submit" name="submit" class="btn btn-primary">Añadir</button>
+                            <button type="reset" class="btn">Limpiar</button>
+                            <a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
+                        </div>
+                    </div>
+
+                    <!-- End #submit tab-pane -->
+
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" name="submit" class="btn btn-primary">Añadir</button>
-                <button type="reset" class="btn">Limpiar</button>
-                <a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
-            </div>
         </fieldset>
     </form>
 
@@ -176,6 +205,14 @@
             $('#assigned_employee_formset tbody tr').formset({
                 prefix: '{{ assigned_employee_formset.prefix }}',
                 addText: 'Añadir empleado',
+                addCssClass: 'btn btn-info',
+                deleteText: ' Eliminar',
+                deleteCssClass: 'btn',
+            });
+
+            $('#consortium_member_formset tbody tr').formset({
+                prefix: '{{ consortium_member_formset.prefix }}',
+                addText: 'Añadir miembro del consorcio',
                 addCssClass: 'btn btn-info',
                 deleteText: ' Eliminar',
                 deleteCssClass: 'btn',

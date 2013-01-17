@@ -243,3 +243,8 @@ class AssignedEmployee(models.Model):
         default = 'Researcher',
         verbose_name = 'Rol'
     )
+
+
+class ConsortiumMember(models.Model):
+    project = models.ForeignKey(Project)
+    organization = models.ForeignKey(Organization, verbose_name = "Organización")
