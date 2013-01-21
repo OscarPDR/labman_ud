@@ -72,6 +72,10 @@ ul.nav.nav-tabs {
 	margin-left: 1.5em;
 }
 
+#pr_funding_details ul {
+	padding-left: 2.5em;
+}
+
 #generate-email {
 	margin-top: 2em;
 	margin-left: 40px;
