@@ -31,6 +31,21 @@ CURRENCIES = (
     ('Dollar', 'Dólar'),
 )
 
+MONTHS = (
+    ('1', 'January'),
+    ('2', 'February'),
+    ('3', 'March'),
+    ('4', 'April'),
+    ('5', 'May'),
+    ('6', 'June'),
+    ('7', 'July'),
+    ('8', 'August'),
+    ('9', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December'),
+)
+
 GEOGRAPHICAL_SCOPE = (
     ('Province', 'Provincia'),
     ('State', 'Comunidad autónoma'),
@@ -158,8 +173,10 @@ class FundingProgram(models.Model):
         verbose_name = 'Código del proyecto',
     )
 
-    start_month = models.IntegerField(
-        validators = [MinValueValidator(1), MaxValueValidator(12)],
+    start_month = models.CharField(
+        max_length= 15,
+        choices = MONTHS,
+        default = '1',
         verbose_name = 'Mes de comienzo'
     )
 
@@ -168,8 +185,10 @@ class FundingProgram(models.Model):
         verbose_name = 'Año de comienzo'
     )
 
-    end_month = models.IntegerField(
-        validators = [MinValueValidator(1), MaxValueValidator(12)],
+    end_month = models.CharField(
+        max_length= 15,
+        choices = MONTHS,
+        default = '12',
         verbose_name = 'Mes de fin'
     )
 

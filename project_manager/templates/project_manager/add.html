@@ -16,7 +16,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General</a></li>
                     <li><a href="#additional" data-toggle="tab"><span class="badge">2</span> Información adicional</a></li>
-                    <li><a href="#funding-program" data-toggle="tab"><span class="badge">3</span> Programa de financiación</a></li>
+                    <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">3</span> Programa de financiación</a></li>
                     <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
                     <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">5</span> Personas asignadas</a></li>
                     <li><a href="#consortium-members" data-toggle="tab"><span class="badge">6</span> Miembros del consorcio</a></li>
@@ -233,6 +233,29 @@
                     var label = amount_form.children[0];
                     label.innerHTML = "Año " + (start_year + i);
                 }
+            }
+        }
+    </script>
+
+    <script>
+        function autofillDuration() {
+            try {
+                var start_year = document.getElementById("id_project_form-start_year").value;
+                if (start_year != "") {
+                    document.getElementById("id_funding_program_form-start_year").value = start_year;
+                    document.getElementById("id_funding_program_form-concession_year").value = start_year;
+                }
+            }
+            catch (err) {
+            }
+
+            try {
+                var end_year = document.getElementById("id_project_form-end_year").value;
+                if (end_year != "") {
+                    document.getElementById("id_funding_program_form-end_year").value = end_year;
+                }
+            }
+            catch (err) {
             }
         }
     </script>
