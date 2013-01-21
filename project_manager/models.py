@@ -130,11 +130,13 @@ class Project(models.Model):
         null = True,
     )
 
-    slug = models.SlugField()
+    slug = models.SlugField(
+        blank = True,
+    )
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.title))
-        print "Proyecto guardado"
+        if self.slug == "":
+            self.slug = slugify(str(self.title))
         super(Project, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):

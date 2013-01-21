@@ -3,9 +3,114 @@
 
 {% block content %}
 
-    <h1>{{ project.title }}</h1>
+    <h2>{{ project.title }}</h2>
 
-    <a href="../email/{{ project.slug }}">Generar email</a>
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#pr_general_info" data-toggle="tab">General</a></li>
+            <li><a href="#pr_funding_details" data-toggle="tab">Financiación</a></li>
+            <li><a href="#pr_consortium_members" data-toggle="tab">Miembros del consorcio</a></li>
+            <li><a href="#pr_assigned_employees" data-toggle="tab">Empleados</a></li>
+
+            <a id="generate-email" class="btn btn-small" href="../email/{{ project.slug }}">Generar email</a>
+        </ul>
+
+        <div class="tab-content project-template">
+
+            <!-- begin tab-pane #pr_general_info -->
+
+            <div class="tab-pane active" id="pr_general_info">
+
+                <h5>Description:</h5>
+                <p>
+                    {{ project.description }}
+                </p>
+
+                <br>
+
+                <h5>Duration:</h5>
+                <p>
+                     {{ project.start_year }} - {{ project.end_year }} ({{ project.status }})
+                </p>
+
+            </div>
+
+            <!-- end tab-pane #pr_general_info -->
+
+            <!-- begin tab-pane #pr_funding_details -->
+
+            <div class="tab-pane" id="pr_funding_details">
+
+                <h5>Supported by:</h5>
+                <p>
+                     {{ funding_program.name }}, {{ funding_program.organization.name }}
+                </p>
+
+                <br>
+
+                <h5>Project code:</h5>
+                <p>
+                     {{ funding_program.project_code }}
+                </p>
+
+                <h5>Funding duration:</h5>
+                <p>
+                     Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ funding_program.start_year }} - {{ funding_program.end_year }} period.
+                </p>
+
+                <h5>Funding amount:</h5>
+                <p>
+                     The project is valued in {{ funding_program.concession_year }} €, DeustoTech receiving {{ total_deusto.amount__sum }} € in the following way:
+                </p>
+                <ul>
+                    {% for funding_amount in funding_amounts %}
+                        <li><strong>Año {{ funding_amount.year }}:</strong> {{ funding_amount.amount }} €</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            <!-- end tab-pane #pr_funding_details -->
+
+            <!-- begin tab-pane #pr_consortium_members -->
+
+            <div class="tab-pane" id="pr_consortium_members">
+
+                <ul>
+                    {% for consortium_member in consortium_members %}
+                        <li>
+                            <a target="_blank" href="{{ consortium_member.organization.homepage }}">
+                                <i class="icon-globe"></i>
+                            </a>
+                            {{ consortium_member.organization.name }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            <!-- end tab-pane #pr_consortium_members -->
+
+            <!-- begin tab-pane #pr_assigned_employees -->
+
+            <div class="tab-pane" id="pr_assigned_employees">
+
+                <ul>
+                    {% for assigned_employee in assigned_employees %}
+                        <li>
+                            <i class="icon-user"></i>
+
+                            {{ assigned_employee.employee.name }} {{ assigned_employee.employee.first_surname }} {{ assigned_employee.employee.second_surname }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            <!-- end tab-pane #pr_assigned_employees -->
+        </div>
+
+    </div>
 
 {% endblock %}
 

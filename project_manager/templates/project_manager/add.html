@@ -28,6 +28,7 @@
                     <!-- General form fields -->
 
                     <div class="tab-pane active" id="general">
+
                         <div class="control-group">
                             <label class="control-label">{{ project_form.project_type.label }}</label>
                             <div class="controls">
@@ -39,6 +40,13 @@
                             <label class="control-label">{{ project_form.title.label }}</label>
                             <div class="controls">
                                 {{ project_form.title }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">{{ project_form.slug.label }}</label>
+                            <div class="controls">
+                                {{ project_form.slug }}
                             </div>
                         </div>
 

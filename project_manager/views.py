@@ -89,11 +89,7 @@ def add_project(request):
             # # FIXME
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
-                    print "funding amount de " + str(current_year)
-                    print "hay cleaned data: " + str(len(funding_amount_form.cleaned_data))
-                    print str(current_year) + " < " + str(cd_f['end_year'])
                     if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= cd_f['end_year']):
-                        print "entra"
                         cd_fa = funding_amount_form.cleaned_data
 
                         funding_amount = FundingAmount(
@@ -103,7 +99,6 @@ def add_project(request):
                         )
 
                         funding_amount.save()
-                        print "funding_amount.save()"
 
                         current_year += 1
 
@@ -162,8 +157,23 @@ def add_project(request):
 def info_project(request, slug):
     project = get_object_or_404(Project, slug=slug)
 
+    funding_program = FundingProgram.objects.get(project_id = project.id)
+
+    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+
+    total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
+
+    funding_amounts = FundingAmount.objects.filter(project_id = project.id)
+
+    consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
+
     return render_to_response("project_manager/info.html", {
-            "project": project,
+            'project': project,
+            'funding_program': funding_program,
+            'assigned_employees': assigned_employees,
+            'total_deusto': total_deusto,
+            'funding_amounts': funding_amounts,
+            'consortium_members': consortium_members,
         },
         context_instance=RequestContext(request))
 
@@ -197,7 +207,12 @@ def email_project(request, slug):
     })
     text_content = strip_tags(html_content)
 
-    msg = EmailMultiAlternatives('Prueba', text_content, 'oscar.pdr@gmail.com', ['oscar.pdr@gmail.com'])
+    msg = EmailMultiAlternatives(
+        'Nuevo proyecto',               # subject
+        text_content,                     # message
+        'oscar.pdr@gmail.com',      # from
+        ['oscar.pdr@gmail.com']     # to
+    )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 

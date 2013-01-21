@@ -18,7 +18,7 @@
         {% endif %}
 
         <p>
-            <strong>Funding amount for DeustoTech:</strong> {{ total_deusto }} €
+            <strong>Funding amount for DeustoTech:</strong> {{ total_deusto.amount__sum }} €
             {% if project.total_funding_amount %}
                 (from a total project funding of {{ project.total_funding_amount }})
             {% endif %}
@@ -34,19 +34,14 @@
 
         <p>
             <strong>Consortium members:</strong>
-            <!-- {% for organization in consortium_members|slice:":-1" %}
-                {{ organization }},
-            {% endfor %}
-            {{ consortium_members|last }}
-            . -->
-                <ul>
-                    {% for organization in consortium_members %}
-                        <li>{{ organization }}</li>
-                    {% endfor %}
-                </ul>
+            <ul>
+                {% for organization in consortium_members %}
+                    <li>{{ organization }}</li>
+                {% endfor %}
+            </ul>
         </p>
 
-        <p>
+        <p style="margin-top: 1em; margin-bottom: 1em;">
             {{ project.description }}
         </p>
 
@@ -56,9 +51,11 @@
 
         <img src="#"/>
 
-        <pre>
+        <div style="border-top: 3px solid #CCCCCC; width: 100%; margin-top: 1em; margin-bottom: 1em;"></div>
 
-        </pre>
+        <p>
+            {{ project.observations }}
+        </p>
 
     </body>
 </html>

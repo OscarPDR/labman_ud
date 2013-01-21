@@ -57,6 +57,26 @@ ul.nav.nav-tabs {
 	min-height: 500px;
 }
 
+.tab-divider {
+	border-top: #ddd 1px solid;
+	padding-bottom: 3px;
+	margin-left: 2em;
+}
+
+.project-template {
+	margin-top: 1.5em;
+	padding-left: 1.5em;
+}
+
+.project-template p {
+	margin-left: 1.5em;
+}
+
+#generate-email {
+	margin-top: 2em;
+	margin-left: 40px;
+}
+
 .dynamic-form {
 	margin-bottom: 20px;
 	display: block;
