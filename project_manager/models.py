@@ -267,3 +267,6 @@ class AssignedEmployee(models.Model):
 class ConsortiumMember(models.Model):
     project = models.ForeignKey(Project)
     organization = models.ForeignKey(Organization, verbose_name = "Organización")
+
+    def __unicode__(self):
+        return u'proyecto %s - organización %s' % (self.project.title, self.organization.id)

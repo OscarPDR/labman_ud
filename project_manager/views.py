@@ -1,8 +1,16 @@
+# coding: utf-8
+
 # Create your views here.
 
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+
+from django.db.models import Sum
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from project_manager.models import *
 from project_manager.forms import *
@@ -12,6 +20,7 @@ from employee_manager.forms import *
 
 from organization_manager.models import *
 from organization_manager.forms import *
+
 
 def project_index(request):
     projects = Project.objects.all()
@@ -148,6 +157,51 @@ def add_project(request):
             "consortium_member_formset": consortium_member_formset,
         },
         context_instance=RequestContext(request))
+
+
+def info_project(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+
+    return render_to_response("project_manager/info.html", {
+            "project": project,
+        },
+        context_instance=RequestContext(request))
+
+
+def email_project(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+
+    funding_program = FundingProgram.objects.get(project_id = project.id)
+
+    lpm = AssignedEmployee.objects.get(project_id = project.id, role = 'LocalProjectManager')
+    project_manager = Employee.objects.get(id = lpm.employee_id)
+
+    lpr = AssignedEmployee.objects.get(project_id = project.id, role = 'LocalPrincipalResearcher')
+    principal_researcher = Employee.objects.get(id = lpr.employee_id)
+
+    total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
+
+    consortium_members = []
+
+    for consortium_member in ConsortiumMember.objects.all().filter(project_id = project.id):
+        org = Organization.objects.get(id = consortium_member.organization.id)
+        consortium_members.append(org.name)
+
+    html_content = render_to_string('project_manager/project_email_template.html', {
+        'project': project,
+        'funding_program': funding_program,
+        'project_manager': project_manager,
+        'principal_researcher': principal_researcher,
+        'total_deusto': total_deusto,
+        'consortium_members': consortium_members,
+    })
+    text_content = strip_tags(html_content)
+
+    msg = EmailMultiAlternatives('Prueba', text_content, 'oscar.pdr@gmail.com', ['oscar.pdr@gmail.com'])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    return HttpResponseRedirect('/proyectos')
 
 
 def delete_project(request, slug):

@@ -1,0 +1,13 @@
+{% extends "projects_morelab/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <h1>{{ project.title }}</h1>
+
+    <a href="../email/{{ project.slug }}">Generar email</a>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

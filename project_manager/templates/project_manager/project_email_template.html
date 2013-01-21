@@ -1,0 +1,64 @@
+<html>
+    <body>
+
+        <h2>
+            <a href="#">{{ project.title }}</a>
+        </h2>
+
+        <img src="#"/>
+
+        <p>
+            <strong>Duration:</strong> {{ project.start_year }} - {{ project.end_year }}
+        </p>
+
+        {% if funding_program %}
+            <p>
+                <strong>Supported by:</strong> {{ funding_program.name }}, {{ funding_program.organization.name }}
+            </p>
+        {% endif %}
+
+        <p>
+            <strong>Funding amount for DeustoTech:</strong> {{ total_deusto }} €
+            {% if project.total_funding_amount %}
+                (from a total project funding of {{ project.total_funding_amount }})
+            {% endif %}
+        </p>
+
+        <p>
+            <strong>Project manager:</strong> {{ project_manager }}
+        </p>
+
+        <p>
+            <strong>Principal researcher:</strong> {{ principal_researcher }}
+        </p>
+
+        <p>
+            <strong>Consortium members:</strong>
+            <!-- {% for organization in consortium_members|slice:":-1" %}
+                {{ organization }},
+            {% endfor %}
+            {{ consortium_members|last }}
+            . -->
+                <ul>
+                    {% for organization in consortium_members %}
+                        <li>{{ organization }}</li>
+                    {% endfor %}
+                </ul>
+        </p>
+
+        <p>
+            {{ project.description }}
+        </p>
+
+        <p>
+            For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
+        </p>
+
+        <img src="#"/>
+
+        <pre>
+
+        </pre>
+
+    </body>
+</html>

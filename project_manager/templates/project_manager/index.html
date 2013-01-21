@@ -18,7 +18,7 @@
         <tbody>
             {% for project in projects %}
                 <tr>
-                    <td>{{ project.title }}</td>
+                    <td>{{ project.title }} <a class="btn btn-mini" href="info/{{ project.slug }}">Ver</a></td>
                     <td>{{ project.start_year }} - {{ project.end_year }}</td>
                     <td>{{ project.status }}</td>
                     <td><a class="btn btn-mini" target="_blank" href="{{ project.homepage }}">URL</a></td>
