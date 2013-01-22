@@ -5,6 +5,34 @@
 
     <h2>{{ organization.name}}</h2>
 
+    <div class="row-fluid">
+
+        <div class="span6">
+            <h6>Project leader in</h6>
+
+            <ul>
+                {% for project in projects_leaded %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span6">
+            <h6>Consortium member in</h6>
+
+            <ul>
+                {% for project in projects %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
 {% endblock %}
 
 {% block scripts %}

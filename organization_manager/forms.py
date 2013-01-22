@@ -1,17 +1,24 @@
 # coding: utf-8
 
 from django import forms
-from django.forms import ModelForm
 from django.forms import widgets
-from django.forms import fields
-from django.forms.models import inlineformset_factory
 
 from organization_manager.models import *
 
 # Create your forms here.
 
+
+#########################
+# Widget: URLInput
+#########################
+
 class URLInput(widgets.Input):
     input_type = 'url'
+
+
+#########################
+# Form: OrganizationForm
+#########################
 
 class OrganizationForm(forms.ModelForm):
     class Meta:
