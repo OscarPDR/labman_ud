@@ -19,7 +19,7 @@ def image_path(self, filename):
 class Organization(models.Model):
     name = models.CharField(
         max_length = 25,
-        verbose_name = 'Name',
+        verbose_name = 'Name *',    # Required
     )
 
     country = models.CharField(
