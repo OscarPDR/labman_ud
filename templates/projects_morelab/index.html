@@ -3,13 +3,30 @@
 
 {% block content %}
 
-	<h1>Acciones</h1>
+    <div class="row-fluid" id="main-page">
 
-	<a href="organizaciones/">Gestión de organizaciones</a>
-	<br>
-	<a href="{% url employee_index %}">Gestión de personas</a>
-	<br>
-	<a href="proyectos/">Gestión de proyectos</a>
+        <div class="span4">
+            <a href="{% url employee_index %}">
+                <img src="{{ STATIC_PREFIX }}img/employee.png">
+                Employee management
+            </a>
+        </div>
+
+        <div class="span4">
+            <a href="{% url project_index %}">
+                <img src="{{ STATIC_PREFIX }}img/project.png">
+                Project management
+            </a>
+        </div>
+
+        <div class="span4">
+            <a href="{% url organization_index %}">
+                <img src="{{ STATIC_PREFIX }}img/organization.png">
+                Organization management
+            </a>
+        </div>
+
+    </div>
 
 {% endblock %}
 

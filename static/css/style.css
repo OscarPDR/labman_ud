@@ -3,6 +3,15 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+a:hover {
+    text-decoration: none;
+}
+
+#main-page .span4 a {
+    text-align: center;
+    display: block;
+}
+
 .accordion-toggle {
     text-decoration: none;
 }

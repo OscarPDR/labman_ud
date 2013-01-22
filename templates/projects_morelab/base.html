@@ -3,45 +3,48 @@
 {% get_static_prefix as STATIC_PREFIX %}
 {% get_media_prefix as MEDIA_PREFIX %}
 
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
-	<title>Proyectos MORElab</title>
-	<link rel="shortcut icon" href="{{ STATIC_PREFIX }}img/favicon.ico">
+    <!doctype html>
+    <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <head>
+        <title>MORElab project management</title>
+        <link rel="shortcut icon" href="{{ STATIC_PREFIX }}img/favicon.ico">
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<meta name="description" content="">
-	<meta name="author" content="">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/style.css"/>
-	<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap-responsive.css"/>
-	<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap.css"/>
-</head>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap-responsive.css"/>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap.css"/>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/style.css"/>
 
-<body>
-	<header>
-		<a href="/">
-			<img id="logo" src="{{ STATIC_PREFIX }}img/morelab.png" width="150" />
-		</a>
-	</header>
+    </head>
 
-	<div class="container">
-		{% block content %}{% endblock %}
-	</div>
+    <body>
+        <header>
+            <a href="/">
+                <img id="logo" src="{{ STATIC_PREFIX }}img/morelab.png" width="150" />
+            </a>
+        </header>
 
-	<footer>
-	</footer>
-</body>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
 
-	<script src="{{ STATIC_PREFIX }}js/jquery-1.8.2.min.js"></script>
-	<script src="{{ STATIC_PREFIX }}js/bootstrap.js"></script>
-	{% block scripts %}{% endblock %}
+        <footer>
+        </footer>
+
+    </body>
+
+        <script src="{{ STATIC_PREFIX }}js/jquery-1.8.2.min.js"></script>
+        <script src="{{ STATIC_PREFIX }}js/bootstrap.js"></script>
+
+        {% block scripts %}{% endblock %}
 
 </html>
