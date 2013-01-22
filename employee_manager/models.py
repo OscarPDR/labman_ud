@@ -16,12 +16,12 @@ from organization_manager.models import Organization
 class Employee(models.Model):
     name = models.CharField(
         max_length = 25,
-        verbose_name = 'Name',
+        verbose_name = 'Name *',    # Required
     )
 
     first_surname = models.CharField(
         max_length = 25,
-        verbose_name = 'First surname',
+        verbose_name = 'First surname *',     # Required
     )
 
     second_surname = models.CharField(
