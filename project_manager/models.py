@@ -2,12 +2,12 @@
 
 import os
 
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.template.defaultfilters import slugify
 
-from organization_manager.models import Organization
 from employee_manager.models import Employee
+from organization_manager.models import Organization
 
 PROJECT_TYPES = (
     ('Project', 'Proyecto'),

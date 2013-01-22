@@ -30,7 +30,6 @@ PAGINATION_NUMBER = 5
 # View: project_index
 #########################
 
-
 def project_index(request):
     projects = Project.objects.all().order_by('title')
     paginator = Paginator(projects, PAGINATION_NUMBER)
@@ -51,8 +50,12 @@ def project_index(request):
     return render_to_response("project_manager/index.html", {
             "projects": projects,
         },
-        context_instance=RequestContext(request))
+        context_instance = RequestContext(request))
 
+
+#########################
+# View: add_project
+#########################
 
 def add_project(request):
     project_form = ProjectForm(prefix = 'project_form')
@@ -171,7 +174,7 @@ def add_project(request):
 
                 print 'Guardado líder del proyecto'
 
-            return HttpResponseRedirect("/proyectos")
+            return HttpResponseRedirect("/projects/email/" + project.slug)
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
@@ -188,11 +191,15 @@ def add_project(request):
             "consortium_member_formset": consortium_member_formset,
             "project_leader_form": project_leader_form,
         },
-        context_instance=RequestContext(request))
+        context_instance = RequestContext(request))
 
+
+#########################
+# View: info_project
+#########################
 
 def info_project(request, slug):
-    project = get_object_or_404(Project, slug=slug)
+    project = get_object_or_404(Project, slug = slug)
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
@@ -215,11 +222,15 @@ def info_project(request, slug):
             'consortium_members': consortium_members,
             'project_leader': project_leader,
         },
-        context_instance=RequestContext(request))
+        context_instance = RequestContext(request))
 
+
+#########################
+# View: email_project
+#########################
 
 def email_project(request, slug):
-    project = get_object_or_404(Project, slug=slug)
+    project = get_object_or_404(Project, slug = slug)
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
@@ -248,7 +259,7 @@ def email_project(request, slug):
     text_content = strip_tags(html_content)
 
     msg = EmailMultiAlternatives(
-        'Nuevo proyecto',               # subject
+        'New project',               # subject
         text_content,                     # message
         'oscar.pdr@gmail.com',      # from
         ['oscar.pdr@gmail.com']     # to
@@ -256,8 +267,12 @@ def email_project(request, slug):
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
-    return HttpResponseRedirect('/proyectos')
+    return HttpResponseRedirect('/projects')
 
+
+#########################
+# View: delete_project
+#########################
 
 def delete_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
