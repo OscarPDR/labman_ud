@@ -234,13 +234,15 @@ def email_project(request, slug):
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
-    lpm = AssignedEmployee.objects.get(project_id = project.id, role = 'LocalProjectManager')
-    project_manager = Employee.objects.get(id = lpm.employee_id)
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalProjectManager').values('employee_id')
+    project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
-    lpr = AssignedEmployee.objects.get(project_id = project.id, role = 'LocalPrincipalResearcher')
-    principal_researcher = Employee.objects.get(id = lpr.employee_id)
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalPrincipalResearcher').values('employee_id')
+    principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
     total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
+
+    project_leader = ProjectLeader.objects.get(project_id = project.id)
 
     consortium_members = []
 
@@ -251,18 +253,19 @@ def email_project(request, slug):
     html_content = render_to_string('project_manager/project_email_template.html', {
         'project': project,
         'funding_program': funding_program,
-        'project_manager': project_manager,
-        'principal_researcher': principal_researcher,
+        'project_managers': project_managers,
+        'principal_researchers': principal_researchers,
         'total_deusto': total_deusto,
+        'project_leader': project_leader,
         'consortium_members': consortium_members,
     })
     text_content = strip_tags(html_content)
 
     msg = EmailMultiAlternatives(
-        'New project',               # subject
-        text_content,                     # message
-        'oscar.pdr@gmail.com',      # from
-        ['oscar.pdr@gmail.com']     # to
+        '[NEW PROJECT]: ' + project.title,        # subject
+        text_content,                                       # message
+        'oscar.pdr@gmail.com',                      # from
+        ['oscar.pdr@gmail.com']                     # to
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()

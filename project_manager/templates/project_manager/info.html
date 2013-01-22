@@ -9,12 +9,12 @@
 
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#pr_general_info" data-toggle="tab">General</a></li>
-            <li><a href="#pr_funding_details" data-toggle="tab">Financiación</a></li>
-            <li><a href="#pr_consortium_members" data-toggle="tab">Miembros del consorcio</a></li>
-            <li><a href="#pr_assigned_employees" data-toggle="tab">Empleados</a></li>
+            <li class="active"><a href="#pr_general_info" data-toggle="tab">General information</a></li>
+            <li><a href="#pr_funding_details" data-toggle="tab">Funding details</a></li>
+            <li><a href="#pr_consortium_members" data-toggle="tab">Consortium members</a></li>
+            <li><a href="#pr_assigned_employees" data-toggle="tab">Employees</a></li>
 
-            <a id="generate-email" class="btn btn-small" href="../email/{{ project.slug }}">Generar email</a>
+            <a id="generate-email" class="btn btn-small btn-inverse" href="../email/{{ project.slug }}">Generate email</a>
         </ul>
 
         <div class="tab-content project-template">
@@ -22,6 +22,13 @@
             <!-- begin tab-pane #pr_general_info -->
 
             <div class="tab-pane active" id="pr_general_info">
+
+                <h5>Proyect type:</h5>
+                <p>
+                     {{ project.project_type }}
+                </p>
+
+                <br>
 
                 <h5>Duration:</h5>
                 <p>
@@ -55,10 +62,14 @@
                      {{ funding_program.project_code }}
                 </p>
 
+                <br>
+
                 <h5>Funding duration:</h5>
                 <p>
                      Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ funding_program.start_year }} - {{ funding_program.end_year }} period.
                 </p>
+
+                <br>
 
                 <h5>Funding amount:</h5>
                 <p>
@@ -85,6 +96,7 @@
                         </a>
                         <strong>{{ project_leader.organization.name }}</strong>
                     </li>
+                    <br>
                     {% for consortium_member in consortium_members %}
                         <li>
                             <a target="_blank" href="{{ consortium_member.organization.homepage }}">

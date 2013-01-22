@@ -2,7 +2,7 @@
     <body>
 
         <h2>
-            <a href="#">{{ project.title }}</a>
+            {{ project.title }}
         </h2>
 
         <img src="#"/>
@@ -24,17 +24,32 @@
             {% endif %}
         </p>
 
-        <p>
-            <strong>Project manager:</strong> {{ project_manager }}
-        </p>
+        {% if project_managers %}
+            <p>
+                <strong>Project manager{{ project_managers|pluralize }}:</strong>
+                <ul>
+                    {% for project_manager in project_managers %}
+                        <li>{{ project_manager }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+        {% endif %}
 
-        <p>
-            <strong>Principal researcher:</strong> {{ principal_researcher }}
-        </p>
+        {% if principal_researchers %}
+            <p>
+                <strong>Principal researcher{{ principal_researchers|pluralize }}:</strong>
+                <ul>
+                    {% for principal_researcher in principal_researchers %}
+                        <li>{{ principal_researcher }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+        {% endif %}
 
         <p>
             <strong>Consortium members:</strong>
             <ul>
+                <li><strong>{{ project_leader.organization.name }}</strong></li>
                 {% for organization in consortium_members %}
                     <li>{{ organization }}</li>
                 {% endfor %}
