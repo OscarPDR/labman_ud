@@ -3,35 +3,57 @@
 
 {% block content %}
 
+    <div class="center">
+        <a class="btn btn-info" href="{% url add_project %}">Add project</a>
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if projects.has_previous %}
+                <a href="?page={{ projects.previous_page_number }}"><< previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+            </span>
+
+            {% if projects.has_next %}
+                <a href="?page={{ projects.next_page_number }}">next >></a>
+            {% endif %}
+        </span>
+    </div>
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Título</th>
-                <th>Duración</th>
-                <th>Estado</th>
+                <th>Title</th>
+                <th>Duration</th>
+                <th>Status</th>
                 <th>Homepage</th>
-                <th>Editar</th>
-                <th>Borrar</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
             {% for project in projects %}
                 <tr>
-                    <td>{{ project.title }} <a class="btn btn-mini" href="info/{{ project.slug }}">Ver</a></td>
+                    <td>
+                        <a href="info/{{ project.slug }}">
+                            {{ project.title }}
+                        </a>
+                    </td>
                     <td>{{ project.start_year }} - {{ project.end_year }}</td>
                     <td>{{ project.status }}</td>
-                    <td><a class="btn btn-mini" target="_blank" href="{{ project.homepage }}">URL</a></td>
-                    <td><a class="btn btn-mini" href="edit/{{ project.slug }}">Editar</a></td>
-                    <td><a class="btn btn-mini" href="delete/{{ project.slug }}">Borrar</a></td>
+                    <td>
+                        <a target="_blank" href="{{ project.homepage }}">View</a></td>
+                    <td>
+                        <a class="btn btn-mini btn-inverse" href="edit/{{ project.slug }}">Edit</a>
+                        <a class="btn btn-mini btn-danger" href="delete/{{ project.slug }}">Delete</a>
+                    </td>
                 </tr>
-            {% empty %}
-                <tr>No hay ningún proyecto.</tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <a class="btn" href="{% url add_project %}">Añadir proyecto</a>
 
 {% endblock %}
 
