@@ -2,11 +2,9 @@
 
 import os
 
-from django import forms
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
-from django.core.files.storage import FileSystemStorage
 
 from organization_manager.models import Organization
 from employee_manager.models import Employee
@@ -24,11 +22,6 @@ PROJECT_STATUS = (
     ('NotStarted', 'Sin comenzar'),
     ('InDevelopment', 'En desarrollo'),
     ('Finished', 'Finalizado'),
-)
-
-CURRENCIES = (
-    ('Euro', 'Euro'),
-    ('Dollar', 'Dólar'),
 )
 
 MONTHS = (
@@ -61,6 +54,7 @@ ROLES = (
 )
 
 # Create your models here.
+
 
 def logo_path(self, filename):
     return self.slug + os.path.splitext(filename)[-1]
@@ -106,13 +100,10 @@ class Project(models.Model):
         verbose_name = 'Estado'
     )
 
-    # total_funds =
-
-    currency = models.CharField(
-        max_length = 25,
-        choices = CURRENCIES,
-        default = 'Euro',
-        verbose_name = 'Moneda'
+    total_funds = models.DecimalField(
+        max_digits = 10,
+        decimal_places = 2,
+        blank = True
     )
 
     # additional_info
@@ -160,6 +151,7 @@ class Project(models.Model):
 
         # Delete the file after the model
         storage.delete(path)
+
 
 class FundingProgram(models.Model):
     project = models.ForeignKey(Project)
