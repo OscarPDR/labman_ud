@@ -103,7 +103,8 @@ class Project(models.Model):
     total_funds = models.DecimalField(
         max_digits = 10,
         decimal_places = 2,
-        blank = True
+        blank = True,
+        verbose_name = 'Presupuesto total',
     )
 
     # additional_info

@@ -15,7 +15,6 @@
             <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General</a></li>
-                    <li><a href="#additional" data-toggle="tab"><span class="badge">2</span> Información adicional</a></li>
                     <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">3</span> Programa de financiación</a></li>
                     <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
                     <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">5</span> Personas asignadas</a></li>
@@ -84,19 +83,6 @@
                                 {{ project_form.status }}
                             </div>
                         </div>
-                    </div>
-
-                    <!-- End #general tab-pane -->
-
-                    <!-- Observations, logos and more -->
-
-                    <div class="tab-pane" id="additional">
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.currency.label }}</label>
-                            <div class="controls">
-                                {{ project_form.currency }}
-                            </div>
-                        </div>
 
                         <div class="control-group">
                             <label class="control-label">{{ project_form.observations.label }}</label>
@@ -113,7 +99,7 @@
                         </div>
                     </div>
 
-                    <!-- End #additional tab-pane -->
+                    <!-- End #general tab-pane -->
 
                     <!-- Funding program information -->
 
@@ -133,15 +119,24 @@
                     <!-- Funding amount information -->
 
                     <div class="tab-pane" id="funding-amount">
-                        {% for funding_amount_form in funding_amount_formset.forms %}
-                            <div class="control-group">
-                                <label class="control-label">{{ funding_amount_form.amount.label }}</label>
-                                <div class="controls">
-                                    {{ funding_amount_form.amount }}
-                                </div>
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ project_form.total_funds.label }}</label>
+                            <div class="controls">
+                                {{ project_form.total_funds }}
                             </div>
-                        {% endfor %}
-                        {{ funding_amount_formset.management_form }}
+                        </div>
+
+                        <div id="funding-amount-details">
+                            {% for funding_amount_form in funding_amount_formset.forms %}
+                                <div class="control-group">
+                                    <label class="control-label">{{ funding_amount_form.amount.label }}</label>
+                                    <div class="controls">
+                                        {{ funding_amount_form.amount }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {{ funding_amount_formset.management_form }}
+                        </div>
                     </div>
 
                     <!-- End #funding-amount tab-pane -->
@@ -230,7 +225,7 @@
 
     <script>
         function sortFundingAmountForms() {
-            var amount_forms = document.getElementById("funding-amount");
+            var amount_forms = document.getElementById("funding-amount-details");
             amount_forms.style.visibility = 'hidden';
             var start_year = parseInt(document.getElementById("id_funding_program_form-start_year").value);
             var end_year = parseInt(document.getElementById("id_funding_program_form-end_year").value);
