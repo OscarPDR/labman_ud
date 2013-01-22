@@ -1,21 +1,48 @@
 # coding: utf-8
 
-# Create your views here.
-
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from organization_manager.models import *
 from organization_manager.forms import *
 
-def index(request):
-    organizations = Organization.objects.all()
+# Create your views here.
+
+PAGINATION_NUMBER = 5
+
+
+#########################
+# View: organization_index
+#########################
+
+def organization_index(request):
+    organizations = Organization.objects.all().order_by('name')
+    paginator = Paginator(organizations, PAGINATION_NUMBER)
+
+    page = request.GET.get('page')
+
+    try:
+        organizations = paginator.page(page)
+
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        organizations = paginator.page(1)
+
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        organizations = paginator.page(paginator.num_pages)
 
     return render_to_response("organization_manager/index.html", {
             "organizations": organizations,
         },
         context_instance = RequestContext(request))
+
+
+#########################
+# View: add_organization
+#########################
 
 def add_organization(request):
     if request.method == 'POST':
@@ -29,8 +56,8 @@ def add_organization(request):
             homepage = cd['homepage']
 
             org = Organization(
-                name = name.encode('utf-8'), 
-                country = country.encode('utf-8'), 
+                name = name.encode('utf-8'),
+                country = country.encode('utf-8'),
                 homepage = homepage.encode('utf-8'),
                 logo = request.FILES['logo']
             )
@@ -46,6 +73,24 @@ def add_organization(request):
         },
         context_instance = RequestContext(request))
 
+
+#########################
+# View: info_organization
+#########################
+
+def info_organization(request, slug):
+    organization = get_object_or_404(Organization, slug = slug)
+
+    return render_to_response("organization_manager/info.html", {
+            "organization": organization,
+        },
+        context_instance = RequestContext(request))
+
+
+#########################
+# View: edit_organization
+#########################
+
 def edit_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
 
@@ -56,7 +101,6 @@ def edit_organization(request, slug):
             cd = form.cleaned_data
 
             organization.update()
-            print "image deleted"
 
             organization.name = cd['name'].encode('utf-8')
             organization.country = cd['country'].encode('utf-8')
@@ -65,7 +109,7 @@ def edit_organization(request, slug):
 
             organization.save()
 
-            return HttpResponseRedirect("/organizaciones")
+            return HttpResponseRedirect("/organizations")
     else:
         data = {
             'name': organization.name,
@@ -82,9 +126,13 @@ def edit_organization(request, slug):
         },
         context_instance = RequestContext(request))
 
+
+#########################
+# View: delete_organization
+#########################
+
 def delete_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
     organization.delete()
-    organizations = Organization.objects.all()
 
     return redirect('organization_index')

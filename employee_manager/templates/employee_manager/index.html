@@ -41,11 +41,13 @@
                         </a>
                     </td>
                     <td>
-                        <a target="_blank" href="{{ employee.foaf_link }}">View</a>
+                        {% if employee.foaf_link %}
+                            <a target="_blank" href="{{ employee.foaf_link }}">View</a>
+                        {% endif %}
                     </td>
                     <td>
-                        <a class="btn btn-mini" href="edit/{{ employee.slug }}">Edit</a>
-                        <a class="btn btn-mini" href="delete/{{ employee.slug }}">Delete</a>
+                        <a class="btn btn-mini btn-inverse" href="edit/{{ employee.slug }}">Edit</a>
+                        <a class="btn btn-mini btn-danger" href="delete/{{ employee.slug }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

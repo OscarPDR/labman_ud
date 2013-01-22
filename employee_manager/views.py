@@ -18,7 +18,7 @@ PAGINATION_NUMBER = 5
 #########################
 
 def employee_index(request):
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().order_by('name', 'first_surname', 'second_surname')
     paginator = Paginator(employees, PAGINATION_NUMBER)
 
     page = request.GET.get('page')
@@ -51,14 +51,14 @@ def add_employee(request):
 
             cd = form.cleaned_data
 
-            emp = Employee(
+            employee = Employee(
                 name = cd['name'].encode('utf-8'),
                 first_surname = cd['first_surname'].encode('utf-8'),
                 second_surname = cd['second_surname'].encode('utf-8'),
                 foaf_link = cd['foaf_link'],
             )
 
-            emp.save()
+            employee.save()
 
             return HttpResponseRedirect("/employees")
     else:

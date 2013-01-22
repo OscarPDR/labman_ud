@@ -3,42 +3,50 @@
 
 {% block content %}
 
-	<form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
-		{% csrf_token %}
-		
-		<legend>Editar la organización: {{ organization.name }}</legend>
-		
-		<fieldset>
-			{% for field in form %}
-				<div class="control-group">
-					<label class="control-label">{{ field.label }}</label>
-					<div class="controls">
-						{{ field }}
-					</div>
-				</div>
-			{% endfor %}
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
 
-			<div class="center">
-				<img class="edit-organization-logo" src="{{ MEDIA_PREFIX }}{{ organization.logo.name }}"/>
-			</div>
+        <legend><strong>Edit:</strong> {{ organization.name }}</legend>
 
-			<div class="form-actions">
-				<button type="submit" name="submit" class="btn btn-primary">Añadir</button>
-				<a class="btn btn-danger" href="{% url organization_index %}">Cancelar</a>
-			</div>
-		</fieldset>
-	</form>
+        <fieldset>
 
-	{% if form.errors %}
-		<div id="form-error">
-			<p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
-			<ul>
-			{% for field in form %}
-			<li>{{ field.errors|striptags }}</li>
-			{% endfor %}
-			</ul>
-		</div>
-	{% endif %}
+            {% for field in form %}
+
+                {% if field.errors %}
+
+                    <div class="control-group error">
+                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="center">
+                <img class="edit-organization-logo" src="{{ MEDIA_PREFIX }}{{ organization.logo.name }}"/>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Accept</button>
+                <a class="btn btn-danger" href="{% url organization_index %}">Cancel</a>
+            </div>
+
+        </fieldset>
+
+    </form>
 
 {% endblock %}
 

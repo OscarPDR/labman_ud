@@ -12,11 +12,34 @@ def image_path(self, filename):
     return self.slug + os.path.splitext(filename)[-1]
 
 
+#########################
+# Model: Organization
+#########################
+
 class Organization(models.Model):
-    name = models.CharField(max_length = 25, verbose_name = 'Nombre')
-    country = models.CharField(max_length = 500, verbose_name = 'País')
-    homepage = models.URLField(verbose_name = 'Homepage')
-    logo = models.ImageField(upload_to = image_path, verbose_name = 'Logotipo')
+    name = models.CharField(
+        max_length = 25,
+        verbose_name = 'Name',
+    )
+
+    country = models.CharField(
+        max_length = 500,
+        verbose_name = 'Country',
+        blank = True,
+    )
+
+    homepage = models.URLField(
+        verbose_name = 'Homepage',
+        blank = True,
+        null = True,
+    )
+
+    logo = models.ImageField(
+        upload_to = image_path,
+        verbose_name = 'Logo',
+        blank = True,
+        null = True,
+    )
 
     slug = models.SlugField()
 
@@ -39,11 +62,12 @@ class Organization(models.Model):
     def update(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
         storage = self.logo.storage
-        path = self.logo.path
 
-        print "Path update: " + path
-
-        os.remove(path)
-
-        # Delete the file after the model
-        storage.delete(path)
+        try:
+            path = self.logo.path
+            os.remove(path)
+            # Delete the file after the model
+            storage.delete(path)
+        except:
+            pass
+            # No previous logo

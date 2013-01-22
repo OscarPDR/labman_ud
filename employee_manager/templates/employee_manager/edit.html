@@ -6,7 +6,7 @@
     <form action="" method="post" class="form-horizontal">
         {% csrf_token %}
 
-        <legend>Edit: {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}</legend>
+        <legend><strong>Edit:</strong> {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}</legend>
 
         <fieldset>
 
@@ -39,7 +39,9 @@
                 <button type="submit" name="submit" class="btn btn-primary">Accept</button>
                 <a class="btn btn-danger" href="{% url employee_index %}">Cancel</a>
             </div>
+
         </fieldset>
+
     </form>
 
 {% endblock %}

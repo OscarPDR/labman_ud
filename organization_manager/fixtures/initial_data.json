@@ -5,7 +5,7 @@
         "fields": {
             "name": "Ministerio de Industria",
             "country": "Spain",
-            "homepage": "https://www.mityc.es",
+            "homepage": "http://www.mityc.es",
             "logo": "",
             "slug": "ministerio-de-industria"
         }
@@ -14,22 +14,55 @@
         "model": "organization_manager.organization",
         "pk": 2,
         "fields": {
-            "name": "Universidad de Deusto",
+            "name": "Ministerio de Ciencia e Innovación",
             "country": "Spain",
-            "homepage": "https://www.deusto.es",
+            "homepage": "http://www.micinn.es",
             "logo": "",
-            "slug": "universidad-de-deusto"
+            "slug": "ministerio-de-ciencia-e-innovacion"
         }
     },
     {
         "model": "organization_manager.organization",
         "pk": 3,
         "fields": {
+            "name": "Universidad de Deusto",
+            "country": "Spain",
+            "homepage": "http://www.deusto.es",
+            "logo": "",
+            "slug": "universidad-de-deusto"
+        }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 4,
+        "fields": {
+            "name": "Mondragón Unibertsitatea",
+            "country": "Spain",
+            "homepage": "http://www.mondragon.edu/es",
+            "logo": "",
+            "slug": "mondragon-unibertsitatea"
+        }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 5,
+        "fields": {
             "name": "Treelogic",
             "country": "Spain",
-            "homepage": "https://www.treelogic.com",
+            "homepage": "http://www.treelogic.com",
             "logo": "",
             "slug": "treelogic"
+        }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 6,
+        "fields": {
+            "name": "Bilbomática",
+            "country": "Spain",
+            "homepage": "http://www.bilbomatica.es/es",
+            "logo": "",
+            "slug": "bilbomatica"
         }
     }
 ]
