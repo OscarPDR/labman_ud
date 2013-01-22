@@ -265,3 +265,11 @@ class ConsortiumMember(models.Model):
 
     def __unicode__(self):
         return u'proyecto %s - organización %s' % (self.project.title, self.organization.id)
+
+
+class ProjectLeader(models.Model):
+    project = models.ForeignKey(Project)
+    organization = models.ForeignKey(Organization, verbose_name = "Organización líder")
+
+    def __unicode__(self):
+        return u'proyecto %s - organización líder %s' % (self.project.title, self.organization.id)

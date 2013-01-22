@@ -28,3 +28,9 @@ class FundingProgramForm(forms.ModelForm):
     class Meta:
         model = FundingProgram
         exclude = ('project')
+
+
+class ProjectLeaderForm(forms.ModelForm):
+    class Meta:
+        model = ProjectLeader
+        exclude = ('project')

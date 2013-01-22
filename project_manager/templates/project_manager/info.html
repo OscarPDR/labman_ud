@@ -62,7 +62,7 @@
 
                 <h5>Funding amount:</h5>
                 <p>
-                     The project is valued in {{ funding_program.concession_year }} €, DeustoTech receiving {{ total_deusto.amount__sum }} € in the following way:
+                     The project is valued in {{ project.total_funds }} €, DeustoTech receiving {{ total_deusto.amount__sum }} € in the following way:
                 </p>
                 <ul>
                     {% for funding_amount in funding_amounts %}
@@ -79,6 +79,12 @@
             <div class="tab-pane" id="pr_consortium_members">
 
                 <ul>
+                    <li>
+                        <a target="_blank" href="{{ project_leader.organization.homepage }}">
+                            <i class="icon-user"></i>
+                        </a>
+                        <strong>{{ project_leader.organization.name }}</strong>
+                    </li>
                     {% for consortium_member in consortium_members %}
                         <li>
                             <a target="_blank" href="{{ consortium_member.organization.homepage }}">

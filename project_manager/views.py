@@ -37,6 +37,7 @@ def add_project(request):
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
     assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
+    project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
@@ -47,6 +48,7 @@ def add_project(request):
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
             assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance = project, prefix = 'assigned_employee_formset')
             consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance = project, prefix = 'consortium_member_formset')
+            project_leader_form = ProjectLeaderForm(request.POST, instance = project, prefix = 'project_leader_form')
 
             cd_p = project_form.cleaned_data
 
@@ -57,7 +59,6 @@ def add_project(request):
             project.start_year = cd_p['start_year']
             project.end_year = cd_p['end_year']
             project.status = cd_p['status'].encode('utf-8')
-            project.currency = cd_p['currency'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
 
             # if request.FILES['logo']:
@@ -85,8 +86,6 @@ def add_project(request):
 
                 current_year = cd_f['start_year']
 
-
-            # # FIXME
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
                     if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= cd_f['end_year']):
@@ -136,6 +135,19 @@ def add_project(request):
                         else:
                             print "No assigned employees to save"
 
+            if project_leader_form.is_valid():
+                print "valid project leader"
+                cd_pl = project_leader_form.cleaned_data
+
+                project_leader = ProjectLeader(
+                    project = project,
+                    organization = cd_pl['organization']
+                )
+
+                project_leader.save()
+
+                print 'Guardado líder del proyecto'
+
             return HttpResponseRedirect("/proyectos")
     else:
         project_form = ProjectForm(prefix = 'project_form')
@@ -143,6 +155,7 @@ def add_project(request):
         funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
         assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
+        project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     return render_to_response("project_manager/add.html", {
             "project_form": project_form,
@@ -150,6 +163,7 @@ def add_project(request):
             "funding_amount_formset": funding_amount_formset,
             "assigned_employee_formset": assigned_employee_formset,
             "consortium_member_formset": consortium_member_formset,
+            "project_leader_form": project_leader_form,
         },
         context_instance=RequestContext(request))
 
@@ -167,6 +181,8 @@ def info_project(request, slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
+    project_leader = ProjectLeader.objects.get(project_id = project.id)
+
     return render_to_response("project_manager/info.html", {
             'project': project,
             'funding_program': funding_program,
@@ -174,6 +190,7 @@ def info_project(request, slug):
             'total_deusto': total_deusto,
             'funding_amounts': funding_amounts,
             'consortium_members': consortium_members,
+            'project_leader': project_leader,
         },
         context_instance=RequestContext(request))
 

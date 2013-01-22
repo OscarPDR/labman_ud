@@ -164,6 +164,13 @@
                     <!-- End #consortium-members tab-pane -->
 
                     <div class="tab-pane" id="consortium-members">
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ project_leader_form.organization.label }}</label>
+                            <div class="controls">
+                                {{ project_leader_form.organization }}
+                            </div>
+                        </div>
+
                         <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
                             <tbody>
                                 {% for consortium_member_form in consortium_member_formset.forms %}
