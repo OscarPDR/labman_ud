@@ -49,13 +49,24 @@ header {
     text-align: center;
     width: 100%;
     line-height: 8em;
+    min-height: 10em;
     background-color: whiteSmoke;
     border-bottom: #e5e5e5 0.5em solid;
     margin: 0 auto;
 }
 
 header img {
-    margin: 0 1em;
+    margin: 1em;
+}
+
+#logo-left {
+    float: left;
+    margin-left: 15em;
+}
+
+#logo-right {
+    float: right;
+    margin-right: 15em;
 }
 
 .tab-content {
