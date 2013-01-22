@@ -1,132 +1,140 @@
 
 * {
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .accordion-toggle {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .accordion-toggle:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 h3 {
-	text-align: center;
+    text-align: center;
 }
 
 h4 {
-	padding-top: 1em;
+    padding-top: 1em;
 }
 
 .container {
-	display: block;
-	min-height: 500px;
-	margin-top: 3em;
+    display: block;
+    min-height: 500px;
+    margin-top: 3em;
 }
 
 .edit-organization-logo {
-	margin: 1em;
-	width: 25%;
+    margin: 1em;
+    width: 25%;
 }
 
 .center {
-	display: block;
-	text-align: center;
-	width: 100%;
+    display: block;
+    text-align: center;
+    width: 100%;
 }
 
 header {
-	text-align: center;
-	width: 100%;
-	line-height: 8em;
-	background-color: whiteSmoke;
-	border-bottom: #e5e5e5 0.5em solid;
-	margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    line-height: 8em;
+    background-color: whiteSmoke;
+    border-bottom: #e5e5e5 0.5em solid;
+    margin: 0 auto;
 }
 
 header img {
-	margin: 0 1em;
+    margin: 0 1em;
 }
 
 .tab-content {
-	min-height: 500px;
+    min-height: 500px;
 }
 
 ul.nav.nav-tabs {
-	min-height: 500px;
+    min-height: 500px;
 }
 
 .tab-divider {
-	border-top: #ddd 1px solid;
-	padding-bottom: 3px;
-	margin-left: 2em;
+    border-top: #ddd 1px solid;
+    padding-bottom: 3px;
+    margin-left: 2em;
 }
 
 .project-template {
-	margin-top: 1.5em;
-	padding-left: 1.5em;
+    margin-top: 1.5em;
+    padding-left: 1.5em;
 }
 
 .project-template p {
-	margin-left: 1.5em;
+    margin-left: 1.5em;
 }
 
 #pr_funding_details ul {
-	padding-left: 2.5em;
+    padding-left: 2.5em;
 }
 
 #generate-email {
-	margin-top: 2em;
-	margin-left: 40px;
+    margin-top: 2em;
+    margin-left: 40px;
 }
 
 .dynamic-form {
-	margin-bottom: 20px;
-	display: block;
+    margin-bottom: 20px;
+    display: block;
 }
 
 .dynamic-form th {
-	width: 100px;
-	padding-top: 5px;
-	padding-right: 10px;
-	text-align: right;
+    width: 100px;
+    padding-top: 5px;
+    padding-right: 10px;
+    text-align: right;
 }
 
 .dynamic-form td {
-	margin-left: 180px;
+    margin-left: 180px;
 }
 
 .delete-formset-row {
-	margin-left: 1em;
+    margin-left: 1em;
 }
 
 .form-actions button, a {
-	margin: 0 1em;
+    margin: 0 1em;
 }
 
 .left {
-	float: left;
-	width: 50%;
-	text-align: center;
+    float: left;
+    width: 50%;
+    text-align: center;
 }
 
 .left a {
-	margin-top: 6em;
+    margin-top: 6em;
 }
 
 .right {
-	float: right;
-	width: 50%;
-	text-align: center;
+    float: right;
+    width: 50%;
+    text-align: center;
+}
+
+.pagination {
+    float: right;
+}
+
+.center {
+    text-align: center;
 }
 
 footer {
-	text-align: center;
-	width: 100%;
-	line-height: 5em;
-	min-height: 5em;
-	background-color: whiteSmoke;
-	border-top: #999 0.5em solid;
-	margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    line-height: 5em;
+    min-height: 5em;
+    background-color: whiteSmoke;
+    border-top: #999 0.5em solid;
+    margin: 0 auto;
 }

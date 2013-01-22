@@ -3,51 +3,54 @@
 
 {% block content %}
 
+    <div class="center">
+        <a class="btn btn-info" href="{% url add_employee %}">Add employee</a>
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if employees.has_previous %}
+                <a href="?page={{ employees.previous_page_number }}"><< previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ employees.number }} of {{ employees.paginator.num_pages }}
+            </span>
+
+            {% if employees.has_next %}
+                <a href="?page={{ employees.next_page_number }}">next >></a>
+            {% endif %}
+        </span>
+    </div>
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Link FOAF</th>
-                <th>Más información</th>
-                <th>Editar</th>
-                <th>Borrar</th>
+                <th>Full name</th>
+                <th>FOAF</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
             {% for employee in employees %}
                 <tr>
-                    <td>{{ employee.name }}</td>
-                    <td>{{ employee.first_surname }} {{ employee.second_surname }}</td>
-                    <td><a class="btn btn-mini" target="_blank" href="{{ employee.foaf_link }}">FOAF</a></td>
-                    <td><a class="btn btn-mini" href="info/{{ employee.slug }}">Ver</a></td>
-                    <td><a class="btn btn-mini" href="edit/{{ employee.slug }}">Editar</a></td>
-                    <td><a class="btn btn-mini" href="delete/{{ employee.slug }}">Borrar</a></td>
+                    <td>
+                        <a href="info/{{ employee.slug }}">
+                            {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
+                        </a>
+                    </td>
+                    <td>
+                        <a target="_blank" href="{{ employee.foaf_link }}">View</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-mini" href="edit/{{ employee.slug }}">Edit</a>
+                        <a class="btn btn-mini" href="delete/{{ employee.slug }}">Delete</a>
+                    </td>
                 </tr>
-            {% empty %}
-                <tr>No hay ningún empleado</tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if employees.has_previous %}
-                <a href="?page={{ employees.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ employees.number }} of {{ employees.paginator.num_pages }}.
-            </span>
-
-            {% if employees.has_next %}
-                <a href="?page={{ employees.next_page_number }}">next</a>
-            {% endif %}
-        </span>
-    </div>
-
-    <a class="btn" href="{% url add_employee %}">Añadir empleado</a>
 
 {% endblock %}
 

@@ -3,28 +3,30 @@
 
 {% block content %}
 
-	<form action="" method="post" class="form-horizontal">
-		{% csrf_token %}
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
 
-		<legend>Añadir un nuevo empleado</legend>
+        <legend>Add a new employee</legend>
 
-		<fieldset>
-			{% for field in form %}
-				<div class="control-group">
-					<label class="control-label">{{ field.label }}</label>
-					<div class="controls">
-						{{ field }}
-					</div>
-				</div>
-			{% endfor %}
+        <br>
 
-			<div class="form-actions">
-				<button type="submit" name="submit" class="btn btn-primary">Añadir</button>
-				<button type="reset" class="btn">Limpiar</button>
-				<a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
-			</div>
-		</fieldset>
-	</form>
+        <fieldset>
+            {% for field in form %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                <button type="reset" class="btn">Clean</button>
+                <a class="btn btn-danger" href="{% url employee_index %}">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
 
 {% endblock %}
 

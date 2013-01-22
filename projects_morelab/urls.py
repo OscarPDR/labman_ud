@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     (r'^organizaciones/', include('organization_manager.urls')),
-    (r'^personas/', include('employee_manager.urls')),
+    (r'^employees/', include('employee_manager.urls')),
     (r'^proyectos/', include('project_manager.urls')),
 
     # Just for development purposes, serve in another way in production

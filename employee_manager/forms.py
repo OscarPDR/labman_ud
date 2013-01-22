@@ -8,9 +8,17 @@ from employee_manager.models import *
 # Create your forms here.
 
 
+#########################
+# Class: URLInput
+#########################
+
 class URLInput(widgets.Input):
     input_type = 'url'
 
+
+#########################
+# Class: EmployeeForm
+#########################
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
@@ -20,6 +28,10 @@ class EmployeeForm(forms.ModelForm):
         }
         exclude = ('slug')
 
+
+#########################
+# Class: JobForm
+#########################
 
 class JobForm(forms.ModelForm):
     class Meta:
