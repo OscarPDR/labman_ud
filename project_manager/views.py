@@ -203,7 +203,14 @@ def info_project(request, slug):
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
-    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalPrincipalResearcher').values('employee_id')
+    principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
+
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalProjectManager').values('employee_id')
+    project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
+
+    rs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Researcher').values('employee_id')
+    researchers = Employee.objects.filter(id__in = rs).order_by('name', 'first_surname', 'second_surname')
 
     total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
 
@@ -216,7 +223,9 @@ def info_project(request, slug):
     return render_to_response("project_manager/info.html", {
             'project': project,
             'funding_program': funding_program,
-            'assigned_employees': assigned_employees,
+            'principal_researchers': principal_researchers,
+            'project_managers': project_managers,
+            'researchers': researchers,
             'total_deusto': total_deusto,
             'funding_amounts': funding_amounts,
             'consortium_members': consortium_members,

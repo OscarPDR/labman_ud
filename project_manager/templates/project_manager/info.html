@@ -9,10 +9,10 @@
 
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#pr_general_info" data-toggle="tab">General information</a></li>
-            <li><a href="#pr_funding_details" data-toggle="tab">Funding details</a></li>
-            <li><a href="#pr_consortium_members" data-toggle="tab">Consortium members</a></li>
-            <li><a href="#pr_assigned_employees" data-toggle="tab">Employees</a></li>
+            <li class="active"><a href="#pr_general_info" data-toggle="tab"><i class="icon-info-sign"></i> General information</a></li>
+            <li><a href="#pr_funding_details" data-toggle="tab"><i class="icon-list"></i> Funding details</a></li>
+            <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
+            <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
 
             <a id="generate-email" class="btn btn-small btn-inverse" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
         </ul>
@@ -77,7 +77,7 @@
                 </p>
                 <ul>
                     {% for funding_amount in funding_amounts %}
-                        <li><strong>Año {{ funding_amount.year }}:</strong> {{ funding_amount.amount }} €</li>
+                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount }} €</li>
                     {% endfor %}
                 </ul>
 
@@ -89,20 +89,24 @@
 
             <div class="tab-pane" id="pr_consortium_members">
 
+                <h5>Project leader:</h5>
                 <ul>
                     <li>
-                        <a target="_blank" href="{{ project_leader.organization.homepage }}">
-                            <i class="icon-user"></i>
+                        <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
+                            {{ project_leader.organization.name }}
                         </a>
-                        <strong>{{ project_leader.organization.name }}</strong>
                     </li>
-                    <br>
+                </ul>
+
+                <br>
+
+                <h5>Consortium members:</h5>
+                <ul>
                     {% for consortium_member in consortium_members %}
                         <li>
-                            <a target="_blank" href="{{ consortium_member.organization.homepage }}">
-                                <i class="icon-globe"></i>
+                            <a target="_blank" href="{% url info_organization consortium_member.organization.slug %}">
+                                {{ consortium_member.organization.name }}
                             </a>
-                            {{ consortium_member.organization.name }}
                         </li>
                     {% endfor %}
                 </ul>
@@ -115,15 +119,48 @@
 
             <div class="tab-pane" id="pr_assigned_employees">
 
-                <ul>
-                    {% for assigned_employee in assigned_employees %}
-                        <li>
-                            <i class="icon-user"></i>
+                {% if principal_researchers %}
+                    <h5>Principal researcher{{ principal_researchers|pluralize }}:</h5>
+                    <ul>
+                        {% for principal_researcher in principal_researchers %}
+                            <li>
+                                <a target="_blank" href="{% url info_employee principal_researcher.slug %}">
+                                    {{ principal_researcher.name }} {{ principal_researcher.first_surname }} {{ principal_researcher.second_surname }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
-                            {{ assigned_employee.employee.name }} {{ assigned_employee.employee.first_surname }} {{ assigned_employee.employee.second_surname }}
-                        </li>
-                    {% endfor %}
-                </ul>
+                    <br>
+                {% endif %}
+
+                {% if project_managers %}
+                    <h5>Project manager{{ project_managers|pluralize }}:</h5>
+                    <ul>
+                        {% for project_manager in project_managers %}
+                            <li>
+                                <a target="_blank" href="{% url info_employee project_manager.slug %}">
+                                    {{ project_manager.name }} {{ project_manager.first_surname }} {{ project_manager.second_surname }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <br>
+                {% endif %}
+
+                {% if researchers %}
+                    <h5>Principal researcher{{ researchers|pluralize }}:</h5>
+                    <ul>
+                        {% for researcher in researchers %}
+                            <li>
+                                <a target="_blank" href="{% url info_employee researcher.slug %}">
+                                    {{ researcher.name }} {{ researcher.first_surname }} {{ researcher.second_surname }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
             </div>
 

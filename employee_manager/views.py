@@ -8,6 +8,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from employee_manager.models import *
 from employee_manager.forms import *
 
+from project_manager.models import *
+from project_manager.forms import *
+
 # Create your views here.
 
 PAGINATION_NUMBER = 5
@@ -77,8 +80,20 @@ def add_employee(request):
 def info_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
 
+    apr = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'LocalPrincipalResearcher').values('project_id')
+    as_principal_researcher = Project.objects.filter(id__in = apr).order_by('title')
+
+    apm = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'LocalProjectManager').values('project_id')
+    as_project_manager = Project.objects.filter(id__in = apm).order_by('title')
+
+    ar = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'Researcher').values('project_id')
+    as_researcher = Project.objects.filter(id__in = ar).order_by('title')
+
     return render_to_response("employee_manager/info.html", {
-            "employee": employee,
+            'employee': employee,
+            'as_principal_researcher': as_principal_researcher,
+            'as_project_manager': as_project_manager,
+            'as_researcher': as_researcher,
         },
         context_instance = RequestContext(request))
 

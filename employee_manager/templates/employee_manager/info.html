@@ -5,6 +5,48 @@
 
     <h2>{{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}</h2>
 
+    <br>
+
+    <div class="row-fluid">
+
+        <div class="span4">
+            <h6>Principal researcher in</h6>
+
+            <ul>
+                {% for project in as_principal_researcher %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span4">
+            <h6>Project manager in</h6>
+
+            <ul>
+                {% for project in as_project_manager %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span4">
+            <h6>Researcher in</h6>
+
+            <ul>
+                {% for project in as_researcher %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
