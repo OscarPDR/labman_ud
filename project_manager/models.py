@@ -81,6 +81,10 @@ class Project(models.Model):
         verbose_name = 'Title *',    # Required
     )
 
+    slug = models.SlugField(
+        blank = True,
+    )
+
     description = models.TextField(
         max_length = 500,
         verbose_name = 'Description *',      #Required
@@ -129,10 +133,6 @@ class Project(models.Model):
         verbose_name = 'Logo',
         blank = True,
         null = True,
-    )
-
-    slug = models.SlugField(
-        blank = True,
     )
 
     def save(self, *args, **kwargs):
@@ -315,6 +315,9 @@ class ProjectLeader(models.Model):
 class ConsortiumMember(models.Model):
     project = models.ForeignKey(Project)
     organization = models.ForeignKey(Organization, verbose_name = "Organization *")     # Required
+
+    class Meta:
+        ordering = ["organization"]
 
     def __unicode__(self):
         return u'Project ID %s - Organization ID %s' % (self.project.title, self.organization.id)

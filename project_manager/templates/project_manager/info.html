@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <h2>{{ project.title }}</h2>
+    <a href="{% url project_index %}"><i class="icon-chevron-left"></i></a><h2>{{ project.title }}</h2>
 
     <br>
 
@@ -14,7 +14,7 @@
             <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
             <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
 
-            <a id="generate-email" class="btn btn-small btn-inverse" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
+            <a class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
         </ul>
 
         <div class="tab-content project-template">

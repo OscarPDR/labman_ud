@@ -71,3 +71,6 @@ class Organization(models.Model):
         except:
             pass
             # No previous logo
+
+    class Meta:
+        ordering = ['name']

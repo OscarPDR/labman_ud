@@ -46,6 +46,9 @@ class Employee(models.Model):
         self.slug = slugify(str(self.name) + str(' ' + self.first_surname) + str(' ' + self.second_surname))
         super(Employee, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['name', 'first_surname', 'second_surname']
+
 
 #########################
 # Model: Job

@@ -19,7 +19,9 @@
                     <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">3</span> Funding breakdown</a></li>
                     <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">4</span> Assigned employees</a></li>
                     <li><a href="#consortium-members" data-toggle="tab"><span class="badge">5</span> Consortium members</a></li>
-                    <li><a href="#submit" data-toggle="tab">Save</a></li>
+
+                    <button type="submit" name="submit" class="btn btn-small btn-primary tab-left-btn">Save</button>
+                    <a class="btn btn-small btn-danger tab-left-btn" href="{% url project_index %}">Cancel</a>
                 </ul>
 
                 <div class="tab-content">
@@ -28,75 +30,35 @@
 
                     <div class="tab-pane active" id="general">
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.project_type.label }}</label>
-                            <div class="controls">
-                                {{ project_form.project_type }}
-                            </div>
-                        </div>
+                        {% for field in project_form %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.title.label }}</label>
-                            <div class="controls">
-                                {{ project_form.title }}
-                            </div>
-                        </div>
+                            {% if field.label != 'Total funds' %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.slug.label }}</label>
-                            <div class="controls">
-                                {{ project_form.slug }}
-                            </div>
-                        </div>
+                                {% if field.errors %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.description.label }}</label>
-                            <div class="controls">
-                                {{ project_form.description }}
-                            </div>
-                        </div>
+                                    <div class="control-group error">
+                                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                                        </div>
+                                    </div>
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.homepage.label }}</label>
-                            <div class="controls">
-                                {{ project_form.homepage }}
-                            </div>
-                        </div>
+                                {% else %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.start_year.label }}</label>
-                            <div class="controls">
-                                {{ project_form.start_year }}
-                            </div>
-                        </div>
+                                    <div class="control-group">
+                                        <label class="control-label">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                        </div>
+                                    </div>
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.end_year.label }}</label>
-                            <div class="controls">
-                                {{ project_form.end_year }}
-                            </div>
-                        </div>
+                                {% endif %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.status.label }}</label>
-                            <div class="controls">
-                                {{ project_form.status }}
-                            </div>
-                        </div>
+                            {% endif %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.observations.label }}</label>
-                            <div class="controls">
-                                {{ project_form.observations }}
-                            </div>
-                        </div>
+                        {% endfor %}
 
-                        <div class="control-group">
-                            <label class="control-label">{{ project_form.logo.label }}</label>
-                            <div class="controls">
-                                {{ project_form.logo }}
-                            </div>
-                        </div>
                     </div>
 
                     <!-- End #general tab-pane -->
@@ -104,6 +66,7 @@
                     <!-- Funding program information -->
 
                     <div class="tab-pane" id="funding-program">
+
                         {% for funding_field in funding_program_form %}
                             <div class="control-group">
                                 <label class="control-label" id="label">{{ funding_field.label }}</label>
@@ -112,6 +75,7 @@
                                 </div>
                             </div>
                         {% endfor %}
+
                     </div>
 
                     <!-- End #funding-program tab-pane -->
@@ -188,18 +152,6 @@
 
                     <!-- End #consortium-members tab-pane -->
 
-                    <!-- End #submit tab-pane -->
-
-                    <div class="tab-pane" id="submit">
-                        <div class="form-actions">
-                            <button type="submit" name="submit" class="btn btn-primary">Añadir</button>
-                            <button type="reset" class="btn">Limpiar</button>
-                            <a class="btn btn-danger" href="{% url employee_index %}">Cancelar</a>
-                        </div>
-                    </div>
-
-                    <!-- End #submit tab-pane -->
-
                 </div>
             </div>
 
@@ -218,16 +170,16 @@
                 prefix: '{{ assigned_employee_formset.prefix }}',
                 addText: 'Add employee',
                 addCssClass: 'btn btn-info',
-                deleteText: '<i class="icon-remove icon-white" title="Delete"></i>',
-                deleteCssClass: 'btn btn-danger',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
             });
 
             $('#consortium_member_formset tbody tr').formset({
                 prefix: '{{ consortium_member_formset.prefix }}',
                 addText: 'Add consortium member',
                 addCssClass: 'btn btn-info',
-                deleteText: '<i class="icon-remove icon-white" title="Delete"></i>',
-                deleteCssClass: 'btn btn-danger',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
             });
         });
     </script>
