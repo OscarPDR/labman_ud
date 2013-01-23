@@ -101,6 +101,14 @@ ul.nav.nav-tabs {
     margin-left: 40px;
 }
 
+#employees-form th {
+    width: 75px;
+}
+
+#assigned_employee_formset {
+    width: 100%;
+}
+
 .dynamic-form {
     margin-bottom: 20px;
     display: block;
@@ -111,6 +119,7 @@ ul.nav.nav-tabs {
     padding-top: 5px;
     padding-right: 10px;
     text-align: right;
+    font-weight: normal;
 }
 
 .dynamic-form td {

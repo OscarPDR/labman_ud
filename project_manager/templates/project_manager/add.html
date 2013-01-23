@@ -14,12 +14,12 @@
 
             <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General</a></li>
-                    <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">3</span> Programa de financiación</a></li>
-                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">4</span> Desglose de financiación</a></li>
-                    <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">5</span> Personas asignadas</a></li>
-                    <li><a href="#consortium-members" data-toggle="tab"><span class="badge">6</span> Miembros del consorcio</a></li>
-                    <li><a href="#submit" data-toggle="tab"><span class="badge">7</span> Archivar proyecto</a></li>
+                    <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General information</a></li>
+                    <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">2</span> Funding program</a></li>
+                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">3</span> Funding breakdown</a></li>
+                    <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">4</span> Assigned employees</a></li>
+                    <li><a href="#consortium-members" data-toggle="tab"><span class="badge">5</span> Consortium members</a></li>
+                    <li><a href="#submit" data-toggle="tab">Save</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -146,7 +146,7 @@
                     <div class="tab-pane" id="assigned-employees">
                         {{ assigned_employee_formset.management_form }}
                         <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
-                            <tbody>
+                            <tbody id="employees-form">
                                 {% for assigned_employee_form in assigned_employee_formset.forms %}
                                     <tr>
                                         <th>{{ assigned_employee_form.employee.label }}</th>
@@ -170,6 +170,8 @@
                                 {{ project_leader_form.organization }}
                             </div>
                         </div>
+
+                        <br>
 
                         <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
                             <tbody>
@@ -214,18 +216,18 @@
         $(function() {
             $('#assigned_employee_formset tbody tr').formset({
                 prefix: '{{ assigned_employee_formset.prefix }}',
-                addText: 'Añadir empleado',
+                addText: 'Add employee',
                 addCssClass: 'btn btn-info',
-                deleteText: ' Eliminar',
-                deleteCssClass: 'btn',
+                deleteText: '<i class="icon-remove icon-white" title="Delete"></i>',
+                deleteCssClass: 'btn btn-danger',
             });
 
             $('#consortium_member_formset tbody tr').formset({
                 prefix: '{{ consortium_member_formset.prefix }}',
-                addText: 'Añadir miembro del consorcio',
+                addText: 'Add consortium member',
                 addCssClass: 'btn btn-info',
-                deleteText: ' Eliminar',
-                deleteCssClass: 'btn',
+                deleteText: '<i class="icon-remove icon-white" title="Delete"></i>',
+                deleteCssClass: 'btn btn-danger',
             });
         });
     </script>

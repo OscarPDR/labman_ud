@@ -1,0 +1,207 @@
+[
+    {
+        "model": "project_manager.project",
+        "pk": 1,
+        "fields": {
+            "project_type": "DevelopmentProject",
+            "title": "THOFU: Tecnologías del Hotel del Futuro",
+            "slug": "thofu",
+            "description": "THOFU is a large multidisciplinary R&D project which aims to enhance the offer of the hospitality sector through joint research on a new conception of the future hotel, from the spaces and their construction, to objects that reside in it, the interaction with guests, as well as the symbiosis with the Internet.",
+            "homepage": "http://www.thofu.es/inicio",
+            "start_year": 2010,
+            "end_year": 2013,
+            "status": "InDevelopment",
+            "total_funds": 1000000,
+            "observations": "",
+            "logo": ""
+        }
+    },
+    {
+        "model": "project_manager.project",
+        "pk": 2,
+        "fields": {
+            "project_type": "AppliedResearchProject",
+            "title": "SELENE",
+            "slug": "selene",
+            "description": "The goal of this project is to design, develop and evaluate a collaborative work environment based on social and semantic Web technologies to support networking innovation models in order to accelerate innovation processes through an architecture of participation and intelligent information management.",
+            "homepage": "http://www.morelab.deusto.es/selene/",
+            "start_year": 2009,
+            "end_year": 2011,
+            "status": "Finished",
+            "total_funds": 0,
+            "observations": "",
+            "logo": ""
+        }
+    },
+    {
+        "pk": 1,
+        "model": "project_manager.fundingprogram",
+        "fields": {
+            "project": 1,
+            "organization": 2,
+            "name": "Sexta Convocatoria Programa de Consorcios Estratégicos Nacionales en Investigación Técnica (CENIT)",
+            "project_code": "",
+            "start_month": "1",
+            "start_year": 2010,
+            "end_month": "12",
+            "end_year": 2013,
+            "concession_year": 2010,
+            "geographical_scope": "Spain"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "project_manager.fundingprogram",
+        "fields": {
+            "project": 2,
+            "organization": 2,
+            "name": "",
+            "project_code": "CIT-430000-2009-43",
+            "start_month": "5",
+            "start_year": 2009,
+            "end_month": "7",
+            "end_year": 2011,
+            "concession_year": 2008,
+            "geographical_scope": "Euskadi"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 130060,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 2,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 223760,
+            "year": 2012
+        }
+    },
+    {
+        "pk": 3,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 190230,
+            "year": 2013
+        }
+    },
+    {
+        "pk": 1,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 5,
+            "role": "LocalProjectManager"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 8,
+            "role": "LocalProjectManager"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 2,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 3,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 8,
+            "role": "LocalProjectManager"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 1,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 4,
+            "role": "LocalPrincipalResearcher"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 7,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "project_manager.consortiummember",
+        "fields": {
+            "project": 1,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 2,
+        "model": "project_manager.consortiummember",
+        "fields": {
+            "project": 1,
+            "organization": 5
+        }
+    },
+    {
+        "pk": 3,
+        "model": "project_manager.consortiummember",
+        "fields": {
+            "project": 2,
+            "organization": 4
+        }
+    },
+    {
+        "pk": 1,
+        "model": "project_manager.projectleader",
+        "fields": {
+            "project": 1,
+            "organization": 7
+        }
+    },
+    {
+        "pk": 2,
+        "model": "project_manager.projectleader",
+        "fields": {
+            "project": 2,
+            "organization": 3
+        }
+    }
+]

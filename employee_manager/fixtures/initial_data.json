@@ -1,79 +1,90 @@
 [
-	{
-		"model": "employee_manager.employee",
-		"pk": 1,
-		"fields": {
-			"name": "Oscar",
-			"first_surname": "Peña",
-			"second_surname": "del Rio",
-			"foaf_link": "http://google.es",
-			"slug": "oscar-pena-del-rio"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 2,
-		"fields": {
-			"name": "Mikel",
-			"first_surname": "Emaldi",
-			"second_surname": "Manrique",
-			"foaf_link": "http://google.es",
-			"slug": "mikel-emaldi-manrique"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 3,
-		"fields": {
-			"name": "Jon",
-			"first_surname": "Lázaro",
-			"second_surname": "Aduna",
-			"foaf_link": "http://google.es",
-			"slug": "jon-lazaro-aduna"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 4,
-		"fields": {
-			"name": "Eduardo",
-			"first_surname": "Castillejo",
-			"second_surname": "Gil",
-			"foaf_link": "http://google.es",
-			"slug": "eduardo-castillejo-gil"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 5,
-		"fields": {
-			"name": "Aitor",
-			"first_surname": "Almeida",
-			"second_surname": "",
-			"foaf_link": "http://google.es",
-			"slug": "aitor-almeida"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 6,
-		"fields": {
-			"name": "Unai",
-			"first_surname": "Aguilera",
-			"second_surname": "",
-			"foaf_link": "http://google.es",
-			"slug": "unai-aguilera"
-		}
-	},
-	{
-		"model": "employee_manager.employee",
-		"pk": 7,
-		"fields": {
-			"name": "Pablo",
-			"first_surname": "Orduña",
-			"second_surname": "",
-			"foaf_link": "http://google.es",
-			"slug": "pablo-orduna"
-		}
-	}
+    {
+        "model": "employee_manager.employee",
+        "pk": 1,
+        "fields": {
+            "name": "Oscar",
+            "first_surname": "Peña",
+            "second_surname": "del Rio",
+            "foaf_link": "http://google.es",
+            "slug": "oscar-pena-del-rio"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 2,
+        "fields": {
+            "name": "Mikel",
+            "first_surname": "Emaldi",
+            "second_surname": "Manrique",
+            "foaf_link": "http://google.es",
+            "slug": "mikel-emaldi-manrique"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 3,
+        "fields": {
+            "name": "Jon",
+            "first_surname": "Lázaro",
+            "second_surname": "Aduna",
+            "foaf_link": "http://google.es",
+            "slug": "jon-lazaro-aduna"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 4,
+        "fields": {
+            "name": "Eduardo",
+            "first_surname": "Castillejo",
+            "second_surname": "Gil",
+            "foaf_link": "http://google.es",
+            "slug": "eduardo-castillejo-gil"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 5,
+        "fields": {
+            "name": "Aitor",
+            "first_surname": "Almeida",
+            "second_surname": "",
+            "foaf_link": "http://google.es",
+            "slug": "aitor-almeida"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 6,
+        "fields": {
+            "name": "Unai",
+            "first_surname": "Aguilera",
+            "second_surname": "",
+            "foaf_link": "http://google.es",
+            "slug": "unai-aguilera"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 7,
+        "fields": {
+            "name": "Pablo",
+            "first_surname": "Orduña",
+            "second_surname": "",
+            "foaf_link": "http://google.es",
+            "slug": "pablo-orduna"
+        }
+    },
+    {
+        "model": "employee_manager.employee",
+        "pk": 8,
+        "fields": {
+            "name": "Diego",
+            "first_surname": "López de Ipiña",
+            "second_surname": "",
+            "foaf_link": "http://google.es",
+            "slug": "diego-lopez-de-ipina"
+        }
+    }
 ]

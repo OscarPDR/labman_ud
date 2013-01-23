@@ -10,18 +10,18 @@ from employee_manager.models import Employee
 from organization_manager.models import Organization
 
 PROJECT_TYPES = (
-    ('Project', 'Proyecto'),
-    ('DevelopmentProject', 'Proyecto de desarrollo'),
-    ('InnovationProject', 'Proyecto de innovación'),
-    ('ResearchProject', 'Proyecto de investigación'),
-    ('BasicResearchProject', 'Proyecto de investigación básica'),
-    ('AppliedResearchProject', 'Proyecto de investigación aplicada'),
+    ('Project', 'Project'),
+    ('DevelopmentProject', 'Development project'),
+    ('InnovationProject', 'Innovation project'),
+    ('ResearchProject', 'Research project'),
+    ('BasicResearchProject', 'Basic research project'),
+    ('AppliedResearchProject', 'Applied research project'),
 )
 
 PROJECT_STATUS = (
-    ('NotStarted', 'Sin comenzar'),
-    ('InDevelopment', 'En desarrollo'),
-    ('Finished', 'Finalizado'),
+    ('NotStarted', 'Not started'),
+    ('InDevelopment', 'In development'),
+    ('Finished', 'Finished'),
 )
 
 MONTHS = (
@@ -40,17 +40,21 @@ MONTHS = (
 )
 
 GEOGRAPHICAL_SCOPE = (
-    ('Province', 'Provincia'),
-    ('State', 'Comunidad autónoma'),
-    ('Country', 'País'),
+    ('Araba', 'Araba'),
+    ('Bizkaia', 'Bizkaia'),
+    ('Gipuzkoa', 'Gipuzkoa'),
+    ('Euskadi', 'Euskadi'),
+    ('Spain', 'Spain'),
+    ('Europe', 'Europe'),
+    ('International', 'International'),
 )
 
 ROLES = (
-    ('Researcher', 'Investigador'),
-    ('PrincipalResearcher', 'Investigador principal'),
-    ('LocalPrincipalResearcher', 'Investigador principal (local)'),
-    ('ProjectManager', 'Gestor del proyecto'),
-    ('LocalProjectManager', 'Gestor del proyecto (local)'),
+    ('Researcher', 'Researcher'),
+    ('PrincipalResearcher', 'Principal researcher'),
+    ('LocalPrincipalResearcher', 'Local principal researcher'),
+    ('ProjectManager', 'Project manager'),
+    ('LocalProjectManager', 'Local project manager'),
 )
 
 # Create your models here.
@@ -65,59 +69,56 @@ class Project(models.Model):
         max_length = 25,
         choices = PROJECT_TYPES,
         default = 'Project',
-        verbose_name = 'Tipo de proyecto'
+        verbose_name = 'Project type'
     )
 
     title = models.CharField(
         max_length = 100,
-        verbose_name = 'Título'
+        verbose_name = 'Title'
     )
 
     description = models.TextField(
         max_length = 500,
-        verbose_name = 'Descripción'
+        verbose_name = 'Description'
     )
 
     homepage = models.URLField(
         max_length = 150,
-        verbose_name = 'Web'
+        verbose_name = 'Homepage'
     )
 
     start_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de comienzo'
+        verbose_name = 'Start year'
     )
 
     end_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de fin'
+        verbose_name = 'End year'
     )
 
     status = models.CharField(
         max_length = 25,
         choices = PROJECT_STATUS,
         default = 'NotStarted',
-        verbose_name = 'Estado'
+        verbose_name = 'Status'
     )
 
     total_funds = models.DecimalField(
         max_digits = 10,
         decimal_places = 2,
         blank = True,
-        verbose_name = 'Presupuesto total',
+        verbose_name = 'Total funds',
     )
-
-    # additional_info
-    # tag
 
     observations = models.TextField(
         max_length = 500,
-        verbose_name = 'Observaciones'
+        verbose_name = 'Observations'
     )
 
     logo = models.ImageField(
         upload_to = logo_path,
-        verbose_name = 'Logotipo',
+        verbose_name = 'Logo',
         blank = True,
         null = True,
     )
@@ -156,52 +157,52 @@ class Project(models.Model):
 
 class FundingProgram(models.Model):
     project = models.ForeignKey(Project)
-    organization = models.ForeignKey(Organization, verbose_name = 'Organización que lo otorga')
+    organization = models.ForeignKey(Organization, verbose_name = 'Funding organization')
 
     name = models.CharField(
         max_length = 25,
-        verbose_name = 'Nombre del programa',
+        verbose_name = 'Program name',
     )
 
     project_code = models.CharField(
         max_length = 25,
-        verbose_name = 'Código del proyecto',
+        verbose_name = 'Project code',
     )
 
     start_month = models.CharField(
         max_length= 15,
         choices = MONTHS,
         default = '1',
-        verbose_name = 'Mes de comienzo'
+        verbose_name = 'Start month'
     )
 
     start_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de comienzo'
+        verbose_name = 'Start year'
     )
 
     end_month = models.CharField(
         max_length= 15,
         choices = MONTHS,
         default = '12',
-        verbose_name = 'Mes de fin'
+        verbose_name = 'End month'
     )
 
     end_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de fin'
+        verbose_name = 'End year'
     )
 
     concession_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de concesión'
+        verbose_name = 'Concession year'
     )
 
     geographical_scope = models.CharField(
         max_length = 25,
         choices = GEOGRAPHICAL_SCOPE,
         default = 'Province',
-        verbose_name = 'Ámbito geográfico'
+        verbose_name = 'Geographical scope'
     )
 
     # logo = models.ImageField(
@@ -237,39 +238,40 @@ class FundingAmount(models.Model):
     amount = models.DecimalField(
         max_digits = 10,
         decimal_places = 2,
+        verbose_name = 'Amount',
         blank = True
     )
 
     year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Año de concesión',
+        verbose_name = 'Concession year',
         blank = True
     )
 
 
 class AssignedEmployee(models.Model):
     project = models.ForeignKey(Project)
-    employee = models.ForeignKey(Employee, verbose_name = "Empleado")
+    employee = models.ForeignKey(Employee, verbose_name = "Employee")
 
     role = models.CharField(
         max_length = 50,
         choices = ROLES,
         default = 'Researcher',
-        verbose_name = 'Rol'
+        verbose_name = 'Role'
     )
 
 
 class ConsortiumMember(models.Model):
     project = models.ForeignKey(Project)
-    organization = models.ForeignKey(Organization, verbose_name = "Organización")
+    organization = models.ForeignKey(Organization, verbose_name = "Organization")
 
     def __unicode__(self):
-        return u'proyecto %s - organización %s' % (self.project.title, self.organization.id)
+        return u'Project ID %s - Organization ID %s' % (self.project.title, self.organization.id)
 
 
 class ProjectLeader(models.Model):
     project = models.ForeignKey(Project)
-    organization = models.ForeignKey(Organization, verbose_name = "Organización líder")
+    organization = models.ForeignKey(Organization, verbose_name = "Leader organization")
 
     def __unicode__(self):
-        return u'proyecto %s - organización líder %s' % (self.project.title, self.organization.id)
+        return u'Project ID %s - Leader organization ID %s' % (self.project.title, self.organization.id)

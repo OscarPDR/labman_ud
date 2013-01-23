@@ -64,5 +64,16 @@
             "logo": "",
             "slug": "bilbomatica"
         }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 7,
+        "fields": {
+            "name": "Lógica",
+            "country": "Spain",
+            "homepage": "http://www.logica.com.es/",
+            "logo": "",
+            "slug": "logica"
+        }
     }
 ]

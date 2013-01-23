@@ -87,7 +87,7 @@ def info_organization(request, slug):
     leaded_ids = ProjectLeader.objects.filter(organization_id = organization.id).values('project_id')
     projects_leaded = Project.objects.filter(id__in = leaded_ids).order_by('title')
 
-    consortium_ids = ConsortiumMembers.objects.filter(organization_id = organization.id).values('project_id')
+    consortium_ids = ConsortiumMember.objects.filter(organization_id = organization.id).values('project_id')
     projects = Project.objects.filter(id__in = consortium_ids).order_by('title')
 
     return render_to_response("organization_manager/info.html", {
