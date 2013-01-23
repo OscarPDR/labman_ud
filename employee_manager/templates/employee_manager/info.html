@@ -3,7 +3,10 @@
 
 {% block content %}
 
-    <h2>{{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}</h2>
+    <h2>
+        <a href="{% url employee_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}
+    </h2>
 
     <br>
 

@@ -230,12 +230,21 @@ class FundingProgram(models.Model):
         blank = True,
     )
 
-    # logo = models.ImageField(
-    #     upload_to = logo_path,
-    #     verbose_name = 'Logotipo',
-    #     blank = True,
-    #     null = True,
-    # )
+    logo = models.ImageField(
+        upload_to = logo_path,
+        verbose_name = 'Logo',
+        blank = True,
+        null = True,
+    )
+
+    slug = models.SlugField(
+        blank = True,
+    )
+
+    def save(self, *args, **kwargs):
+        if self.slug == "":
+            self.slug = slugify(str(self.name) + str(self.project_code))
+        super(FundingProgram, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model

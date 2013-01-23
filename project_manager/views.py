@@ -87,8 +87,8 @@ def add_project(request):
             project.status = cd_p['status'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
 
-            # if request.FILES['logo']:
-            #     project.logo = request.FILES['logo']
+            if request.FILES['project_form-logo']:
+                project.logo = request.FILES['project_form-logo']
 
             project.save()
 
@@ -108,9 +108,16 @@ def add_project(request):
                     geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
                 )
 
+                if request.FILES['funding_program_form-logo']:
+                    funding_program.logo = request.FILES['funding_program_form-logo']
+
                 funding_program.save()
 
                 current_year = cd_f['start_year']
+
+            else:
+                project.delete()
+                print '1'
 
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
@@ -129,6 +136,9 @@ def add_project(request):
 
                     else:
                         print "No fundings amounts to save"
+            else:
+                project.delete()
+                print '2'
 
             if assigned_employee_formset.is_valid():
                 for assigned_employee_form in assigned_employee_formset:
@@ -145,6 +155,9 @@ def add_project(request):
                         print "No assigned employees to save"
 
                 assigned_employee_formset.save()
+            else:
+                project.delete()
+                print '3'
 
             if consortium_member_formset.is_valid():
                 for consortium_member_form in consortium_member_formset:
@@ -159,20 +172,23 @@ def add_project(request):
                             consortium_member.save()
 
                         else:
-                            print "No assigned employees to save"
+                            print "No consortium members to save"
+            else:
+                project.delete()
+                print '4'
 
             if project_leader_form.is_valid():
-                print "valid project leader"
-                cd_pl = project_leader_form.cleaned_data
+                if (len(project_leader_form.cleaned_data) > 0):
+                    cd_pl = project_leader_form.cleaned_data
 
-                project_leader = ProjectLeader(
-                    project = project,
-                    organization = cd_pl['organization']
-                )
+                    project_leader = ProjectLeader(
+                        project = project,
+                        organization = cd_pl['organization']
+                    )
 
-                project_leader.save()
-
-                print 'Guardado líder del proyecto'
+                    project_leader.save()
+                else:
+                    print "No project leader to save"
 
             return HttpResponseRedirect("/projects/email/" + project.slug)
     else:
@@ -201,7 +217,7 @@ def add_project(request):
 def info_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
-    funding_program = FundingProgram.objects.get(project_id = project.id)
+    funding_program = FundingProgram.objects.filter(project_id = project.id)
 
     lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalPrincipalResearcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
@@ -218,7 +234,7 @@ def info_project(request, slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
-    project_leader = ProjectLeader.objects.get(project_id = project.id)
+    project_leader = ProjectLeader.objects.filter(project_id = project.id)
 
     return render_to_response("project_manager/info.html", {
             'project': project,
@@ -235,13 +251,170 @@ def info_project(request, slug):
 
 
 #########################
+# View: add_project
+#########################
+
+def add_project(request, slug):
+    project_form = ProjectForm(prefix = 'project_form')
+    funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
+    funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
+    assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
+    consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
+    project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
+
+    if request.POST:
+        project_form = ProjectForm(request.POST, prefix = 'project_form')
+        if project_form.is_valid():
+            project = project_form.save(commit = False)
+
+            funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
+            funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
+            assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance = project, prefix = 'assigned_employee_formset')
+            consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance = project, prefix = 'consortium_member_formset')
+            project_leader_form = ProjectLeaderForm(request.POST, instance = project, prefix = 'project_leader_form')
+
+            cd_p = project_form.cleaned_data
+
+            project.project_type = cd_p['project_type'].encode('utf-8')
+            project.title = cd_p['title'].encode('utf-8')
+            project.description = cd_p['description'].encode('utf-8')
+            project.homepage = cd_p['homepage']
+            project.start_year = cd_p['start_year']
+            project.end_year = cd_p['end_year']
+            project.status = cd_p['status'].encode('utf-8')
+            project.observations = cd_p['observations'].encode('utf-8')
+
+            if request.FILES['project_form-logo']:
+                project.logo = request.FILES['project_form-logo']
+
+            project.save()
+
+            if funding_program_form.is_valid():
+                cd_f = funding_program_form.cleaned_data
+
+                funding_program = FundingProgram(
+                    project = project,
+                    organization = cd_f['organization'],
+                    name = cd_f['name'].encode('utf-8'),
+                    project_code = cd_f['project_code'].encode('utf-8'),
+                    start_month = cd_f['start_month'],
+                    start_year = cd_f['start_year'],
+                    end_month = cd_f['end_month'],
+                    end_year = cd_f['end_year'],
+                    concession_year = cd_f['concession_year'],
+                    geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
+                )
+
+                if request.FILES['funding_program_form-logo']:
+                    funding_program.logo = request.FILES['funding_program_form-logo']
+
+                funding_program.save()
+
+                current_year = cd_f['start_year']
+
+            else:
+                project.delete()
+                print '1'
+
+            if funding_amount_formset.is_valid():
+                for funding_amount_form in funding_amount_formset:
+                    if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= cd_f['end_year']):
+                        cd_fa = funding_amount_form.cleaned_data
+
+                        funding_amount = FundingAmount(
+                            project = project,
+                            amount = cd_fa['amount'],
+                            year = current_year,
+                        )
+
+                        funding_amount.save()
+
+                        current_year += 1
+
+                    else:
+                        print "No fundings amounts to save"
+            else:
+                project.delete()
+                print '2'
+
+            if assigned_employee_formset.is_valid():
+                for assigned_employee_form in assigned_employee_formset:
+                    if (len(assigned_employee_form.cleaned_data) > 0):
+                        cd_ae = assigned_employee_form.cleaned_data
+
+                        assigned_employee_form.project = project
+                        assigned_employee_form.employee = cd_ae['employee']
+                        assigned_employee_form.role = cd_ae['role']
+
+                        assigned_employee_form.save()
+
+                    else:
+                        print "No assigned employees to save"
+
+                assigned_employee_formset.save()
+            else:
+                project.delete()
+                print '3'
+
+            if consortium_member_formset.is_valid():
+                for consortium_member_form in consortium_member_formset:
+                        if (len(consortium_member_form.cleaned_data) > 0):
+                            cd_cm = consortium_member_form.cleaned_data
+
+                            consortium_member = ConsortiumMember(
+                                project = project,
+                                organization = cd_cm['organization'],
+                            )
+
+                            consortium_member.save()
+
+                        else:
+                            print "No consortium members to save"
+            else:
+                project.delete()
+                print '4'
+
+            if project_leader_form.is_valid():
+                if (len(project_leader_form.cleaned_data) > 0):
+                    cd_pl = project_leader_form.cleaned_data
+
+                    project_leader = ProjectLeader(
+                        project = project,
+                        organization = cd_pl['organization']
+                    )
+
+                    project_leader.save()
+                else:
+                    print "No project leader to save"
+
+            return HttpResponseRedirect("/projects/email/" + project.slug)
+    else:
+        project_form = ProjectForm(prefix = 'project_form')
+        funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
+        funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
+        assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
+        consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
+        project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
+
+    return render_to_response("project_manager/add.html", {
+            "project_form": project_form,
+            "funding_program_form": funding_program_form,
+            "funding_amount_formset": funding_amount_formset,
+            "assigned_employee_formset": assigned_employee_formset,
+            "consortium_member_formset": consortium_member_formset,
+            "project_leader_form": project_leader_form,
+        },
+        context_instance = RequestContext(request))
+
+
+#########################
 # View: email_project
 #########################
 
 def email_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
-    funding_program = FundingProgram.objects.get(project_id = project.id)
+    funding_program = FundingProgram.objects.filter(project_id = project.id)
 
     lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalProjectManager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
@@ -251,12 +424,12 @@ def email_project(request, slug):
 
     total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
 
-    project_leader = ProjectLeader.objects.get(project_id = project.id)
+    project_leader = ProjectLeader.objects.filter(project_id = project.id)
 
     consortium_members = []
 
     for consortium_member in ConsortiumMember.objects.all().filter(project_id = project.id):
-        org = Organization.objects.get(id = consortium_member.organization.id)
+        org = Organization.objects.filter(id = consortium_member.organization.id)
         consortium_members.append(org.name)
 
     html_content = render_to_string('project_manager/project_email_template.html', {

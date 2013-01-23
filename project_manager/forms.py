@@ -31,7 +31,6 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'homepage': URLInput(attrs={'placeholder': 'http://'}),
         }
-        # exclude = ('slug')
 
 
 #########################
@@ -41,7 +40,7 @@ class ProjectForm(forms.ModelForm):
 class FundingProgramForm(forms.ModelForm):
     class Meta:
         model = FundingProgram
-        exclude = ('project')
+        exclude = ('project', 'slug')
 
 
 #########################

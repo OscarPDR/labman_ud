@@ -3,7 +3,10 @@
 
 {% block content %}
 
-    <h2>{{ organization.name}}</h2>
+    <h2>
+        <a href="{% url organization_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ organization.name}}
+    </h2>
 
     <br>
 

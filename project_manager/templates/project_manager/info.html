@@ -3,7 +3,10 @@
 
 {% block content %}
 
-    <a href="{% url project_index %}"><i class="icon-chevron-left"></i></a><h2>{{ project.title }}</h2>
+    <h2>
+        <a href="{% url project_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ project.title }}
+    </h2>
 
     <br>
 
@@ -89,16 +92,18 @@
 
             <div class="tab-pane" id="pr_consortium_members">
 
-                <h5>Project leader:</h5>
-                <ul>
-                    <li>
-                        <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
-                            {{ project_leader.organization.name }}
-                        </a>
-                    </li>
-                </ul>
+                {% if project_leader %}
+                    <h5>Project leader:</h5>
+                    <ul>
+                        <li>
+                            <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
+                                {{ project_leader.organization.name }}
+                            </a>
+                        </li>
+                    </ul>
 
-                <br>
+                    <br>
+                {% endif %}
 
                 <h5>Consortium members:</h5>
                 <ul>
