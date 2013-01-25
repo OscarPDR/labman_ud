@@ -26,6 +26,10 @@
 
             <div class="tab-pane active" id="pr_general_info">
 
+                <div class="project-logo">
+                    <img src="{{ MEDIA_PREFIX}}{{ project.logo }}" height="150" />
+                </div>
+
                 <h5>Proyect type:</h5>
                 <p>
                      {{ project.project_type }}
@@ -96,10 +100,11 @@
                     <h5>Project leader:</h5>
                     <ul>
                         <li>
-                            <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
+                            <a target="_blank" href="{% url info_organization 'project_leader.organization.slug' %}">
                                 {{ project_leader.organization.name }}
                             </a>
                         </li>
+                        <li>{{ project_leader.organization.slug }}</li>
                     </ul>
 
                     <br>

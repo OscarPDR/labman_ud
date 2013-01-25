@@ -3,10 +3,166 @@
 
 {% block content %}
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-    </ul>
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend><strong>Edit:</strong> {{ project.title }}</legend>
+
+        <br />
+
+        <fieldset>
+
+            <div class="tabbable tabs-left">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General information</a></li>
+                    <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">2</span> Funding program</a></li>
+                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">3</span> Funding breakdown</a></li>
+                    <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">4</span> Assigned employees</a></li>
+                    <li><a href="#consortium-members" data-toggle="tab"><span class="badge">5</span> Consortium members</a></li>
+
+                    <button type="submit" name="submit" class="btn btn-small btn-primary tab-left-btn">Save</button>
+                    <a class="btn btn-small btn-danger tab-left-btn" href="{% url project_index %}">Cancel</a>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- General form fields -->
+
+                    <div class="tab-pane active" id="general">
+
+                        {% for field in project_form %}
+
+                            {% if field.label != 'Total funds' %}
+
+                                {% if field.errors %}
+
+                                    <div class="control-group error">
+                                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="control-group">
+                                        <label class="control-label">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                        {% if project.logo %}
+                            <div class="project-logo">
+                                <img src="{{ MEDIA_PREFIX}}{{ project.logo }}" height="150" />
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- End #general tab-pane -->
+
+                    <!-- Funding program information -->
+
+                    <div class="tab-pane" id="funding-program">
+
+                        {% for funding_field in funding_program_form %}
+                            <div class="control-group">
+                                <label class="control-label" id="label">{{ funding_field.label }}</label>
+                                <div class="controls">
+                                    {{ funding_field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <!-- End #funding-program tab-pane -->
+
+                    <!-- Funding amount information -->
+
+                    <div class="tab-pane" id="funding-amount">
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ project_form.total_funds.label }}</label>
+                            <div class="controls">
+                                {{ project_form.total_funds }}
+                            </div>
+                        </div>
+
+                        <div id="funding-amount-details">
+                            {% for funding_amount_form in funding_amount_formset.forms %}
+                                <div class="control-group">
+                                    <label class="control-label">{{ funding_amount_form.amount.label }}</label>
+                                    <div class="controls">
+                                        {{ funding_amount_form.amount }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {{ funding_amount_formset.management_form }}
+                        </div>
+                    </div>
+
+                    <!-- End #funding-amount tab-pane -->
+
+                    <!-- End #assigned-employees tab-pane -->
+
+                    <div class="tab-pane" id="assigned-employees">
+                        {{ assigned_employee_formset.management_form }}
+                        <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody id="employees-form">
+                                {% for assigned_employee_form in assigned_employee_formset.forms %}
+                                    <tr>
+                                        <th>{{ assigned_employee_form.employee.label }}</th>
+                                        <td>{{ assigned_employee_form.employee }}</td>
+                                        <th>{{ assigned_employee_form.role.label }}</th>
+                                        <td>{{ assigned_employee_form.role }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- End #assigned-employees tab-pane -->
+
+                    <!-- End #consortium-members tab-pane -->
+
+                    <div class="tab-pane" id="consortium-members">
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ project_leader_form.organization.label }}</label>
+                            <div class="controls">
+                                {{ project_leader_form.organization }}
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                {% for consortium_member_form in consortium_member_formset.forms %}
+                                    <tr>
+                                        <th>{{ consortium_member_form.organization.label }}</th>
+                                        <td>{{ consortium_member_form.organization }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {{ consortium_member_formset.management_form }}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- End #consortium-members tab-pane -->
+
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
 
 {% endblock %}
 

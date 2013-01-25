@@ -83,6 +83,12 @@ ul.nav.nav-tabs {
     margin-left: 2em;
 }
 
+.project-logo {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
 .project-template {
     margin-top: 1.5em;
     padding-left: 1.5em;

@@ -254,13 +254,16 @@ def info_project(request, slug):
 # View: add_project
 #########################
 
-def add_project(request, slug):
+def edit_project(request, slug):
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
     assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
     project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
+
+    project = get_object_or_404(Project, slug = slug)
+
 
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
@@ -388,15 +391,33 @@ def add_project(request, slug):
                     print "No project leader to save"
 
             return HttpResponseRedirect("/projects/email/" + project.slug)
+
     else:
-        project_form = ProjectForm(prefix = 'project_form')
+        project_data = {
+            'project_type': project.project_type,
+            'title': project.title,
+            'slug': project.slug,
+            'description': project.description,
+            'homepage': project.homepage,
+            'start_year': project.start_year,
+            'end_year': project.end_year,
+            'status': project.status,
+            'total_funds': project.total_funds,
+            'observations': project.observations,
+        }
+
+        project_form = ProjectForm(
+            prefix = 'project_form',
+            initial = project_data,
+        )
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
         funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
         assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
         project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
-    return render_to_response("project_manager/add.html", {
+    return render_to_response("project_manager/edit.html", {
+            'project': project,
             "project_form": project_form,
             "funding_program_form": funding_program_form,
             "funding_amount_formset": funding_amount_formset,
