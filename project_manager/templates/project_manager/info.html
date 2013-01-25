@@ -1,5 +1,6 @@
 {% extends "projects_morelab/base.html" %}
 {% load i18n %}
+{% load humanize %}
 
 {% block content %}
 
@@ -80,11 +81,11 @@
 
                 <h5>Funding amount:</h5>
                 <p>
-                     The project is valued in {{ project.total_funds }} €, DeustoTech receiving {{ total_deusto.amount__sum }} € in the following way:
+                     The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ total_deusto.amount__sum|intcomma|intword }} € in the following way:
                 </p>
                 <ul>
                     {% for funding_amount in funding_amounts %}
-                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount }} €</li>
+                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
                     {% endfor %}
                 </ul>
 
@@ -100,11 +101,10 @@
                     <h5>Project leader:</h5>
                     <ul>
                         <li>
-                            <a target="_blank" href="{% url info_organization 'project_leader.organization.slug' %}">
+                            <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
                                 {{ project_leader.organization.name }}
                             </a>
                         </li>
-                        <li>{{ project_leader.organization.slug }}</li>
                     </ul>
 
                     <br>

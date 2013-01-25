@@ -135,6 +135,9 @@ class Project(models.Model):
         null = True,
     )
 
+    def __unicode__(self):
+        return u'%s' % (self.title)
+
     def save(self, *args, **kwargs):
         if self.slug == "":
             self.slug = slugify(str(self.title))
@@ -241,6 +244,9 @@ class FundingProgram(models.Model):
         blank = True,
     )
 
+    def __unicode__(self):
+        return u'%s - Funding project: %s' % (self.name, self.project.title)
+
     def save(self, *args, **kwargs):
         if self.slug == "":
             self.slug = slugify(str(self.name) + str(self.project_code))
@@ -288,6 +294,9 @@ class FundingAmount(models.Model):
         blank = True,
     )
 
+    def __unicode__(self):
+        return u'Year %s - %s €' % (self.year, self.amount)
+
 
 #########################
 # Model: AssignedEmployee
@@ -303,6 +312,9 @@ class AssignedEmployee(models.Model):
         default = 'Researcher',
         verbose_name = 'Role *',    # Required
     )
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.employee, self.project)
 
 
 #########################

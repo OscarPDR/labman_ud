@@ -234,7 +234,7 @@ def info_project(request, slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
-    project_leader = ProjectLeader.objects.filter(project_id = project.id)
+    project_leader = ProjectLeader.objects.get(project_id = project.id)
 
     return render_to_response("project_manager/info.html", {
             'project': project,
@@ -244,8 +244,8 @@ def info_project(request, slug):
             'researchers': researchers,
             'total_deusto': total_deusto,
             'funding_amounts': funding_amounts,
-            'consortium_members': consortium_members,
             'project_leader': project_leader,
+            'consortium_members': consortium_members,
         },
         context_instance = RequestContext(request))
 
@@ -255,15 +255,16 @@ def info_project(request, slug):
 #########################
 
 def edit_project(request, slug):
+    project = get_object_or_404(Project, slug = slug)
+    funding_program = get_object_or_404(FundingProgram, project_id = project.id)
+    project_leader = get_object_or_404(ProjectLeader, project_id = project.id)
+
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
     assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
     project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
-
-    project = get_object_or_404(Project, slug = slug)
-
 
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
@@ -406,24 +407,56 @@ def edit_project(request, slug):
             'observations': project.observations,
         }
 
+        funding_program_data = {
+            'organization': funding_program.organization,
+            'name': funding_program.name,
+            'project_code': funding_program.project_code,
+            'start_month': funding_program.start_month,
+            'start_year': funding_program.start_year,
+            'end_month': funding_program.end_month,
+            'end_year': funding_program.end_year,
+            'concession_year': funding_program.concession_year,
+            'geographical_scope': funding_program.geographical_scope,
+        }
+
+        project_leader_data = {
+            'organization': project_leader.organization,
+        }
+
+        # FORMS
+
         project_form = ProjectForm(
             prefix = 'project_form',
             initial = project_data,
         )
-        funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
+
+        funding_program_form = FundingProgramForm(
+            instance = Project(),
+            prefix = 'funding_program_form',
+            initial = funding_program_data,
+        )
+
         funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
         assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
+
+        project_leader_form = ProjectLeaderForm(
+            instance = Project(),
+            prefix = 'project_leader_form',
+            initial = project_leader_data,
+        )
+
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
-        project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     return render_to_response("project_manager/edit.html", {
             'project': project,
             "project_form": project_form,
+            'funding_program_data': funding_program_data,
             "funding_program_form": funding_program_form,
             "funding_amount_formset": funding_amount_formset,
             "assigned_employee_formset": assigned_employee_formset,
-            "consortium_member_formset": consortium_member_formset,
+            'project_leader': project_leader,
             "project_leader_form": project_leader_form,
+            "consortium_member_formset": consortium_member_formset,
         },
         context_instance = RequestContext(request))
 
