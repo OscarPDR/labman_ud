@@ -6,7 +6,7 @@
     <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
         {% csrf_token %}
 
-        <legend>Añadir un nuevo proyecto</legend>
+        <legend>Add a new project</legend>
 
         <br />
 
@@ -163,6 +163,12 @@
 {% block scripts %}
 
     <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            $("textarea").attr("rows", 5);
+        });
+    </script>
 
     <script>
         $(function() {

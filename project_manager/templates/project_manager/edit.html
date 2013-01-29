@@ -240,6 +240,12 @@
 
     <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
 
+    <script type="text/javascript">
+        $(window).load(function() {
+            $("textarea").attr("rows", 5);
+        });
+    </script>
+
     <script>
         $(function() {
             $('#assigned_employee_formset tbody tr').formset({

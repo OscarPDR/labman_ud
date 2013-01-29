@@ -6,8 +6,20 @@
     <h2>
         <a href="{% url organization_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ organization.name}}
+
+        {% if organization.logo %}
+            <img class="organization-logo" src="{{ MEDIA_PREFIX}}{{ organization.logo }}" />
+        {% endif %}
     </h2>
 
+    <br>
+
+
+
+    <a class="btn btn-small btn-inverse" target="_blank" href="{{ organization.homepage }}"><i class="icon-globe icon-white"></i> Visit homepage</a>
+    <a class="btn btn-small btn-inverse" href="{% url edit_organization organization.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+
+    <br>
     <br>
 
     <div class="row-fluid">

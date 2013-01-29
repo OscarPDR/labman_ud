@@ -39,7 +39,7 @@
             "name": "Eduardo",
             "first_surname": "Castillejo",
             "second_surname": "Gil",
-            "foaf_link": "http://google.es",
+            "foaf_link": "http://paginaspersonales.deusto.es/eduardo.castillejo/foaf.rdf",
             "slug": "eduardo-castillejo-gil"
         }
     },
@@ -50,7 +50,7 @@
             "name": "Aitor",
             "first_surname": "Almeida",
             "second_surname": "",
-            "foaf_link": "http://google.es",
+            "foaf_link": "http://www.morelab.deusto.es/page/aitor-almeida",
             "slug": "aitor-almeida"
         }
     },
@@ -61,7 +61,7 @@
             "name": "Unai",
             "first_surname": "Aguilera",
             "second_surname": "",
-            "foaf_link": "http://google.es",
+            "foaf_link": "http://paginaspersonales.deusto.es/unai.aguilera/foaf.rdf",
             "slug": "unai-aguilera"
         }
     },

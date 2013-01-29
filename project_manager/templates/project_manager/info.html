@@ -19,6 +19,8 @@
             <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
 
             <a class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
+            <br>
+            <a class="btn btn-small btn-inverse tab-left-btn" href="../edit/{{ project.slug }}"><i class="icon-edit icon-white"></i> Edit</a>
         </ul>
 
         <div class="tab-content project-template">
@@ -27,9 +29,11 @@
 
             <div class="tab-pane active" id="pr_general_info">
 
-                <div class="project-logo">
-                    <img src="{{ MEDIA_PREFIX}}{{ project.logo }}" height="150" />
-                </div>
+                {% if project.logo %}
+                    <div class="project-logo">
+                        <img src="{{ MEDIA_PREFIX}}{{ project.logo }}" height="150" />
+                    </div>
+                 {% endif %}
 
                 <h5>Proyect type:</h5>
                 <p>
@@ -40,7 +44,17 @@
 
                 <h5>Duration:</h5>
                 <p>
-                     {{ project.start_year }} - {{ project.end_year }} ({{ project.status }})
+                    {{ project.start_year }} - {{ project.end_year }}
+                    <br>
+                    {% ifequal project.status 'Not started' %}
+                        <span class="label">{{ project.status }}</span>
+                    {% endifequal %}
+                    {% ifequal project.status 'In development' %}
+                        <span class="label label-info">{{ project.status }}</span>
+                    {% endifequal %}
+                    {% ifequal project.status 'Finished' %}
+                        <span class="label label-success">{{ project.status }}</span>
+                    {% endifequal %}
                 </p>
 
                 <br>
@@ -60,34 +74,52 @@
 
                 <h5>Supported by:</h5>
                 <p>
-                     {{ funding_program.name }}, {{ funding_program.organization.name }}
+                    {% if funding_program.name %}
+                        {{ funding_program.name }}, {{ funding_program.organization.name }}
+                    {% else %}
+                        No information available
+                    {% endif %}
                 </p>
 
                 <br>
 
                 <h5>Project code:</h5>
                 <p>
-                     {{ funding_program.project_code }}
+                    {% if funding_program.project_code %}
+                        {{ funding_program.project_code }}
+                    {% else %}
+                        No information available
+                    {% endif %}
                 </p>
 
                 <br>
 
                 <h5>Funding duration:</h5>
                 <p>
-                     Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ funding_program.start_year }} - {{ funding_program.end_year }} period.
+                    {% if funding_program.concession_year %}
+                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ funding_program.start_year }} - {{ funding_program.end_year }} period.
+                    {% else %}
+                        No information available
+                    {% endif %}
                 </p>
 
                 <br>
 
                 <h5>Funding amount:</h5>
-                <p>
-                     The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ total_deusto.amount__sum|intcomma|intword }} € in the following way:
-                </p>
-                <ul>
-                    {% for funding_amount in funding_amounts %}
-                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
-                    {% endfor %}
-                </ul>
+                {% if project.total_funds %}
+                    <p>
+                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ total_deusto.amount__sum|intcomma|intword }} € in the following way:
+                    </p>
+                    <ul>
+                        {% for funding_amount in funding_amounts %}
+                            <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>
+                        No information available
+                    </p>
+                {% endif %}
 
             </div>
 
@@ -160,7 +192,7 @@
                 {% endif %}
 
                 {% if researchers %}
-                    <h5>Principal researcher{{ researchers|pluralize }}:</h5>
+                    <h5>Researcher{{ researchers|pluralize }}:</h5>
                     <ul>
                         {% for researcher in researchers %}
                             <li>

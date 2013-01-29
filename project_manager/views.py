@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 from django.db.models import Sum
+from email.mime.image import MIMEImage
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -87,8 +88,10 @@ def add_project(request):
             project.status = cd_p['status'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
 
-            if request.FILES['project_form-logo']:
+            try:
                 project.logo = request.FILES['project_form-logo']
+            except:
+                    pass
 
             project.save()
 
@@ -108,8 +111,10 @@ def add_project(request):
                     geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
                 )
 
-                if request.FILES['funding_program_form-logo']:
+                try:
                     funding_program.logo = request.FILES['funding_program_form-logo']
+                except:
+                    pass
 
                 funding_program.save()
 
@@ -217,12 +222,12 @@ def add_project(request):
 def info_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
-    funding_program = FundingProgram.objects.filter(project_id = project.id)
+    funding_program = FundingProgram.objects.get(project_id = project.id)
 
-    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalPrincipalResearcher').values('employee_id')
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
-    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalProjectManager').values('employee_id')
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
     rs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Researcher').values('employee_id')
@@ -261,6 +266,9 @@ def edit_project(request, slug):
     assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
+    current_year = 3000
+    end_year = 2999
+
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
@@ -271,7 +279,7 @@ def edit_project(request, slug):
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
         if project_form.is_valid():
-            project = project_form.save(commit = False)
+            # project = project_form.save(commit = False)
 
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
@@ -290,33 +298,36 @@ def edit_project(request, slug):
             project.status = cd_p['status'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
 
-            if request.FILES['project_form-logo']:
+            try:
                 project.logo = request.FILES['project_form-logo']
+            except:
+                    pass
 
             project.save()
 
             if funding_program_form.is_valid():
                 cd_f = funding_program_form.cleaned_data
 
-                funding_program = FundingProgram(
-                    project = project,
-                    organization = cd_f['organization'],
-                    name = cd_f['name'].encode('utf-8'),
-                    project_code = cd_f['project_code'].encode('utf-8'),
-                    start_month = cd_f['start_month'],
-                    start_year = cd_f['start_year'],
-                    end_month = cd_f['end_month'],
-                    end_year = cd_f['end_year'],
-                    concession_year = cd_f['concession_year'],
-                    geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
-                )
+                funding_program.project = project
+                funding_program.organization = cd_f['organization']
+                funding_program.name = cd_f['name'].encode('utf-8')
+                funding_program.project_code = cd_f['project_code'].encode('utf-8')
+                funding_program.start_month = cd_f['start_month']
+                funding_program.start_year = cd_f['start_year']
+                funding_program.end_month = cd_f['end_month']
+                funding_program.end_year = cd_f['end_year']
+                funding_program.concession_year = cd_f['concession_year']
+                funding_program.geographical_scope = cd_f['geographical_scope'].encode('utf-8')
 
-                if request.FILES['funding_program_form-logo']:
+                try:
                     funding_program.logo = request.FILES['funding_program_form-logo']
+                except:
+                    pass
 
                 funding_program.save()
 
                 current_year = cd_f['start_year']
+                end_year = cd_f['end_year']
 
             else:
                 project.delete()
@@ -324,14 +335,12 @@ def edit_project(request, slug):
 
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
-                    if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= cd_f['end_year']):
+                    if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= end_year):
                         cd_fa = funding_amount_form.cleaned_data
 
-                        funding_amount = FundingAmount(
-                            project = project,
-                            amount = cd_fa['amount'],
-                            year = current_year,
-                        )
+                        funding_amount_form.project = project
+                        funding_amount_form.amount = cd_fa['amount']
+                        funding_amount_form.year = current_year
 
                         funding_amount.save()
 
@@ -367,10 +376,8 @@ def edit_project(request, slug):
                         if (len(consortium_member_form.cleaned_data) > 0):
                             cd_cm = consortium_member_form.cleaned_data
 
-                            consortium_member = ConsortiumMember(
-                                project = project,
-                                organization = cd_cm['organization'],
-                            )
+                            consortium_member_form.project = project
+                            consortium_member_form.organization = cd_cm['organization']
 
                             consortium_member.save()
 
@@ -384,12 +391,11 @@ def edit_project(request, slug):
                 if (len(project_leader_form.cleaned_data) > 0):
                     cd_pl = project_leader_form.cleaned_data
 
-                    project_leader = ProjectLeader(
-                        project = project,
-                        organization = cd_pl['organization']
-                    )
+                    project_leader.project = project
+                    project_leader.organization = cd_pl['organization']
 
                     project_leader.save()
+
                 else:
                     print "No project leader to save"
 
@@ -483,20 +489,22 @@ def email_project(request, slug):
 
     funding_program = FundingProgram.objects.filter(project_id = project.id)
 
-    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalProjectManager').values('employee_id')
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
-    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'LocalPrincipalResearcher').values('employee_id')
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
+
+    print principal_researchers
 
     total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
 
-    project_leader = ProjectLeader.objects.filter(project_id = project.id)
+    project_leader = ProjectLeader.objects.get(project_id = project.id)
 
     consortium_members = []
 
     for consortium_member in ConsortiumMember.objects.all().filter(project_id = project.id):
-        org = Organization.objects.filter(id = consortium_member.organization.id)
+        org = Organization.objects.get(id = consortium_member.organization.id)
         consortium_members.append(org.name)
 
     html_content = render_to_string('project_manager/project_email_template.html', {
@@ -516,6 +524,14 @@ def email_project(request, slug):
         'oscar.pdr@gmail.com',                      # from
         ['oscar.pdr@gmail.com']                    # to
     )
+
+    image_file = open(project.logo.path, 'rb')
+    msg_image = MIMEImage(image_file.read())
+    image_file.close()
+
+    msg_image.add_header('Content-ID', '<image>', filename = project.logo.path)
+    msg.attach(msg_image)
+
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
