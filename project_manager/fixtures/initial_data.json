@@ -3,7 +3,7 @@
         "model": "project_manager.project",
         "pk": 1,
         "fields": {
-            "project_type": "DevelopmentProject",
+            "project_type": "Development project",
             "title": "THOFU: Tecnologías del Hotel del Futuro",
             "slug": "thofu",
             "description": "THOFU is a large multidisciplinary R&D project which aims to enhance the offer of the hospitality sector through joint research on a new conception of the future hotel, from the spaces and their construction, to objects that reside in it, the interaction with guests, as well as the symbiosis with the Internet.",
@@ -20,7 +20,7 @@
         "model": "project_manager.project",
         "pk": 2,
         "fields": {
-            "project_type": "AppliedResearchProject",
+            "project_type": "Applied research project",
             "title": "SELENE",
             "slug": "selene",
             "description": "The goal of this project is to design, develop and evaluate a collaborative work environment based on social and semantic Web technologies to support networking innovation models in order to accelerate innovation processes through an architecture of participation and intelligent information management.",
@@ -98,7 +98,7 @@
         "fields": {
             "project": 1,
             "employee": 5,
-            "role": "LocalProjectManager"
+            "role": "Local project manager"
         }
     },
     {
@@ -107,7 +107,7 @@
         "fields": {
             "project": 1,
             "employee": 8,
-            "role": "LocalProjectManager"
+            "role": "Local project manager"
         }
     },
     {
@@ -134,7 +134,7 @@
         "fields": {
             "project": 2,
             "employee": 8,
-            "role": "LocalProjectManager"
+            "role": "Local project manager"
         }
     },
     {
@@ -152,7 +152,7 @@
         "fields": {
             "project": 2,
             "employee": 4,
-            "role": "LocalPrincipalResearcher"
+            "role": "Local principal researcher"
         }
     },
     {

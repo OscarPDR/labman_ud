@@ -11,16 +11,16 @@ from organization_manager.models import Organization
 
 PROJECT_TYPES = (
     ('Project', 'Project'),
-    ('DevelopmentProject', 'Development project'),
-    ('InnovationProject', 'Innovation project'),
-    ('ResearchProject', 'Research project'),
-    ('BasicResearchProject', 'Basic research project'),
-    ('AppliedResearchProject', 'Applied research project'),
+    ('Development project', 'Development project'),
+    ('Innovation project', 'Innovation project'),
+    ('Research project', 'Research project'),
+    ('Basic research project', 'Basic research project'),
+    ('Applied research project', 'Applied research project'),
 )
 
 PROJECT_STATUS = (
-    ('NotStarted', 'Not started'),
-    ('InDevelopment', 'In development'),
+    ('Not started', 'Not started'),
+    ('In development', 'In development'),
     ('Finished', 'Finished'),
 )
 
@@ -51,10 +51,10 @@ GEOGRAPHICAL_SCOPE = (
 
 ROLES = (
     ('Researcher', 'Researcher'),
-    ('PrincipalResearcher', 'Principal researcher'),
-    ('LocalPrincipalResearcher', 'Local principal researcher'),
-    ('ProjectManager', 'Project manager'),
-    ('LocalProjectManager', 'Local project manager'),
+    ('Principal researcher', 'Principal researcher'),
+    ('Local principal researcher', 'Local principal researcher'),
+    ('Project manager', 'Project manager'),
+    ('Local project manager', 'Local project manager'),
 )
 
 # Create your models here.

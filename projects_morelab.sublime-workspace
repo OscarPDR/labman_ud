@@ -4,8 +4,60 @@
 		"selected_items":
 		[
 			[
+				"pro",
+				"project_leader"
+			],
+			[
+				"g",
+				"get_object_or_404"
+			],
+			[
 				"proje",
-				"project_code"
+				"project_leader"
+			],
+			[
+				"proj",
+				"project_leader"
+			],
+			[
+				"ge",
+				"geographical_scope"
+			],
+			[
+				"con",
+				"concession_year"
+			],
+			[
+				"sta",
+				"start_month"
+			],
+			[
+				"fu",
+				"funding_program_data"
+			],
+			[
+				"fun",
+				"funding_program"
+			],
+			[
+				"to",
+				"total_funds"
+			],
+			[
+				"s",
+				"status"
+			],
+			[
+				"en",
+				"end_year"
+			],
+			[
+				"st",
+				"start_year"
+			],
+			[
+				"get",
+				"get_object_or_404"
 			],
 			[
 				"fo",
@@ -18,10 +70,6 @@
 			[
 				"Local",
 				"LocalProjectManager"
-			],
-			[
-				"proj",
-				"project"
 			],
 			[
 				"Proj",
@@ -56,20 +104,12 @@
 				"text-align"
 			],
 			[
-				"pro",
-				"project_leader"
-			],
-			[
 				"Proje",
 				"ProjectLeader"
 			],
 			[
 				"project",
 				"project_leader"
-			],
-			[
-				"fun",
-				"funding-p"
 			],
 			[
 				"marg",
@@ -132,10 +172,6 @@
 				"Organization"
 			],
 			[
-				"con",
-				"consortium_members"
-			],
-			[
 				"employ",
 				"employee"
 			],
@@ -183,15 +219,23 @@
 			"file": "project_manager/models.py",
 			"settings":
 			{
-				"buffer_size": 8815,
+				"buffer_size": 9158,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "project_manager/views.py",
+			"file": "projects_morelab/settings.py",
 			"settings":
 			{
-				"buffer_size": 19836,
+				"buffer_size": 6152,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "project_manager/templates/project_manager/add.html",
+			"settings":
+			{
+				"buffer_size": 9709,
 				"line_ending": "Unix"
 			}
 		},
@@ -204,18 +248,10 @@
 			}
 		},
 		{
-			"file": "project_manager/templates/project_manager/info.html",
+			"file": "project_manager/views.py",
 			"settings":
 			{
-				"buffer_size": 6427,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "employee_manager/views.py",
-			"settings":
-			{
-				"buffer_size": 4458,
+				"buffer_size": 21542,
 				"line_ending": "Unix"
 			}
 		}
@@ -244,40 +280,44 @@
 	},
 	"file_history":
 	[
-		"/home/oscar/Escritorio/Mi biblioteca.bib",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/views.py",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/forms.py",
 		"/home/oscar/Proyectos/projects_morelab/organization_manager/models.py",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/models.py",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/info.html",
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/info.html",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/info.html",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/add.html",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/add.html",
-		"/home/oscar/Proyectos/projects_morelab/static/css/style.css",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/forms.py",
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/forms.py",
 		"/home/oscar/Proyectos/projects_morelab/employee_manager/models.py",
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/views.py",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/index.html",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/project_email_template.html",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/admin.py",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/admin.py",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/models.py",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/admin.py",
 		"/home/oscar/Proyectos/projects_morelab/project_manager/views.py",
-		"/home/oscar/Proyectos/projects_morelab/organization_manager/urls.py",
-		"/home/oscar/.config/sublime-text-2/Packages/User/Python Django.sublime-settings",
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/fixtures/initial_data.json",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/fixtures/initial_data.json",
-		"/home/oscar/Proyectos/projects_morelab/project_manager/fixtures/initial_data.old.json",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/edit.html",
+		"/home/oscar/Proyectos/projects_morelab/static/css/style.css",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/info.html",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/views.py",
+		"/home/oscar/Proyectos/projects_morelab/projects_morelab/settings.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/edit.html",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/add.html",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/views.py",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/forms.py",
 		"/home/oscar/Proyectos/projects_morelab/organization_manager/fixtures/initial_data.json",
 		"/home/oscar/Proyectos/projects_morelab/project_manager/urls.py",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/fixtures/initial_data.json",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/fixtures/initial_data.json",
+		"/home/oscar/Escritorio/Mi biblioteca.bib",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/forms.py",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/info.html",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/info.html",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/add.html",
+		"/home/oscar/Proyectos/projects_morelab/employee_manager/forms.py",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/index.html",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/project_email_template.html",
+		"/home/oscar/Proyectos/projects_morelab/organization_manager/urls.py",
+		"/home/oscar/.config/sublime-text-2/Packages/User/Python Django.sublime-settings",
+		"/home/oscar/Proyectos/projects_morelab/project_manager/fixtures/initial_data.old.json",
 		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/index.html",
 		"/home/oscar/Proyectos/projects_morelab/project_manager/templates/project_manager/index.html",
-		"/home/oscar/Proyectos/projects_morelab/projects_morelab/settings.py",
 		"/home/oscar/Proyectos/projects_morelab/organization_manager/templates/organization_manager/edit.html",
 		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/add.html",
 		"/home/oscar/Proyectos/projects_morelab/projects_morelab/views.py",
 		"/home/oscar/Proyectos/projects_morelab/projects_morelab/urls.py",
 		"/home/oscar/Proyectos/projects_morelab/employee_manager/urls.py",
-		"/home/oscar/Proyectos/projects_morelab/employee_manager/templates/employee_manager/edit.html",
 		"/home/oscar/Proyectos/projects_morelab/templates/projects_morelab/base.html",
 		"/home/oscar/Proyectos/projects_morelab/templates/projects_morelab/index.html",
 		"/home/oscar/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
@@ -301,6 +341,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			", queryset = qset",
+			"query",
+			", initial = example_data",
 			"get_object_or_404",
 			"get(",
 			"principal_researcher",
@@ -326,6 +369,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"",
 			"filter(",
 			"researcher",
 			"project_manager",
@@ -345,7 +389,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -353,15 +397,15 @@
 					"file": "project_manager/models.py",
 					"settings":
 					{
-						"buffer_size": 8815,
+						"buffer_size": 9158,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8135,
-								8135
+								8720,
+								8720
 							]
 						],
 						"settings":
@@ -460,25 +504,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5260.0,
+						"translation.y": 5670.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "project_manager/views.py",
+					"file": "projects_morelab/settings.py",
 					"settings":
 					{
-						"buffer_size": 19836,
+						"buffer_size": 6152,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12092,
-								12092
+								5045,
+								5045
 							]
 						],
 						"settings":
@@ -577,13 +621,130 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4355.0,
+						"translation.y": 2214.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "project_manager/templates/project_manager/add.html",
+					"settings":
+					{
+						"buffer_size": 9709,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1482,
+								1482
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501",
+								"E251"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Djaneiro/Syntaxes/HTML (Django).tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 216.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "project_manager/forms.py",
 					"settings":
 					{
@@ -594,8 +755,8 @@
 						"selection":
 						[
 							[
-								823,
-								823
+								194,
+								194
 							]
 						],
 						"settings":
@@ -700,136 +861,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "project_manager/templates/project_manager/info.html",
-					"settings":
-					{
-						"buffer_size": 6427,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3575,
-								3575
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501",
-								"E251"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Djaneiro/Syntaxes/HTML (Django).tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 756.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 4,
-					"file": "employee_manager/views.py",
+					"file": "project_manager/views.py",
 					"settings":
 					{
-						"buffer_size": 4458,
+						"buffer_size": 21542,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4373,
-								4373
+								18433,
+								18433
 							]
 						],
 						"settings":
@@ -927,8 +971,8 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 1261.0,
+						"translation.x": 17.0,
+						"translation.y": 7731.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

@@ -8,6 +8,9 @@ urlpatterns = patterns('',
     url(r'^email/(\S+)$', 'project_manager.views.email_project', name = 'email_project'),
     url(r'^edit/(\S+)$', 'project_manager.views.edit_project', name = 'edit_project'),
     url(r'^delete/(\S+)$', 'project_manager.views.delete_project', name = 'delete_project'),
+
+    url(r'^delete_emp/(?P<employee_slug>\S+)/from/(?P<project_slug>\S+)$', 'project_manager.views.delete_employee_from_project', name = 'delete_employee_from_project'),
+    url(r'^delete_org/(?P<organization_slug>\S+)/from/(?P<project_slug>\S+)$', 'project_manager.views.delete_organization_from_project', name = 'delete_organization_from_project'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

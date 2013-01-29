@@ -108,11 +108,17 @@ ul.nav.nav-tabs {
 }
 
 #employees-form th {
-    width: 75px;
+    width: 85px;
+    font-weight: normal;
 }
 
 #assigned_employee_formset {
     width: 100%;
+}
+
+#consortium-members-form th {
+    width: 125px;
+    font-weight: normal;
 }
 
 .dynamic-form {

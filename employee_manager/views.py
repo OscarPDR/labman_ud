@@ -80,10 +80,10 @@ def add_employee(request):
 def info_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
 
-    apr = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'LocalPrincipalResearcher').values('project_id')
+    apr = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'Local principal researcher').values('project_id')
     as_principal_researcher = Project.objects.filter(id__in = apr).order_by('title')
 
-    apm = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'LocalProjectManager').values('project_id')
+    apm = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'Local project manager').values('project_id')
     as_project_manager = Project.objects.filter(id__in = apm).order_by('title')
 
     ar = AssignedEmployee.objects.filter(employee_id = employee.id, role = 'Researcher').values('project_id')

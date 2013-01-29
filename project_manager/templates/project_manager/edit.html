@@ -30,6 +30,11 @@
 
                     <div class="tab-pane active" id="general">
 
+                        <div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            You should first edit the assigned employees and consortium members in order not to loose edited information.
+                        </div>
+
                         {% for field in project_form %}
 
                             {% if field.label != 'Total funds' %}
@@ -114,6 +119,41 @@
                     <!-- End #assigned-employees tab-pane -->
 
                     <div class="tab-pane" id="assigned-employees">
+
+                        {% if assigned_employees %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for assigned_employee in assigned_employees %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/employees/info/{{ assigned_employee.employee.slug }}">
+                                                    {{ assigned_employee.employee.name }} {{ assigned_employee.employee.first_surname }} {{ assigned_employee.employee.second_surname }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ assigned_employee.role }}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-mini btn-danger" href="/projects/delete_emp/{{ assigned_employee.employee.slug }}/from/{{ assigned_employee.project.slug }}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
+
                         {{ assigned_employee_formset.management_form }}
                         <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
                             <tbody id="employees-form">
@@ -143,8 +183,38 @@
 
                         <br>
 
+                        {% if consortium_members %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Organization</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for consortium_member in consortium_members %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/organizations/info/{{ consortium_member.organization.slug }}">
+                                                    {{ consortium_member.organization.name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-mini btn-danger" href="/projects/delete_org/{{ consortium_member.organization.slug }}/from/{{ consortium_member.project.slug }}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
+
                         <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
-                            <tbody>
+                            <tbody id="consortium-members-form">
                                 {% for consortium_member_form in consortium_member_formset.forms %}
                                     <tr>
                                         <th>{{ consortium_member_form.organization.label }}</th>
@@ -167,4 +237,67 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
+
+    <script>
+        $(function() {
+            $('#assigned_employee_formset tbody tr').formset({
+                prefix: '{{ assigned_employee_formset.prefix }}',
+                addText: 'Add employee',
+                addCssClass: 'btn btn-info',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
+            });
+
+            $('#consortium_member_formset tbody tr').formset({
+                prefix: '{{ consortium_member_formset.prefix }}',
+                addText: 'Add consortium member',
+                addCssClass: 'btn btn-info',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
+            });
+        });
+    </script>
+
+    <script>
+        function sortFundingAmountForms() {
+            var amount_forms = document.getElementById("funding-amount-details");
+            amount_forms.style.visibility = 'hidden';
+            var start_year = parseInt(document.getElementById("id_funding_program_form-start_year").value);
+            var end_year = parseInt(document.getElementById("id_funding_program_form-end_year").value);
+            if (end_year >= start_year) {
+                for (var i = 0; i <= (end_year - start_year); i++) {
+                    var amount_form = amount_forms.children[i];
+                    amount_form.style.visibility = 'visible';
+                    var label = amount_form.children[0];
+                    label.innerHTML = "Año " + (start_year + i);
+                }
+            }
+        }
+    </script>
+
+    <script>
+        function autofillDuration() {
+            try {
+                var start_year = document.getElementById("id_project_form-start_year").value;
+                if (start_year != "") {
+                    document.getElementById("id_funding_program_form-start_year").value = start_year;
+                    document.getElementById("id_funding_program_form-concession_year").value = start_year;
+                }
+            }
+            catch (err) {
+            }
+
+            try {
+                var end_year = document.getElementById("id_project_form-end_year").value;
+                if (end_year != "") {
+                    document.getElementById("id_funding_program_form-end_year").value = end_year;
+                }
+            }
+            catch (err) {
+            }
+        }
+    </script>
+
 {% endblock %}

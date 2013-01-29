@@ -251,13 +251,15 @@ def info_project(request, slug):
 
 
 #########################
-# View: add_project
+# View: edit_project
 #########################
 
 def edit_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
     funding_program = get_object_or_404(FundingProgram, project_id = project.id)
     project_leader = get_object_or_404(ProjectLeader, project_id = project.id)
+    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+    consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
@@ -436,8 +438,15 @@ def edit_project(request, slug):
             initial = funding_program_data,
         )
 
-        funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
-        assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
+        funding_amount_formset = FundingAmountFormSet(
+            instance = Project(),
+            prefix = 'funding_amount_formset'
+        )
+
+        assigned_employee_formset = AssignedEmployeeFormSet(
+            instance = Project(),
+            prefix = 'assigned_employee_formset'
+        )
 
         project_leader_form = ProjectLeaderForm(
             instance = Project(),
@@ -447,15 +456,19 @@ def edit_project(request, slug):
 
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
 
+    print consortium_members
+
     return render_to_response("project_manager/edit.html", {
             'project': project,
             "project_form": project_form,
             'funding_program_data': funding_program_data,
             "funding_program_form": funding_program_form,
             "funding_amount_formset": funding_amount_formset,
+            'assigned_employees': assigned_employees,
             "assigned_employee_formset": assigned_employee_formset,
             'project_leader': project_leader,
             "project_leader_form": project_leader_form,
+            'consortium_members': consortium_members,
             "consortium_member_formset": consortium_member_formset,
         },
         context_instance = RequestContext(request))
@@ -499,9 +512,9 @@ def email_project(request, slug):
 
     msg = EmailMultiAlternatives(
         '[NEW PROJECT]: ' + project.title,        # subject
-        text_content,                                       # message
+        text_content,                                     # message
         'oscar.pdr@gmail.com',                      # from
-        ['oscar.pdr@gmail.com']                     # to
+        ['oscar.pdr@gmail.com']                    # to
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
@@ -518,3 +531,31 @@ def delete_project(request, slug):
     project.delete()
 
     return redirect('project_index')
+
+
+#########################
+# View: delete_employee_from_project
+#########################
+
+def delete_employee_from_project(request, employee_slug, project_slug):
+    project = get_object_or_404(Project, slug = project_slug)
+    employee = get_object_or_404(Employee, slug = employee_slug)
+
+    assigned_employee = get_object_or_404(AssignedEmployee, project_id = project.id, employee_id = employee.id)
+    assigned_employee.delete()
+
+    return redirect('/projects/edit/' + project.slug)
+
+
+#########################
+# View: delete_employee_from_project
+#########################
+
+def delete_organization_from_project(request, organization_slug, project_slug):
+    project = get_object_or_404(Project, slug = project_slug)
+    organization = get_object_or_404(Organization, slug = organization_slug)
+
+    consortium_member = get_object_or_404(ConsortiumMember, project_id = project.id, organization_id = organization.id)
+    consortium_member.delete()
+
+    return redirect('/projects/edit/' + project.slug)
