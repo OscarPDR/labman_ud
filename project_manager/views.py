@@ -487,7 +487,7 @@ def edit_project(request, slug):
 def email_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
-    funding_program = FundingProgram.objects.filter(project_id = project.id)
+    funding_program = FundingProgram.objects.get(project_id = project.id)
 
     lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
@@ -525,12 +525,15 @@ def email_project(request, slug):
         ['oscar.pdr@gmail.com']                    # to
     )
 
-    image_file = open(project.logo.path, 'rb')
-    msg_image = MIMEImage(image_file.read())
-    image_file.close()
+    try:
+        image_file = open(project.logo.path, 'rb')
+        msg_image = MIMEImage(image_file.read())
+        image_file.close()
 
-    msg_image.add_header('Content-ID', '<image>', filename = project.logo.path)
-    msg.attach(msg_image)
+        msg_image.add_header('Content-ID', '<image>', filename = project.logo.path)
+        msg.attach(msg_image)
+    except:
+        pass
 
     msg.attach_alternative(html_content, "text/html")
     msg.send()

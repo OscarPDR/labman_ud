@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <html>
     <body>
 
@@ -13,18 +15,18 @@
             <strong>Duration:</strong> {{ project.start_year }} - {{ project.end_year }}
         </p>
 
-        {% if funding_program %}
+        {% if funding_program.name %}
             <p>
                 <strong>Supported by:</strong> {{ funding_program.name }}, {{ funding_program.organization.name }}
             </p>
         {% endif %}
 
-        <p>
-            <strong>Funding amount for DeustoTech:</strong> {{ total_deusto.amount__sum }} €
-            {% if project.total_funding_amount %}
-                (from a total project funding of {{ project.total_funding_amount }})
-            {% endif %}
-        </p>
+        {% if project.total_funding_amount %}
+            <p>
+                <strong>Funding amount for DeustoTech:</strong> {{ total_deusto.amount__sum|intcomma|intword }} €
+                    (from a total project funding of {{ project.total_funding_amount|intcomma|intword }})
+            </p>
+        {% endif %}
 
         {% if project_managers %}
             <p>
