@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
 
 from organization_manager.models import Organization
@@ -37,6 +36,12 @@ class Employee(models.Model):
         null = True,
     )
 
+    external = models.BooleanField(
+        blank = True,
+    )
+
+    organization = models.ForeignKey(Organization, blank = True, null = True)
+
     slug = models.SlugField()
 
     def __unicode__(self):
@@ -48,44 +53,3 @@ class Employee(models.Model):
 
     class Meta:
         ordering = ['name', 'first_surname', 'second_surname']
-
-
-#########################
-# Model: Job
-#########################
-
-class Job(models.Model):
-    employee = models.ForeignKey(Employee)
-    place = models.ForeignKey(Organization)
-
-    start_month = models.IntegerField(
-        validators = [
-            MinValueValidator(1),
-            MaxValueValidator(12)
-        ],
-        verbose_name = 'Start month'
-    )
-
-    start_year = models.IntegerField(
-        validators = [
-            MinValueValidator(1990),
-            MaxValueValidator(2030)
-        ],
-        verbose_name = 'Start year'
-    )
-
-    end_month = models.IntegerField(
-        validators = [
-            MinValueValidator(1),
-            MaxValueValidator(12)
-        ],
-        verbose_name = 'End month'
-    )
-
-    start_year = models.IntegerField(
-        validators = [
-            MinValueValidator(1990),
-            MaxValueValidator(2030)
-        ],
-        verbose_name = 'End year'
-    )

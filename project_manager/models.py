@@ -52,9 +52,7 @@ GEOGRAPHICAL_SCOPE = (
 ROLES = (
     ('Researcher', 'Researcher'),
     ('Principal researcher', 'Principal researcher'),
-    ('Local principal researcher', 'Local principal researcher'),
     ('Project manager', 'Project manager'),
-    ('Local project manager', 'Local project manager'),
 )
 
 # Create your models here.

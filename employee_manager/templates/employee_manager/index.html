@@ -47,7 +47,7 @@
                     </td>
                     <td>
                         <a class="btn btn-mini btn-inverse" href="edit/{{ employee.slug }}">Edit</a>
-                        <a class="btn btn-mini btn-danger" href="delete/{{ employee.slug }}">Delete</a>
+                        <a class="btn btn-mini btn-danger" href="{% url delete_employee employee.slug %}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

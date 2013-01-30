@@ -224,10 +224,10 @@ def info_project(request, slug):
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
-    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local principal researcher').values('employee_id')
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
-    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local project manager').values('employee_id')
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
     rs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Researcher').values('employee_id')
@@ -489,10 +489,10 @@ def email_project(request, slug):
 
     funding_program = FundingProgram.objects.get(project_id = project.id)
 
-    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local project manager').values('employee_id')
+    lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
-    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Local principal researcher').values('employee_id')
+    lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
     print principal_researchers

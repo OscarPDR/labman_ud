@@ -98,7 +98,7 @@
         "fields": {
             "project": 1,
             "employee": 5,
-            "role": "Local project manager"
+            "role": "Project manager"
         }
     },
     {
@@ -107,7 +107,7 @@
         "fields": {
             "project": 1,
             "employee": 8,
-            "role": "Local project manager"
+            "role": "Project manager"
         }
     },
     {
@@ -134,7 +134,7 @@
         "fields": {
             "project": 2,
             "employee": 8,
-            "role": "Local project manager"
+            "role": "Project manager"
         }
     },
     {
@@ -152,7 +152,7 @@
         "fields": {
             "project": 2,
             "employee": 4,
-            "role": "Local principal researcher"
+            "role": "Principal researcher"
         }
     },
     {
