@@ -11,13 +11,34 @@
         <br>
 
         <fieldset>
+
+            {% for error in errors %}
+                {{ error }}
+            {% endfor %}
+
             {% for field in form %}
-                <div class="control-group">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">
-                        {{ field }}
+
+                {% if field.errors %}
+
+                    <div class="control-group error">
+                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                        </div>
                     </div>
-                </div>
+
+                {% else %}
+
+                    <div class="control-group"  id="employee-{{ field.label|lower }}-form">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
             {% endfor %}
 
             <div class="form-actions">
@@ -31,4 +52,19 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        // $("#employee-organization-form").css("visibility", "hidden");
+
+        $('#id_external').change(function() {
+            if ($('#id_external').is(':checked')) {
+                $("#employee-organization-form").css("visibility", "visible");
+            }
+            else {
+                $("#employee-organization-form").css("visibility", "hidden");
+            }
+        });
+    </script>
+
+
 {% endblock %}

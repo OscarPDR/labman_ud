@@ -24,7 +24,7 @@
 
                 {% else %}
 
-                    <div class="control-group">
+                    <div class="control-group"  id="employee-{{ field.label|lower }}-form">
                         <label class="control-label">{{ field.label }}</label>
                         <div class="controls">
                             {{ field }}
@@ -47,4 +47,19 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        if ($('#id_external').is(':checked')) {
+            $("#employee-organization-form").css("visibility", "visible");
+        }
+        $('#id_external').change(function() {
+            if ($('#id_external').is(':checked')) {
+                $("#employee-organization-form").css("visibility", "visible");
+            }
+            else {
+                $("#employee-organization-form").css("visibility", "hidden");
+            }
+        });
+    </script>
+
 {% endblock %}

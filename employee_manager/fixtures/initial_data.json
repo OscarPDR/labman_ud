@@ -7,7 +7,9 @@
             "first_surname": "Peña",
             "second_surname": "del Rio",
             "foaf_link": "http://google.es",
-            "slug": "oscar-pena-del-rio"
+            "slug": "oscar-pena-del-rio",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -18,7 +20,9 @@
             "first_surname": "Emaldi",
             "second_surname": "Manrique",
             "foaf_link": "http://google.es",
-            "slug": "mikel-emaldi-manrique"
+            "slug": "mikel-emaldi-manrique",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -29,7 +33,9 @@
             "first_surname": "Lázaro",
             "second_surname": "Aduna",
             "foaf_link": "http://google.es",
-            "slug": "jon-lazaro-aduna"
+            "slug": "jon-lazaro-aduna",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -40,7 +46,9 @@
             "first_surname": "Castillejo",
             "second_surname": "Gil",
             "foaf_link": "http://paginaspersonales.deusto.es/eduardo.castillejo/foaf.rdf",
-            "slug": "eduardo-castillejo-gil"
+            "slug": "eduardo-castillejo-gil",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -51,7 +59,9 @@
             "first_surname": "Almeida",
             "second_surname": "",
             "foaf_link": "http://www.morelab.deusto.es/page/aitor-almeida",
-            "slug": "aitor-almeida"
+            "slug": "aitor-almeida",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -62,7 +72,9 @@
             "first_surname": "Aguilera",
             "second_surname": "",
             "foaf_link": "http://paginaspersonales.deusto.es/unai.aguilera/foaf.rdf",
-            "slug": "unai-aguilera"
+            "slug": "unai-aguilera",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -73,7 +85,9 @@
             "first_surname": "Orduña",
             "second_surname": "",
             "foaf_link": "http://google.es",
-            "slug": "pablo-orduna"
+            "slug": "pablo-orduna",
+            "external": false,
+            "organization": null
         }
     },
     {
@@ -84,7 +98,9 @@
             "first_surname": "López de Ipiña",
             "second_surname": "",
             "foaf_link": "http://google.es",
-            "slug": "diego-lopez-de-ipina"
+            "slug": "diego-lopez-de-ipina",
+            "external": false,
+            "organization": null
         }
     }
 ]

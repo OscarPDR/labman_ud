@@ -28,11 +28,15 @@ class EmployeeForm(forms.ModelForm):
         }
         exclude = ('slug')
 
+    def clean_organization(self):
+        cleaned_data = self.cleaned_data
+        external = cleaned_data.get('external')
+        organization = cleaned_data.get('organization')
 
-#########################
-# Class: JobForm
-#########################
+        if external:
+            if organization is None:
+                raise forms.ValidationError("You must provide the organization the employee belongs to.")
+            else:
+                pass
 
-class JobForm(forms.ModelForm):
-    class Meta:
-        model = Job
+        return organization
