@@ -9,7 +9,8 @@ from django.template.defaultfilters import slugify
 
 
 def image_path(self, filename):
-    return self.slug + os.path.splitext(filename)[-1]
+    print "Hey: " + str(os.path)
+    return 'home/morelab/projects_morelab/media/organizations/%s%s' % (self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -18,7 +19,7 @@ def image_path(self, filename):
 
 class Organization(models.Model):
     name = models.CharField(
-        max_length = 25,
+        max_length = 75,
         verbose_name = 'Name *',    # Required
     )
 
@@ -52,12 +53,15 @@ class Organization(models.Model):
 
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-        path = self.logo.path
-        # Delete the model before the file
-        super(Organization, self).delete(*args, **kwargs)
-        # Delete the file after the model
-        storage.delete(path)
+	if self.logo:
+            storage = self.logo.storage
+            path = self.logo.path
+            # Delete the model before the file
+            super(Organization, self).delete(*args, **kwargs)
+            # Delete the file after the model
+            storage.delete(path)
+	else:
+	    super(Organization, self).delete(*args, **kwargs)
 
     def update(self, *args, **kwargs):
         # You have to prepare what you need before delete the model

@@ -1,9 +1,10 @@
 # coding: utf-8
 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
 
 from organization_manager.models import *
 from organization_manager.forms import *
@@ -62,12 +63,16 @@ def add_organization(request):
                 name = name.encode('utf-8'),
                 country = country.encode('utf-8'),
                 homepage = homepage.encode('utf-8'),
-                logo = request.FILES['logo']
             )
+
+	    try:
+		org.logo = request.FILES['organization_form-logo']
+	    except:
+		pass
 
             org.save()
 
-            return HttpResponseRedirect("/organizaciones")
+            return HttpResponseRedirect(reverse('organization_index'))
     else:
         form = OrganizationForm()
 
@@ -116,11 +121,15 @@ def edit_organization(request, slug):
             organization.name = cd['name'].encode('utf-8')
             organization.country = cd['country'].encode('utf-8')
             organization.homepage = cd['homepage'].encode('utf-8')
-            organization.logo = request.FILES['logo']
+
+	    try:
+                organization.logo = request.FILES['organization_form-logo']
+            except:
+                pass
 
             organization.save()
 
-            return HttpResponseRedirect("/organizations")
+            return HttpResponseRedirect(reverse('organization_index'))
     else:
         data = {
             'name': organization.name,
@@ -146,4 +155,4 @@ def delete_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
     organization.delete()
 
-    return redirect('organization_index')
+    return HttpResponseRedirect(reverse('organization_index'))
