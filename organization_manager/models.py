@@ -9,8 +9,7 @@ from django.template.defaultfilters import slugify
 
 
 def image_path(self, filename):
-    print "Hey: " + str(os.path)
-    return 'home/morelab/projects_morelab/media/organizations/%s%s' % (self.slug, os.path.splitext(filename)[-1])
+    return '/home/morelab/projects_morelab/media/organizations/%s%s' % (self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
