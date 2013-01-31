@@ -12,6 +12,7 @@
             "end_year": 2013,
             "status": "In development",
             "total_funds": 1000000,
+            "total_funds_deusto": 0,
             "observations": "",
             "logo": "thofu.png"
         }
@@ -29,6 +30,7 @@
             "end_year": 2011,
             "status": "Finished",
             "total_funds": 0,
+            "total_funds_deusto": 0,
             "observations": "",
             "logo": ""
         }
@@ -46,7 +48,8 @@
             "end_month": "12",
             "end_year": 2013,
             "concession_year": 2010,
-            "geographical_scope": "Spain"
+            "geographical_scope": "Spain",
+            "observations": ""
         }
     },
     {
@@ -62,7 +65,8 @@
             "end_month": "7",
             "end_year": 2011,
             "concession_year": 2008,
-            "geographical_scope": "Euskadi"
+            "geographical_scope": "Euskadi",
+            "observations": ""
         }
     },
     {

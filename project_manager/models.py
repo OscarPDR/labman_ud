@@ -58,8 +58,12 @@ ROLES = (
 # Create your models here.
 
 
-def logo_path(self, filename):
-    return self.slug + os.path.splitext(filename)[-1]
+def project_logo_path(self, filename):
+    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
+
+
+def organization_logo_path(self, filename):
+    return "%s/%s%s" % ("organizations", self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -120,17 +124,25 @@ class Project(models.Model):
         verbose_name = 'Total funds',
     )
 
+    total_funds_deusto = models.DecimalField(
+        max_digits = 10,
+        decimal_places = 2,
+        blank = True,
+        null = True,
+        verbose_name = 'Total funds (DeustoTech only)',
+    )
+
+    logo = models.ImageField(
+        upload_to = project_logo_path,
+        verbose_name = 'Logo',
+        blank = True,
+        null = True,
+    )
+
     observations = models.TextField(
         max_length = 500,
         verbose_name = 'Observations',
         blank = True,
-    )
-
-    logo = models.ImageField(
-        upload_to = logo_path,
-        verbose_name = 'Logo',
-        blank = True,
-        null = True,
     )
 
     def __unicode__(self):
@@ -175,19 +187,19 @@ class FundingProgram(models.Model):
     organization = models.ForeignKey(Organization, verbose_name = 'Funding organization', blank = True, null = True,)
 
     name = models.CharField(
-        max_length = 25,
+        max_length = 100,
         verbose_name = 'Program name',
         blank = True,
     )
 
     project_code = models.CharField(
-        max_length = 25,
+        max_length = 50,
         verbose_name = 'Project code',
         blank = True,
     )
 
     start_month = models.CharField(
-        max_length= 15,
+        max_length= 25,
         choices = MONTHS,
         default = '1',
         verbose_name = 'Start month',
@@ -195,14 +207,14 @@ class FundingProgram(models.Model):
     )
 
     start_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'Start year',
         blank = True,
         null = True,
     )
 
     end_month = models.CharField(
-        max_length= 15,
+        max_length= 25,
         choices = MONTHS,
         default = '12',
         verbose_name = 'End month',
@@ -210,14 +222,14 @@ class FundingProgram(models.Model):
     )
 
     end_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'End year',
         blank = True,
         null = True,
     )
 
     concession_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'Concession year',
         blank = True,
         null = True,
@@ -232,10 +244,16 @@ class FundingProgram(models.Model):
     )
 
     logo = models.ImageField(
-        upload_to = logo_path,
+        upload_to = organization_logo_path,
         verbose_name = 'Logo',
         blank = True,
         null = True,
+    )
+
+    observations = models.TextField(
+        max_length = 500,
+        verbose_name = 'Observations',
+        blank = True,
     )
 
     slug = models.SlugField(
@@ -287,7 +305,7 @@ class FundingAmount(models.Model):
     )
 
     year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'Concession year',
         blank = True,
     )
