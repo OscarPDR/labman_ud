@@ -59,11 +59,11 @@ ROLES = (
 
 
 def project_logo_path(self, filename):
-    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
+    return "/home/morelab/projects_morelab/media/%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
 
 
 def organization_logo_path(self, filename):
-    return "%s/%s%s" % ("organizations", self.slug, os.path.splitext(filename)[-1])
+    return "/home/morelab/projects_morelab/media/%s/%s%s" % ("organizations", self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -193,7 +193,7 @@ class FundingProgram(models.Model):
     )
 
     project_code = models.CharField(
-        max_length = 50,
+        max_length = 100,
         verbose_name = 'Project code',
         blank = True,
     )
