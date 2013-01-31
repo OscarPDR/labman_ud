@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.conf import settings
 
 from django.db.models import Sum
 from email.mime.image import MIMEImage
@@ -519,10 +520,10 @@ def email_project(request, slug):
     text_content = strip_tags(html_content)
 
     msg = EmailMultiAlternatives(
-        '[NEW PROJECT]: ' + project.title,        # subject
-        text_content,                                     # message
-        'oscar.pdr@gmail.com',                      # from
-        ['oscar.pdr@gmail.com']                    # to
+        '[NEW PROJECT]: ' + project.title,                # subject
+        text_content,                                             # message
+        'oscar.pdr@gmail.com',                              # from
+        settings.PROJECTS_RECEPTOR_EMAILS,       # to
     )
 
     try:

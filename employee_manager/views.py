@@ -151,4 +151,5 @@ def delete_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
     employee.delete()
 
+    ## FIXME: Pagination issues
     return HttpResponseRedirect(reverse('employee_index'))
