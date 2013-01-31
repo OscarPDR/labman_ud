@@ -1,5 +1,5 @@
 """
-WSGI DEV config for projects_morelab project.
+WSGI PROD config for projects_morelab project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
