@@ -59,11 +59,11 @@ ROLES = (
 
 
 def project_logo_path(self, filename):
-    return "/home/morelab/projects_morelab/media/%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
+    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
 
 
 def organization_logo_path(self, filename):
-    return "/home/morelab/projects_morelab/media/%s/%s%s" % ("organizations", self.slug, os.path.splitext(filename)[-1])
+    return "%s/%s%s" % ("organizations", self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -84,6 +84,7 @@ class Project(models.Model):
     )
 
     slug = models.SlugField(
+	max_length = 100,
         blank = True,
     )
 
@@ -257,6 +258,7 @@ class FundingProgram(models.Model):
     )
 
     slug = models.SlugField(
+	max_length = 100,
         blank = True,
     )
 
