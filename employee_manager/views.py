@@ -122,7 +122,7 @@ def edit_employee(request, slug):
 
             employee.save()
 
-            return HttpResponseRedirect("/employees")
+            return HttpResponseRedirect(reverse('employee_index'))
 
     else:
         data = {
