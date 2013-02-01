@@ -37,17 +37,10 @@ h4 {
     max-height: 75px;
 }
 
-<<<<<<< HEAD
 #main-container {
     display: block;
     min-height: 500px;
     padding-top: 10em;
-=======
-.container {
-    display: block;
-    min-height: 500px;
-    margin-top: 3em;
->>>>>>> b82e295bb5eb8e1231b21f90dfd73efde19ad318
 }
 
 .edit-organization-logo {
@@ -61,23 +54,6 @@ h4 {
     width: 100%;
 }
 
-<<<<<<< HEAD
-=======
-header {
-    text-align: center;
-    width: 100%;
-    line-height: 8em;
-    min-height: 10em;
-    background-color: whiteSmoke;
-    border-bottom: #e5e5e5 0.5em solid;
-    margin: 0 auto;
-}
-
-header img {
-    margin: 1em;
-}
-
->>>>>>> b82e295bb5eb8e1231b21f90dfd73efde19ad318
 #logo-left {
     float: left;
     margin-left: 15em;
@@ -126,13 +102,10 @@ ul.nav.nav-tabs {
     margin-left: 40px;
 }
 
-<<<<<<< HEAD
 #edit-from-info {
    margin-left: 70px;
 }
 
-=======
->>>>>>> b82e295bb5eb8e1231b21f90dfd73efde19ad318
 #employees-form th {
     width: 85px;
     font-weight: normal;
@@ -199,21 +172,13 @@ ul.nav.nav-tabs {
 footer {
     text-align: center;
     width: 100%;
-<<<<<<< HEAD
     line-height: 8em;
     min-height: 11em;
-=======
-    line-height: 5em;
-    min-height: 5em;
->>>>>>> b82e295bb5eb8e1231b21f90dfd73efde19ad318
     background-color: whiteSmoke;
     border-top: #999 0.5em solid;
     margin: 0 auto;
 }
-<<<<<<< HEAD
 
 footer img {
     margin: 1em;
 }
-=======
->>>>>>> b82e295bb5eb8e1231b21f90dfd73efde19ad318
