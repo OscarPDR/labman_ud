@@ -8,9 +8,9 @@ from django.template.defaultfilters import slugify
 # Create your models here.
 
 
-def image_path(self, filename):
-    # return '/home/morelab/projects_morelab/media/organizations/%s%s' % (self.slug, os.path.splitext(filename)[-1])
+def logo_path(self, filename):
     return '%s/%s%s' % ('organizations', self.slug, os.path.splitext(filename)[-1])
+
 
 #########################
 # Model: Organization
@@ -35,7 +35,7 @@ class Organization(models.Model):
     )
 
     logo = models.ImageField(
-        upload_to = 'organizations',
+        upload_to = logo_path,
         verbose_name = 'Logo',
         blank = True,
         null = True,
