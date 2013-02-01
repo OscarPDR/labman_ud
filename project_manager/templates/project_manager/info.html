@@ -31,7 +31,7 @@
 
                 {% if project.logo %}
                     <div class="project-logo">
-                        <img src="{{ project.logo.url }}" height="150" />
+                        <img src="{{ MEDIA_URL }}{{ project.logo }}" height="150" />
                     </div>
                  {% endif %}
 
