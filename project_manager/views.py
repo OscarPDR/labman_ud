@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
 
 from django.conf import settings
 
@@ -123,7 +124,6 @@ def add_project(request):
 
             else:
                 project.delete()
-                print '1'
 
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
@@ -144,7 +144,6 @@ def add_project(request):
                         print "No fundings amounts to save"
             else:
                 project.delete()
-                print '2'
 
             if assigned_employee_formset.is_valid():
                 for assigned_employee_form in assigned_employee_formset:
@@ -163,7 +162,6 @@ def add_project(request):
                 assigned_employee_formset.save()
             else:
                 project.delete()
-                print '3'
 
             if consortium_member_formset.is_valid():
                 for consortium_member_form in consortium_member_formset:
@@ -181,7 +179,6 @@ def add_project(request):
                             print "No consortium members to save"
             else:
                 project.delete()
-                print '4'
 
             if project_leader_form.is_valid():
                 if (len(project_leader_form.cleaned_data) > 0):
@@ -196,7 +193,7 @@ def add_project(request):
                 else:
                     print "No project leader to save"
 
-            return HttpResponseRedirect("/projects/email/" + project.slug)
+            return HttpResponseRedirect(reverse('email_project', args = (project.slug,)))
     else:
         project_form = ProjectForm(prefix = 'project_form')
         funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
@@ -302,7 +299,7 @@ def edit_project(request, slug):
             try:
                 project.logo = request.FILES['project_form-logo']
             except:
-                    pass
+                pass
 
             project.save()
 
@@ -332,8 +329,7 @@ def edit_project(request, slug):
 
             else:
                 project.delete()
-                print '1'
-
+                
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
                     if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= end_year):
@@ -351,8 +347,7 @@ def edit_project(request, slug):
                         print "No fundings amounts to save"
             else:
                 project.delete()
-                print '2'
-
+                
             if assigned_employee_formset.is_valid():
                 for assigned_employee_form in assigned_employee_formset:
                     if (len(assigned_employee_form.cleaned_data) > 0):
@@ -370,8 +365,7 @@ def edit_project(request, slug):
                 assigned_employee_formset.save()
             else:
                 project.delete()
-                print '3'
-
+                
             if consortium_member_formset.is_valid():
                 for consortium_member_form in consortium_member_formset:
                         if (len(consortium_member_form.cleaned_data) > 0):
@@ -386,8 +380,7 @@ def edit_project(request, slug):
                             print "No consortium members to save"
             else:
                 project.delete()
-                print '4'
-
+                
             if project_leader_form.is_valid():
                 if (len(project_leader_form.cleaned_data) > 0):
                     cd_pl = project_leader_form.cleaned_data
@@ -400,7 +393,7 @@ def edit_project(request, slug):
                 else:
                     print "No project leader to save"
 
-            return HttpResponseRedirect("/projects/email/" + project.slug)
+            return HttpResponseRedirect(reverse('email_project', args = (project.slug,)))
 
     else:
         project_data = {
@@ -539,7 +532,7 @@ def email_project(request, slug):
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
-    return HttpResponseRedirect('/projects')
+    return HttpResponseRedirect(reverse('project_index'))
 
 
 #########################
@@ -550,7 +543,7 @@ def delete_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
     project.delete()
 
-    return redirect('project_index')
+    return HttpResponseRedirect(reverse('project_index'))
 
 
 #########################
@@ -564,7 +557,7 @@ def delete_employee_from_project(request, employee_slug, project_slug):
     assigned_employee = get_object_or_404(AssignedEmployee, project_id = project.id, employee_id = employee.id)
     assigned_employee.delete()
 
-    return redirect('/projects/edit/' + project.slug)
+    return HttpResponseRedirect(reverse('edit_project', args = (project.slug,)))
 
 
 #########################
@@ -578,4 +571,4 @@ def delete_organization_from_project(request, organization_slug, project_slug):
     consortium_member = get_object_or_404(ConsortiumMember, project_id = project.id, organization_id = organization.id)
     consortium_member.delete()
 
-    return redirect('/projects/edit/' + project.slug)
+    return HttpResponseRedirect(reverse('edit_project', args = (project.slug,)))
