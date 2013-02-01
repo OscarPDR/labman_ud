@@ -66,9 +66,9 @@ def add_organization(request):
             )
 
 	    try:
-		org.logo = request.FILES['id_logo']
+	    	org.logo = request.FILES['logo']
 	    except:
-		pass
+	    	pass
 
             org.save()
 
@@ -123,7 +123,7 @@ def edit_organization(request, slug):
             organization.homepage = cd['homepage'].encode('utf-8')
 
 	    try:
-                organization.logo = request.FILES['id_logo']
+                organization.logo = request.FILES['logo']
             except:
                 pass
 

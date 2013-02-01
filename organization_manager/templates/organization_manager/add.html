@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <form action="" method="post" class="form-horizontal">
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
         {% csrf_token %}
 
         <legend>Add a new organization</legend>
@@ -26,7 +26,7 @@
 
                 {% else %}
 
-                    <div class="control-group">
+                    <div class="control-group" id="organization-{{ field.label|lower }}-form">
                         <label class="control-label">{{ field.label }}</label>
                         <div class="controls">
                             {{ field }}
