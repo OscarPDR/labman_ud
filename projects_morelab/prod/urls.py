@@ -21,9 +21,6 @@ urlpatterns = patterns('',
     (r'^organizations/', include('organization_manager.urls')),
     (r'^employees/', include('employee_manager.urls')),
     (r'^projects/', include('project_manager.urls')),
-
-    # Just for development purposes, serve in another way in production
-    # (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()
