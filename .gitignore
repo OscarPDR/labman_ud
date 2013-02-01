@@ -9,3 +9,6 @@ settings.py
 
 /media/projects/*
 /media/organizations/*
+
+projects_morelab.sublime-project
+projects_morelab.sublime-workspace
