@@ -16,8 +16,12 @@
                 <fieldset>
 
                     {% if form.errors %}
-                        <p>Your username and password didn't match, please try again.</p>
+                        <div class="alert alert-error">
+                            <p>Your username and password didn't match, please try again.</p>
+                        </div>
                     {% endif %}
+
+                    <br>
 
                     <form method="post" action=".">
                         {% csrf_token %}
