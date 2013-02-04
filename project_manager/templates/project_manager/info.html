@@ -18,9 +18,11 @@
             <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
             <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
 
-            <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
-            <br>
-            <a id="edit-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../edit/{{ project.slug }}"><i class="icon-edit icon-white"></i> Edit</a>
+            {% if user.is_authenticated %}
+                <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
+                <br>
+                <a id="edit-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../edit/{{ project.slug }}"><i class="icon-edit icon-white"></i> Edit</a>
+            {% endif %}
         </ul>
 
         <div class="tab-content project-template">
