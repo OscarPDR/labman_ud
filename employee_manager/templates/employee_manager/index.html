@@ -43,7 +43,7 @@
                             {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
                         </a>
                         {% if employee.external %}
-                            <a target="_blank" href="{% url organization_info employee.organization.slug%}">
+                            <a target="_blank" href="{% url info_organization employee.organization.slug%}">
                                 " ({{ employee.organization.name }})"
                             </a>
                         {% endif %}
