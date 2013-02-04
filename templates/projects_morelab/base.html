@@ -44,18 +44,20 @@
                         <ul class="nav pull-right">
                             {% if user.is_authenticated %}
                                 <li>
-                                    Welcome, {{ user.username }}
+                                    Welcome, {{ user.username }}.
                                 </li>
                                 <li class="divider-vertical"></li>
                                 <li>
-                                    <a href="{% url logout %}">
+                                    <a href="{% url logout_view %}">
                                         Logout
                                     </a>
                                 </li>
                             {% else %}
-                                <a href="{% url django.contrib.auth.views.login %}">
-                                    Sign In
-                                </a>
+                                <li>
+                                    <a href="{% url django.contrib.auth.views.login %}">
+                                        Sign In
+                                    </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>
