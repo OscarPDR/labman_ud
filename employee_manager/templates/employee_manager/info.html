@@ -7,7 +7,9 @@
         <a href="{% url employee_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}
         {% if employee.external %}
-            " - {{ employee.organization.name }}"
+            <a target="_blank" href="{% url info_organization employee.organization.slug%}">
+                ({{ employee.organization.name }})
+            </a>
         {% endif %}
     </h2>
 
