@@ -61,6 +61,7 @@
                                     {% endif %}
 
                                     <form method="post" action="">
+                                        {% csrf_token %}
                                         <input id="user_username" style="margin-bottom: 15px;" type="text" name="user[username]" size="30" />
                                         <input id="user_password" style="margin-bottom: 15px;" type="password" name="user[password]" size="30" />
 
