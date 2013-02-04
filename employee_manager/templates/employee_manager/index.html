@@ -37,8 +37,16 @@
                 <tr>
                     <td>
                         <a href="info/{{ employee.slug }}">
+                            {% if employee.external %}
+                                <i class="icon-road"></i>
+                            {% endif %}
                             {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
                         </a>
+                        {% if employee.external %}
+                            <a target="_blank" href="{% url organization_info employee.organization.slug%}">
+                                " ({{ employee.organization.name }})"
+                            </a>
+                        {% endif %}
                     </td>
                     <td>
                         {% if employee.foaf_link %}
