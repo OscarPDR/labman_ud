@@ -65,7 +65,7 @@ def add_employee(request):
 
             employee.save()
 
-            return HttpResponseRedirect("/employees")
+            return HttpResponseRedirect(reverse('employee_index'))
     else:
         form = EmployeeForm()
 
