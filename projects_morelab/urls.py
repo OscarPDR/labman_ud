@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'projects_morelab.views.home', name = 'home'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/$', 'projects_morelab.views.logout-view', name = 'logout-view'),
+    url(r'^logout/$', 'projects_morelab.views.logout_view', name = 'logout_view'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
