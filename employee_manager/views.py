@@ -6,6 +6,8 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.contrib.auth.decorators import login_required
+
 from employee_manager.models import *
 from employee_manager.forms import *
 
@@ -104,6 +106,7 @@ def info_employee(request, slug):
 # View: edit_employee
 #########################
 
+@login_required
 def edit_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
 
