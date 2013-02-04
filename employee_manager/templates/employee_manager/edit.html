@@ -49,9 +49,12 @@
 {% block scripts %}
 
     <script>
-        if ($('#id_external').is(':checked')) {
+        {% if employee.external %}
             $("#employee-organization-form").css("visibility", "visible");
-        }
+        {% else %}
+            $("#employee-organization-form").css("visibility", "hidden");
+        {% endif %}
+
         $('#id_external').change(function() {
             if ($('#id_external').is(':checked')) {
                 $("#employee-organization-form").css("visibility", "visible");
