@@ -9,8 +9,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'projects_morelab.views.home', name='home'),
-    # url(r'^projects_morelab/', include('projects_morelab.foo.urls')),
+    url(r'^$', 'projects_morelab.views.home', name = 'home'),
+    url(r'^$', 'projects_morelab.views.login', name = 'login'),
+    url(r'^logout/$', 'projects_morelab.views.logout', name = 'logout'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -18,12 +19,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    (r'^organizations/', include('organization_manager.urls')),
-    (r'^employees/', include('employee_manager.urls')),
-    (r'^projects/', include('project_manager.urls')),
+    url(r'^organizations/', include('organization_manager.urls')),
+    url(r'^employees/', include('employee_manager.urls')),
+    url(r'^projects/', include('project_manager.urls')),
 
     # Just for development purposes, serve in another way in production
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()
