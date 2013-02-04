@@ -3,44 +3,50 @@
 {% block content %}
 
 
-    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
-        {% csrf_token %}
+    <div class="row-fluid">
+        <div class="span4 offset4">
 
-        <legend>Login</legend>
-
-        <br />
-
-        <fieldset>
-
-            {% if form.errors %}
-                <p>Your username and password didn't match, please try again.</p>
-            {% endif %}
-
-            <form method="post" action=".">
+            <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
                 {% csrf_token %}
 
-                <div class="control-group">
-                    <label class="control-label" id="label">{{ form.username.label }}</label>
-                    <div class="controls">
-                        {{ form.username }}
-                    </div>
-                </div>
+                <legend>Login</legend>
 
-                <div class="control-group">
-                    <label class="control-label" id="label">{{ form.password.label }}</label>
-                    <div class="controls">
-                        {{ form.password }}
-                    </div>
-                </div>
+                <br />
 
-                {% if next %}
-                    <input type="hidden" name="next" value="{{ next }}" />
-                {% else %}
-                    <input type="hidden" name="next" value="/sourceplanet/" />
-                {% endif %}
-                <input class="btn btn-primary" type="submit" value="Login" />
+                <fieldset>
 
-            </fieldset>
-        </form>
+                    {% if form.errors %}
+                        <p>Your username and password didn't match, please try again.</p>
+                    {% endif %}
+
+                    <form method="post" action=".">
+                        {% csrf_token %}
+
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ form.username.label }}</label>
+                            <div class="controls">
+                                {{ form.username }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" id="label">{{ form.password.label }}</label>
+                            <div class="controls">
+                                {{ form.password }}
+                            </div>
+                        </div>
+
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        {% else %}
+                            <input type="hidden" name="next" value="/sourceplanet/" />
+                        {% endif %}
+                        <input class="btn btn-primary" type="submit" value="Login" />
+
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
 
 {% endblock %}
