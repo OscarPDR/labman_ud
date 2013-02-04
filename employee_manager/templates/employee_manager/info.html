@@ -19,7 +19,9 @@
         <a class="btn btn-small btn-inverse" target="_blank" href="{{ employee.foaf_link }}"><img src="{{ STATIC_PREFIX }}img/foaf.png" width="24" /> FOAF</a>
     {% endif %}
 
-    <a class="btn btn-small btn-inverse" href="{% url edit_employee employee.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-small btn-inverse" href="{% url edit_employee employee.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+    {% endif %}
 
 
     <br>

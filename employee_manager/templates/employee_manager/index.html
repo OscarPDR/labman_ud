@@ -3,9 +3,11 @@
 
 {% block content %}
 
-    <div class="center">
-        <a class="btn btn-info" href="{% url add_employee %}">Add employee</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="center">
+            <a class="btn btn-info" href="{% url add_employee %}">Add employee</a>
+        </div>
+    {% endif %}
 
     <div class="pagination">
         <span class="step-links">
