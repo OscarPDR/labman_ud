@@ -6,6 +6,9 @@
     <h2>
         <a href="{% url employee_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}
+        {% if employee.external %}
+            " - {{ employee.organization.name }}"
+        {% endif %}
     </h2>
 
     <br>
