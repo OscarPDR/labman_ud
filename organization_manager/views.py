@@ -1,10 +1,12 @@
 # coding: utf-8
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
-from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+
+from django.contrib.auth.decorators import login_required
 
 from organization_manager.models import *
 from organization_manager.forms import *
@@ -48,6 +50,7 @@ def organization_index(request):
 # View: add_organization
 #########################
 
+@login_required
 def add_organization(request):
     if request.method == 'POST':
         form = OrganizationForm(request.POST, request.FILES)
@@ -65,10 +68,10 @@ def add_organization(request):
                 homepage = homepage.encode('utf-8'),
             )
 
-	    try:
-	    	org.logo = request.FILES['logo']
-	    except:
-	    	pass
+            try:
+                org.logo = request.FILES['logo']
+            except:
+                pass
 
             org.save()
 
@@ -107,6 +110,7 @@ def info_organization(request, slug):
 # View: edit_organization
 #########################
 
+@login_required
 def edit_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
 
@@ -122,7 +126,7 @@ def edit_organization(request, slug):
             organization.country = cd['country'].encode('utf-8')
             organization.homepage = cd['homepage'].encode('utf-8')
 
-	    try:
+            try:
                 organization.logo = request.FILES['logo']
             except:
                 pass
@@ -151,6 +155,7 @@ def edit_organization(request, slug):
 # View: delete_organization
 #########################
 
+@login_required
 def delete_organization(request, slug):
     organization = get_object_or_404(Organization, slug = slug)
     organization.delete()
