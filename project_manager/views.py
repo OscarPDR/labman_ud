@@ -1,10 +1,12 @@
 # coding: utf-8
 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.template import RequestContext
-from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+
+from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
 
@@ -60,6 +62,7 @@ def project_index(request):
 # View: add_project
 #########################
 
+@login_required
 def add_project(request):
     project_form = ProjectForm(prefix = 'project_form')
     funding_program_form = FundingProgramForm(instance = Project(), prefix = 'funding_program_form')
@@ -257,6 +260,7 @@ def info_project(request, slug):
 # View: edit_project
 #########################
 
+@login_required
 def edit_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
     funding_program = get_object_or_404(FundingProgram, project_id = project.id)
@@ -329,7 +333,7 @@ def edit_project(request, slug):
 
             else:
                 project.delete()
-                
+
             if funding_amount_formset.is_valid():
                 for funding_amount_form in funding_amount_formset:
                     if (len(funding_amount_form.cleaned_data) > 0) and (current_year <= end_year):
@@ -347,7 +351,7 @@ def edit_project(request, slug):
                         print "No fundings amounts to save"
             else:
                 project.delete()
-                
+
             if assigned_employee_formset.is_valid():
                 for assigned_employee_form in assigned_employee_formset:
                     if (len(assigned_employee_form.cleaned_data) > 0):
@@ -365,7 +369,7 @@ def edit_project(request, slug):
                 assigned_employee_formset.save()
             else:
                 project.delete()
-                
+
             if consortium_member_formset.is_valid():
                 for consortium_member_form in consortium_member_formset:
                         if (len(consortium_member_form.cleaned_data) > 0):
@@ -380,7 +384,7 @@ def edit_project(request, slug):
                             print "No consortium members to save"
             else:
                 project.delete()
-                
+
             if project_leader_form.is_valid():
                 if (len(project_leader_form.cleaned_data) > 0):
                     cd_pl = project_leader_form.cleaned_data
@@ -478,6 +482,7 @@ def edit_project(request, slug):
 # View: email_project
 #########################
 
+@login_required
 def email_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
@@ -539,6 +544,7 @@ def email_project(request, slug):
 # View: delete_project
 #########################
 
+@login_required
 def delete_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
     project.delete()
@@ -550,6 +556,7 @@ def delete_project(request, slug):
 # View: delete_employee_from_project
 #########################
 
+@login_required
 def delete_employee_from_project(request, employee_slug, project_slug):
     project = get_object_or_404(Project, slug = project_slug)
     employee = get_object_or_404(Employee, slug = employee_slug)
@@ -564,6 +571,7 @@ def delete_employee_from_project(request, employee_slug, project_slug):
 # View: delete_employee_from_project
 #########################
 
+@login_required
 def delete_organization_from_project(request, organization_slug, project_slug):
     project = get_object_or_404(Project, slug = project_slug)
     organization = get_object_or_404(Organization, slug = organization_slug)
