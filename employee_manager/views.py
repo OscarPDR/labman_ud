@@ -1,10 +1,10 @@
 # coding: utf-8
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.core.urlresolvers import reverse
-from django.template import RequestContext
-from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
 
 from django.contrib.auth.decorators import login_required
 
@@ -50,6 +50,7 @@ def employee_index(request):
 # View: add_employee
 #########################
 
+@login_required
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -150,6 +151,7 @@ def edit_employee(request, slug):
 # View: delete_employee
 #########################
 
+@login_required
 def delete_employee(request, slug):
     employee = get_object_or_404(Employee, slug = slug)
     employee.delete()
