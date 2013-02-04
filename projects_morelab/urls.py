@@ -10,7 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'projects_morelab.views.home', name = 'home'),
-    url(r'^$', 'projects_morelab.views.login', name = 'login'),
+    url(r'^login/$', 'projects_morelab.views.login', name = 'login'),
     url(r'^logout/$', 'projects_morelab.views.logout', name = 'logout'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
