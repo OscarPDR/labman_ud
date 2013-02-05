@@ -370,7 +370,6 @@ map:Project a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "project/@@project_manager_project.slug@@";
     d2rq:class swrcfe:Project;
-    d2rq:condition "project_manager_project.project_type = 'Project'";
     .
 map:project__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
@@ -418,33 +417,27 @@ map:project_total_funds a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasTotalFunds;
     d2rq:column "project_manager_project.total_funds";
-    d2rq:condition "project_manager_project.total_funds <> 0";
+    d2rq:condition "project_manager_project.total_funds > 0";
     d2rq:datatype xsd:decimal;
     .
 map:project_total_funds_deusto a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasTotalFundsDeusto;
     d2rq:column "project_manager_project.total_funds_deusto";
-    d2rq:condition "project_manager_project.total_funds_deusto <> 0";
+    d2rq:condition "project_manager_project.total_funds_deusto > 0";
     d2rq:datatype xsd:decimal;
     .
-#map:project_manager_project_logo a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_project;
-#    d2rq:property vocab:project_manager_project_logo;
-#    d2rq:propertyDefinitionLabel "project_manager_project logo";
-#    d2rq:column "project_manager_project.logo";
-#    .
-#map:project_manager_project_observations a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_project;
-#    d2rq:property vocab:project_manager_project_observations;
-#    d2rq:propertyDefinitionLabel "project_manager_project observations";
-#    d2rq:column "project_manager_project.observations";
-#    .
+map:project_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectLogo;
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@project_manager_project.logo@@";
+    d2rq:condition "project_manager_project.logo is not null";
+    .
 
-#
-#
-#
-#
+
+
+
+
 ################################################################################
 ##   project_manager: ProjectLeader
 ################################################################################
