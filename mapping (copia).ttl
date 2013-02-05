@@ -466,8 +466,15 @@ map:Employee a d2rq:ClassMap;
 map:employee_manager_employee__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
     d2rq:property rdfs:label;
-    d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+    d2rq:pattern "Employee - @@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
     .
+#map:employee_manager_employee_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_id;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee id";
+#    d2rq:column "employee_manager_employee.id";
+#    d2rq:datatype xsd:integer;
+#    .
 map:employee_manager_employee_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
     d2rq:property foaf:name;
@@ -475,7 +482,20 @@ map:employee_manager_employee_name a d2rq:PropertyBridge;
     d2rq:column "employee_manager_employee.name";
     d2rq:datatype rdfs:Literal;
     .
-map:family_name a d2rq:PropertyBridge;
+#map:employee_manager_employee_first_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_first_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee.first_surname";
+#    d2rq:column "employee_manager_employee.first_surname";
+#    .
+#map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_second_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
+#    d2rq:column "employee_manager_employee.second_surname";
+#    .
+
+map.family_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
     d2rq:property foaf:familyName;
     d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
@@ -487,6 +507,25 @@ map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
     d2rq:uriColumn "employee_manager_employee.foaf_link";
     d2rq:datatype xsd:anyURI;
     .
+#map:employee_manager_employee_external a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_external;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee external";
+#    d2rq:column "employee_manager_employee.external";
+#    d2rq:valueRegex "^[01]*$";
+#    .
+#map:employee_manager_employee_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_slug;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee slug";
+#    d2rq:column "employee_manager_employee.slug";
+#    .
+#map:employee_manager_employee_organization_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_organization_id;
+#    d2rq:refersToClassMap map:organization_manager_organization;
+#    d2rq:join "employee_manager_employee.organization_id => organization_manager_organization.id";
+#    .
 
 
 
