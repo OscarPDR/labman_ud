@@ -10,7 +10,7 @@
 
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe.owl> .
+@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe.owl#> .
 
 <> a d2r:Server;
     rdfs:label "SourcePlanet D2R Server";
@@ -61,6 +61,12 @@ map:employee_foaf_link a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Employee;
     d2rq:property swrcfe:hasFOAF;
     d2rq:uriColumn "employee_manager_employee.foaf_link";
+    .
+map:employee_organization a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property swrcfe:worksAt;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "employee_manager_employee.organization_id => organization_manager_organization.id";
     .
 
 
@@ -433,6 +439,27 @@ map:project_logo a d2rq:PropertyBridge;
     d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@project_manager_project.logo@@";
     d2rq:condition "project_manager_project.logo is not null";
     .
+map:project_leader a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectLeader;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "project_manager_projectleader.organization_id => organization_manager_organization.id";
+    d2rq:join "project_manager_projectleader.project_id => project_manager_project.id";
+    .
+map:project_consortium_member a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasConsortiumMember;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "project_manager_consortiummember.organization_id => organization_manager_organization.id";
+    d2rq:join "project_manager_consortiummember.project_id => project_manager_project.id";
+    .
+map:project_researcher a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasResearcher;
+    d2rq:refersToClassMap map:Employee;
+    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
+    .
 
 
 
@@ -442,36 +469,34 @@ map:project_logo a d2rq:PropertyBridge;
 ##   project_manager: ProjectLeader
 ################################################################################
 
-#
-#
-## Table project_manager_projectleader
-#map:project_manager_projectleader a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project_manager_projectleader/@@project_manager_projectleader.id@@";
-#    d2rq:class vocab:project_manager_projectleader;
-#    d2rq:classDefinitionLabel "ProjectLeader";
-#    .
-#map:project_manager_projectleader__label a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_projectleader;
-#    d2rq:property rdfs:label;
-#    d2rq:pattern "project_manager_projectleader #@@project_manager_projectleader.id@@";
-#    .
-#map:project_manager_projectleader_id a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_projectleader;
-#    d2rq:property vocab:project_manager_projectleader_id;
-#    d2rq:propertyDefinitionLabel "project_manager_projectleader id";
-#    d2rq:column "project_manager_projectleader.id";
-#    d2rq:datatype xsd:integer;
-#    .
-#map:project_manager_projectleader_project_id__ref a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_projectleader;
-#    d2rq:property vocab:project_manager_projectleader_project_id;
-#    d2rq:refersToClassMap map:project_manager_project;
-#    d2rq:join "project_manager_projectleader.project_id => project_manager_project.id";
-#    .
-#map:project_manager_projectleader_organization_id__ref a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_projectleader;
-#    d2rq:property vocab:project_manager_projectleader_organization_id;
-#    d2rq:refersToClassMap map:organization_manager_organization;
-#    d2rq:join "project_manager_projectleader.organization_id => organization_manager_organization.id";
-#    .
+
+
+# Table project_manager_projectleader
+map:ProjectLeader a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_leader/@@project_manager_projectleader.id@@";
+    d2rq:class swrcfe:hasProjectLeader;
+    .
+map:project_leader__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:ProjectLeader;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_projectleader #@@project_manager_projectleader.id@@";
+    .
+map:project_leader_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:ProjectLeader;
+    d2rq:property vocab:project_leader_id;
+    d2rq:column "project_manager_projectleader.id";
+    d2rq:datatype xsd:integer;
+    .
+map:project_leader_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:ProjectLeader;
+    d2rq:property vocab:projectleader_project_id;
+    d2rq:refersToClassMap map:Project;
+    d2rq:join "project_manager_projectleader.project_id => project_manager_project.id";
+    .
+map:project_leader_organization_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:ProjectLeader;
+    d2rq:property vocab:projectleader_organization_id;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "project_manager_projectleader.organization_id => organization_manager_organization.id";
+    .
