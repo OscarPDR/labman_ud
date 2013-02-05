@@ -366,40 +366,40 @@ map:organization_logo a d2rq:PropertyBridge;
 
 
 # Table project_manager_project
-#map:Project a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-#    d2rq:class swrcfe:Project;
-#    d2rq:condition "project_manager_project.project_type = 'Project'";
-#    .
-#map:Project a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-#    d2rq:class swrcfe:DevelopmentProject;
-#    d2rq:condition "project_manager_project.project_type = 'Development project'";
-#    .
-#map:Project a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-#    d2rq:class swrcfe:project;
-#    d2rq:condition "project_manager_project.project_type = 'Innovation project'";
-#    .
-#map:Project a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-#    d2rq:class swrcfe:project;
-#    d2rq:condition "project_manager_project.project_type = 'Research project'";
-#    .
-#map:Project a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-#    d2rq:class swrcfe:project;
-#    d2rq:condition "project_manager_project.project_type = 'Basic research project'";
-#    .
 map:Project a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:project;
+    d2rq:class swrcfe:Project;
+    d2rq:condition "project_manager_project.project_type = 'Project'";
+    .
+map:DevelopmentProject a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@project_manager_project.slug@@";
+    d2rq:class swrcfe:DevelopmentProject;
+    d2rq:condition "project_manager_project.project_type = 'Development project'";
+    .
+map:InnovationProject a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@project_manager_project.slug@@";
+    d2rq:class swrcfe:InnovationProject;
+    d2rq:condition "project_manager_project.project_type = 'Innovation project'";
+    .
+map:ResearchProject a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@project_manager_project.slug@@";
+    d2rq:class swrcfe:ResearchProject;
+    d2rq:condition "project_manager_project.project_type = 'Research project'";
+    .
+map:BasicResearchProject a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@project_manager_project.slug@@";
+    d2rq:class swrcfe:BasicResearchProject;
+    d2rq:condition "project_manager_project.project_type = 'Basic research project'";
+    .
+map:AppliedResearchProject a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@project_manager_project.slug@@";
+    d2rq:class swrcfe:AppliedResearchProject;
     d2rq:condition "project_manager_project.project_type = 'Applied research project'";
     .
 map:project__label a d2rq:PropertyBridge;
