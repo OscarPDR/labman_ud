@@ -55,7 +55,7 @@ map:employee_name a d2rq:PropertyBridge;
 map:employee_family_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Employee;
     d2rq:property foaf:familyName;
-    d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+    d2rq:pattern "@@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
     .
 map:employee_foaf_link a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Employee;
@@ -76,7 +76,7 @@ map:employee_foaf_link a d2rq:PropertyBridge;
 # Table organization_manager_organization
 map:Organization a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "organization/@@organization_manager_organization.name@@";
+    d2rq:uriPattern "organization/@@organization_manager_organization.slug@@";
     d2rq:class swrcfe:Organization;
     .
 map:organization__label a d2rq:PropertyBridge;
