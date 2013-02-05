@@ -487,13 +487,13 @@ map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
     d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
     d2rq:column "employee_manager_employee.second_surname";
     .
-map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property ordip:Employee#foaf;
-    d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
-    d2rq:column "Employee.foaf_link";
-    d2rq:datatype xsd:anyURI;
-    .
+#map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property ordip:Employee#foaf;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
+#    d2rq:column "Employee.foaf_link";
+#    d2rq:datatype xsd:anyURI;
+#    .
 #map:employee_manager_employee_external a d2rq:PropertyBridge;
 #    d2rq:belongsToClassMap map:employee_manager_employee;
 #    d2rq:property vocab:employee_manager_employee_external;
