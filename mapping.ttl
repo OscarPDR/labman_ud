@@ -459,7 +459,7 @@ map:database a d2rq:Database;
 # Table employee_manager_employee
 map:employee_manager_employee a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "employee/@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+    d2rq:uriPattern "employee/@@employee_manager_employee.slug@@";
     d2rq:class foaf:Person;
     d2rq:classDefinitionLabel "Employee";
     .
@@ -484,21 +484,21 @@ map:employee_manager_employee_name a d2rq:PropertyBridge;
     .
 map:employee_manager_employee_first_surname a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property vocab:Employee#first_surname;
-    d2rq:propertyDefinitionLabel "employee_manager_employee first_surname";
+    d2rq:property vocab:Employee_first_surname;
+    d2rq:propertyDefinitionLabel "employee_manager_employee.first_surname";
     d2rq:column "employee_manager_employee.first_surname";
     .
 map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property vocab:Employee#second_surname;
+    d2rq:property vocab:Employee_second_surname;
     d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
     d2rq:column "employee_manager_employee.second_surname";
     .
 map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property vocab:Employee#foaf;
+    d2rq:property vocab:Employee_foaf;
     d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
-    d2rq:column "Employee.foaf_link";
+    d2rq:column "employee_manager_employee.foaf_link";
     d2rq:datatype xsd:anyURI;
     .
 #map:employee_manager_employee_external a d2rq:PropertyBridge;
