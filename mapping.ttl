@@ -464,7 +464,7 @@ map:Employee a d2rq:ClassMap;
     d2rq:classDefinitionLabel "Employee";
     .
 map:employee_manager_employee__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
+    d2rq:belongsToClassMap map:Employee;
     d2rq:property rdfs:label;
     d2rq:pattern "Employee - @@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
     .
@@ -476,7 +476,7 @@ map:employee_manager_employee__label a d2rq:PropertyBridge;
 #    d2rq:datatype xsd:integer;
 #    .
 map:employee_manager_employee_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
+    d2rq:belongsToClassMap map:Employee;
     d2rq:property foaf:name;
     d2rq:propertyDefinitionLabel "Employee name";
     d2rq:column "employee_manager_employee.name";
@@ -494,18 +494,16 @@ map:employee_manager_employee_name a d2rq:PropertyBridge;
 #    d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
 #    d2rq:column "employee_manager_employee.second_surname";
 #    .
-
-map.family_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
+map:family_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
     d2rq:property foaf:familyName;
     d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
-
+    .
 map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
+    d2rq:belongsToClassMap map:Employee;
     d2rq:property vocab:Employee_foaf;
     d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
     d2rq:uriColumn "employee_manager_employee.foaf_link";
-    d2rq:datatype xsd:anyURI;
     .
 #map:employee_manager_employee_external a d2rq:PropertyBridge;
 #    d2rq:belongsToClassMap map:employee_manager_employee;
@@ -622,19 +620,19 @@ map:project_manager_assignedemployee_role a d2rq:PropertyBridge;
     d2rq:propertyDefinitionLabel "Role";
     d2rq:column "project_manager_assignedemployee.role";
     .
-map:project_manager_assignedemployee_employee_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:project_manager_assignedemployee;
-    d2rq:property vocab:employee_id;
-    d2rq:refersToClassMap map:employee_manager_employee;
-    d2rq:propertyDefinitionLabel "Employee";
-    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
-    .
-map:project_manager_assignedemployee_project_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:project_manager_assignedemployee;
-    d2rq:property vocab:project_manager_assignedemployee_project_id;
-    d2rq:refersToClassMap map:project_manager_project;
-    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
-    .
+#map:project_manager_assignedemployee_employee_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:employee_id;
+#    d2rq:refersToClassMap map:employee_manager_employee;
+#    d2rq:propertyDefinitionLabel "Employee";
+#    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+#    .
+#map:project_manager_assignedemployee_project_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:project_manager_assignedemployee_project_id;
+#    d2rq:refersToClassMap map:project_manager_project;
+#    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
+#    .
 
 
 
@@ -930,7 +928,6 @@ map:project_manager_project_homepage a d2rq:PropertyBridge;
     d2rq:property vocab:project_homepage;
     d2rq:propertyDefinitionLabel "Project homepage";
     d2rq:uriColumn "project_manager_project.homepage";
-    d2rq:datatype xsd:anyURI;
     .
 map:project_manager_project_start_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
