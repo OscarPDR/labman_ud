@@ -457,7 +457,7 @@ map:database a d2rq:Database;
 
 
 # Table employee_manager_employee
-map:employee_manager_employee a d2rq:ClassMap;
+map:Employee a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "employee/@@employee_manager_employee.slug@@";
     d2rq:class foaf:Person;
@@ -482,23 +482,29 @@ map:employee_manager_employee_name a d2rq:PropertyBridge;
     d2rq:column "employee_manager_employee.name";
     d2rq:datatype rdfs:Literal;
     .
-map:employee_manager_employee_first_surname a d2rq:PropertyBridge;
+#map:employee_manager_employee_first_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_first_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee.first_surname";
+#    d2rq:column "employee_manager_employee.first_surname";
+#    .
+#map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_second_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
+#    d2rq:column "employee_manager_employee.second_surname";
+#    .
+
+map.family_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property vocab:Employee_first_surname;
-    d2rq:propertyDefinitionLabel "employee_manager_employee.first_surname";
-    d2rq:column "employee_manager_employee.first_surname";
-    .
-map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:employee_manager_employee;
-    d2rq:property vocab:Employee_second_surname;
-    d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
-    d2rq:column "employee_manager_employee.second_surname";
-    .
+    d2rq:property foaf:familyName;
+    d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+
 map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:employee_manager_employee;
     d2rq:property vocab:Employee_foaf;
     d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
-    d2rq:column "employee_manager_employee.foaf_link";
+    d2rq:uriColumn "employee_manager_employee.foaf_link";
     d2rq:datatype xsd:anyURI;
     .
 #map:employee_manager_employee_external a d2rq:PropertyBridge;
@@ -847,6 +853,42 @@ map:project_manager_project a d2rq:ClassMap;
     d2rq:classDefinitionLabel "Project";
     d2rq:condition "project_manager_project.project_type = 'Project'";
     .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:DevelopmentProject;
+    d2rq:classDefinitionLabel "Project";
+    d2rq:condition "project_manager_project.project_type = 'Development project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "InnovationProject";
+    d2rq:condition "project_manager_project.project_type = 'Innovation project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "ResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Research project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "BasicResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Basic research project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "AppliedResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Applied research project'";
+    .
+
 map:project_manager_project__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
     d2rq:property rdfs:label;
@@ -859,47 +901,48 @@ map:project_manager_project__label a d2rq:PropertyBridge;
 #    d2rq:column "project_manager_project.id";
 #    d2rq:datatype xsd:integer;
 #    .
-map:project_manager_project_project_type a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_project_type;
-    d2rq:propertyDefinitionLabel "project_manager_project project_type";
-    d2rq:column "project_manager_project.project_type";
-    .
+#map:project_manager_project_project_type a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_project;
+#    d2rq:property vocab:project_manager_project_project_type;
+#    d2rq:propertyDefinitionLabel "project_manager_project project_type";
+#    d2rq:column "project_manager_project.project_type";
+#    .
 map:project_manager_project_title a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
     d2rq:property dc:title;
-    d2rq:propertyDefinitionLabel "project_manager_project title";
+    d2rq:propertyDefinitionLabel "Project title";
     d2rq:column "project_manager_project.title";
     .
-map:project_manager_project_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_slug;
-    d2rq:propertyDefinitionLabel "project_manager_project slug";
-    d2rq:column "project_manager_project.slug";
-    .
+#map:project_manager_project_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_project;
+#    d2rq:property vocab:project_manager_project_slug;
+#    d2rq:propertyDefinitionLabel "project_manager_project slug";
+#    d2rq:column "project_manager_project.slug";
+#    .
 map:project_manager_project_description a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_description;
-    d2rq:propertyDefinitionLabel "project_manager_project description";
+    d2rq:property dc:description;
+    d2rq:propertyDefinitionLabel "Project description";
     d2rq:column "project_manager_project.description";
     .
 map:project_manager_project_homepage a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_homepage;
-    d2rq:propertyDefinitionLabel "project_manager_project homepage";
-    d2rq:column "project_manager_project.homepage";
+    d2rq:property vocab:project_homepage;
+    d2rq:propertyDefinitionLabel "Project homepage";
+    d2rq:uriColumn "project_manager_project.homepage";
+    d2rq:datatype xsd:anyURI;
     .
 map:project_manager_project_start_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_start_year;
-    d2rq:propertyDefinitionLabel "project_manager_project start_year";
+    d2rq:property vocab:hasStartYear;
+    d2rq:propertyDefinitionLabel "Project start year";
     d2rq:column "project_manager_project.start_year";
     d2rq:datatype xsd:integer;
     .
 map:project_manager_project_end_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_project;
-    d2rq:property vocab:project_manager_project_end_year;
-    d2rq:propertyDefinitionLabel "project_manager_project end_year";
+    d2rq:property vocab:hasEndYear;
+    d2rq:propertyDefinitionLabel "Project end year";
     d2rq:column "project_manager_project.end_year";
     d2rq:datatype xsd:integer;
     .
