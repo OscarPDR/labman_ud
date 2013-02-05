@@ -534,52 +534,52 @@ map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
 # Table organization_manager_organization
 map:organization_manager_organization a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "organization_manager_organization/@@organization_manager_organization.id@@";
+    d2rq:uriPattern "organization/@@organization_manager_organization.name@@";
     d2rq:class swrcfe:Organization;
     d2rq:classDefinitionLabel "Organization";
     .
 map:organization_manager_organization__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:organization_manager_organization;
     d2rq:property rdfs:label;
-    d2rq:pattern "organization_manager_organization #@@organization_manager_organization.id@@";
+    d2rq:pattern "Organization - @@organization_manager_organization.name@@";
     .
-map:organization_manager_organization_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_id;
-    d2rq:propertyDefinitionLabel "organization_manager_organization id";
-    d2rq:column "organization_manager_organization.id";
-    d2rq:datatype xsd:integer;
-    .
+#map:organization_manager_organization_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_id;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization id";
+#    d2rq:column "organization_manager_organization.id";
+#    d2rq:datatype xsd:integer;
+#    .
 map:organization_manager_organization_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_name;
-    d2rq:propertyDefinitionLabel "organization_manager_organization name";
+    d2rq:property vocab:organization_name;
+    d2rq:propertyDefinitionLabel "Organization name";
     d2rq:column "organization_manager_organization.name";
     .
 map:organization_manager_organization_country a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_country;
-    d2rq:propertyDefinitionLabel "organization_manager_organization country";
+    d2rq:property vocab:organization_country;
+    d2rq:propertyDefinitionLabel "Organization country";
     d2rq:column "organization_manager_organization.country";
     .
 map:organization_manager_organization_homepage a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_homepage;
-    d2rq:propertyDefinitionLabel "organization_manager_organization homepage";
+    d2rq:property vocab:Organization_homepage;
+    d2rq:propertyDefinitionLabel "Organization homepage";
     d2rq:column "organization_manager_organization.homepage";
     .
-map:organization_manager_organization_logo a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_logo;
-    d2rq:propertyDefinitionLabel "organization_manager_organization logo";
-    d2rq:column "organization_manager_organization.logo";
-    .
-map:organization_manager_organization_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organization_manager_organization;
-    d2rq:property vocab:organization_manager_organization_slug;
-    d2rq:propertyDefinitionLabel "organization_manager_organization slug";
-    d2rq:column "organization_manager_organization.slug";
-    .
+#map:organization_manager_organization_logo a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_logo;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization logo";
+#    d2rq:column "organization_manager_organization.logo";
+#    .
+#map:organization_manager_organization_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_slug;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization slug";
+#    d2rq:column "organization_manager_organization.slug";
+#    .
 
 
 
@@ -603,23 +603,24 @@ map:project_manager_assignedemployee__label a d2rq:PropertyBridge;
     d2rq:property rdfs:label;
     d2rq:pattern "project_manager_assignedemployee #@@project_manager_assignedemployee.id@@";
     .
-map:project_manager_assignedemployee_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:project_manager_assignedemployee;
-    d2rq:property vocab:project_manager_assignedemployee_id;
-    d2rq:propertyDefinitionLabel "project_manager_assignedemployee id";
-    d2rq:column "project_manager_assignedemployee.id";
-    d2rq:datatype xsd:integer;
-    .
+#map:project_manager_assignedemployee_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:project_manager_assignedemployee_id;
+#    d2rq:propertyDefinitionLabel "project_manager_assignedemployee id";
+#    d2rq:column "project_manager_assignedemployee.id";
+#    d2rq:datatype xsd:integer;
+#    .
 map:project_manager_assignedemployee_role a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_assignedemployee;
-    d2rq:property vocab:project_manager_assignedemployee_role;
-    d2rq:propertyDefinitionLabel "project_manager_assignedemployee role";
+    d2rq:property vocab:assignedemployee_role;
+    d2rq:propertyDefinitionLabel "Role";
     d2rq:column "project_manager_assignedemployee.role";
     .
 map:project_manager_assignedemployee_employee_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:project_manager_assignedemployee;
-    d2rq:property vocab:project_manager_assignedemployee_employee_id;
+    d2rq:property vocab:employee_id;
     d2rq:refersToClassMap map:employee_manager_employee;
+    d2rq:propertyDefinitionLabel "Employee";
     d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
     .
 map:project_manager_assignedemployee_project_id__ref a d2rq:PropertyBridge;
