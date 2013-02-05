@@ -372,40 +372,15 @@ map:Project a d2rq:ClassMap;
     d2rq:class swrcfe:Project;
     d2rq:condition "project_manager_project.project_type = 'Project'";
     .
-map:DevelopmentProject a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:DevelopmentProject;
-    d2rq:condition "project_manager_project.project_type = 'Development project'";
-    .
-map:InnovationProject a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:InnovationProject;
-    d2rq:condition "project_manager_project.project_type = 'Innovation project'";
-    .
-map:ResearchProject a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:ResearchProject;
-    d2rq:condition "project_manager_project.project_type = 'Research project'";
-    .
-map:BasicResearchProject a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:BasicResearchProject;
-    d2rq:condition "project_manager_project.project_type = 'Basic research project'";
-    .
-map:AppliedResearchProject a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "project/@@project_manager_project.slug@@";
-    d2rq:class swrcfe:AppliedResearchProject;
-    d2rq:condition "project_manager_project.project_type = 'Applied research project'";
-    .
 map:project__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property rdfs:label;
     d2rq:pattern "@@project_manager_project.title@@";
+    .
+map:project_type a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property rdfs:label;
+    d2rq:column "project_manager_project.project_type";
     .
 map:project_title a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
@@ -434,26 +409,25 @@ map:project_end_year a d2rq:PropertyBridge;
     d2rq:column "project_manager_project.end_year";
     d2rq:datatype xsd:gYear;
     .
-#map:project_manager_project_status a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_project;
-#    d2rq:property vocab:project_manager_project_status;
-#    d2rq:propertyDefinitionLabel "project_manager_project status";
-#    d2rq:column "project_manager_project.status";
-#    .
-#map:project_manager_project_total_funds a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_project;
-#    d2rq:property vocab:project_manager_project_total_funds;
-#    d2rq:propertyDefinitionLabel "project_manager_project total_funds";
-#    d2rq:column "project_manager_project.total_funds";
-#    d2rq:datatype xsd:decimal;
-#    .
-#map:project_manager_project_total_funds_deusto a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_project;
-#    d2rq:property vocab:project_manager_project_total_funds_deusto;
-#    d2rq:propertyDefinitionLabel "project_manager_project total_funds_deusto";
-#    d2rq:column "project_manager_project.total_funds_deusto";
-#    d2rq:datatype xsd:decimal;
-#    .
+map:project_status a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasStatus;
+    d2rq:column "project_manager_project.status";
+    .
+map:project_total_funds a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasTotalFunds;
+    d2rq:column "project_manager_project.total_funds";
+    d2rq:condition "project_manager_project.total_funds <> 0";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_total_funds_deusto a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasTotalFundsDeusto;
+    d2rq:column "project_manager_project.total_funds_deusto";
+    d2rq:condition "project_manager_project.total_funds_deusto <> 0";
+    d2rq:datatype xsd:decimal;
+    .
 #map:project_manager_project_logo a d2rq:PropertyBridge;
 #    d2rq:belongsToClassMap map:project_manager_project;
 #    d2rq:property vocab:project_manager_project_logo;
