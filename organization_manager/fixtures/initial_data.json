@@ -6,7 +6,7 @@
             "name": "Ministerio de Industria",
             "country": "Spain",
             "homepage": "http://www.mityc.es",
-            "logo": "ministerio-de-industria.png",
+            "logo": "",
             "slug": "ministerio-de-industria"
         }
     },
@@ -17,7 +17,7 @@
             "name": "Ministerio de Ciencia e Innovación",
             "country": "Spain",
             "homepage": "http://www.micinn.es",
-            "logo": "ministerio-de-ciencia-e-innovacion.jpg",
+            "logo": "",
             "slug": "ministerio-de-ciencia-e-innovacion"
         }
     },
