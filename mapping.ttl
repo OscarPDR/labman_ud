@@ -213,28 +213,30 @@ map:organization_logo a d2rq:PropertyBridge;
 # Table project_manager_fundingamount
 map:FundingAmount a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "project_manager_fundingamount/@@project_manager_fundingamount.id@@";
+    d2rq:uriPattern "funding_amount/@@project_manager_project.slug@@/@@project_manager_fundingamount.year@@";
     d2rq:class vocab:project_manager_fundingamount;
+    d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
     .
 map:funding_amount__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:belongsToClassMap map:FundingAmount;
     d2rq:property rdfs:label;
-    d2rq:pattern "project_manager_fundingamount #@@project_manager_fundingamount.id@@";
+    d2rq:pattern "@@project_manager_fundingamount.year@@'s funding amount for @@project_manager_project.title@@";
+    d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
     .
 map:funding_amount_amount a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:belongsToClassMap map:FundingAmount;
     d2rq:property vocab:project_manager_fundingamount_amount;
     d2rq:column "project_manager_fundingamount.amount";
     d2rq:datatype xsd:decimal;
     .
 map:funding_amount_year a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:belongsToClassMap map:FundingAmount;
     d2rq:property vocab:project_manager_fundingamount_year;
     d2rq:column "project_manager_fundingamount.year";
     d2rq:datatype xsd:gYear;
     .
 map:funding_amount_project_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:belongsToClassMap map:FundingAmount;
     d2rq:property vocab:project_manager_fundingamount_project_id;
     d2rq:refersToClassMap map:Project;
     d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
@@ -437,6 +439,12 @@ map:project_funding_amount a d2rq:PropertyBridge;
     d2rq:property swrcfe:hasFundingAmount;
     d2rq:refersToClassMap map:FundingAmount;
     d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
+    .
+map:project_funding_program a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasFundingProgram;
+    d2rq:refersToClassMap map:FundingProgram;
+    d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
     .
 
 
