@@ -6,7 +6,7 @@
             "name": "Oscar",
             "first_surname": "Peña",
             "second_surname": "del Rio",
-            "foaf_link": "http://google.es",
+            "foaf_link": "",
             "slug": "oscar-pena-del-rio",
             "external": false,
             "organization": null
@@ -19,7 +19,7 @@
             "name": "Mikel",
             "first_surname": "Emaldi",
             "second_surname": "Manrique",
-            "foaf_link": "http://google.es",
+            "foaf_link": "",
             "slug": "mikel-emaldi-manrique",
             "external": false,
             "organization": null
@@ -32,7 +32,7 @@
             "name": "Jon",
             "first_surname": "Lázaro",
             "second_surname": "Aduna",
-            "foaf_link": "http://google.es",
+            "foaf_link": "",
             "slug": "jon-lazaro-aduna",
             "external": false,
             "organization": null
@@ -84,7 +84,7 @@
             "name": "Pablo",
             "first_surname": "Orduña",
             "second_surname": "",
-            "foaf_link": "http://google.es",
+            "foaf_link": "",
             "slug": "pablo-orduna",
             "external": false,
             "organization": null
@@ -97,7 +97,7 @@
             "name": "Diego",
             "first_surname": "López de Ipiña",
             "second_surname": "",
-            "foaf_link": "http://google.es",
+            "foaf_link": "",
             "slug": "diego-lopez-de-ipina",
             "external": false,
             "organization": null
