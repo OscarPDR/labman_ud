@@ -1,0 +1,1021 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2r: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe.owl> .
+
+<> a d2r:Server;
+    rdfs:label "SourcePlanet D2R Server";
+    d2r:baseURI <http://dev.morelab.deusto.es/sourceplanet/d2r/>;
+    d2r:port 2020;
+    .
+
+map:database a d2rq:Database;
+    d2rq:jdbcDriver "org.postgresql.Driver";
+    d2rq:jdbcDSN "jdbc:postgresql://localhost:5432/projects_morelab";
+    d2rq:username "morelab";
+    d2rq:password "morelab";
+    .
+
+
+### Table auth_group
+#map:auth_group a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_group/@@auth_group.id@@";
+#    d2rq:class vocab:auth_group;
+#    d2rq:classDefinitionLabel "auth_group";
+#    .
+#map:auth_group__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_group #@@auth_group.id@@";
+#    .
+#map:auth_group_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group;
+#    d2rq:property vocab:auth_group_id;
+#    d2rq:propertyDefinitionLabel "auth_group id";
+#    d2rq:column "auth_group.id";
+#    d2rq:
+datatype xsd:integer;
+#    .
+#map:auth_group_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group;
+#    d2rq:property vocab:auth_group_name;
+#    d2rq:propertyDefinitionLabel "auth_group name";
+#    d2rq:column "auth_group.name";
+#    .
+
+
+### Table auth_group_permissions
+#map:auth_group_permissions a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_group_permissions/@@auth_group_permissions.id@@";
+#    d2rq:class vocab:auth_group_permissions;
+#    d2rq:classDefinitionLabel "auth_group_permissions";
+#    .
+#map:auth_group_permissions__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group_permissions;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_group_permissions #@@auth_group_permissions.id@@";
+#    .
+#map:auth_group_permissions_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group_permissions;
+#    d2rq:property vocab:auth_group_permissions_id;
+#    d2rq:propertyDefinitionLabel "auth_group_permissions id";
+#    d2rq:column "auth_group_permissions.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:auth_group_permissions_group_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group_permissions;
+#    d2rq:property vocab:auth_group_permissions_group_id;
+#    d2rq:refersToClassMap map:auth_group;
+#    d2rq:join "auth_group_permissions.group_id => auth_group.id";
+#    .
+#map:auth_group_permissions_permission_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_group_permissions;
+#    d2rq:property vocab:auth_group_permissions_permission_id;
+#    d2rq:refersToClassMap map:auth_permission;
+#    d2rq:join "auth_group_permissions.permission_id => auth_permission.id";
+#    .
+
+
+### Table auth_permission
+#map:auth_permission a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_permission/@@auth_permission.id@@";
+#    d2rq:class vocab:auth_permission;
+#    d2rq:classDefinitionLabel "auth_permission";
+#    .
+#map:auth_permission__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_permission;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_permission #@@auth_permission.id@@";
+#    .
+#map:auth_permission_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_permission;
+#    d2rq:property vocab:auth_permission_id;
+#    d2rq:propertyDefinitionLabel "auth_permission id";
+#    d2rq:column "auth_permission.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:auth_permission_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_permission;
+#    d2rq:property vocab:auth_permission_name;
+#    d2rq:propertyDefinitionLabel "auth_permission name";
+#    d2rq:column "auth_permission.name";
+#    .
+#map:auth_permission_codename a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_permission;
+#    d2rq:property vocab:auth_permission_codename;
+#    d2rq:propertyDefinitionLabel "auth_permission codename";
+#    d2rq:column "auth_permission.codename";
+#    .
+#map:auth_permission_content_type_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_permission;
+#    d2rq:property vocab:auth_permission_content_type_id;
+#    d2rq:refersToClassMap map:django_content_type;
+#    d2rq:join "auth_permission.content_type_id => django_content_type.id";
+#    .
+
+
+### Table auth_user
+#map:auth_user a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_user/@@auth_user.id@@";
+#    d2rq:class vocab:auth_user;
+#    d2rq:classDefinitionLabel "auth_user";
+#    .
+#map:auth_user__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_user #@@auth_user.id@@";
+#    .
+#map:auth_user_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_id;
+#    d2rq:propertyDefinitionLabel "auth_user id";
+#    d2rq:column "auth_user.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:auth_user_username a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_username;
+#    d2rq:propertyDefinitionLabel "auth_user username";
+#    d2rq:column "auth_user.username";
+#    .
+#map:auth_user_first_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_first_name;
+#    d2rq:propertyDefinitionLabel "auth_user first_name";
+#    d2rq:column "auth_user.first_name";
+#    .
+#map:auth_user_last_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_last_name;
+#    d2rq:propertyDefinitionLabel "auth_user last_name";
+#    d2rq:column "auth_user.last_name";
+#    .
+#map:auth_user_email a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_email;
+#    d2rq:propertyDefinitionLabel "auth_user email";
+#    d2rq:column "auth_user.email";
+#    .
+#map:auth_user_password a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_password;
+#    d2rq:propertyDefinitionLabel "auth_user password";
+#    d2rq:column "auth_user.password";
+#    .
+#map:auth_user_is_staff a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_is_staff;
+#    d2rq:propertyDefinitionLabel "auth_user is_staff";
+#    d2rq:column "auth_user.is_staff";
+#    d2rq:valueRegex "^[01]*$";
+#    .
+#map:auth_user_is_active a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_is_active;
+#    d2rq:propertyDefinitionLabel "auth_user is_active";
+#    d2rq:column "auth_user.is_active";
+#    d2rq:valueRegex "^[01]*$";
+#    .
+#map:auth_user_is_superuser a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_is_superuser;
+#    d2rq:propertyDefinitionLabel "auth_user is_superuser";
+#    d2rq:column "auth_user.is_superuser";
+#    d2rq:valueRegex "^[01]*$";
+#    .
+#map:auth_user_last_login a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_last_login;
+#    d2rq:propertyDefinitionLabel "auth_user last_login";
+#    d2rq:column "auth_user.last_login";
+#    d2rq:datatype xsd:dateTime;
+#    .
+#map:auth_user_date_joined a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user;
+#    d2rq:property vocab:auth_user_date_joined;
+#    d2rq:propertyDefinitionLabel "auth_user date_joined";
+#    d2rq:column "auth_user.date_joined";
+#    d2rq:datatype xsd:dateTime;
+#    .
+
+
+### Table auth_user_groups
+#map:auth_user_groups a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_user_groups/@@auth_user_groups.id@@";
+#    d2rq:class vocab:auth_user_groups;
+#    d2rq:classDefinitionLabel "auth_user_groups";
+#    .
+#map:auth_user_groups__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_groups;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_user_groups #@@auth_user_groups.id@@";
+#    .
+#map:auth_user_groups_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_groups;
+#    d2rq:property vocab:auth_user_groups_id;
+#    d2rq:propertyDefinitionLabel "auth_user_groups id";
+#    d2rq:column "auth_user_groups.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:auth_user_groups_group_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_groups;
+#    d2rq:property vocab:auth_user_groups_group_id;
+#    d2rq:refersToClassMap map:auth_group;
+#    d2rq:join "auth_user_groups.group_id => auth_group.id";
+#    .
+#map:auth_user_groups_user_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_groups;
+#    d2rq:property vocab:auth_user_groups_user_id;
+#    d2rq:refersToClassMap map:auth_user;
+#    d2rq:join "auth_user_groups.user_id => auth_user.id";
+#    .
+
+
+### Table auth_user_user_permissions
+#map:auth_user_user_permissions a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "auth_user_user_permissions/@@auth_user_user_permissions.id@@";
+#    d2rq:class vocab:auth_user_user_permissions;
+#    d2rq:classDefinitionLabel "auth_user_user_permissions";
+#    .
+#map:auth_user_user_permissions__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_user_permissions;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "auth_user_user_permissions #@@auth_user_user_permissions.id@@";
+#    .
+#map:auth_user_user_permissions_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_user_permissions;
+#    d2rq:property vocab:auth_user_user_permissions_id;
+#    d2rq:propertyDefinitionLabel "auth_user_user_permissions id";
+#    d2rq:column "auth_user_user_permissions.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:auth_user_user_permissions_permission_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_user_permissions;
+#    d2rq:property vocab:auth_user_user_permissions_permission_id;
+#    d2rq:refersToClassMap map:auth_permission;
+#    d2rq:join "auth_user_user_permissions.permission_id => auth_permission.id";
+#    .
+#map:auth_user_user_permissions_user_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:auth_user_user_permissions;
+#    d2rq:property vocab:auth_user_user_permissions_user_id;
+#    d2rq:refersToClassMap map:auth_user;
+#    d2rq:join "auth_user_user_permissions.user_id => auth_user.id";
+#    .
+
+
+### Table django_admin_log
+#map:django_admin_log a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "django_admin_log/@@django_admin_log.id@@";
+#    d2rq:class vocab:django_admin_log;
+#    d2rq:classDefinitionLabel "django_admin_log";
+#    .
+#map:django_admin_log__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "django_admin_log #@@django_admin_log.id@@";
+#    .
+#map:django_admin_log_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_id;
+#    d2rq:propertyDefinitionLabel "django_admin_log id";
+#    d2rq:column "django_admin_log.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:django_admin_log_action_time a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_action_time;
+#    d2rq:propertyDefinitionLabel "django_admin_log action_time";
+#    d2rq:column "django_admin_log.action_time";
+#    d2rq:datatype xsd:dateTime;
+#    .
+#map:django_admin_log_object_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_object_id;
+#    d2rq:propertyDefinitionLabel "django_admin_log object_id";
+#    d2rq:column "django_admin_log.object_id";
+#    .
+#map:django_admin_log_object_repr a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_object_repr;
+#    d2rq:propertyDefinitionLabel "django_admin_log object_repr";
+#    d2rq:column "django_admin_log.object_repr";
+#    .
+#map:django_admin_log_action_flag a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_action_flag;
+#    d2rq:propertyDefinitionLabel "django_admin_log action_flag";
+#    d2rq:column "django_admin_log.action_flag";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:django_admin_log_change_message a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_change_message;
+#    d2rq:propertyDefinitionLabel "django_admin_log change_message";
+#    d2rq:column "django_admin_log.change_message";
+#    .
+#map:django_admin_log_content_type_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_content_type_id;
+#    d2rq:refersToClassMap map:django_content_type;
+#    d2rq:join "django_admin_log.content_type_id => django_content_type.id";
+#    .
+#map:django_admin_log_user_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_admin_log;
+#    d2rq:property vocab:django_admin_log_user_id;
+#    d2rq:refersToClassMap map:auth_user;
+#    d2rq:join "django_admin_log.user_id => auth_user.id";
+#    .
+
+
+### Table django_content_type
+#map:django_content_type a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "django_content_type/@@django_content_type.id@@";
+#    d2rq:class vocab:django_content_type;
+#    d2rq:classDefinitionLabel "django_content_type";
+#    .
+#map:django_content_type__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_content_type;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "django_content_type #@@django_content_type.id@@";
+#    .
+#map:django_content_type_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_content_type;
+#    d2rq:property vocab:django_content_type_id;
+#    d2rq:propertyDefinitionLabel "django_content_type id";
+#    d2rq:column "django_content_type.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:django_content_type_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_content_type;
+#    d2rq:property vocab:django_content_type_name;
+#    d2rq:propertyDefinitionLabel "django_content_type name";
+#    d2rq:column "django_content_type.name";
+#    .
+#map:django_content_type_app_label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_content_type;
+#    d2rq:property vocab:django_content_type_app_label;
+#    d2rq:propertyDefinitionLabel "django_content_type app_label";
+#    d2rq:column "django_content_type.app_label";
+#    .
+#map:django_content_type_model a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_content_type;
+#    d2rq:property vocab:django_content_type_model;
+#    d2rq:propertyDefinitionLabel "django_content_type model";
+#    d2rq:column "django_content_type.model";
+#    .
+
+
+### Table django_session
+#map:django_session a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "django_session/@@django_session.session_key|urlify@@";
+#    d2rq:class vocab:django_session;
+#    d2rq:classDefinitionLabel "django_session";
+#    .
+#map:django_session__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_session;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "django_session #@@django_session.session_key@@";
+#    .
+#map:django_session_session_key a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_session;
+#    d2rq:property vocab:django_session_session_key;
+#    d2rq:propertyDefinitionLabel "django_session session_key";
+#    d2rq:column "django_session.session_key";
+#    .
+#map:django_session_session_data a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_session;
+#    d2rq:property vocab:django_session_session_data;
+#    d2rq:propertyDefinitionLabel "django_session session_data";
+#    d2rq:column "django_session.session_data";
+#    .
+#map:django_session_expire_date a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_session;
+#    d2rq:property vocab:django_session_expire_date;
+#    d2rq:propertyDefinitionLabel "django_session expire_date";
+#    d2rq:column "django_session.expire_date";
+#    d2rq:datatype xsd:dateTime;
+#    .
+
+
+### Table django_site
+#map:django_site a d2rq:ClassMap;
+#    d2rq:dataStorage map:database;
+#    d2rq:uriPattern "django_site/@@django_site.id@@";
+#    d2rq:class vocab:django_site;
+#    d2rq:classDefinitionLabel "django_site";
+#    .
+#map:django_site__label a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_site;
+#    d2rq:property rdfs:label;
+#    d2rq:pattern "django_site #@@django_site.id@@";
+#    .
+#map:django_site_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_site;
+#    d2rq:property vocab:django_site_id;
+#    d2rq:propertyDefinitionLabel "django_site id";
+#    d2rq:column "django_site.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:django_site_domain a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_site;
+#    d2rq:property vocab:django_site_domain;
+#    d2rq:propertyDefinitionLabel "django_site domain";
+#    d2rq:column "django_site.domain";
+#    .
+#map:django_site_name a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:django_site;
+#    d2rq:property vocab:django_site_name;
+#    d2rq:propertyDefinitionLabel "django_site name";
+#    d2rq:column "django_site.name";
+#    .
+
+
+
+
+
+###############################################################################
+#   employee_manager: Employee
+###############################################################################
+
+
+
+# Table employee_manager_employee
+map:Employee a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "employee/@@employee_manager_employee.slug@@";
+    d2rq:class foaf:Person;
+    d2rq:classDefinitionLabel "Employee";
+    .
+map:employee_manager_employee__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property rdfs:label;
+    d2rq:pattern "Employee - @@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+    .
+#map:employee_manager_employee_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_id;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee id";
+#    d2rq:column "employee_manager_employee.id";
+#    d2rq:datatype xsd:integer;
+#    .
+map:employee_manager_employee_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property foaf:name;
+    d2rq:propertyDefinitionLabel "Employee name";
+    d2rq:column "employee_manager_employee.name";
+    d2rq:datatype rdfs:Literal;
+    .
+#map:employee_manager_employee_first_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_first_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee.first_surname";
+#    d2rq:column "employee_manager_employee.first_surname";
+#    .
+#map:employee_manager_employee_second_surname a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:Employee_second_surname;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee second_surname";
+#    d2rq:column "employee_manager_employee.second_surname";
+#    .
+map:family_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property foaf:familyName;
+    d2rq:pattern "@@employee_manager_employee.name@@ @@employee_manager_employee.first_surname@@ @@employee_manager_employee.second_surname@@";
+    .
+map:employee_manager_employee_foaf_link a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property vocab:Employee_foaf;
+    d2rq:propertyDefinitionLabel "employee_manager_employee foaf_link";
+    d2rq:uriColumn "employee_manager_employee.foaf_link";
+    d2rq:datatype xsd:anyURI;
+    .
+#map:employee_manager_employee_external a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_external;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee external";
+#    d2rq:column "employee_manager_employee.external";
+#    d2rq:valueRegex "^[01]*$";
+#    .
+#map:employee_manager_employee_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_slug;
+#    d2rq:propertyDefinitionLabel "employee_manager_employee slug";
+#    d2rq:column "employee_manager_employee.slug";
+#    .
+#map:employee_manager_employee_organization_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:employee_manager_employee;
+#    d2rq:property vocab:employee_manager_employee_organization_id;
+#    d2rq:refersToClassMap map:organization_manager_organization;
+#    d2rq:join "employee_manager_employee.organization_id => organization_manager_organization.id";
+#    .
+
+
+
+
+
+###############################################################################
+#   organization_manager: Organization
+###############################################################################
+
+
+
+# Table organization_manager_organization
+map:organization_manager_organization a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "organization/@@organization_manager_organization.name@@";
+    d2rq:class swrcfe:Organization;
+    d2rq:classDefinitionLabel "Organization";
+    .
+map:organization_manager_organization__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:organization_manager_organization;
+    d2rq:property rdfs:label;
+    d2rq:pattern "Organization - @@organization_manager_organization.name@@";
+    .
+#map:organization_manager_organization_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_id;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization id";
+#    d2rq:column "organization_manager_organization.id";
+#    d2rq:datatype xsd:integer;
+#    .
+map:organization_manager_organization_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:organization_manager_organization;
+    d2rq:property vocab:organization_name;
+    d2rq:propertyDefinitionLabel "Organization name";
+    d2rq:column "organization_manager_organization.name";
+    .
+map:organization_manager_organization_country a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:organization_manager_organization;
+    d2rq:property vocab:organization_country;
+    d2rq:propertyDefinitionLabel "Organization country";
+    d2rq:column "organization_manager_organization.country";
+    .
+map:organization_manager_organization_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:organization_manager_organization;
+    d2rq:property vocab:Organization_homepage;
+    d2rq:propertyDefinitionLabel "Organization homepage";
+    d2rq:column "organization_manager_organization.homepage";
+    .
+#map:organization_manager_organization_logo a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_logo;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization logo";
+#    d2rq:column "organization_manager_organization.logo";
+#    .
+#map:organization_manager_organization_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:organization_manager_organization;
+#    d2rq:property vocab:organization_manager_organization_slug;
+#    d2rq:propertyDefinitionLabel "organization_manager_organization slug";
+#    d2rq:column "organization_manager_organization.slug";
+#    .
+
+
+
+
+
+###############################################################################
+#   project_manager: AssignedEmployee
+###############################################################################
+
+
+
+# Table project_manager_assignedemployee
+map:project_manager_assignedemployee a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_assignedemployee/@@project_manager_assignedemployee.id@@";
+    d2rq:class vocab:project_manager_assignedemployee;
+    d2rq:classDefinitionLabel "AssignedEmployee";
+    .
+map:project_manager_assignedemployee__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_assignedemployee #@@project_manager_assignedemployee.id@@";
+    .
+#map:project_manager_assignedemployee_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:project_manager_assignedemployee_id;
+#    d2rq:propertyDefinitionLabel "project_manager_assignedemployee id";
+#    d2rq:column "project_manager_assignedemployee.id";
+#    d2rq:datatype xsd:integer;
+#    .
+map:project_manager_assignedemployee_role a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+    d2rq:property vocab:assignedemployee_role;
+    d2rq:propertyDefinitionLabel "Role";
+    d2rq:column "project_manager_assignedemployee.role";
+    .
+#map:project_manager_assignedemployee_employee_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:employee_id;
+#    d2rq:refersToClassMap map:employee_manager_employee;
+#    d2rq:propertyDefinitionLabel "Employee";
+#    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+#    .
+#map:project_manager_assignedemployee_project_id__ref a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_assignedemployee;
+#    d2rq:property vocab:project_manager_assignedemployee_project_id;
+#    d2rq:refersToClassMap map:project_manager_project;
+#    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
+#    .
+
+
+
+###############################################################################
+#   project_manager: ConsortiumMember
+###############################################################################
+
+
+
+# Table project_manager_consortiummember
+map:project_manager_consortiummember a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_consortiummember/@@project_manager_consortiummember.id@@";
+    d2rq:class vocab:project_manager_consortiummember;
+    d2rq:classDefinitionLabel "ConsortiumMember";
+    .
+map:project_manager_consortiummember__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_consortiummember;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_consortiummember #@@project_manager_consortiummember.id@@";
+    .
+map:project_manager_consortiummember_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_consortiummember;
+    d2rq:property vocab:project_manager_consortiummember_id;
+    d2rq:propertyDefinitionLabel "project_manager_consortiummember id";
+    d2rq:column "project_manager_consortiummember.id";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_consortiummember_organization_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_consortiummember;
+    d2rq:property vocab:project_manager_consortiummember_organization_id;
+    d2rq:refersToClassMap map:organization_manager_organization;
+    d2rq:join "project_manager_consortiummember.organization_id => organization_manager_organization.id";
+    .
+map:project_manager_consortiummember_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_consortiummember;
+    d2rq:property vocab:project_manager_consortiummember_project_id;
+    d2rq:refersToClassMap map:project_manager_project;
+    d2rq:join "project_manager_consortiummember.project_id => project_manager_project.id";
+    .
+
+
+
+###############################################################################
+#   project_manager: FundingAmount
+###############################################################################
+
+
+
+# Table project_manager_fundingamount
+map:project_manager_fundingamount a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_fundingamount/@@project_manager_fundingamount.id@@";
+    d2rq:class vocab:project_manager_fundingamount;
+    d2rq:classDefinitionLabel "FundingAmount";
+    .
+map:project_manager_fundingamount__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingamount;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_fundingamount #@@project_manager_fundingamount.id@@";
+    .
+map:project_manager_fundingamount_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingamount;
+    d2rq:property vocab:project_manager_fundingamount_id;
+    d2rq:propertyDefinitionLabel "project_manager_fundingamount id";
+    d2rq:column "project_manager_fundingamount.id";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingamount_amount a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingamount;
+    d2rq:property vocab:project_manager_fundingamount_amount;
+    d2rq:propertyDefinitionLabel "project_manager_fundingamount amount";
+    d2rq:column "project_manager_fundingamount.amount";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_manager_fundingamount_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingamount;
+    d2rq:property vocab:project_manager_fundingamount_year;
+    d2rq:propertyDefinitionLabel "project_manager_fundingamount year";
+    d2rq:column "project_manager_fundingamount.year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingamount_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingamount;
+    d2rq:property vocab:project_manager_fundingamount_project_id;
+    d2rq:refersToClassMap map:project_manager_project;
+    d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
+    .
+
+
+
+
+
+###############################################################################
+#   project_manager: FundingProgram
+###############################################################################
+
+
+
+# Table project_manager_fundingprogram
+map:project_manager_fundingprogram a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_fundingprogram/@@project_manager_fundingprogram.id@@";
+    d2rq:class vocab:project_manager_fundingprogram;
+    d2rq:classDefinitionLabel "FundingProgram";
+    .
+map:project_manager_fundingprogram__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_fundingprogram #@@project_manager_fundingprogram.id@@";
+    .
+map:project_manager_fundingprogram_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_id;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram id";
+    d2rq:column "project_manager_fundingprogram.id";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingprogram_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_name;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram name";
+    d2rq:column "project_manager_fundingprogram.name";
+    .
+map:project_manager_fundingprogram_project_code a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_project_code;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram project_code";
+    d2rq:column "project_manager_fundingprogram.project_code";
+    .
+map:project_manager_fundingprogram_start_month a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_start_month;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram start_month";
+    d2rq:column "project_manager_fundingprogram.start_month";
+    .
+map:project_manager_fundingprogram_start_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_start_year;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram start_year";
+    d2rq:column "project_manager_fundingprogram.start_year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingprogram_end_month a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_end_month;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram end_month";
+    d2rq:column "project_manager_fundingprogram.end_month";
+    .
+map:project_manager_fundingprogram_end_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_end_year;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram end_year";
+    d2rq:column "project_manager_fundingprogram.end_year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingprogram_concession_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_concession_year;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram concession_year";
+    d2rq:column "project_manager_fundingprogram.concession_year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_fundingprogram_geographical_scope a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_geographical_scope;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram geographical_scope";
+    d2rq:column "project_manager_fundingprogram.geographical_scope";
+    .
+map:project_manager_fundingprogram_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_logo;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram logo";
+    d2rq:column "project_manager_fundingprogram.logo";
+    .
+map:project_manager_fundingprogram_observations a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_observations;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram observations";
+    d2rq:column "project_manager_fundingprogram.observations";
+    .
+map:project_manager_fundingprogram_slug a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_slug;
+    d2rq:propertyDefinitionLabel "project_manager_fundingprogram slug";
+    d2rq:column "project_manager_fundingprogram.slug";
+    .
+map:project_manager_fundingprogram_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_project_id;
+    d2rq:refersToClassMap map:project_manager_project;
+    d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
+    .
+map:project_manager_fundingprogram_organization_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_fundingprogram;
+    d2rq:property vocab:project_manager_fundingprogram_organization_id;
+    d2rq:refersToClassMap map:organization_manager_organization;
+    d2rq:join "project_manager_fundingprogram.organization_id => organization_manager_organization.id";
+    .
+
+
+
+
+
+###############################################################################
+#   project_manager: Project
+###############################################################################
+
+
+
+# Table project_manager_project
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "Project";
+    d2rq:condition "project_manager_project.project_type = 'Project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:DevelopmentProject;
+    d2rq:classDefinitionLabel "Project";
+    d2rq:condition "project_manager_project.project_type = 'Development project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "InnovationProject";
+    d2rq:condition "project_manager_project.project_type = 'Innovation project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "ResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Research project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "BasicResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Basic research project'";
+    .
+map:project_manager_project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_project/@@project_manager_project.slug@@";
+    d2rq:class vocab:project;
+    d2rq:classDefinitionLabel "AppliedResearchProject";
+    d2rq:condition "project_manager_project.project_type = 'Applied research project'";
+    .
+
+map:project_manager_project__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property rdfs:label;
+    d2rq:pattern "Project - @@project_manager_project.title@@";
+    .
+#map:project_manager_project_id a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_project;
+#    d2rq:property vocab:project_manager_project_id;
+#    d2rq:propertyDefinitionLabel "project_manager_project id";
+#    d2rq:column "project_manager_project.id";
+#    d2rq:datatype xsd:integer;
+#    .
+#map:project_manager_project_project_type a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_project;
+#    d2rq:property vocab:project_manager_project_project_type;
+#    d2rq:propertyDefinitionLabel "project_manager_project project_type";
+#    d2rq:column "project_manager_project.project_type";
+#    .
+map:project_manager_project_title a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property dc:title;
+    d2rq:propertyDefinitionLabel "Project title";
+    d2rq:column "project_manager_project.title";
+    .
+#map:project_manager_project_slug a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:project_manager_project;
+#    d2rq:property vocab:project_manager_project_slug;
+#    d2rq:propertyDefinitionLabel "project_manager_project slug";
+#    d2rq:column "project_manager_project.slug";
+#    .
+map:project_manager_project_description a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property dc:description;
+    d2rq:propertyDefinitionLabel "Project description";
+    d2rq:column "project_manager_project.description";
+    .
+map:project_manager_project_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_homepage;
+    d2rq:propertyDefinitionLabel "Project homepage";
+    d2rq:uriColumn "project_manager_project.homepage";
+    .
+map:project_manager_project_start_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:hasStartYear;
+    d2rq:propertyDefinitionLabel "Project start year";
+    d2rq:column "project_manager_project.start_year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_project_end_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:hasEndYear;
+    d2rq:propertyDefinitionLabel "Project end year";
+    d2rq:column "project_manager_project.end_year";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_project_status a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_manager_project_status;
+    d2rq:propertyDefinitionLabel "project_manager_project status";
+    d2rq:column "project_manager_project.status";
+    .
+map:project_manager_project_total_funds a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_manager_project_total_funds;
+    d2rq:propertyDefinitionLabel "project_manager_project total_funds";
+    d2rq:column "project_manager_project.total_funds";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_manager_project_total_funds_deusto a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_manager_project_total_funds_deusto;
+    d2rq:propertyDefinitionLabel "project_manager_project total_funds_deusto";
+    d2rq:column "project_manager_project.total_funds_deusto";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_manager_project_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_manager_project_logo;
+    d2rq:propertyDefinitionLabel "project_manager_project logo";
+    d2rq:column "project_manager_project.logo";
+    .
+map:project_manager_project_observations a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_project;
+    d2rq:property vocab:project_manager_project_observations;
+    d2rq:propertyDefinitionLabel "project_manager_project observations";
+    d2rq:column "project_manager_project.observations";
+    .
+
+
+
+
+
+###############################################################################
+#   project_manager: ProjectLeader
+###############################################################################
+
+
+
+# Table project_manager_projectleader
+map:project_manager_projectleader a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_projectleader/@@project_manager_projectleader.id@@";
+    d2rq:class vocab:project_manager_projectleader;
+    d2rq:classDefinitionLabel "ProjectLeader";
+    .
+map:project_manager_projectleader__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_projectleader;
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_projectleader #@@project_manager_projectleader.id@@";
+    .
+map:project_manager_projectleader_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_projectleader;
+    d2rq:property vocab:project_manager_projectleader_id;
+    d2rq:propertyDefinitionLabel "project_manager_projectleader id";
+    d2rq:column "project_manager_projectleader.id";
+    d2rq:datatype xsd:integer;
+    .
+map:project_manager_projectleader_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_projectleader;
+    d2rq:property vocab:project_manager_projectleader_project_id;
+    d2rq:refersToClassMap map:project_manager_project;
+    d2rq:join "project_manager_projectleader.project_id => project_manager_project.id";
+    .
+map:project_manager_projectleader_organization_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:project_manager_projectleader;
+    d2rq:property vocab:project_manager_projectleader_organization_id;
+    d2rq:refersToClassMap map:organization_manager_organization;
+    d2rq:join "project_manager_projectleader.organization_id => organization_manager_organization.id";
+    .
