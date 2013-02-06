@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+    xml:base="http://www.morelab.deusto.es/ontologies/swrcfe.owl"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    ontologyIRI="http://www.morelab.deusto.es/ontologies/swrcfe.owl">
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="ontology" IRI="http://swrc.ontoware.org/ontology#"/>
+    <Prefix name="swrcfe" IRI="http://www.morelab.deusto.es/ontologies/swrcfe.owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Import>http://data.semanticweb.org/ns/swc/swrc</Import>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">SWRCFE (SWRC Funding Extension) is an extension of the SWRC ontology for represeting funding of R&amp;D projects (who finances the project, in what period of time, and with which amount of money).
+Made by Morelab Research Group at Deustotech (University of Deusto).</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:backwardCompatibleWith"/>
+        <Literal datatypeIRI="&xsd;anyURI">http://data.semanticweb.org/ns/swc/swrc</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+        <Literal datatypeIRI="&xsd;double">0.1</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="#Funding"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FundingAmount"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FundingProgram"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FundingProject"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#YearSchedule"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#financedWith"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#funds"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#principalInvestigator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#projectManager"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#programType"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#sheduledIn"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#totalFunds"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#amount"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#currency"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#geographicalScope"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#projectCode"/>
+    </Declaration>
+    <SubClassOf>
+        <Class abbreviatedIRI="ontology:Project"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#financedWith"/>
+            <Class IRI="#Funding"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI="ontology:ResearchProject"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#principalInvestigator"/>
+            <Class abbreviatedIRI="ontology:Employee"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI="ontology:Project"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#projectManager"/>
+            <Class abbreviatedIRI="ontology:Employee"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Funding"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty abbreviatedIRI="ontology:financedBy"/>
+            <ObjectUnionOf>
+                <Class abbreviatedIRI="ontology:Organization"/>
+                <Class IRI="#FundingProject"/>
+            </ObjectUnionOf>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Funding"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#sheduledIn"/>
+            <Class IRI="#YearSchedule"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Funding"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#totalFunds"/>
+            <Class IRI="#FundingAmount"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Funding"/>
+        <DataAllValuesFrom>
+            <DataProperty abbreviatedIRI="ontology:endDate"/>
+            <Datatype abbreviatedIRI="xsd:date"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Funding"/>
+        <DataAllValuesFrom>
+            <DataProperty abbreviatedIRI="ontology:startDate"/>
+            <Datatype abbreviatedIRI="xsd:date"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingAmount"/>
+        <DataAllValuesFrom>
+            <DataProperty IRI="#amount"/>
+            <Datatype abbreviatedIRI="xsd:double"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingAmount"/>
+        <DataAllValuesFrom>
+            <DataProperty IRI="#currency"/>
+            <Datatype abbreviatedIRI="xsd:anyURI"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProgram"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty abbreviatedIRI="ontology:financedBy"/>
+            <Class abbreviatedIRI="ontology:Organization"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProgram"/>
+        <DataAllValuesFrom>
+            <DataProperty abbreviatedIRI="ontology:name"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProgram"/>
+        <DataAllValuesFrom>
+            <DataProperty abbreviatedIRI="ontology:year"/>
+            <Datatype abbreviatedIRI="xsd:date"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProgram"/>
+        <DataAllValuesFrom>
+            <DataProperty IRI="#geographicalScope"/>
+            <Datatype abbreviatedIRI="xsd:anyURI"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProject"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#programType"/>
+            <Class IRI="#FundingProgram"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FundingProject"/>
+        <DataAllValuesFrom>
+            <DataProperty IRI="#projectCode"/>
+            <Datatype abbreviatedIRI="rdfs:Literal"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#YearSchedule"/>
+        <ObjectAllValuesFrom>
+            <ObjectProperty IRI="#funds"/>
+            <Class IRI="#FundingAmount"/>
+        </ObjectAllValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#YearSchedule"/>
+        <DataAllValuesFrom>
+            <DataProperty abbreviatedIRI="ontology:year"/>
+            <Datatype abbreviatedIRI="xsd:date"/>
+        </DataAllValuesFrom>
+    </SubClassOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#totalFunds"/>
+        <ObjectProperty IRI="#funds"/>
+    </SubObjectPropertyOf>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#funds"/>
+        <Class IRI="#FundingAmount"/>
+    </ObjectPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Funding</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Description of a funding given by a certain Organization.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingAmount</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the currency.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#YearSchedule</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Breakdown of each year of funding</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
