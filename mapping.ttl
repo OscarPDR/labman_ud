@@ -208,52 +208,42 @@ map:organization_logo a d2rq:PropertyBridge;
 ##   project_manager: FundingAmount
 ################################################################################
 
-#
-#
-## Table project_manager_fundingamount
-#map:project_manager_fundingamount a d2rq:ClassMap;
-#    d2rq:dataStorage map:database;
-#    d2rq:uriPattern "project_manager_fundingamount/@@project_manager_fundingamount.id@@";
-#    d2rq:class vocab:project_manager_fundingamount;
-#    d2rq:classDefinitionLabel "FundingAmount";
-#    .
-#map:project_manager_fundingamount__label a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_fundingamount;
-#    d2rq:property rdfs:label;
-#    d2rq:pattern "project_manager_fundingamount #@@project_manager_fundingamount.id@@";
-#    .
-#map:project_manager_fundingamount_id a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_fundingamount;
-#    d2rq:property vocab:project_manager_fundingamount_id;
-#    d2rq:propertyDefinitionLabel "project_manager_fundingamount id";
-#    d2rq:column "project_manager_fundingamount.id";
-#    d2rq:datatype xsd:integer;
-#    .
-#map:project_manager_fundingamount_amount a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_fundingamount;
-#    d2rq:property vocab:project_manager_fundingamount_amount;
-#    d2rq:propertyDefinitionLabel "project_manager_fundingamount amount";
-#    d2rq:column "project_manager_fundingamount.amount";
-#    d2rq:datatype xsd:decimal;
-#    .
-#map:project_manager_fundingamount_year a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_fundingamount;
-#    d2rq:property vocab:project_manager_fundingamount_year;
-#    d2rq:propertyDefinitionLabel "project_manager_fundingamount year";
-#    d2rq:column "project_manager_fundingamount.year";
-#    d2rq:datatype xsd:integer;
-#    .
-#map:project_manager_fundingamount_project_id__ref a d2rq:PropertyBridge;
-#    d2rq:belongsToClassMap map:project_manager_fundingamount;
-#    d2rq:property vocab:project_manager_fundingamount_project_id;
-#    d2rq:refersToClassMap map:project_manager_project;
-#    d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
-#    .
 
-#
-#
-#
-#
+
+# Table project_manager_fundingamount
+map:FundingAmount a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project_manager_fundingamount/@@project_manager_fundingamount.id@@";
+    d2rq:class vocab:project_manager_fundingamount;
+    .
+map:funding_amount__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:property rdfs:label;
+    d2rq:pattern "project_manager_fundingamount #@@project_manager_fundingamount.id@@";
+    .
+map:funding_amount_amount a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:property vocab:project_manager_fundingamount_amount;
+    d2rq:column "project_manager_fundingamount.amount";
+    d2rq:datatype xsd:decimal;
+    .
+map:funding_amount_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:property vocab:project_manager_fundingamount_year;
+    d2rq:column "project_manager_fundingamount.year";
+    d2rq:datatype xsd:gYear;
+    .
+map:funding_amount_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount
+    d2rq:property vocab:project_manager_fundingamount_project_id;
+    d2rq:refersToClassMap map:Project;
+    d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
+    .
+
+
+
+
+
 ################################################################################
 ##   project_manager: FundingProgram
 ################################################################################
@@ -271,12 +261,6 @@ map:funding_program__label a d2rq:PropertyBridge;
     d2rq:property rdfs:label;
     d2rq:pattern "project_manager_fundingprogram #@@project_manager_fundingprogram.id@@";
     .
-map:funding_program_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingProgram;
-    d2rq:property vocab:project_manager_fundingprogram_id;
-    d2rq:column "project_manager_fundingprogram.id";
-    d2rq:datatype xsd:integer;
-    .
 map:funding_program_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property vocab:project_manager_fundingprogram_name;
@@ -287,10 +271,11 @@ map:funding_program_project_code a d2rq:PropertyBridge;
     d2rq:property vocab:project_manager_fundingprogram_project_code;
     d2rq:column "project_manager_fundingprogram.project_code";
     .
-map:funding_program_start_month a d2rq:PropertyBridge;
+map:funding_program_start_date a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property vocab:project_manager_fundingprogram_start_month;
-    d2rq:column "project_manager_fundingprogram.start_month";
+    d2rq:pattern "@@project_manager_fundingprogram.start_year@@-@@project_manager_fundingprogram.start_month@@";
+    d2rq:datatype xsd:gYearMonth;
     .
 map:funding_program_start_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
