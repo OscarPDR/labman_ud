@@ -85,6 +85,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'dajaxice.finders.DajaxiceFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -94,7 +95,7 @@ SECRET_KEY = '$fshr_l3d%(b8yu21zi&amp;-khm5jo2(p%3ydx6@n1fm(0@=tyaap'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,6 +106,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages'
 )
 
 ROOT_URLCONF = 'projects_morelab.urls'
@@ -118,6 +129,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, '../templates'),
 )
+
+DAJAXICE_MEDIA_PREFIX = "dajaxice"
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -137,6 +150,9 @@ INSTALLED_APPS = (
     'funding_call_manager',
 
     'django_extensions',
+
+    'dajaxice',
+    'dajax',
 )
 
 # A sample logging configuration. The only tangible logging

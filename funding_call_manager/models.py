@@ -71,7 +71,7 @@ class FundingCall(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s - Funding call: %s' % (self.full_name, self.organization.name)
+        return u'%s, %s' % (self.full_name, self.organization.name)
 
     def save(self, *args, **kwargs):
         if self.slug == "":
