@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 
 from employee_manager.models import Employee
 from organization_manager.models import Organization
+from funding_call_manager.models import FundingCall
 
 PROJECT_TYPES = (
     ('Project', 'Project'),
@@ -84,7 +85,7 @@ class Project(models.Model):
     )
 
     slug = models.SlugField(
-	max_length = 100,
+        max_length = 100,
         blank = True,
     )
 
@@ -185,6 +186,7 @@ class Project(models.Model):
 
 class FundingProgram(models.Model):
     project = models.ForeignKey(Project, blank = True, null = True,)
+    funding_call = models.ForeignKey(FundingCall, verbose_name = 'Funding call', blank = True, null = True)
     organization = models.ForeignKey(Organization, verbose_name = 'Funding organization', blank = True, null = True,)
 
     name = models.CharField(
@@ -258,7 +260,7 @@ class FundingProgram(models.Model):
     )
 
     slug = models.SlugField(
-	max_length = 100,
+        max_length = 100,
         blank = True,
     )
 
