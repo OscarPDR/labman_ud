@@ -345,27 +345,27 @@ map:project_funding_program a d2rq:PropertyBridge;
     d2rq:refersToClassMap map:FundingProgram;
     d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
     .
-map:project_project_manager a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Project;
-    d2rq:property swrcfe:hasProjectManager;
-    d2rq:refersToClassMap map:Employee;
-    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
-    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
-    d2rq:condition "project_manager_assignedemployee.role = 'Project Manager'";
-    .
+#map:project_project_manager a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:Project;
+#    d2rq:property swrcfe:hasProjectManager;
+#    d2rq:refersToClassMap map:Employee;
+#    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+#    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
+#    d2rq:condition "project_manager_assignedemployee.role = 'Project manager'";
+#    .
 map:project_principal_researcher a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasPrincipalResearcher;
     d2rq:refersToClassMap map:Employee;
-    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+#    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
     d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
     d2rq:condition "project_manager_assignedemployee.role = 'Principal researcher'";
     .
-map:project_researcher a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Project;
-    d2rq:property swrcfe:hasResearcher;
-    d2rq:refersToClassMap map:Employee;
-    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
-    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
-    d2rq:condition "project_manager_assignedemployee.role = 'Researcher'";
-    .
+#map:project_researcher a d2rq:PropertyBridge;
+#    d2rq:belongsToClassMap map:Project;
+#    d2rq:property swrcfe:hasResearcher;
+#    d2rq:refersToClassMap map:Employee;
+#    d2rq:join "project_manager_assignedemployee.employee_id => employee_manager_employee.id";
+#    d2rq:join "project_manager_assignedemployee.project_id => project_manager_project.id";
+#    d2rq:condition "project_manager_assignedemployee.role = 'Researcher'";
+#    .
