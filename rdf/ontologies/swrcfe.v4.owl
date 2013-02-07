@@ -42,6 +42,405 @@ The most recent version of the ontology is v4 (6th february, 2013).
 Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         </Literal>
     </Annotation>
+    <Declaration>
+        <Class IRI="#FundingAmount"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FundingProgram"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasConsortiumMember"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasFundingAmount"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasFundingProgram"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasPrincipalResearcher"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasProjectLeader"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasProjectManager"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasResearcher"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isConceededBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isFundingAmountOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isFundingProgramOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isPartOfFundingProgram"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#worksAt"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasAmount"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasConcessionYear"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasCountry"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasEndDate"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasEndYear"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFOAF"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingProgramName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingProgramObservations"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasGeographicalScope"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasOrganizationHomepage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasOrganizationLogo"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasOrganizationName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasProjectCode"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasProjectHomepage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasProjectLogo"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasProjectType"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasStartDate"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasStartYear"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasStatus"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasTotalFunds"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasTotalFundsDeusto"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasYear"/>
+    </Declaration>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasConsortiumMember"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasFundingAmount"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasFundingProgram"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasPrincipalResearcher"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasProjectLeader"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasProjectManager"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasResearcher"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isConceededBy"/>
+        <Class IRI="#FundingProgram"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isFundingAmountOf"/>
+        <Class IRI="#FundingAmount"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isFundingProgramOf"/>
+        <Class IRI="#FundingProgram"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isPartOfFundingProgram"/>
+        <Class IRI="#FundingAmount"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#worksAt"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasConsortiumMember"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasFundingAmount"/>
+        <Class IRI="#FundingAmount"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasFundingProgram"/>
+        <Class IRI="#FundingProgram"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasPrincipalResearcher"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasProjectLeader"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasProjectManager"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasResearcher"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isConceededBy"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isFundingAmountOf"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isFundingProgramOf"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isPartOfFundingProgram"/>
+        <Class IRI="#FundingProgram"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#worksAt"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasAmount"/>
+        <Class IRI="#FundingAmount"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasConcessionYear"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasCountry"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasEndDate"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasEndYear"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFOAF"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingProgramName"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingProgramObservations"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasGeographicalScope"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasOrganizationHomepage"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasOrganizationLogo"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasOrganizationName"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasProjectCode"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasProjectHomepage"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasProjectLogo"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasProjectType"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasStartDate"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasStartYear"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasStatus"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasTotalFunds"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasTotalFundsDeusto"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasYear"/>
+        <Class IRI="#FundingAmount"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasAmount"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasConcessionYear"/>
+        <Datatype abbreviatedIRI="xsd:gYear"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasCountry"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasEndDate"/>
+        <Datatype abbreviatedIRI="xsd:gYearMonth"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasEndYear"/>
+        <Datatype abbreviatedIRI="xsd:gYear"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFOAF"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingProgramName"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingProgramObservations"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasGeographicalScope"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasOrganizationHomepage"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasOrganizationLogo"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasOrganizationName"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasProjectCode"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasProjectHomepage"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasProjectLogo"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasProjectType"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasStartDate"/>
+        <Datatype abbreviatedIRI="xsd:gYearMonth"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasStartYear"/>
+        <Datatype abbreviatedIRI="xsd:gYear"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasStatus"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasTotalFunds"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasTotalFundsDeusto"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasYear"/>
+        <Datatype abbreviatedIRI="xsd:gYear"/>
+    </DataPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingAmount</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the year it was conceeded.</Literal>
+    </AnnotationAssertion>
 </Ontology>
 
+
+
 <!-- Generated by the OWL API (version 3.3.1957) http://owlapi.sourceforge.net -->
+
