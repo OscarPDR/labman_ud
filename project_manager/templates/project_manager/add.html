@@ -32,7 +32,7 @@
 
                         {% for field in project_form %}
 
-                            {% if field.label != 'Total funds' %}
+                            {% if field.label not in "'Total funds', 'Total funds (DeustoTech only)'" %}
 
                                 {% if field.errors %}
 
@@ -68,10 +68,14 @@
                     <div class="tab-pane" id="funding-program">
 
                         {% for funding_field in funding_program_form %}
-                            <div class="control-group">
+                            <div class="control-group" id="funding-program-{{ funding_field.label|lower|slugify }}-form">
                                 <label class="control-label" id="label">{{ funding_field.label }}</label>
                                 <div class="controls">
-                                    {{ funding_field }}
+                                    {% if funding_field.label|lower|slugify = ''%}
+
+                                    {% else %}
+                                        {{ funding_field }}
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
@@ -83,10 +87,18 @@
                     <!-- Funding amount information -->
 
                     <div class="tab-pane" id="funding-amount">
-                        <div class="control-group">
+
+                        <div class="control-group" id="funding-program-total-funds-form">
                             <label class="control-label" id="label">{{ project_form.total_funds.label }}</label>
                             <div class="controls">
                                 {{ project_form.total_funds }}
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="funding-program-total-fund-deusto-form">
+                            <label class="control-label" id="label">{{ project_form.total_funds_deusto.label }}</label>
+                            <div class="controls">
+                                {{ project_form.total_funds_deusto }}
                             </div>
                         </div>
 
@@ -228,6 +240,32 @@
             catch (err) {
             }
         }
+    </script>
+
+    <script>
+
+        $('#id_funding_program_form-funding_call').change(function() {
+            var id = $('#id_funding_program_form-funding_call').val();
+            if(id != '') {
+                Dajaxice.project_manager.get_funding_call(Dajax.process, {'pk': id});
+                $("#id_funding_program_form-organization").prop('disabled', true);
+                $("#id_funding_program_form-name").prop('disabled', true);
+                $("#id_funding_program_form-concession_year").prop('disabled', true);
+                $("#id_funding_program_form-geographical_scope").prop('disabled', true);
+            }
+            else {
+                $("#id_funding_program_form-organization").prop('disabled', false);
+                $("#id_funding_program_form-name").prop('disabled', false);
+                $("#id_funding_program_form-concession_year").prop('disabled', false);
+                $("#id_funding_program_form-geographical_scope").prop('disabled', false);
+
+                $("#id_funding_program_form-organization").val('');
+                $("#id_funding_program_form-name").val('');
+                $("#id_funding_program_form-concession_year").val('');
+                $("#id_funding_program_form-geographical_scope").val('');
+            }
+        });
+
     </script>
 
 {% endblock %}
