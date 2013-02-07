@@ -4,7 +4,7 @@
 
     <div class="row-fluid" id="main-page">
 
-        <div class="span4">
+        <div class="span3">
             <a href="{% url employee_index %}">
                 <img src="{{ STATIC_PREFIX }}img/employee.png">
                 <br>
@@ -12,7 +12,7 @@
             </a>
         </div>
 
-        <div class="span4">
+        <div class="span3">
             <a href="{% url project_index %}">
                 <img src="{{ STATIC_PREFIX }}img/project.png">
                 <br>
@@ -20,11 +20,19 @@
             </a>
         </div>
 
-        <div class="span4">
+        <div class="span3">
             <a href="{% url organization_index %}">
                 <img src="{{ STATIC_PREFIX }}img/organization.png">
                 <br>
                 Organization management
+            </a>
+        </div>
+
+        <div class="span3">
+            <a href="{% url funding_call_index %}">
+                <img src="{{ STATIC_PREFIX }}img/funding_call.png">
+                <br>
+                Funding call management
             </a>
         </div>
 

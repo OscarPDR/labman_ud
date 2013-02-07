@@ -9,6 +9,9 @@ settings.py
 
 /media/projects/*
 /media/organizations/*
+/media/funding_calls/*
 
 projects_morelab.sublime-project
 projects_morelab.sublime-workspace
+
+projectsDB.sqlite
