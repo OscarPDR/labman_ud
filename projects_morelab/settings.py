@@ -134,6 +134,8 @@ INSTALLED_APPS = (
     'project_manager',
     'employee_manager',
     'organization_manager',
+    'funding_call_manager',
+
     'django_extensions',
 )
 

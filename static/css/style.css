@@ -37,6 +37,11 @@ h4 {
     max-height: 75px;
 }
 
+.funding-call-logo {
+    float: right;
+    max-height: 75px;
+}
+
 #main-container {
     display: block;
     min-height: 500px;
