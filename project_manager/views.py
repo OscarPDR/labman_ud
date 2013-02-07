@@ -103,6 +103,11 @@ def add_project(request):
             if funding_program_form.is_valid():
                 cd_f = funding_program_form.cleaned_data
 
+                if(cd_f['funding_call']):
+                    print "Hay call"
+                else:
+                    print "No hay call"
+
                 funding_program = FundingProgram(
                     project = project,
                     organization = cd_f['organization'],
@@ -115,11 +120,6 @@ def add_project(request):
                     concession_year = cd_f['concession_year'],
                     geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
                 )
-
-                try:
-                    funding_program.logo = request.FILES['funding_program_form-logo']
-                except:
-                    pass
 
                 funding_program.save()
 
@@ -320,11 +320,6 @@ def edit_project(request, slug):
                 funding_program.end_year = cd_f['end_year']
                 funding_program.concession_year = cd_f['concession_year']
                 funding_program.geographical_scope = cd_f['geographical_scope'].encode('utf-8')
-
-                try:
-                    funding_program.logo = request.FILES['funding_program_form-logo']
-                except:
-                    pass
 
                 funding_program.save()
 

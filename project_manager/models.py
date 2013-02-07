@@ -186,7 +186,7 @@ class Project(models.Model):
 
 class FundingProgram(models.Model):
     project = models.ForeignKey(Project, blank = True, null = True,)
-    funding_call = models.ForeignKey(FundingCall, verbose_name = 'Funding call', blank = True, null = True)
+    funding_call = models.ForeignKey(FundingCall, verbose_name = 'Funding call', blank = True, null = True,)
     organization = models.ForeignKey(Organization, verbose_name = 'Funding organization', blank = True, null = True,)
 
     name = models.CharField(
@@ -246,13 +246,6 @@ class FundingProgram(models.Model):
         blank = True,
     )
 
-    logo = models.ImageField(
-        upload_to = organization_logo_path,
-        verbose_name = 'Logo',
-        blank = True,
-        null = True,
-    )
-
     observations = models.TextField(
         max_length = 500,
         verbose_name = 'Observations',
@@ -271,27 +264,6 @@ class FundingProgram(models.Model):
         if self.slug == "":
             self.slug = slugify(str(self.name) + str(self.project_code))
         super(FundingProgram, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-        path = self.logo.path
-        # Delete the model before the file
-        super(FundingProgram, self).delete(*args, **kwargs)
-        # Delete the file after the model
-        storage.delete(path)
-
-    def update(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-        try:
-            path = self.logo.path
-            os.remove(path)
-            # Delete the file after the model
-            storage.delete(path)
-        except:
-            pass
-            # No previous logo
 
 
 #########################
