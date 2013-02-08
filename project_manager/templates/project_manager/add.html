@@ -1,5 +1,4 @@
 {% extends "projects_morelab/base.html" %}
-{% load i18n %}
 
 {% block content %}
 
@@ -8,17 +7,66 @@
 
         <legend>Add a new project</legend>
 
-        <br />
+        <br>
 
         <fieldset>
 
             <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#general" data-toggle="tab"><span class="badge">1</span> General information</a></li>
-                    <li><a href="#funding-program" data-toggle="tab" onclick="autofillDuration();"><span class="badge">2</span> Funding program</a></li>
-                    <li><a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();"><span class="badge">3</span> Funding breakdown</a></li>
-                    <li><a href="#assigned-employees" data-toggle="tab"><span class="badge">4</span> Assigned employees</a></li>
-                    <li><a href="#consortium-members" data-toggle="tab"><span class="badge">5</span> Consortium members</a></li>
+                    <li class="active">
+                        <a href="#general" data-toggle="tab">
+                            {% if 'project' in error_badges %}
+                                <span class="badge badge-important">1</span>
+                            {% else %}
+                                <span class="badge">1</span>
+                            {% endif %}
+                            General information
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#funding-program" data-toggle="tab" onclick="autofillDuration();">
+                            {% if 'funding_program' in error_badges %}
+                                <span class="badge badge-important">2</span>
+                            {% else %}
+                                <span class="badge">2</span>
+                            {% endif %}
+                            Funding program
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#funding-amount" data-toggle="tab" onclick="sortFundingAmountForms();">
+                            {% if 'funding_amount' in error_badges %}
+                                <span class="badge badge-important">3</span>
+                            {% else %}
+                                <span class="badge">3</span>
+                            {% endif %}
+                            Funding breakdown
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#assigned-employees" data-toggle="tab">
+                            {% if 'assigned_employees' in error_badges %}
+                                <span class="badge badge-important">4</span>
+                            {% else %}
+                                <span class="badge">4</span>
+                            {% endif %}
+                            Assigned employees
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#consortium-members" data-toggle="tab">
+                            {% if 'consortium_members' in error_badges %}
+                                <span class="badge badge-important">5</span>
+                            {% else %}
+                                <span class="badge">5</span>
+                            {% endif %}
+                            Consortium members
+                        </a>
+                    </li>
 
                     <button type="submit" name="submit" class="btn btn-small btn-primary tab-left-btn">Save</button>
                     <a class="btn btn-small btn-danger tab-left-btn" href="{% url project_index %}">Cancel</a>
@@ -32,7 +80,7 @@
 
                         {% for field in project_form %}
 
-                            {% if field.label not in "'Total funds', 'Total funds (DeustoTech only)', 'Leader organization *'" %}
+                            {% if field.label not in "'Total funds', 'Leader organization *'" %}
 
                                 {% if field.errors %}
 
@@ -68,16 +116,28 @@
                     <div class="tab-pane" id="funding-program">
 
                         {% for funding_field in funding_program_form %}
-                            <div class="control-group" id="funding-program-{{ funding_field.label|lower|slugify }}-form">
-                                <label class="control-label" id="label">{{ funding_field.label }}</label>
-                                <div class="controls">
-                                    {% if funding_field.label|lower|slugify = ''%}
 
-                                    {% else %}
+                            {% if funding_field.errors %}
+
+                                <div class="control-group error">
+                                    <label class="control-label" for="inputError">{{ funding_field.label }}</label>
+                                    <div class="controls">
                                         {{ funding_field }}
-                                    {% endif %}
+                                        <span class="help-inline">{{ funding_field.errors|striptags }}</span>
+                                    </div>
                                 </div>
-                            </div>
+
+                            {% else %}
+
+                                <div class="control-group" id="funding-program-{{ funding_field.label|lower|slugify }}-form">
+                                    <label class="control-label" id="label">{{ funding_field.label }}</label>
+                                    <div class="controls">
+                                        {{ funding_field }}
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
                         {% endfor %}
 
                     </div>
@@ -88,12 +148,18 @@
 
                     <div class="tab-pane" id="funding-amount">
 
+                        <h6>Total funds of the project</h6>
+
                         <div class="control-group" id="funding-program-total-funds-form">
                             <label class="control-label" id="label">{{ project_form.total_funds.label }}</label>
                             <div class="controls">
                                 {{ project_form.total_funds }}
                             </div>
                         </div>
+
+                        <br>
+
+                        <h6>DeustoTech specific funds</h6>
 
                         <div class="control-group" id="funding-program-total-fund-deusto-form">
                             <label class="control-label" id="label">{{ project_form.total_funds_deusto.label }}</label>
@@ -140,12 +206,27 @@
                     <!-- End #consortium-members tab-pane -->
 
                     <div class="tab-pane" id="consortium-members">
-                        <div class="control-group">
-                            <label class="control-label" id="label">{{ project_form.project_leader.label }}</label>
-                            <div class="controls">
-                                {{ project_form.project_leader }}
+
+                        {% if project_form.project_leader.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.project_leader.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_leader }}
+                                    <span class="help-inline">{{ project_form.project_leader.errors|striptags }}</span>
+                                </div>
                             </div>
-                        </div>
+
+                        {% else %}
+
+                            <div class="control-group">
+                                <label class="control-label" id="label">{{ project_form.project_leader.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_leader }}
+                                </div>
+                            </div>
+
+                        {% endif %}
 
                         <br>
 
@@ -249,18 +330,21 @@
             if(id != '') {
                 Dajaxice.project_manager.get_funding_call(Dajax.process, {'pk': id});
                 $("#id_funding_program_form-organization").prop('disabled', true);
-                $("#id_funding_program_form-name").prop('disabled', true);
+                $("#id_funding_program_form-full_name").prop('disabled', true);
+                $("#id_funding_program_form-short_name").prop('disabled', true);
                 $("#id_funding_program_form-concession_year").prop('disabled', true);
                 $("#id_funding_program_form-geographical_scope").prop('disabled', true);
             }
             else {
                 $("#id_funding_program_form-organization").prop('disabled', false);
-                $("#id_funding_program_form-name").prop('disabled', false);
+                $("#id_funding_program_form-full_name").prop('disabled', false);
+                $("#id_funding_program_form-short_name").prop('disabled', false);
                 $("#id_funding_program_form-concession_year").prop('disabled', false);
                 $("#id_funding_program_form-geographical_scope").prop('disabled', false);
 
                 $("#id_funding_program_form-organization").val('');
-                $("#id_funding_program_form-name").val('');
+                $("#id_funding_program_form-full_name").val('');
+                $("#id_funding_program_form-short_name").val('');
                 $("#id_funding_program_form-concession_year").val('');
                 $("#id_funding_program_form-geographical_scope").val('');
             }

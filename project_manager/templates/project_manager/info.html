@@ -76,8 +76,8 @@
 
                 <h5>Supported by:</h5>
                 <p>
-                    {% if funding_program.name %}
-                        {{ funding_program.name }}, {{ funding_program.organization.name }}
+                    {% if funding_program.full_name %}
+                        {{ funding_program.full_name }}, {{ funding_program.organization.name }}
                     {% else %}
                         No information available
                     {% endif %}
@@ -87,8 +87,8 @@
 
                 <h5>Project code:</h5>
                 <p>
-                    {% if funding_program.project_code %}
-                        {{ funding_program.project_code }}
+                    {% if project.funding_program.project_code %}
+                        {{ project.funding_program.project_code }}
                     {% else %}
                         No information available
                     {% endif %}
@@ -99,7 +99,7 @@
                 <h5>Funding duration:</h5>
                 <p>
                     {% if funding_program.concession_year %}
-                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ funding_program.start_year }} - {{ funding_program.end_year }} period.
+                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.funding_program.start_year }} - {{ project.funding_program.end_year }} period.
                     {% else %}
                         No information available
                     {% endif %}
@@ -110,8 +110,11 @@
                 <h5>Funding amount:</h5>
                 {% if project.total_funds %}
                     <p>
-                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ total_deusto.amount__sum|intcomma|intword }} € in the following way:
+                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_deusto.amount__sum|intcomma|intword }} € in the following way:
                     </p>
+                {% endif %}
+
+                {% if funding_amounts %}
                     <ul>
                         {% for funding_amount in funding_amounts %}
                             <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>

@@ -86,8 +86,8 @@ def add_funding_call(request):
 
 def info_funding_call(request, slug):
     funding_call = get_object_or_404(FundingCall, slug = slug)
-    funding_programs = FundingProgram.objects.filter(funding_call_id = funding_call.id).values("project_id")
-    projects = Project.objects.filter(id__in = funding_programs)
+    funding_programs = FundingProgram.objects.filter(funding_call_id = funding_call.id).values("id")
+    projects = Project.objects.filter(funding_program_id__in = funding_programs)
 
     return render_to_response("funding_call_manager/info.html", {
             "funding_call": funding_call,
