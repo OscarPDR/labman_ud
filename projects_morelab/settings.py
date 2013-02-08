@@ -20,12 +20,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'projectsDB.sqlite',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'projects_morelab',                      # Or path to database file if using sqlite3.
+        'USER': 'morelab',                      # Not used with sqlite3.
+        'PASSWORD': 'morelab',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': 5432,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -52,14 +52,22 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+# URL of the login page.
+LOGIN_URL = '/sourceplanet/login/'
+
+# URL prefix for admin static files -- CSS, JavaScript and images.
+# Make sure to use a trailing slash.
+# Examples: "http://foo.com/static/admin/", "/static/admin/".
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(SITE_ROOT, '../media')
+MEDIA_ROOT = '/home/morelab/projects_morelab/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/media/'
+MEDIA_URL = '/sourceplanet/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -69,14 +77,14 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = '/sourceplanet/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(SITE_ROOT, '../static'),
+    '/home/morelab/projects_morelab/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -186,11 +194,12 @@ LOGGING = {
 
 # Django email settings
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = ''
-SERVER_EMAIL = ''
+EMAIL_HOST_USER = 'projects.morelab@gmail.com'
+EMAIL_HOST_PASSWORD = 'm0r3l4bDT'
+DEFAULT_FROM_EMAIL = 'projects.morelab@gmail.com'
+SERVER_EMAIL = 'projects.morelab@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-PROJECTS_RECEPTOR_EMAILS = ['']
+PROJECTS_RECEPTOR_EMAILS = ['oscar.pena@deusto.es']
+
