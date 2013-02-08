@@ -15,6 +15,7 @@
             "total_funds_deusto": 0,
             "observations": "",
             "logo": "",
+            "funding_program": 1,
             "project_leader": 7
         }
     },
@@ -34,6 +35,7 @@
             "total_funds_deusto": 0,
             "observations": "",
             "logo": "",
+            "funding_program": 2,
             "project_leader": 3
         }
     },
@@ -41,9 +43,9 @@
         "pk": 1,
         "model": "project_manager.fundingprogram",
         "fields": {
-            "project": 1,
             "organization": 2,
-            "name": "Sexta Convocatoria Programa de Consorcios Estratégicos Nacionales en Investigación Técnica (CENIT)",
+            "full_name": "Sexta Convocatoria Programa de Consorcios Estratégicos Nacionales en Investigación Técnica",
+            "short_name": "6ª convocatoria programa CENIT",
             "project_code": "",
             "start_month": "1",
             "start_year": 2010,
@@ -58,9 +60,9 @@
         "pk": 2,
         "model": "project_manager.fundingprogram",
         "fields": {
-            "project": 2,
             "organization": 2,
-            "name": "",
+            "full_name": "",
+            "short_name": "",
             "project_code": "CIT-430000-2009-43",
             "start_month": "5",
             "start_year": 2009,
