@@ -4,7 +4,7 @@ from django import forms
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 
-from project_manager.models import *
+from project_manager.models import Project, FundingProgram, FundingAmount, AssignedEmployee, ConsortiumMember
 
 # Create the form class.
 
@@ -41,13 +41,3 @@ class FundingProgramForm(forms.ModelForm):
     class Meta:
         model = FundingProgram
         exclude = ('project', 'slug')
-
-
-#########################
-# Form: ProjectLeaderForm
-#########################
-
-class ProjectLeaderForm(forms.ModelForm):
-    class Meta:
-        model = ProjectLeader
-        exclude = ('project')
