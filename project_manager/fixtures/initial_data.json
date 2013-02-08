@@ -14,7 +14,8 @@
             "total_funds": 1000000,
             "total_funds_deusto": 0,
             "observations": "",
-            "logo": ""
+            "logo": "",
+            "project_leader": 7
         }
     },
     {
@@ -32,7 +33,8 @@
             "total_funds": 0,
             "total_funds_deusto": 0,
             "observations": "",
-            "logo": ""
+            "logo": "",
+            "project_leader": 3
         }
     },
     {
@@ -190,22 +192,6 @@
         "fields": {
             "project": 2,
             "organization": 4
-        }
-    },
-    {
-        "pk": 1,
-        "model": "project_manager.projectleader",
-        "fields": {
-            "project": 1,
-            "organization": 7
-        }
-    },
-    {
-        "pk": 2,
-        "model": "project_manager.projectleader",
-        "fields": {
-            "project": 2,
-            "organization": 3
         }
     }
 ]

@@ -72,6 +72,8 @@ def organization_logo_path(self, filename):
 #########################
 
 class Project(models.Model):
+    project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
+
     project_type = models.CharField(
         max_length = 25,
         choices = PROJECT_TYPES,
@@ -307,18 +309,6 @@ class AssignedEmployee(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.employee, self.project)
-
-
-#########################
-# Model: ProjectLeader
-#########################
-
-class ProjectLeader(models.Model):
-    project = models.ForeignKey(Project)
-    organization = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
-
-    def __unicode__(self):
-        return u'Project ID %s - Leader organization ID %s' % (self.project.title, self.organization.id)
 
 
 #########################

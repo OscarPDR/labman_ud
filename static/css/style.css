@@ -146,7 +146,7 @@ ul.nav.nav-tabs {
     margin-left: 1em;
 }
 
-.form-actions button, a {
+.form-actions > button > a {
     margin: 0 1em;
 }
 

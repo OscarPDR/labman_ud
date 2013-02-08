@@ -131,18 +131,16 @@
 
             <div class="tab-pane" id="pr_consortium_members">
 
-                {% if project_leader %}
-                    <h5>Project leader:</h5>
-                    <ul>
-                        <li>
-                            <a target="_blank" href="{% url info_organization project_leader.organization.slug %}">
-                                {{ project_leader.organization.name }}
-                            </a>
-                        </li>
-                    </ul>
+                <h5>Project leader:</h5>
+                <ul>
+                    <li>
+                        <a target="_blank" href="{% url info_organization project.project_leader.slug %}">
+                            {{ project.project_leader.name }}
+                        </a>
+                    </li>
+                </ul>
 
-                    <br>
-                {% endif %}
+                <br>
 
                 <h5>Consortium members:</h5>
                 <ul>
