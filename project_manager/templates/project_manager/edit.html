@@ -37,7 +37,7 @@
 
                         {% for field in project_form %}
 
-                            {% if field.label != 'Total funds' %}
+                            {% if field.label not in "'Total funds', 'Total funds (DeustoTech only)', 'Leader organization *'" %}
 
                                 {% if field.errors %}
 
@@ -175,9 +175,9 @@
 
                     <div class="tab-pane" id="consortium-members">
                         <div class="control-group">
-                            <label class="control-label" id="label">{{ project_leader_form.organization.label }}</label>
+                            <label class="control-label" id="label">{{ project_form.project_leader.label }}</label>
                             <div class="controls">
-                                {{ project_leader_form.organization }}
+                                {{ project_form.project_leader }}
                             </div>
                         </div>
 
