@@ -1,11 +1,12 @@
 *.log
 *.pot
 *.pyc
-local_settings.py
 
 *.DS_Store
 
-settings.py
+projects_morelab/settings.py
+projects_morelab/prod/settings.py
+projects_morelab/dev/settings.py
 
 /media/projects/*
 /media/organizations/*
