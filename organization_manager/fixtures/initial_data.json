@@ -75,5 +75,16 @@
             "logo": "",
             "slug": "logica"
         }
+    },
+    {
+        "model": "organization_manager.organization",
+        "pk": 8,
+        "fields": {
+            "name": "Gobierno Vasco",
+            "country": "Spain",
+            "homepage": "http://www.ejgv.euskadi.net/",
+            "logo": "",
+            "slug": "gobierno-vasco"
+        }
     }
 ]

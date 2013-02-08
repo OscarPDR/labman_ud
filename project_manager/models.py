@@ -68,132 +68,22 @@ def organization_logo_path(self, filename):
 
 
 #########################
-# Model: Project
-#########################
-
-class Project(models.Model):
-    project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
-
-    project_type = models.CharField(
-        max_length = 25,
-        choices = PROJECT_TYPES,
-        default = 'Project',
-        verbose_name = 'Project type *',     # Required
-    )
-
-    title = models.CharField(
-        max_length = 100,
-        verbose_name = 'Title *',    # Required
-    )
-
-    slug = models.SlugField(
-        max_length = 100,
-        blank = True,
-    )
-
-    description = models.TextField(
-        max_length = 500,
-        verbose_name = 'Description *',      #Required
-    )
-
-    homepage = models.URLField(
-        max_length = 150,
-        verbose_name = 'Homepage',
-        blank = True,
-        null = True,
-    )
-
-    start_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'Start year *',      # Required
-    )
-
-    end_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
-        verbose_name = 'End year *',    # Required
-    )
-
-    status = models.CharField(
-        max_length = 25,
-        choices = PROJECT_STATUS,
-        default = 'NotStarted',
-        verbose_name = 'Status *',      # Required
-    )
-
-    total_funds = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        blank = True,
-        null = True,
-        verbose_name = 'Total funds',
-    )
-
-    total_funds_deusto = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        blank = True,
-        null = True,
-        verbose_name = 'Total funds (DeustoTech only)',
-    )
-
-    logo = models.ImageField(
-        upload_to = project_logo_path,
-        verbose_name = 'Logo',
-        blank = True,
-        null = True,
-    )
-
-    observations = models.TextField(
-        max_length = 500,
-        verbose_name = 'Observations',
-        blank = True,
-    )
-
-    def __unicode__(self):
-        return u'%s' % (self.title)
-
-    def save(self, *args, **kwargs):
-        if self.slug == "":
-            self.slug = slugify(str(self.title))
-        super(Project, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        if self.logo:
-            storage = self.logo.storage
-            path = self.logo.path
-            # Delete the model before the file
-            super(Project, self).delete(*args, **kwargs)
-            # Delete the file after the model
-            storage.delete(path)
-        else:
-            super(Project, self).delete(*args, **kwargs)
-
-    def update(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-        try:
-            path = self.logo.path
-            os.remove(path)
-            # Delete the file after the model
-            storage.delete(path)
-        except:
-            pass
-            # No previous logo
-
-
-#########################
 # Model: FundingProgram
 #########################
 
 class FundingProgram(models.Model):
-    project = models.ForeignKey(Project, blank = True, null = True,)
     funding_call = models.ForeignKey(FundingCall, verbose_name = 'Funding call', blank = True, null = True,)
     organization = models.ForeignKey(Organization, verbose_name = 'Funding organization', blank = True, null = True,)
 
-    name = models.CharField(
-        max_length = 100,
-        verbose_name = 'Program name',
+    full_name = models.CharField(
+        max_length = 150,
+        verbose_name = 'Program full name *',   # Required
+        blank = True,
+    )
+
+    short_name = models.CharField(
+        max_length = 50,
+        verbose_name = 'Program short name',
         blank = True,
     )
 
@@ -259,13 +149,129 @@ class FundingProgram(models.Model):
         blank = True,
     )
 
+    def save(self, *args, **kwargs):
+        if self.slug == "":
+            if self.short_name != "":
+                self.slug = slugify(str(self.short_name))
+            else:
+                self.slug = slugify(str(self.full_name))
+        super(FundingProgram, self).save(*args, **kwargs)
+
+
+#########################
+# Model: Project
+#########################
+
+class Project(models.Model):
+    funding_program = models.ForeignKey(FundingProgram)     # Required
+    project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
+
+    project_type = models.CharField(
+        max_length = 25,
+        choices = PROJECT_TYPES,
+        default = 'Project',
+        verbose_name = 'Project type *',     # Required
+    )
+
+    title = models.CharField(
+        max_length = 100,
+        verbose_name = 'Title *',    # Required
+    )
+
+    slug = models.SlugField(
+        max_length = 100,
+        blank = True,
+    )
+
+    description = models.TextField(
+        max_length = 500,
+        verbose_name = 'Description *',     # Required
+    )
+
+    homepage = models.URLField(
+        max_length = 150,
+        verbose_name = 'Homepage',
+        blank = True,
+        null = True,
+    )
+
+    start_year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'Start year *',      # Required
+    )
+
+    end_year = models.IntegerField(
+        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        verbose_name = 'End year *',    # Required
+    )
+
+    status = models.CharField(
+        max_length = 25,
+        choices = PROJECT_STATUS,
+        default = 'NotStarted',
+        verbose_name = 'Status *',      # Required
+    )
+
+    total_funds = models.DecimalField(
+        max_digits = 10,
+        decimal_places = 2,
+        blank = True,
+        null = True,
+        verbose_name = 'Total funds',
+    )
+
+    total_funds_deusto = models.DecimalField(
+        max_digits = 10,
+        decimal_places = 2,
+        blank = True,
+        null = True,
+        verbose_name = 'Total funds',
+    )
+
+    logo = models.ImageField(
+        upload_to = project_logo_path,
+        verbose_name = 'Logo',
+        blank = True,
+        null = True,
+    )
+
+    observations = models.TextField(
+        max_length = 500,
+        verbose_name = 'Observations',
+        blank = True,
+    )
+
     def __unicode__(self):
-        return u'%s - Funding project: %s' % (self.name, self.project.title)
+        return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
         if self.slug == "":
-            self.slug = slugify(str(self.name) + str(self.project_code))
-        super(FundingProgram, self).save(*args, **kwargs)
+            self.slug = slugify(str(self.title))
+        super(Project, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        if self.logo:
+            storage = self.logo.storage
+            path = self.logo.path
+            # Delete the model before the file
+            super(Project, self).delete(*args, **kwargs)
+            # Delete the file after the model
+            storage.delete(path)
+        else:
+            super(Project, self).delete(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        storage = self.logo.storage
+        try:
+            path = self.logo.path
+            os.remove(path)
+            # Delete the file after the model
+            storage.delete(path)
+        except:
+            pass
+            # No previous logo
 
 
 #########################

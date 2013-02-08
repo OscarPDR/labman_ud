@@ -33,12 +33,12 @@ class FundingCall(models.Model):
     organization = models.ForeignKey(Organization)
 
     full_name = models.CharField(
-        max_length = 100,
+        max_length = 150,
         verbose_name = 'Funding call full name',
     )
 
     short_name = models.CharField(
-        max_length = 100,
+        max_length = 50,
         verbose_name = 'Funding call short name',
         blank = True,
     )
@@ -74,11 +74,9 @@ class FundingCall(models.Model):
         return u'%s, %s' % (self.full_name, self.organization.name)
 
     def save(self, *args, **kwargs):
-        if self.slug == "":
-            if self.short_name != "":
-                self.slug = slugify(str(self.short_name))
-            else:
-                self.slug = slugify(str(self.full_name))
+        if self.short_name == "":
+            self.short_name = self.full_name
+        self.slug = slugify(str(self.short_name))
         super(FundingCall, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
