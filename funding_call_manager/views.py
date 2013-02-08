@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from funding_call_manager.models import FundingCall
 from funding_call_manager.forms import FundingCallForm
 
-from project_manager.models import Project
+from project_manager.models import Project, FundingProgram
 
 # Create your views here.
 
@@ -86,11 +86,12 @@ def add_funding_call(request):
 
 def info_funding_call(request, slug):
     funding_call = get_object_or_404(FundingCall, slug = slug)
-    # projects = Project.objects.filter(funding_call = funding_call.id)
+    funding_programs = FundingProgram.objects.filter(funding_call_id = funding_call.id).values("project_id")
+    projects = Project.objects.filter(id__in = funding_programs)
 
     return render_to_response("funding_call_manager/info.html", {
             "funding_call": funding_call,
-            # "projects": projects,
+            "projects": projects,
         },
         context_instance = RequestContext(request))
 

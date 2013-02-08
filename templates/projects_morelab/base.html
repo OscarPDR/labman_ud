@@ -23,7 +23,6 @@
         <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap.css"/>
         <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap-responsive.css"/>
         <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/style.css"/>
-
     </head>
 
     <body>
@@ -39,7 +38,7 @@
                     <!-- Your site name for the upper left corner of the site -->
                     <a class="brand" href="{% url home %}">Projects MORElab</a>
 
-                <!-- Start of the nav bar content -->
+                    <!-- Start of the nav bar content -->
                     <div class="nav-collapse"><!-- Other nav bar content -->
                         <!-- The drop down menu -->
                         <ul class="nav pull-right">
@@ -86,19 +85,6 @@
         {% dajaxice_js_import %}
 
         {% block scripts %}
-
-            <script>
-                $(function() {
-                    // Setup drop down menu
-                    $('.dropdown-toggle').dropdown();
-
-                    // Fix input element click problem
-                    $('.dropdown input, .dropdown label').click(function(e) {
-                        e.stopPropagation();
-                    });
-                });
-            </script>
-
         {% endblock %}
 
 </html>

@@ -26,6 +26,9 @@ from employee_manager.forms import *
 from organization_manager.models import *
 from organization_manager.forms import *
 
+from funding_call_manager.models import *
+from funding_call_manager.forms import *
+
 # Create your views here.
 
 PAGINATION_NUMBER = 5
@@ -69,7 +72,6 @@ def add_project(request):
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
     assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
-    project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
@@ -80,7 +82,6 @@ def add_project(request):
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
             assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance = project, prefix = 'assigned_employee_formset')
             consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance = project, prefix = 'consortium_member_formset')
-            project_leader_form = ProjectLeaderForm(request.POST, instance = project, prefix = 'project_leader_form')
 
             cd_p = project_form.cleaned_data
 
@@ -92,6 +93,7 @@ def add_project(request):
             project.end_year = cd_p['end_year']
             project.status = cd_p['status'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
+            project.project_leader = cd_p['project_leader']
 
             try:
                 project.logo = request.FILES['project_form-logo']
@@ -103,23 +105,22 @@ def add_project(request):
             if funding_program_form.is_valid():
                 cd_f = funding_program_form.cleaned_data
 
-                if(cd_f['funding_call']):
-                    print "Hay call"
-                else:
-                    print "No hay call"
-
                 funding_program = FundingProgram(
                     project = project,
-                    organization = cd_f['organization'],
-                    name = cd_f['name'].encode('utf-8'),
                     project_code = cd_f['project_code'].encode('utf-8'),
                     start_month = cd_f['start_month'],
                     start_year = cd_f['start_year'],
                     end_month = cd_f['end_month'],
                     end_year = cd_f['end_year'],
-                    concession_year = cd_f['concession_year'],
-                    geographical_scope = cd_f['geographical_scope'].encode('utf-8'),
                 )
+
+                if(cd_f['funding_call']):
+                    funding_program.funding_call = cd_f['funding_call']
+                else:
+                    funding_program.organization = cd_f['organization']
+                    funding_program.name = cd_f['name'].encode('utf-8')
+                    funding_program.concession_year = cd_f['concession_year']
+                    funding_program.geographical_scope = cd_f['geographical_scope'].encode('utf-8')
 
                 funding_program.save()
 
@@ -183,19 +184,6 @@ def add_project(request):
             else:
                 project.delete()
 
-            if project_leader_form.is_valid():
-                if (len(project_leader_form.cleaned_data) > 0):
-                    cd_pl = project_leader_form.cleaned_data
-
-                    project_leader = ProjectLeader(
-                        project = project,
-                        organization = cd_pl['organization']
-                    )
-
-                    project_leader.save()
-                else:
-                    print "No project leader to save"
-
             return HttpResponseRedirect(reverse('email_project', args = (project.slug,)))
     else:
         project_form = ProjectForm(prefix = 'project_form')
@@ -203,7 +191,6 @@ def add_project(request):
         funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
         assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
-        project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     return render_to_response("project_manager/add.html", {
             "project_form": project_form,
@@ -211,7 +198,6 @@ def add_project(request):
             "funding_amount_formset": funding_amount_formset,
             "assigned_employee_formset": assigned_employee_formset,
             "consortium_member_formset": consortium_member_formset,
-            "project_leader_form": project_leader_form,
         },
         context_instance = RequestContext(request))
 
@@ -240,8 +226,6 @@ def info_project(request, slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
-    project_leader = ProjectLeader.objects.get(project_id = project.id)
-
     return render_to_response("project_manager/info.html", {
             'project': project,
             'funding_program': funding_program,
@@ -250,7 +234,6 @@ def info_project(request, slug):
             'researchers': researchers,
             'total_deusto': total_deusto,
             'funding_amounts': funding_amounts,
-            'project_leader': project_leader,
             'consortium_members': consortium_members,
         },
         context_instance = RequestContext(request))
@@ -264,7 +247,6 @@ def info_project(request, slug):
 def edit_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
     funding_program = get_object_or_404(FundingProgram, project_id = project.id)
-    project_leader = get_object_or_404(ProjectLeader, project_id = project.id)
     assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
     consortium_members = ConsortiumMember.objects.filter(project_id = project.id)
 
@@ -276,18 +258,15 @@ def edit_project(request, slug):
     funding_amount_formset = FundingAmountFormSet(instance = Project(), prefix = 'funding_amount_formset')
     assigned_employee_formset = AssignedEmployeeFormSet(instance = Project(), prefix = 'assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
-    project_leader_form = ProjectLeaderForm(instance = Project(), prefix = 'project_leader_form')
 
     if request.POST:
         project_form = ProjectForm(request.POST, prefix = 'project_form')
         if project_form.is_valid():
-            # project = project_form.save(commit = False)
 
             funding_program_form = FundingProgramForm(request.POST, instance = project, prefix = 'funding_program_form')
             funding_amount_formset = FundingAmountFormSet(request.POST, instance = project, prefix = 'funding_amount_formset')
             assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance = project, prefix = 'assigned_employee_formset')
             consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance = project, prefix = 'consortium_member_formset')
-            project_leader_form = ProjectLeaderForm(request.POST, instance = project, prefix = 'project_leader_form')
 
             cd_p = project_form.cleaned_data
 
@@ -299,6 +278,7 @@ def edit_project(request, slug):
             project.end_year = cd_p['end_year']
             project.status = cd_p['status'].encode('utf-8')
             project.observations = cd_p['observations'].encode('utf-8')
+            project.project_leader = cd_p['project_leader']
 
             try:
                 project.logo = request.FILES['project_form-logo']
@@ -380,18 +360,6 @@ def edit_project(request, slug):
             else:
                 project.delete()
 
-            if project_leader_form.is_valid():
-                if (len(project_leader_form.cleaned_data) > 0):
-                    cd_pl = project_leader_form.cleaned_data
-
-                    project_leader.project = project
-                    project_leader.organization = cd_pl['organization']
-
-                    project_leader.save()
-
-                else:
-                    print "No project leader to save"
-
             return HttpResponseRedirect(reverse('email_project', args = (project.slug,)))
 
     else:
@@ -406,6 +374,7 @@ def edit_project(request, slug):
             'status': project.status,
             'total_funds': project.total_funds,
             'observations': project.observations,
+            'leader': project.leader,
         }
 
         funding_program_data = {
@@ -418,10 +387,6 @@ def edit_project(request, slug):
             'end_year': funding_program.end_year,
             'concession_year': funding_program.concession_year,
             'geographical_scope': funding_program.geographical_scope,
-        }
-
-        project_leader_data = {
-            'organization': project_leader.organization,
         }
 
         # FORMS
@@ -447,15 +412,7 @@ def edit_project(request, slug):
             prefix = 'assigned_employee_formset'
         )
 
-        project_leader_form = ProjectLeaderForm(
-            instance = Project(),
-            prefix = 'project_leader_form',
-            initial = project_leader_data,
-        )
-
         consortium_member_formset = ConsortiumMemberFormSet(instance = Project(), prefix = 'consortium_member_formset')
-
-    print consortium_members
 
     return render_to_response("project_manager/edit.html", {
             'project': project,
@@ -465,8 +422,6 @@ def edit_project(request, slug):
             "funding_amount_formset": funding_amount_formset,
             'assigned_employees': assigned_employees,
             "assigned_employee_formset": assigned_employee_formset,
-            'project_leader': project_leader,
-            "project_leader_form": project_leader_form,
             'consortium_members': consortium_members,
             "consortium_member_formset": consortium_member_formset,
         },
@@ -489,11 +444,7 @@ def email_project(request, slug):
     lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
-    print principal_researchers
-
     total_deusto = FundingAmount.objects.filter(project_id = project.id).aggregate(Sum('amount'))
-
-    project_leader = ProjectLeader.objects.get(project_id = project.id)
 
     consortium_members = []
 
@@ -507,7 +458,6 @@ def email_project(request, slug):
         'project_managers': project_managers,
         'principal_researchers': principal_researchers,
         'total_deusto': total_deusto,
-        'project_leader': project_leader,
         'consortium_members': consortium_members,
     })
     text_content = strip_tags(html_content)

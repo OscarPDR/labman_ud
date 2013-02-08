@@ -21,8 +21,7 @@
     {% endif %}
 
     <p>
-        This funding call is provided by:
-        <a target="_blank" href="{% url info_organization funding_call.organization.slug %}">{{ funding_call.organization.name }}</a>
+        This funding call is supported by <a target="_blank" href="{% url info_organization funding_call.organization.slug %}">{{ funding_call.organization.name }}</a>, providing financial resources to projects developed in {{ funding_call.geographical_scope }} in the year {{ funding_call.concession_year }}.
     </p>
 
     <br>
