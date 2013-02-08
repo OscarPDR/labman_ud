@@ -1,0 +1,28 @@
+[
+    {
+        "model": "funding_call_manager.fundingcall",
+        "pk": 1,
+        "fields": {
+            "organization": 2,
+            "full_name": "Convocatoria INNPACTO 2012",
+            "short_name": "INNPACTO 2012",
+            "concession_year": 2012,
+            "geographical_scope": "Spain",
+            "logo": "",
+            "slug": "innpacto-2012"
+        }
+    },
+    {
+        "model": "funding_call_manager.fundingcall",
+        "pk": 2,
+        "fields": {
+            "organization": 8,
+            "full_name": "GAITEK 2012",
+            "short_name": "",
+            "concession_year": 2012,
+            "geographical_scope": "Euskadi",
+            "logo": "",
+            "slug": "gaitek-2012"
+        }
+    }
+]
