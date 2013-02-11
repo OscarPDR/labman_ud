@@ -5,7 +5,6 @@ from django.conf import settings
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 dajaxice_autodiscover()
 
-import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -27,12 +26,12 @@ urlpatterns = patterns('',
     url(r'^employees/', include('employee_manager.urls')),
     url(r'^projects/', include('project_manager.urls')),
     url(r'^funding_calls/', include('funding_call_manager.urls')),
+    url(r'^charts/', include('charts.urls')),
 
     # Just for development purposes, serve in another way in production
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
-    # url(r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
