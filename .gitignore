@@ -5,9 +5,6 @@
 *.DS_Store
 
 projects_morelab/settings.py
-projects_morelab/prod/settings.py
-projects_morelab/dev/settings.py
-*settings.py
 
 /media/projects/*
 /media/organizations/*
