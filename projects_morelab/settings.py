@@ -123,7 +123,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages'
+    'django.contrib.messages.context_processors.messages',
 )
 
 ROOT_URLCONF = 'projects_morelab.urls'
@@ -138,7 +138,7 @@ TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, '../templates'),
 )
 
-DAJAXICE_MEDIA_PREFIX = "dajaxice"
+DAJAXICE_MEDIA_PREFIX = 'dajaxice'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -159,8 +159,8 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
-    'dajaxice',
     'dajax',
+    'dajaxice',
 )
 
 # A sample logging configuration. The only tangible logging
