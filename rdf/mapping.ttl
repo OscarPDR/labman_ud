@@ -402,7 +402,7 @@ map:funding_call_concession_year a d2rq:PropertyBridge;
     .
 map:funding_call_geographical_scope a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingCall;
-    d2rq:property swrcfe:hasFundingCallGeographicalScope
+    d2rq:property swrcfe:hasFundingCallGeographicalScope;
     d2rq:column "funding_call_manager_fundingcall.geographical_scope";
     d2rq:condition "funding_call_manager_fundingcall.geographical_scope is not null";
     .
