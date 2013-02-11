@@ -77,6 +77,10 @@
                     <!-- General form fields -->
 
                     <div class="tab-pane active" id="general">
+			<div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            You should first edit the assigned employees and consortium members in order not to loose edited information.
+                        </div>
 
                         {% for field in project_form %}
 
@@ -186,6 +190,40 @@
                     <!-- End #assigned-employees tab-pane -->
 
                     <div class="tab-pane" id="assigned-employees">
+			{% if assigned_employees %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for assigned_employee in assigned_employees %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/employees/info/{{ assigned_employee.employee.slug }}">
+                                                    {{ assigned_employee.employee.name }} {{ assigned_employee.employee.first_surname }} {{ assigned_employee.employee.second_surname }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ assigned_employee.role }}
+                                            </td>
+                                            <td>
+                                               <a class="btn btn-mini btn-danger" href="{% url delete_employee_from_project assigned_employee.employee.slug assigned_employee.project.slug %}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
+
                         {{ assigned_employee_formset.management_form }}
                         <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
                             <tbody id="employees-form">
@@ -229,6 +267,36 @@
                         {% endif %}
 
                         <br>
+
+			{% if consortium_members %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Organization</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for consortium_member in consortium_members %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/organizations/info/{{ consortium_member.organization.slug }}">
+                                                    {{ consortium_member.organization.name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-mini btn-danger" href="{% url delete_organization_from_project consortium_member.organization.slug consortium_member.project.slug %}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
 
                         <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
                             <tbody>
