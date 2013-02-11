@@ -421,10 +421,6 @@ def edit_project(request, slug):
 
         else:
             error_badges.append('funding_amount')
-            try:
-                project.delete()
-            except:
-                pass
 
         # end funding_amount_formset validation
 
@@ -451,10 +447,6 @@ def edit_project(request, slug):
 
         else:
             error_badges.append('assigned_employees')
-            try:
-                project.delete()
-            except:
-                pass
 
         # end assigned_employee_formset validation
 
@@ -468,7 +460,7 @@ def edit_project(request, slug):
                     consortium_member_form.project = project
                     consortium_member_form.organization = cd_cm['organization']
 
-                    consortium_member.save()
+                    consortium_member_form.save()
 
                 else:
                     print "No consortium members to save"
@@ -478,10 +470,6 @@ def edit_project(request, slug):
 
         else:
             error_badges.append('consortium_members')
-            try:
-                project.delete()
-            except:
-                pass
 
         # start consortium_member_formset validation
 
