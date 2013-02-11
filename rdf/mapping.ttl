@@ -154,12 +154,6 @@ map:funding_amount_project_id__ref a d2rq:PropertyBridge;
     d2rq:refersToClassMap map:Project;
     d2rq:join "project_manager_fundingamount.project_id => project_manager_project.id";
     .
-map:funding_amount_fundingprogram_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingAmount;
-    d2rq:property swrcfe:isPartOfFundingProgram;
-    d2rq:refersToClassMap map:FundingProgram;
-    d2rq:join "project_manager_fundingamount.project_id => project_manager_fundingprogram.project_id";
-    .
 
 
 
@@ -176,19 +170,19 @@ map:FundingProgram a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "funding_program/@@project_manager_project.slug@@";
     d2rq:class swrcfe:FundingProgram;
-    d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
+    d2rq:join "project_manager_project.funding_program_id => project_manager_fundingprogram.id";
     .
 map:funding_program__label a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property rdfs:label;
     d2rq:pattern "Funding program for project @@project_manager_project.title@@";
-    d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
+    d2rq:join "project_manager_project.funding_program_id => project_manager_fundingprogram.id";
     .
-map:funding_program_name a d2rq:PropertyBridge;
+map:funding_program_full_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
-    d2rq:property swrcfe:hasFundingProgramName;
-    d2rq:column "project_manager_fundingprogram.name";
-    d2rq:condition "project_manager_fundingprogram.funding_call is not null";
+    d2rq:property swrcfe:hasFundingProgramFullName;
+    d2rq:column "project_manager_fundingprogram.full_name";
+    d2rq:condition "project_manager_fundingprogram.funding_call_id is not null";
     .
 map:funding_program_project_code a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
@@ -212,19 +206,13 @@ map:funding_program_concession_year a d2rq:PropertyBridge;
     d2rq:property swrcfe:hasConcessionYear;
     d2rq:column "project_manager_fundingprogram.concession_year";
     d2rq:datatype xsd:gYear;
-    d2rq:condition "project_manager_fundingprogram.funding_call is not null";
+    d2rq:condition "project_manager_fundingprogram.funding_call_id is not null";
     .
 map:funding_program_geographical_scope a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property swrcfe:hasGeographicalScope;
     d2rq:column "project_manager_fundingprogram.geographical_scope";
-    d2rq:condition "project_manager_fundingprogram.funding_call is not null";
-    .
-map:funding_program_logo a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:FundingProgram;
-    d2rq:property swrcfe:hasFundingProgramLogo;
-    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@project_manager_fundingprogram.logo@@";
-    d2rq:condition "project_manager_fundingprogram.logo is not null";
+    d2rq:condition "project_manager_fundingprogram.funding_call_id is not null";
     .
 map:funding_program_observations a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
@@ -321,14 +309,7 @@ map:project_funding_program a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasFundingProgram;
     d2rq:refersToClassMap map:Project;
-    d2rq:join "project_manager_fundingprogram.project_id => project_manager_project.id";
-    .
-map:project_leader a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Project;
-    d2rq:property swrcfe:hasProjectLeader;
-    d2rq:refersToClassMap map:Organization;
-    d2rq:join "project_manager_projectleader.organization_id => organization_manager_organization.id";
-    d2rq:join "project_manager_projectleader.project_id => project_manager_project.id";
+    d2rq:join "project_manager_project.funding_program_id => project_manager_fundingprogram.id";
     .
 map:project_consortium_member a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
