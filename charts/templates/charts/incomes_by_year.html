@@ -7,6 +7,8 @@
 
         <a href="{% url chart_index %}">Volver</a>
 
+	{{ incomes }}
+
 {% endblock %}
 
 {% block scripts %}
@@ -18,16 +20,16 @@
         google.setOnLoadCallback(drawChart);
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
-                ['Year', 'Sales', 'Expenses'],
-                ['2004',  1000,      400],
-                ['2005',  1170,      460],
-                ['2006',  660,       1120],
-                ['2007',  1030,      540]
+                ['Year', 'Incomes'],
+                ['2004',  1000],
+                ['2005',  1170],
+                ['2006',  660],
+                ['2007',  1030]
             ]);
 
             var options = {
-                title: 'Company Performance',
-                hAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+                title: 'DeustoTech incomes',
+                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}}
             };
 
             var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
