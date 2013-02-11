@@ -29,9 +29,10 @@ urlpatterns = patterns('',
     url(r'^funding_calls/', include('funding_call_manager.urls')),
 
     # Just for development purposes, serve in another way in production
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    # url(r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
