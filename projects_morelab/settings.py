@@ -20,12 +20,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'projects_morelab',                      # Or path to database file if using sqlite3.
-        'USER': 'morelab',                      # Not used with sqlite3.
-        'PASSWORD': 'morelab',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': 5432,                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': ,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -97,7 +97,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '$fshr_l3d%(b8yu21zi&amp;-khm5jo2(p%3ydx6@n1fm(0@=tyaap'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -194,12 +194,12 @@ LOGGING = {
 
 # Django email settings
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'projects.morelab@gmail.com'
-EMAIL_HOST_PASSWORD = 'm0r3l4bDT'
-DEFAULT_FROM_EMAIL = 'projects.morelab@gmail.com'
-SERVER_EMAIL = 'projects.morelab@gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = ''
+SERVER_EMAIL = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-PROJECTS_RECEPTOR_EMAILS = ['oscar.pena@deusto.es']
+PROJECTS_RECEPTOR_EMAILS = ['']
 
