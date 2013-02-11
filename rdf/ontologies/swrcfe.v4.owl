@@ -46,6 +46,9 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingAmount"/>
     </Declaration>
     <Declaration>
+        <Class IRI="#FundingCall"/>
+    </Declaration>
+    <Declaration>
         <Class IRI="#FundingProgram"/>
     </Declaration>
     <Declaration>
@@ -71,6 +74,9 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#isConceededBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isFundedBy"/>
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#isFundingAmountOf"/>
@@ -103,13 +109,25 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <DataProperty IRI="#hasFOAF"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasFundingProgramLogo"/>
+        <DataProperty IRI="#hasFundingCallConcessionYear"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasFundingProgramName"/>
+        <DataProperty IRI="#hasFundingCallFullName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingCallShortName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingProgramFullName"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasFundingProgramObservations"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasFundingProgramShortName"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasGeographicalScope"/>
@@ -186,6 +204,10 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingProgram"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isFundedBy"/>
+        <Class IRI="#FundingProgram"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
         <ObjectProperty IRI="#isFundingAmountOf"/>
         <Class IRI="#FundingAmount"/>
     </ObjectPropertyDomain>
@@ -234,6 +256,10 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Organization"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
+        <ObjectProperty IRI="#isFundedBy"/>
+        <Class IRI="#FundingCall"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
         <ObjectProperty IRI="#isFundingAmountOf"/>
         <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyRange>
@@ -274,15 +300,31 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Employee"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingProgramLogo"/>
-        <Class IRI="#FundingProgram"/>
+        <DataProperty IRI="#hasFundingCallConcessionYear"/>
+        <Class IRI="#FundingCall"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingProgramName"/>
+        <DataProperty IRI="#hasFundingCallFullName"/>
+        <Class IRI="#FundingCall"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
+        <Class IRI="#FundingCall"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingCallShortName"/>
+        <Class IRI="#FundingCall"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingProgramFullName"/>
         <Class IRI="#FundingProgram"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasFundingProgramObservations"/>
+        <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasFundingProgramShortName"/>
         <Class IRI="#FundingProgram"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -366,15 +408,31 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Datatype abbreviatedIRI="xsd:anyURI"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasFundingProgramLogo"/>
-        <Datatype abbreviatedIRI="xsd:anyURI"/>
+        <DataProperty IRI="#hasFundingCallConcessionYear"/>
+        <Datatype abbreviatedIRI="xsd:gYear"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasFundingProgramName"/>
+        <DataProperty IRI="#hasFundingCallFullName"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingCallShortName"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingProgramFullName"/>
         <Datatype abbreviatedIRI="rdfs:Literal"/>
     </DataPropertyRange>
     <DataPropertyRange>
         <DataProperty IRI="#hasFundingProgramObservations"/>
+        <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasFundingProgramShortName"/>
         <Datatype abbreviatedIRI="rdfs:Literal"/>
     </DataPropertyRange>
     <DataPropertyRange>
@@ -437,6 +495,11 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
         <IRI>#FundingAmount</IRI>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the year it was conceeded.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingCall</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">The funding call the project is presented to for finding finance.</Literal>
     </AnnotationAssertion>
 </Ontology>
 
