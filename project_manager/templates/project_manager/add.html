@@ -329,7 +329,6 @@
             var id = $('#id_funding_program_form-funding_call').val();
             if(id != '') {
                 Dajaxice.project_manager.get_funding_call(Dajax.process, {'pk': id});
-		window.alert("aaaa");
                 $("#id_funding_program_form-organization").prop('disabled', true);
                 $("#id_funding_program_form-full_name").prop('disabled', true);
                 $("#id_funding_program_form-short_name").prop('disabled', true);
