@@ -7,6 +7,8 @@
 
         <a href="{% url chart_index %}">Volver</a>
 
+        {{ project_incomes }}
+
 {% endblock %}
 
 {% block scripts %}
@@ -19,9 +21,9 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Geographical scope', 'Incomes'],
-                ['Europe', {{ europe }}],
-                ['Spain', {{ spain }}],
-                ['Euskadi', {{ euskadi }}]
+                {% for project_income in project_incomes %}
+                    ["{{ project_income.key }}", {{ project_income.value }}],
+                {% endfor %}
             ]);
 
             var options = {
@@ -31,7 +33,7 @@
 
             // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
             // var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
 
             // Add selection handler.
