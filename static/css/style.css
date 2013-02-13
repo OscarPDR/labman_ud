@@ -11,7 +11,7 @@ textarea {
     width: 90%;
 }
 
-#main-page .span3 a {
+.main-page > .span3 > a {
     text-align: center;
     display: block;
 }
@@ -180,6 +180,10 @@ ul.nav.nav-tabs {
 
 #funding-call-info > a {
     margin: 0;
+}
+
+#chart_div {
+    margin: 0 auto;
 }
 
 footer {

@@ -1,6 +1,5 @@
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
-from dajaxice.core import dajaxice_functions
 
 from funding_call_manager.models import FundingCall
 
