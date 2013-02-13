@@ -10,6 +10,8 @@ projects_morelab/settings.py
 /media/organizations/*
 /media/funding_calls/*
 
+/static_prod/*
+
 projects_morelab.sublime-project
 projects_morelab.sublime-workspace
 

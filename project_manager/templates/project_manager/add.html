@@ -1,4 +1,5 @@
 {% extends "projects_morelab/base.html" %}
+{% load dajaxice_templatetags %}
 
 {% block content %}
 
@@ -256,6 +257,7 @@
 {% block scripts %}
 
     <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
+    {% dajaxice_js_import %}
 
     <script type="text/javascript">
         $(window).load(function() {
@@ -353,4 +355,3 @@
     </script>
 
 {% endblock %}
-

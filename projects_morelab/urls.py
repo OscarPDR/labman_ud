@@ -11,7 +11,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
+
+    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+
     url(r'^$', 'projects_morelab.views.home', name = 'home'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'projects_morelab.views.logout_view', name = 'logout_view'),
@@ -31,7 +33,7 @@ urlpatterns = patterns('',
     # Just for development purposes, serve in another way in production
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 
-    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    # url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
