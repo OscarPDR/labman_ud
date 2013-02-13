@@ -33,7 +33,7 @@
     <br>
 
     <div class="row-fluid main-page">
-        <div class="span3 offset2">
+        <div class="span3 offset1">
             <a href="{% url funding_call_index %}">
                 <img src="{{ STATIC_PREFIX }}img/funding_call.png">
                 <br>
@@ -41,11 +41,19 @@
             </a>
         </div>
 
-        <div class="span3 offset2">
+        <div class="span3 offset1">
             <a href="{% url chart_index %}">
                 <img src="{{ STATIC_PREFIX }}img/chart.png">
                 <br>
                 Statistical charts
+            </a>
+        </div>
+
+        <div class="span3 offset1">
+            <a href="{% url semantic_search %}">
+                <img src="{{ STATIC_PREFIX }}img/search.png">
+                <br>
+                Semantic searcher
             </a>
         </div>
     </div>
