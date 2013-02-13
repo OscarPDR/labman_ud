@@ -40,6 +40,26 @@
         }
     },
     {
+        "model": "project_manager.project",
+        "pk": 3,
+        "fields": {
+            "project_type": "Research project",
+            "title": "LAGUNFC",
+            "slug": "lagunfc",
+            "description": "The aim of this project is to design a system that provides access to services offered by the environment in a more natural way by Touch Computing and smart service identification.",
+            "homepage": "",
+            "start_year": 2011,
+            "end_year": 2012,
+            "status": "Started",
+            "total_funds": 0,
+            "total_funds_deusto": 0,
+            "observations": "",
+            "logo": "",
+            "funding_program": 3,
+            "project_leader": 3
+        }
+    },
+    {
         "pk": 1,
         "model": "project_manager.fundingprogram",
         "fields": {
@@ -74,6 +94,24 @@
         }
     },
     {
+        "pk": 3,
+        "model": "project_manager.fundingprogram",
+        "fields": {
+            "funding_call": 2,
+            "organization": null,
+            "full_name": "",
+            "short_name": "",
+            "project_code": "",
+            "start_month": "1",
+            "start_year": 2011,
+            "end_month": "12",
+            "end_year": 2012,
+            "concession_year": null,
+            "geographical_scope": "",
+            "observations": ""
+        }
+    },
+    {
         "pk": 1,
         "model": "project_manager.fundingamount",
         "fields": {
@@ -98,6 +136,51 @@
             "project": 1,
             "amount": 190230,
             "year": 2013
+        }
+    },
+    {
+        "pk": 4,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 2460,
+            "year": 2009
+        }
+    },
+    {
+        "pk": 5,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 7928,
+            "year": 2010
+        }
+    },
+    {
+        "pk": 6,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 7945,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 7,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": 47945,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 8,
+        "model": "project_manager.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": 78419,
+            "year": 2012
         }
     },
     {
@@ -168,6 +251,24 @@
         "model": "project_manager.assignedemployee",
         "fields": {
             "project": 2,
+            "employee": 7,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 3,
+            "employee": 7,
+            "role": "Project manager"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "project_manager.assignedemployee",
+        "fields": {
+            "project": 3,
             "employee": 7,
             "role": "Researcher"
         }

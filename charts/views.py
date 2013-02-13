@@ -82,6 +82,7 @@ def incomes_by_year(request, year):
             'europe': europe,
             'spain': spain,
             'euskadi': euskadi,
+            'year': year,
         },
         context_instance = RequestContext(request))
 
@@ -104,15 +105,11 @@ def incomes_by_year_and_scope(request, year, scope):
         else:
             area = funding_program.geographical_scope
 
-        print area
-        print scope
-
         if area == scope:
             project_incomes.append({'key': project.title, 'value': year_income.amount})
 
-    print project_incomes
-
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
+            'year': year,
         },
         context_instance = RequestContext(request))

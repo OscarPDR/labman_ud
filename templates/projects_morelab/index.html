@@ -2,9 +2,8 @@
 
 {% block content %}
 
-    <div class="row-fluid" id="main-page">
-
-        <div class="span3">
+    <div class="row-fluid main-page">
+        <div class="span3 offset1">
             <a href="{% url employee_index %}">
                 <img src="{{ STATIC_PREFIX }}img/employee.png">
                 <br>
@@ -12,7 +11,7 @@
             </a>
         </div>
 
-        <div class="span3">
+        <div class="span3 offset1">
             <a href="{% url project_index %}">
                 <img src="{{ STATIC_PREFIX }}img/project.png">
                 <br>
@@ -20,15 +19,21 @@
             </a>
         </div>
 
-        <div class="span3">
+        <div class="span3 offset1">
             <a href="{% url organization_index %}">
                 <img src="{{ STATIC_PREFIX }}img/organization.png">
                 <br>
                 Organization management
             </a>
         </div>
+    </div>
 
-        <div class="span3">
+    <br>
+    <br>
+    <br>
+
+    <div class="row-fluid main-page">
+        <div class="span3 offset2">
             <a href="{% url funding_call_index %}">
                 <img src="{{ STATIC_PREFIX }}img/funding_call.png">
                 <br>
@@ -36,9 +41,18 @@
             </a>
         </div>
 
+        <div class="span3 offset2">
+            <a href="{% url chart_index %}">
+                <img src="{{ STATIC_PREFIX }}img/chart.png">
+                <br>
+                Statistical charts
+            </a>
+        </div>
     </div>
 
-    <a href="{% url chart_index %}">Charts</a>
+    <br>
+    <br>
+    <br>
 
 {% endblock %}
 
