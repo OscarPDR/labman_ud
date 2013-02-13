@@ -186,6 +186,18 @@ ul.nav.nav-tabs {
     margin: 0 auto;
 }
 
+#query-form .control-label {
+    width: 100px;
+}
+
+#query-form .controls {
+    margin-left: 115px;
+}
+
+#sparql-query > pre {
+    font-size: 10px;
+}
+
 footer {
     text-align: center;
     width: 100%;

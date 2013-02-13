@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^projects/', include('project_manager.urls')),
     url(r'^funding_calls/', include('funding_call_manager.urls')),
     url(r'^charts/', include('charts.urls')),
+    url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Just for development purposes, serve in another way in production
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
