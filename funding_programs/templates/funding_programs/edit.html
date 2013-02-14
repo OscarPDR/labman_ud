@@ -1,0 +1,49 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend><strong>Edit:</strong> {{ funding_program.full_name }}</legend>
+
+        <fieldset>
+
+            {% for field in form %}
+
+                {% if field.errors %}
+
+                    <div class="control-group error">
+                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="control-group"  id="employee-{{ field.label|lower }}-form">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Accept</button>
+                <a class="btn btn-danger" href="{% url funding_program_index %}">Cancel</a>
+            </div>
+
+        </fieldset>
+
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

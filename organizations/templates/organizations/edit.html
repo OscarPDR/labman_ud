@@ -1,0 +1,53 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend><strong>Edit:</strong> {{ organization.name }}</legend>
+
+        <fieldset>
+
+            {% for field in form %}
+
+                {% if field.errors %}
+
+                    <div class="control-group error">
+                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="center">
+                <img class="edit-organization-logo" src="{{ MEDIA_PREFIX }}{{ organization.logo.name }}"/>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Accept</button>
+                <a class="btn btn-danger" href="{% url organization_index %}">Cancel</a>
+            </div>
+
+        </fieldset>
+
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

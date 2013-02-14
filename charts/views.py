@@ -9,11 +9,9 @@ from django.db.models import Sum, Min, Max
 
 # from django.contrib.auth.decorators import login_required
 
-from employee_manager.models import *
-from employee_manager.forms import *
+from funding_programs.models import FundingProgram
 
-from project_manager.models import *
-from project_manager.forms import *
+from projects.models import Project, FundingAmount
 
 # Create your views here.
 

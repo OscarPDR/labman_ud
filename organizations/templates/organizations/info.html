@@ -1,0 +1,56 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <h2>
+        <a href="{% url organization_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ organization.name}}
+
+        {% if organization.logo %}
+            <img class="organization-logo" src="{{ MEDIA_URL }}{{ organization.logo }}" />
+        {% endif %}
+    </h2>
+
+    <br>
+
+    <a class="btn btn-small btn-inverse" target="_blank" href="{{ organization.homepage }}"><i class="icon-globe icon-white"></i> Visit homepage</a>
+
+    {% if user.is_authenticated %}
+        <a class="btn btn-small btn-inverse" href="{% url edit_organization organization.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+    {% endif %}
+
+    <br>
+    <br>
+
+    <div class="row-fluid">
+
+        <div class="span6">
+            <h6>Project leader in</h6>
+
+            <ul>
+                {% for project in projects_leaded %}
+                    <li>
+                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span6">
+            <h6>Consortium member in</h6>
+
+            <ul>
+                {% for project in projects %}
+                    <li>
+                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

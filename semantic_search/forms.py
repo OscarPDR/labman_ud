@@ -2,11 +2,12 @@
 
 from django import forms
 
-from employee_manager.models import Employee
+from employees.models import Employee
 
 # Create your forms here.
 
 PROJECT_STATUS = (
+    ('Any', 'Any'),
     ('Not started', 'Not started'),
     ('In development', 'In development'),
     ('Finished', 'Finished'),
@@ -32,6 +33,7 @@ YEARS = (
 )
 
 GEOGRAPHICAL_SCOPE = (
+    ('All', 'All'),
     ('Araba', 'Araba'),
     ('Bizkaia', 'Bizkaia'),
     ('Gipuzkoa', 'Gipuzkoa'),
@@ -54,8 +56,8 @@ AND_OR = (
 class SemanticSearchForm(forms.Form):
     title = forms.CharField(max_length = 150, required = False)
     researchers = forms.ModelMultipleChoiceField(queryset = Employee.objects.all(), required = False)
-    status = forms.ChoiceField(choices = PROJECT_STATUS, required = False)
-    scope = forms.ChoiceField(choices = GEOGRAPHICAL_SCOPE, initial = "Euskadi", required = False)
-    begin_year = forms.ChoiceField(choices = YEARS, initial = 2004, required = False)
+    status = forms.ChoiceField(choices = PROJECT_STATUS, initial = "Any", required = False)
+    scope = forms.ChoiceField(choices = GEOGRAPHICAL_SCOPE, initial = "All", required = False)
+    start_year = forms.ChoiceField(choices = YEARS, initial = 2004, required = False)
     end_year = forms.ChoiceField(choices = YEARS, initial = 2013, required = False)
     and_or = forms.ChoiceField(widget = forms.RadioSelect(), choices = AND_OR, required = False)

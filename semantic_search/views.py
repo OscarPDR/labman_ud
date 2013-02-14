@@ -7,7 +7,10 @@ from django.template import RequestContext
 
 from django.db.models import Sum, Min, Max
 
-from semantic_search.models import *
+from funding_programs.models import FundingProgram
+
+from projects.models import Project
+
 from semantic_search.forms import SemanticSearchForm
 
 # Create your views here.
@@ -20,12 +23,13 @@ from semantic_search.forms import SemanticSearchForm
 def semantic_search(request):
     active = False
     title = ''
-    researchers = ''
-    status = 'Not started'
-    scope = 'Euskadi'
-    begin_year = 2004
+    researchers = None
+    status = 'Any'
+    scope = 'All'
+    start_year = 2004
     end_year = 2013
     and_or = 'OR'
+    projects = None
     if request.method == 'POST':
         form = SemanticSearchForm(request.POST)
         if form.is_valid():
@@ -37,9 +41,25 @@ def semantic_search(request):
             researchers = cd['researchers']
             status = cd['status']
             scope = cd['scope']
-            begin_year = cd['begin_year']
-            end_year = cd['end_year']
+            start_year = int(cd['start_year'])
+            end_year = int(cd['end_year'])
             and_or = cd['and_or']
+
+            projects = Project.objects.all()
+
+            if title != '':
+                projects = projects.filter(title__contains = title)
+
+            if status != 'Any':
+                projects = projects.filter(status = status)
+
+            if scope != 'All':
+                project_ids = projects.values('funding_program')
+                funding_program_ids = FundingProgram.objects.filter(id__in = project_ids)
+                projects = projects.filter(funding_program__in = funding_program_ids)
+
+            projects = projects.filter(start_year__gte = start_year)
+            projects = projects.filter(end_year__lte = end_year)
 
     else:
         form = SemanticSearchForm()
@@ -51,9 +71,10 @@ def semantic_search(request):
             'researchers': researchers,
             'status': status,
             'scope': scope,
-            'begin_year': begin_year,
+            'start_year': start_year,
             'end_year': end_year,
             'and_or': and_or,
+            'projects': projects,
         },
         context_instance = RequestContext(request))
 
