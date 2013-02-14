@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Just for development purposes, serve in another way in production
-    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()

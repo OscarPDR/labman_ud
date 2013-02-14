@@ -40,7 +40,7 @@ def organization_index(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         organizations = paginator.page(paginator.num_pages)
 
-    return render_to_response("organization_manager/index.html", {
+    return render_to_response("organizations/index.html", {
             'organizations': organizations,
         },
         context_instance = RequestContext(request))
@@ -74,7 +74,7 @@ def add_organization(request):
     else:
         form = OrganizationForm()
 
-    return render_to_response("organization_manager/add.html", {
+    return render_to_response("organizations/add.html", {
             'form': form,
         },
         context_instance = RequestContext(request))
@@ -92,7 +92,7 @@ def organization_info(request, slug):
     consortium_ids = ConsortiumMember.objects.filter(organization_id = organization.id).values('project_id')
     projects = Project.objects.filter(id__in = consortium_ids).order_by('title')
 
-    return render_to_response("organization_manager/info.html", {
+    return render_to_response("organizations/info.html", {
             'organization': organization,
             'projects_leaded': projects_leaded,
             'projects': projects,
@@ -136,7 +136,7 @@ def edit_organization(request, slug):
 
         form = OrganizationForm(initial = data)
 
-    return render_to_response("organization_manager/edit.html", {
+    return render_to_response("organizations/edit.html", {
             'organization': organization,
             'form': form,
         },
