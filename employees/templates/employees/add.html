@@ -1,0 +1,69 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend>Add a new employee</legend>
+
+        <br>
+
+        <fieldset>
+
+            {% for error in errors %}
+                {{ error }}
+            {% endfor %}
+
+            {% for field in form %}
+
+                {% if field.errors %}
+
+                    <div class="control-group error">
+                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="control-group" id="employee-{{ field.label|lower }}-form">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                <button type="reset" class="btn">Clean</button>
+                <a class="btn btn-danger" href="{% url employee_index %}">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $("#employee-organization-form").css("visibility", "hidden");
+
+        $('#id_external').change(function() {
+            if ($('#id_external').is(':checked')) {
+                $("#employee-organization-form").css("visibility", "visible");
+            }
+            else {
+                $("#employee-organization-form").css("visibility", "hidden");
+            }
+        });
+    </script>
+
+
+{% endblock %}

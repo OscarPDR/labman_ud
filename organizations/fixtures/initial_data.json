@@ -1,0 +1,90 @@
+[
+    {
+        "model": "organizations.organization",
+        "pk": 1,
+        "fields": {
+            "name": "Ministerio de Industria",
+            "country": "Spain",
+            "homepage": "http://www.mityc.es",
+            "logo": "",
+            "slug": "ministerio-de-industria"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 2,
+        "fields": {
+            "name": "Ministerio de Ciencia e Innovación",
+            "country": "Spain",
+            "homepage": "http://www.micinn.es",
+            "logo": "",
+            "slug": "ministerio-de-ciencia-e-innovacion"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 3,
+        "fields": {
+            "name": "Universidad de Deusto",
+            "country": "Spain",
+            "homepage": "http://www.deusto.es",
+            "logo": "",
+            "slug": "universidad-de-deusto"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 4,
+        "fields": {
+            "name": "Mondragón Unibertsitatea",
+            "country": "Spain",
+            "homepage": "http://www.mondragon.edu/es",
+            "logo": "",
+            "slug": "mondragon-unibertsitatea"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 5,
+        "fields": {
+            "name": "Treelogic",
+            "country": "Spain",
+            "homepage": "http://www.treelogic.com",
+            "logo": "",
+            "slug": "treelogic"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 6,
+        "fields": {
+            "name": "Bilbomática",
+            "country": "Spain",
+            "homepage": "http://www.bilbomatica.es/es",
+            "logo": "",
+            "slug": "bilbomatica"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 7,
+        "fields": {
+            "name": "Lógica",
+            "country": "Spain",
+            "homepage": "http://www.logica.com.es/",
+            "logo": "",
+            "slug": "logica"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 8,
+        "fields": {
+            "name": "Gobierno Vasco",
+            "country": "Spain",
+            "homepage": "http://www.ejgv.euskadi.net/",
+            "logo": "",
+            "slug": "gobierno-vasco"
+        }
+    }
+]

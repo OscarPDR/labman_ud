@@ -62,19 +62,23 @@
                 SPARQL query to launch over the <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/snorql/">SPARQL endpoint</a>
             </p>
 
-            <pre>
+            <p class="alert alert-info">
+                Prefixes are omitted because they are already included in the snorql configuration.
+            </p>
 
-    PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;
-    PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
-    PREFIX swrcfe: &lt;http://www.morelab.deusto.es/ontologies/swrcfe.owl#&gt;
+            <pre>
 
     SELECT DISTINCT ?project WHERE
     {
         ?project rdf:type swrcfe:Project .
+        {% if title != "" %}
         ?project dc:title ?title .
         FILTER regex(?title, "{{ title }}", "i") .
+        {% endif %}
+        {% if status != "Any" %}
         ?project swrcfe:hasStatus "{{ status }}" .
-        ?project swrcfe:hasStartYear {{ begin_year }} .
+        {% endif %}
+        ?project swrcfe:hasStartYear {{ start_year }} .
         ?project swrcfe:hasEndYear {{ end_year }} .
         {% if and_or == 'AND' %}
             {% for researcher in researchers %}
@@ -86,9 +90,11 @@
          UNION
             {% endfor %}
         {% endif %}
+        {% if scope != "All" %}
         { ?project swrcfe:hasGeographicalScope "{{ scope }}" }
         UNION
         { ?project swrcfe:hasFundingCallGeographicalScope "{{ scope }}" }
+        {% endif %}
     }
             </pre>
 
@@ -97,7 +103,13 @@
             <h6>Results:</h6>
 
             <ul>
-
+                {% for project in projects %}
+                    <li>
+                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% empty %}
+                    No projects match your query
+                {% endfor %}
             </ul>
         </div>
 
@@ -109,6 +121,12 @@
 
     <script>
         $(document).ready(function() {
+            {% if and_or == 'AND' %}
+                $("#id_and_or_0").attr('checked', 'checked');
+            {% else %}
+                $("#id_and_or_1").attr('checked', 'checked');
+            {% endif %}
+
             $("#sparql-query").hide();
             {% if active %}
                 $("#sparql-query").show();

@@ -1,0 +1,263 @@
+[
+    {
+        "model": "projects.project",
+        "pk": 1,
+        "fields": {
+            "project_type": "Development project",
+            "title": "THOFU: Tecnologías del Hotel del Futuro",
+            "slug": "thofu",
+            "description": "THOFU is a large multidisciplinary R&D project which aims to enhance the offer of the hospitality sector through joint research on a new conception of the future hotel, from the spaces and their construction, to objects that reside in it, the interaction with guests, as well as the symbiosis with the Internet.",
+            "homepage": "http://www.thofu.es/inicio",
+            "start_month": "February",
+            "start_year": 2010,
+            "end_month": "November",
+            "end_year": 2013,
+            "status": "In development",
+            "total_funds": 1000000,
+            "total_funds_deusto": 0,
+            "observations": "",
+            "logo": "",
+            "funding_program": 1,
+            "project_leader": 7
+        }
+    },
+    {
+        "model": "projects.project",
+        "pk": 2,
+        "fields": {
+            "project_type": "Applied research project",
+            "title": "SELENE",
+            "slug": "selene",
+            "description": "The goal of this project is to design, develop and evaluate a collaborative work environment based on social and semantic Web technologies to support networking innovation models in order to accelerate innovation processes through an architecture of participation and intelligent information management.",
+            "homepage": "http://www.morelab.deusto.es/selene/",
+            "start_month": "January",
+            "start_year": 2009,
+            "end_month": "December",
+            "end_year": 2011,
+            "status": "Finished",
+            "total_funds": 0,
+            "total_funds_deusto": 0,
+            "observations": "",
+            "logo": "",
+            "funding_program": 1,
+            "project_leader": 3
+        }
+    },
+    {
+        "model": "projects.project",
+        "pk": 3,
+        "fields": {
+            "project_type": "Research project",
+            "title": "LAGUNFC",
+            "slug": "lagunfc",
+            "description": "The aim of this project is to design a system that provides access to services offered by the environment in a more natural way by Touch Computing and smart service identification.",
+            "homepage": "",
+            "start_month": "May",
+            "start_year": 201,
+            "end_month": "June",
+            "end_year": 2012,
+            "status": "Started",
+            "total_funds": 0,
+            "total_funds_deusto": 0,
+            "observations": "",
+            "logo": "",
+            "funding_program": 2,
+            "project_leader": 3
+        }
+    },
+    {
+        "pk": 1,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 65183,
+            "year": 2010
+        }
+    },
+    {
+        "pk": 2,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 130060,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 3,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 223760,
+            "year": 2012
+        }
+    },
+    {
+        "pk": 4,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": 190230,
+            "year": 2013
+        }
+    },
+    {
+        "pk": 5,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 2460,
+            "year": 2009
+        }
+    },
+    {
+        "pk": 6,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 7928,
+            "year": 2010
+        }
+    },
+    {
+        "pk": 7,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 2,
+            "amount": 7945,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 8,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": 47945,
+            "year": 2011
+        }
+    },
+    {
+        "pk": 9,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": 78419,
+            "year": 2012
+        }
+    },
+    {
+        "pk": 1,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 5,
+            "role": "Project manager"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 8,
+            "role": "Project manager"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 2,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 1,
+            "employee": 3,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 8,
+            "role": "Project manager"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 1,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 4,
+            "role": "Principal researcher"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 2,
+            "employee": 7,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 3,
+            "employee": 7,
+            "role": "Project manager"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "projects.assignedemployee",
+        "fields": {
+            "project": 3,
+            "employee": 5,
+            "role": "Researcher"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 1,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 2,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 1,
+            "organization": 5
+        }
+    },
+    {
+        "pk": 3,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 2,
+            "organization": 4
+        }
+    }
+]
