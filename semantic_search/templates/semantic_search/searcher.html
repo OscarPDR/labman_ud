@@ -92,8 +92,6 @@
         {% endif %}
         {% if scope != "All" %}
         { ?project swrcfe:hasGeographicalScope "{{ scope }}" }
-        UNION
-        { ?project swrcfe:hasFundingCallGeographicalScope "{{ scope }}" }
         {% endif %}
     }
             </pre>
@@ -105,7 +103,7 @@
             <ul>
                 {% for project in projects %}
                     <li>
-                        <a href="{% url info_project project.slug %}">{{ project.title }}</a>
+                        <a target="_blank" href="{% url project_info project.slug %}">{{ project.title }}</a>
                     </li>
                 {% empty %}
                     No projects match your query

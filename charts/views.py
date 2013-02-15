@@ -64,10 +64,7 @@ def incomes_by_year(request, year):
         project = Project.objects.get(id = year_income.project_id)
         funding_program = FundingProgram.objects.get(id = project.funding_program_id)
 
-        if funding_program.funding_call is not None:
-            area = funding_program.funding_call.geographical_scope
-        else:
-            area = funding_program.geographical_scope
+        area = funding_program.geographical_scope
 
         if area == 'Europe':
             europe += year_income.amount
@@ -98,10 +95,7 @@ def incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id = year_income.project_id)
         funding_program = FundingProgram.objects.get(id = project.funding_program_id)
 
-        if funding_program.funding_call is not None:
-            area = funding_program.funding_call.geographical_scope
-        else:
-            area = funding_program.geographical_scope
+        area = funding_program.geographical_scope
 
         if area == scope:
             project_incomes.append({'key': project.title, 'value': year_income.amount})
@@ -109,5 +103,6 @@ def incomes_by_year_and_scope(request, year, scope):
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
             'year': year,
+            'scope': scope,
         },
         context_instance = RequestContext(request))
