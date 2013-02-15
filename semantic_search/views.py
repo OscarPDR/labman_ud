@@ -54,8 +54,7 @@ def semantic_search(request):
                 projects = projects.filter(status = status)
 
             if scope != 'All':
-                project_ids = projects.values('funding_program')
-                funding_program_ids = FundingProgram.objects.filter(id__in = project_ids)
+                funding_program_ids = FundingProgram.objects.filter(geographical_scope = scope).values("id")
                 projects = projects.filter(funding_program__in = funding_program_ids)
 
             projects = projects.filter(start_year__gte = start_year)

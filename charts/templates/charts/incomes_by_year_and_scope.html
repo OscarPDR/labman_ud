@@ -29,8 +29,9 @@
             ]);
 
             var options = {
-                title: 'DeustoTech incomes',
-                hAxis: {title: 'Geographical scope',  titleTextStyle: {color: 'black'}}
+                title: 'Income breakdown from {{ scope }} in the year {{ year }}',
+                hAxis: {title: 'Geographical scope',  titleTextStyle: {color: 'black'}},
+                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
             };
 
             // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
@@ -50,7 +51,6 @@
                 }
             }
         }
-
     </script>
 
 {% endblock %}
