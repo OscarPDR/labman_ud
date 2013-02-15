@@ -5,16 +5,11 @@ from django.conf import settings
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 dajaxice_autodiscover()
 
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-
-    # url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
-    (r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
-
     url(r'^$', 'projects_morelab.views.home', name = 'home'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'projects_morelab.views.logout_view', name = 'logout_view'),
@@ -25,16 +20,16 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^organizations/', include('organization_manager.urls')),
-    url(r'^employees/', include('employee_manager.urls')),
-    url(r'^projects/', include('project_manager.urls')),
-    url(r'^funding_calls/', include('funding_call_manager.urls')),
+    url(r'^organizations/', include('organizations.urls')),
+    url(r'^employees/', include('employees.urls')),
+    url(r'^projects/', include('projects.urls')),
+    url(r'^funding_programs/', include('funding_programs.urls')),
+
     url(r'^charts/', include('charts.urls')),
+    url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Just for development purposes, serve in another way in production
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-
-    # url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

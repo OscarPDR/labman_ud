@@ -3,7 +3,15 @@
 
 {% block content %}
 
-    <a href="{% url total_incomes %}">Incomes by year</a>
+    <div class="row-fluid main-page">
+        <div class="span3">
+            <a href="{% url total_incomes %}">
+                <img src="{{ STATIC_PREFIX }}img/index/calendar.png">
+                <br>
+                Incomes by year
+            </a>
+        </div>
+    </div>
 
 {% endblock %}
 

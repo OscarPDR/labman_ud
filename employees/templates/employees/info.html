@@ -1,0 +1,72 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <h2>
+        <a href="{% url employee_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ employee.name}} {{ employee.first_surname }} {{ employee.second_surname }}
+        {% if employee.external %}
+            <a target="_blank" href="{% url organization_info employee.organization.slug%}">
+                ({{ employee.organization.name }})
+            </a>
+        {% endif %}
+    </h2>
+
+    <br>
+
+    {% if employee.foaf_link %}
+        <a class="btn btn-small btn-inverse" target="_blank" href="{{ employee.foaf_link }}"><img src="{{ STATIC_PREFIX }}img/foaf.png" width="24" /> FOAF</a>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <a class="btn btn-small btn-inverse" href="{% url edit_employee employee.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+    {% endif %}
+
+
+    <br>
+    <br>
+
+    <div class="row-fluid">
+
+        <div class="span4">
+            <h6>Principal researcher in</h6>
+
+            <ul>
+                {% for project in as_principal_researcher %}
+                    <li>
+                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span4">
+            <h6>Project manager in</h6>
+
+            <ul>
+                {% for project in as_project_manager %}
+                    <li>
+                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="span4">
+            <h6>Researcher in</h6>
+
+            <ul>
+                {% for project in as_researcher %}
+                    <li>
+                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
