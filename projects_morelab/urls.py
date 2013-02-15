@@ -12,7 +12,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    # url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    (r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
 
     url(r'^$', 'projects_morelab.views.home', name = 'home'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
