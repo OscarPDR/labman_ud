@@ -1,0 +1,55 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <h2>
+        <a href="{% url funding_program_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ funding_program.full_name}}
+
+        {% if funding_program.logo %}
+            <img class="funding-call-logo" src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+        {% endif %}
+    </h2>
+
+    <br>
+
+    {% if user.is_authenticated %}
+        <a class="btn btn-small btn-inverse" href="{% url edit_funding_program funding_program.slug %}"><i class="icon-edit icon-white"></i> Edit</a>
+
+        <br>
+        <br>
+    {% endif %}
+
+    <p id="funding-call-info">
+        This funding program is supported by <a target="_blank" href="{% url organization_info funding_program.organization.slug %}">{{ funding_program.organization.name }}</a>, providing financial resources to projects developed in {{ funding_program.geographical_scope }} in the year {{ funding_program.concession_year }}.
+    </p>
+
+    <br>
+    <br>
+
+    {% if user.is_authenticated %}
+        {% if funding_program.observations %}
+            <h5>Observations:</h5>
+            <p>
+                {{ funding_program.observations }}
+            </p>
+
+            <br>
+            <br>
+        {% endif %}
+    {% endif %}
+
+    <h6>Projects funded:</h6>
+
+    <ul>
+        {% for project in projects %}
+            <li>
+                <a target="_blank" href="{% url project_info project.slug %}">{{ project.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
