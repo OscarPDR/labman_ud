@@ -27,6 +27,18 @@
     <br>
     <br>
 
+    {% if user.is_authenticated %}
+        {% if funding_program.observations %}
+            <h5>Observations:</h5>
+            <p>
+                {{ funding_program.observations }}
+            </p>
+
+            <br>
+            <br>
+        {% endif %}
+    {% endif %}
+
     <h6>Projects funded:</h6>
 
     <ul>

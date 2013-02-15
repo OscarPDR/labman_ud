@@ -15,8 +15,8 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#pr_general_info" data-toggle="tab"><i class="icon-info-sign"></i> General information</a></li>
             <li><a href="#pr_funding_details" data-toggle="tab"><i class="icon-list"></i> Funding details</a></li>
-            <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
             <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
+            <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
 
             {% if user.is_authenticated %}
                 <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
@@ -66,6 +66,17 @@
                     {{ project.description }}
                 </p>
 
+                <br>
+
+                {% if user.is_authenticated %}
+                    {% if project.observations %}
+                        <h5>Observations:</h5>
+                        <p>
+                            {{ project.observations }}
+                        </p>
+                    {% endif %}
+                {% endif %}
+
             </div>
 
             <!-- end tab-pane #pr_general_info -->
@@ -76,19 +87,15 @@
 
                 <h5>Supported by:</h5>
                 <p>
-                    {% if funding_program.full_name %}
-                        {{ funding_program.full_name }}, {{ funding_program.organization.name }}
-                    {% else %}
-                        No information available
-                    {% endif %}
+                    {{ funding_program.full_name }}, {{ funding_program.organization.name }}
                 </p>
 
                 <br>
 
                 <h5>Project code:</h5>
                 <p>
-                    {% if project.funding_program.project_code %}
-                        {{ project.funding_program.project_code }}
+                    {% if project.project_code %}
+                        {{ project.project_code }}
                     {% else %}
                         No information available
                     {% endif %}
@@ -99,7 +106,7 @@
                 <h5>Funding duration:</h5>
                 <p>
                     {% if funding_program.concession_year %}
-                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.funding_program.start_year }} - {{ project.funding_program.end_year }} period.
+                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
                     {% else %}
                         No information available
                     {% endif %}
@@ -110,7 +117,7 @@
                 <h5>Funding amount:</h5>
                 {% if project.total_funds %}
                     <p>
-                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_deusto.amount__sum|intcomma|intword }} € in the following way:
+                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_funds_deusto|intcomma|intword }} € in the following way:
                     </p>
                 {% endif %}
 
@@ -130,36 +137,6 @@
 
             <!-- end tab-pane #pr_funding_details -->
 
-            <!-- begin tab-pane #pr_consortium_members -->
-
-            <div class="tab-pane" id="pr_consortium_members">
-
-                <h5>Project leader:</h5>
-                <ul>
-                    <li>
-                        <a target="_blank" href="{% url info_organization project.project_leader.slug %}">
-                            {{ project.project_leader.name }}
-                        </a>
-                    </li>
-                </ul>
-
-                <br>
-
-                <h5>Consortium members:</h5>
-                <ul>
-                    {% for consortium_member in consortium_members %}
-                        <li>
-                            <a target="_blank" href="{% url info_organization consortium_member.organization.slug %}">
-                                {{ consortium_member.organization.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-
-            </div>
-
-            <!-- end tab-pane #pr_consortium_members -->
-
             <!-- begin tab-pane #pr_assigned_employees -->
 
             <div class="tab-pane" id="pr_assigned_employees">
@@ -169,7 +146,7 @@
                     <ul>
                         {% for principal_researcher in principal_researchers %}
                             <li>
-                                <a target="_blank" href="{% url info_employee principal_researcher.slug %}">
+                                <a target="_blank" href="{% url employee_info principal_researcher.slug %}">
                                     {{ principal_researcher.name }} {{ principal_researcher.first_surname }} {{ principal_researcher.second_surname }}
                                 </a>
                             </li>
@@ -184,7 +161,7 @@
                     <ul>
                         {% for project_manager in project_managers %}
                             <li>
-                                <a target="_blank" href="{% url info_employee project_manager.slug %}">
+                                <a target="_blank" href="{% url employee_info project_manager.slug %}">
                                     {{ project_manager.name }} {{ project_manager.first_surname }} {{ project_manager.second_surname }}
                                 </a>
                             </li>
@@ -199,7 +176,7 @@
                     <ul>
                         {% for researcher in researchers %}
                             <li>
-                                <a target="_blank" href="{% url info_employee researcher.slug %}">
+                                <a target="_blank" href="{% url employee_info researcher.slug %}">
                                     {{ researcher.name }} {{ researcher.first_surname }} {{ researcher.second_surname }}
                                 </a>
                             </li>
@@ -210,6 +187,39 @@
             </div>
 
             <!-- end tab-pane #pr_assigned_employees -->
+
+            <!-- begin tab-pane #pr_consortium_members -->
+
+            <div class="tab-pane" id="pr_consortium_members">
+
+                <h5>Project leader:</h5>
+                <ul>
+                    <li>
+                        <a target="_blank" href="{% url organization_info project.project_leader.slug %}">
+                            {{ project.project_leader.name }}
+                        </a>
+                    </li>
+                </ul>
+
+                <br>
+
+                {% if consortium_members %}
+                    <h5>Consortium members:</h5>
+                    <ul>
+                        {% for consortium_member in consortium_members %}
+                            <li>
+                                <a target="_blank" href="{% url organization_info consortium_member.organization.slug %}">
+                                    {{ consortium_member.organization.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+            </div>
+
+            <!-- end tab-pane #pr_consortium_members -->
+
         </div>
 
     </div>

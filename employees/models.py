@@ -42,7 +42,10 @@ class Employee(models.Model):
 
     organization = models.ForeignKey(Organization, blank = True, null = True)
 
-    slug = models.SlugField()
+    slug = models.SlugField(
+        max_length = 100,
+        blank = True,
+    )
 
     def __unicode__(self):
         return u'%s %s %s' % (self.name, self.first_surname, self.second_surname)

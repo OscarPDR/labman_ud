@@ -4,8 +4,6 @@ from django import forms
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 
-from funding_programs.models import FundingProgram
-
 from projects.models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
 
 # Create the form class.
@@ -33,14 +31,3 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'homepage': URLInput(attrs={'placeholder': 'http://'}),
         }
-        exclude = ('funding_program')
-
-
-#########################
-# Form: FundingProgramForm
-#########################
-
-class FundingProgramForm(forms.ModelForm):
-    class Meta:
-        model = FundingProgram
-        exclude = ('slug')

@@ -30,7 +30,7 @@ def funding_program_logo_path(self, filename):
 #########################
 
 class FundingProgram(models.Model):
-    organization = models.ForeignKey(Organization)
+    organization = models.ForeignKey(Organization, verbose_name = 'Organization *')
 
     full_name = models.CharField(
         max_length = 150,
@@ -45,22 +45,26 @@ class FundingProgram(models.Model):
 
     concession_year = models.IntegerField(
         validators = [MinValueValidator(1990), MaxValueValidator(2030)],
-        verbose_name = 'Concession year',
-        blank = True,
-        null = True,
+        verbose_name = 'Concession year *',
     )
 
     geographical_scope = models.CharField(
         max_length = 25,
         choices = GEOGRAPHICAL_SCOPE,
-        default = 'Province',
-        verbose_name = 'Geographical scope',
-        blank = True,
+        default = 'Spain',
+        verbose_name = 'Geographical scope *',
     )
 
     logo = models.ImageField(
         upload_to = funding_program_logo_path,
         verbose_name = 'Logo',
+        blank = True,
+        null = True,
+    )
+
+    observations = models.TextField(
+        max_length = 500,
+        verbose_name = 'Observations',
         blank = True,
         null = True,
     )
