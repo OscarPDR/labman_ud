@@ -68,7 +68,7 @@ def project_logo_path(self, filename):
 #########################
 
 class Project(models.Model):
-    funding_program = models.ForeignKey(FundingProgram)     # Required
+    funding_program = models.ForeignKey(FundingProgram, verbose_name = 'Funding program *')     # Required
     project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
 
     project_type = models.CharField(
@@ -116,8 +116,8 @@ class Project(models.Model):
     end_month = models.CharField(
         max_length= 25,
         choices = MONTHS,
-        default = '1',
-        verbose_name = 'Start month',
+        default = '12',
+        verbose_name = 'End month',
         blank = True,
     )
 
@@ -133,6 +133,12 @@ class Project(models.Model):
         verbose_name = 'Status *',      # Required
     )
 
+    project_code = models.CharField(
+        max_length = 100,
+        verbose_name = 'Project code',
+        blank = True,
+    )
+
     total_funds = models.DecimalField(
         max_digits = 10,
         decimal_places = 2,
@@ -146,7 +152,7 @@ class Project(models.Model):
         decimal_places = 2,
         blank = True,
         null = True,
-        verbose_name = 'Total funds',
+        verbose_name = 'Total funds (Deusto)',
     )
 
     logo = models.ImageField(
@@ -232,6 +238,7 @@ class AssignedEmployee(models.Model):
         choices = ROLES,
         default = 'Researcher',
         verbose_name = 'Role *',    # Required
+        blank = True,
     )
 
     def __unicode__(self):

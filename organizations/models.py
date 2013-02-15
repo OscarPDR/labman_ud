@@ -41,7 +41,10 @@ class Organization(models.Model):
         null = True,
     )
 
-    slug = models.SlugField()
+    slug = models.SlugField(
+        max_length = 100,
+        blank = True,
+    )
 
     def __unicode__(self):
         return u'%s' % (self.name)

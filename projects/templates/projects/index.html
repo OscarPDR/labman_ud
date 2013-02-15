@@ -49,9 +49,11 @@
                     <td class="span2">{{ project.start_year }} - {{ project.end_year }}</td>
                     <td class="span1">{{ project.status }}</td>
                     <td class="span1">
+                        {% if project.homepage %}
                         <a target="_blank" href="{{ project.homepage }}">
                             View
                         </a>
+                        {% endif %}
                     </td>
 
                     {% if user.is_authenticated %}
