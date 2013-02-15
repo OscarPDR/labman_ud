@@ -15,4 +15,4 @@ projects_morelab/settings.py
 projects_morelab.sublime-project
 projects_morelab.sublime-workspace
 
-projectsDB.sqlite
+*.db

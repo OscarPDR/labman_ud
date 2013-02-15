@@ -1,0 +1,135 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <div class="row-fluid">
+
+        <div class="span4">
+            <form id="query-form" class="form-horizontal" action="" method="POST">
+            {% csrf_token %}
+                <fieldset>
+
+                    {% for field in form %}
+
+                        {% if field.label != 'And or' %}
+
+                            {% if field.errors %}
+                                <div class="control-group error">
+                                    <label class="control-label" for="inputError">{{ field.label }}</label>
+                                    <div class="controls">
+                                        {{ field }}
+                                        <span class="help-inline">{{ field.errors|striptags }}</span>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <div class="control-group">
+                                    <label class="control-label">{{ field.label }}</label>
+                                    <div class="controls">
+                                        {{ field }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <div class="control-group">
+                        <label class="control-label">Authors relationship</label>
+                        <div class="controls">
+                            <label class="radio" for="id_and_or_0">
+                                <input type="radio" name="and_or" id="id_and_or_0" value="AND" checked>
+                                AND
+                            </label>
+
+                            <label class="radio" for="id_and_or_1">
+                                <input type="radio" name="and_or" id="id_and_or_1" value="OR" checked>
+                                OR
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-primary center"><i class="icon-ok icon-white"></i> Query</button>
+
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="span8" id="sparql-query">
+
+            <p>
+                SPARQL query to launch over the <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/snorql/">SPARQL endpoint</a>
+            </p>
+
+            <p class="alert alert-info">
+                Prefixes are omitted because they are already included in the snorql configuration.
+            </p>
+
+            <pre>
+
+    SELECT DISTINCT ?project WHERE
+    {
+        ?project rdf:type swrcfe:Project .
+        {% if title != "" %}
+        ?project dc:title ?title .
+        FILTER regex(?title, "{{ title }}", "i") .
+        {% endif %}
+        {% if status != "Any" %}
+        ?project swrcfe:hasStatus "{{ status }}" .
+        {% endif %}
+        ?project swrcfe:hasStartYear {{ start_year }} .
+        ?project swrcfe:hasEndYear {{ end_year }} .
+        {% if and_or == 'AND' %}
+            {% for researcher in researchers %}
+        ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; .
+            {% endfor %}
+        {% else %}
+            {% for researcher in researchers %}
+         { ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; }
+         UNION
+            {% endfor %}
+        {% endif %}
+        {% if scope != "All" %}
+        { ?project swrcfe:hasGeographicalScope "{{ scope }}" }
+        {% endif %}
+    }
+            </pre>
+
+            <br>
+
+            <h6>Results:</h6>
+
+            <ul>
+                {% for project in projects %}
+                    <li>
+                        <a target="_blank" href="{% url project_info project.slug %}">{{ project.title }}</a>
+                    </li>
+                {% empty %}
+                    No projects match your query
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $(document).ready(function() {
+            {% if and_or == 'AND' %}
+                $("#id_and_or_0").attr('checked', 'checked');
+            {% else %}
+                $("#id_and_or_1").attr('checked', 'checked');
+            {% endif %}
+
+            $("#sparql-query").hide();
+            {% if active %}
+                $("#sparql-query").show();
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,400 @@
+{% extends "projects_morelab/base.html" %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <legend><strong>Edit:</strong> {{ project.title }}</legend>
+
+        <br>
+
+        <fieldset>
+
+            <div class="tabbable tabs-left">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#general" data-toggle="tab">
+                            {% if 'project' in error_badges %}
+                                <span class="badge badge-important">1</span>
+                            {% else %}
+                                <span class="badge">1</span>
+                            {% endif %}
+                            General information
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#funding-details" data-toggle="tab" onclick="sortFundingAmountForms();">
+                            {% if 'funding_program' in error_badges %}
+                                <span class="badge badge-important">2</span>
+                            {% else %}
+                                <span class="badge">2</span>
+                            {% endif %}
+                            Funding details
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#assigned-employees" data-toggle="tab">
+                            <span class="badge">3</span>
+                            Assigned employees
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#consortium-members" data-toggle="tab">
+                            {% if 'consortium_members' in error_badges %}
+                                <span class="badge badge-important">4</span>
+                            {% else %}
+                                <span class="badge">4</span>
+                            {% endif %}
+                            Consortium members
+                        </a>
+                    </li>
+
+                    <button type="submit" name="submit" class="btn btn-small btn-primary tab-left-btn">Save</button>
+                    <a class="btn btn-small btn-danger tab-left-btn" href="{% url project_index %}">Cancel</a>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- General form fields -->
+
+                    <div class="tab-pane active" id="general">
+			<div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            You should first edit the assigned employees and consortium members in order not to loose edited information.
+                        </div>
+
+                        {% for field in project_form %}
+
+                            {% if field.label not in "'Total funds', 'Total funds (Deusto)', 'Project code', 'Leader organization *', 'Funding program *'" %}
+
+                                {% if field.errors %}
+
+                                    <div class="control-group error">
+                                        <label class="control-label" for="inputError">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                            <span class="help-inline">{{ field.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="control-group">
+                                        <label class="control-label">{{ field.label }}</label>
+                                        <div class="controls">
+                                            {{ field }}
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                    <!-- End #general tab-pane -->
+
+                    <!-- Funding details information -->
+
+                    <div class="tab-pane" id="funding-details">
+
+                        {% if project_form.project_code.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.project_code.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_code }}
+                                    <span class="help-inline">{{ project_form.project_code.errors|striptags }}</span>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="control-group" id="project-funding-program-form">
+                                <label class="control-label" id="label">{{ project_form.project_code.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_code }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <br>
+
+                        {% if project_form.funding_program.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.funding_program.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.funding_program }}
+                                    <span class="help-inline">{{ project_form.funding_program.errors|striptags }}</span>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="control-group" id="project-funding-program-form">
+                                <label class="control-label" id="label">{{ project_form.funding_program.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.funding_program }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <br>
+
+                        {% if project_form.total_funds.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.total_funds.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.total_funds }}
+                                    <span class="help-inline">{{ project_form.total_funds.errors|striptags }}</span>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="control-group" id="project-funding-program-form">
+                                <label class="control-label" id="label">{{ project_form.total_funds.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.total_funds }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <br>
+
+                        {% if project_form.total_funds_deusto.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.total_funds_deusto.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.total_funds_deusto }}
+                                    <span class="help-inline">{{ project_form.total_funds_deusto.errors|striptags }}</span>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="control-group" id="project-funding-program-form">
+                                <label class="control-label" id="label">{{ project_form.total_funds_deusto.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.total_funds_deusto }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <div id="funding-amount-details">
+                            {% for funding_amount_form in funding_amount_formset.forms %}
+                                <div class="control-group">
+                                    <label class="control-label">{{ funding_amount_form.amount.label }}</label>
+                                    <div class="controls">
+                                        {{ funding_amount_form.amount }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {{ funding_amount_formset.management_form }}
+                        </div>
+
+                    </div>
+
+                    <!-- End #funding-details tab-pane -->
+
+                    <!-- End #assigned-employees tab-pane -->
+
+                    <div class="tab-pane" id="assigned-employees">
+			{% if assigned_employees %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for assigned_employee in assigned_employees %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/employees/info/{{ assigned_employee.employee.slug }}">
+                                                    {{ assigned_employee.employee.name }} {{ assigned_employee.employee.first_surname }} {{ assigned_employee.employee.second_surname }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ assigned_employee.role }}
+                                            </td>
+                                            <td>
+                                               <a class="btn btn-mini btn-danger" href="{% url delete_employee_from_project assigned_employee.employee.slug assigned_employee.project.slug %}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
+
+                        {{ assigned_employee_formset.management_form }}
+                        <table id="assigned_employee_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody id="employees-form">
+                                {% for assigned_employee_form in assigned_employee_formset.forms %}
+                                    <tr>
+                                        <th>{{ assigned_employee_form.employee.label }}</th>
+                                        <td>{{ assigned_employee_form.employee }}</td>
+                                        <th>{{ assigned_employee_form.role.label }}</th>
+                                        <td>{{ assigned_employee_form.role }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- End #assigned-employees tab-pane -->
+
+                    <!-- End #consortium-members tab-pane -->
+
+                    <div class="tab-pane" id="consortium-members">
+
+                        {% if project_form.project_leader.errors %}
+
+                            <div class="control-group error">
+                                <label class="control-label" for="inputError">{{ project_form.project_leader.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_leader }}
+                                    <span class="help-inline">{{ project_form.project_leader.errors|striptags }}</span>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="control-group">
+                                <label class="control-label" id="label">{{ project_form.project_leader.label }}</label>
+                                <div class="controls">
+                                    {{ project_form.project_leader }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <br>
+
+			{% if consortium_members %}
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Organization</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for consortium_member in consortium_members %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="/organizations/info/{{ consortium_member.organization.slug }}">
+                                                    {{ consortium_member.organization.name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-mini btn-danger" href="{% url delete_organization_from_project consortium_member.organization.slug consortium_member.project.slug %}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                        {% endif %}
+
+                        <table id="consortium_member_formset" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                {% for consortium_member_form in consortium_member_formset.forms %}
+                                    <tr>
+                                        <th>{{ consortium_member_form.organization.label }}</th>
+                                        <td>{{ consortium_member_form.organization }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {{ consortium_member_formset.management_form }}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- End #consortium-members tab-pane -->
+
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jquery.formset.js"></script>
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            $("textarea").attr("rows", 5);
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('#assigned_employee_formset tbody tr').formset({
+                prefix: '{{ assigned_employee_formset.prefix }}',
+                addText: 'Add employee',
+                addCssClass: 'btn btn-info',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
+            });
+
+            $('#consortium_member_formset tbody tr').formset({
+                prefix: '{{ consortium_member_formset.prefix }}',
+                addText: 'Add consortium member',
+                addCssClass: 'btn btn-info',
+                deleteText: '<i class="icon-remove" title="Delete"></i>',
+                deleteCssClass: 'btn',
+            });
+        });
+    </script>
+
+    <script>
+        function sortFundingAmountForms() {
+            var amount_forms = document.getElementById("funding-amount-details");
+            amount_forms.style.visibility = 'hidden';
+            var start_year = parseInt(document.getElementById("id_project_form-start_year").value);
+            var end_year = parseInt(document.getElementById("id_project_form-end_year").value);
+            if (end_year >= start_year) {
+                for (var i = 0; i <= (end_year - start_year); i++) {
+                    var amount_form = amount_forms.children[i];
+                    amount_form.style.visibility = 'visible';
+                    var label = amount_form.children[0];
+                    label.innerHTML = "Year " + (start_year + i);
+                }
+            }
+        }
+    </script>
+
+    <script>
+        {% for funding_amount in funding_amounts %}
+            $('#id_funding_amount_formset-{{ forloop.counter0 }}-amount').val({{funding_amount.amount}});
+        {% endfor %}
+    </script>
+
+{% endblock %}
