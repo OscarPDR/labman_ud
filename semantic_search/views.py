@@ -62,29 +62,29 @@ def semantic_search(request):
 
             # TODO: Researchers filter
 
-            researcher_ids = []
-            for researcher in researchers:
-                researcher_ids.append(researcher.id)
+            print researchers
 
-            print "rids: " + str(researcher_ids)
+            if researchers == []:
+                projects = probable_projects
 
-            projects = []
+            else:
+                projects = []
 
-            for project in probable_projects:
-                assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
-                employees_ids = []
-                for employee in assigned_employees:
-                    employees_ids.append(employee.employee_id)
+                researcher_ids = []
+                for researcher in researchers:
+                    researcher_ids.append(researcher.id)
 
-                print "Project: " + str(project.id) + ",   r_ids: " + str(researcher_ids) + ",   e_ids: " + str(employees_ids)
+                for project in probable_projects:
+                    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+                    employees_ids = []
+                    for employee in assigned_employees:
+                        employees_ids.append(employee.employee_id)
 
-                if set(researcher_ids).issubset(employees_ids) and and_or == 'AND':
-                    projects.append(project)
+                    if set(researcher_ids).issubset(employees_ids) and and_or == 'AND':
+                        projects.append(project)
 
-                if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
-                    projects.append(project)
-
-            print projects
+                    if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
+                        projects.append(project)
 
     else:
         form = SemanticSearchForm()

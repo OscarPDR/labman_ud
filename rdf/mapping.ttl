@@ -324,4 +324,5 @@ map:project_researcher a d2rq:PropertyBridge;
     d2rq:refersToClassMap map:Employee;
     d2rq:join "projects_assignedemployee.employee_id => employees_employee.id";
     d2rq:join "projects_assignedemployee.project_id => projects_project.id";
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/@@employees_employee.slug@@";
     .
