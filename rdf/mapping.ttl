@@ -30,7 +30,7 @@ map:database a d2rq:Database;
 
 
 ###############################################################################
-#   employee_manager: Employee
+#   employees: Employee
 ###############################################################################
 
 
@@ -74,7 +74,7 @@ map:employee_organization a d2rq:PropertyBridge;
 
 
 ###############################################################################
-#   organization_manager: Organization
+#   organizations: Organization
 ###############################################################################
 
 
@@ -118,7 +118,7 @@ map:organization_logo a d2rq:PropertyBridge;
 
 
 ################################################################################
-##   project_manager: FundingAmount
+##   projects_fundingamount: FundingAmount
 ################################################################################
 
 
@@ -182,13 +182,11 @@ map:funding_program_full_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property swrcfe:hasFundingProgramFullName;
     d2rq:column "funding_programs_fundingprogram.full_name";
-    d2rq:condition "funding_programs_fundingprogram.funding_call_id is not null";
     .
 map:funding_program_short_name a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property swrcfe:hasFundingProgramShortName;
     d2rq:column "funding_programs_fundingprogram.short_name";
-    d2rq:condition "funding_programs_fundingprogram.funding_call_id is not null";
     .
 map:funding_program_concession_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
@@ -204,7 +202,6 @@ map:funding_program_geographical_scope a d2rq:PropertyBridge;
 map:funding_program_logo a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property swrcfe:hasFundingProgramLogo;
-    d2rq:column "funding_programs_fundingprogram.logo";
     d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@funding_programs_fundingprogram.logo@@";
     d2rq:condition "funding_programs_fundingprogram.logo is not null";
     .
@@ -225,7 +222,7 @@ map:funding_program_organization_id__ref a d2rq:PropertyBridge;
 
 
 ################################################################################
-##   project_manager: Project
+##   projects_project: Project
 ################################################################################
 
 
@@ -265,7 +262,6 @@ map:project_start_month a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasStartMonth;
     d2rq:column "projects_project.start_month";
-    d2rq:datatype xsd:gMonth;
     .
 map:project_start_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
@@ -275,9 +271,8 @@ map:project_start_year a d2rq:PropertyBridge;
     .
 map:project_end_month a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
-    d2rq:property swrcfe:hasEndMonthend;
+    d2rq:property swrcfe:hasEndMonth;
     d2rq:column "projects_project.end_month";
-    d2rq:datatype xsd:gMonth;
     .
 map:project_end_year a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
@@ -331,6 +326,12 @@ map:project_consortium_member a d2rq:PropertyBridge;
     d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
     d2rq:join "projects_consortiummember.project_id => projects_project.id";
     .
+map:project_project_leader a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectLeader;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "projects_project.project_leader_id => organizations_organization.id";
+    .
 map:project_funding_amount a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasFundingAmount;
@@ -341,9 +342,9 @@ map:project_project_manager a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:hasProjectManager;
     d2rq:refersToClassMap map:Employee;
-    d2rq:join "projects_assignedemployee.employee_id => employees_employee.id";
-    d2rq:join "projects_assignedemployee.project_id => projects_project.id";
     d2rq:condition "projects_assignedemployee.role = 'Project manager'";
+    d2rq:join "projects_assignedemployee.employee_id => employees_employee.id";
+    #d2rq:join "projects_assignedemployee.project_id => projects_project.id";
     .
 map:project_principal_researcher a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
