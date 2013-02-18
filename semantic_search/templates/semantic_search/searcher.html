@@ -79,8 +79,10 @@
         {% endif %}
         {% if scope != "All" %}?project swrcfe:hasGeographicalScope "{{ scope }}"
         {% endif %}
-        ?project swrcfe:hasStartYear {{ start_year }} .
-        ?project swrcfe:hasEndYear {{ end_year }} .
+        ?project swrcfe:hasStartYear ?startYear .
+        FILTER (?startYear >= "{{ start_year }}"^^xsd:gYear) .
+        ?project swrcfe:hasEndYear ?endYear .
+        FILTER (?endYear <= "{{ end_year }}"^^xsd:gYear) .
         {% if and_or == 'AND' %}{% for researcher in researchers %}
         ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; .{% endfor %}
         {% else %}{% for researcher in researchers %}
