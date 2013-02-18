@@ -46,9 +46,6 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingAmount"/>
     </Declaration>
     <Declaration>
-        <Class IRI="#FundingCall"/>
-    </Declaration>
-    <Declaration>
         <Class IRI="#FundingProgram"/>
     </Declaration>
     <Declaration>
@@ -61,13 +58,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <ObjectProperty IRI="#hasFundingProgram"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#hasPrincipalResearcher"/>
-    </Declaration>
-    <Declaration>
         <ObjectProperty IRI="#hasProjectLeader"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty IRI="#hasProjectManager"/>
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#hasResearcher"/>
@@ -76,7 +67,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <ObjectProperty IRI="#isConceededBy"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#isFundedBy"/>
+        <ObjectProperty IRI="#isConsortiumMemberOf"/>
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#isFundingAmountOf"/>
@@ -85,7 +76,10 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <ObjectProperty IRI="#isFundingProgramOf"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#isPartOfFundingProgram"/>
+        <ObjectProperty IRI="#isProjectLeaderOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isResearcherAt"/>
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#worksAt"/>
@@ -97,40 +91,28 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <DataProperty IRI="#hasConcessionYear"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasCountry"/>
-    </Declaration>
-    <Declaration>
         <DataProperty IRI="#hasEndDate"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasEndYear"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasFOAF"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#hasFundingCallConcessionYear"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#hasFundingCallFullName"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#hasFundingCallShortName"/>
+        <DataProperty IRI="#hasFOAFLink"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasFundingProgramFullName"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasFundingProgramObservations"/>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasFundingProgramShortName"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasGeographicalScope"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasOrganizationCountry"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasOrganizationHomepage"/>
@@ -166,11 +148,31 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <DataProperty IRI="#hasTotalFunds"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#hasTotalFundsDeusto"/>
+        <DataProperty IRI="#hasTotalOwnFunds"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#hasYear"/>
     </Declaration>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isConsortiumMemberOf"/>
+        <ObjectProperty IRI="#hasConsortiumMember"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#hasFundingAmount"/>
+        <ObjectProperty IRI="#isFundingAmountOf"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#hasFundingProgram"/>
+        <ObjectProperty IRI="#isFundingProgramOf"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isProjectLeaderOf"/>
+        <ObjectProperty IRI="#hasProjectLeader"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isResearcherAt"/>
+        <ObjectProperty IRI="#hasResearcher"/>
+    </InverseObjectProperties>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasConsortiumMember"/>
         <Class abbreviatedIRI="ontology:Project"/>
@@ -184,15 +186,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#hasPrincipalResearcher"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasProjectLeader"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty IRI="#hasProjectManager"/>
         <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
@@ -204,8 +198,8 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingProgram"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#isFundedBy"/>
-        <Class IRI="#FundingProgram"/>
+        <ObjectProperty IRI="#isConsortiumMemberOf"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#isFundingAmountOf"/>
@@ -216,8 +210,12 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingProgram"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#isPartOfFundingProgram"/>
-        <Class IRI="#FundingAmount"/>
+        <ObjectProperty IRI="#isProjectLeaderOf"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isResearcherAt"/>
+        <Class abbreviatedIRI="ontology:Employee"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#worksAt"/>
@@ -236,16 +234,8 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingProgram"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#hasPrincipalResearcher"/>
-        <Class abbreviatedIRI="ontology:Employee"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
         <ObjectProperty IRI="#hasProjectLeader"/>
         <Class abbreviatedIRI="ontology:Organization"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty IRI="#hasProjectManager"/>
-        <Class abbreviatedIRI="ontology:Employee"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#hasResearcher"/>
@@ -256,8 +246,8 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Organization"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#isFundedBy"/>
-        <Class IRI="#FundingCall"/>
+        <ObjectProperty IRI="#isConsortiumMemberOf"/>
+        <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#isFundingAmountOf"/>
@@ -268,8 +258,12 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#isPartOfFundingProgram"/>
-        <Class IRI="#FundingProgram"/>
+        <ObjectProperty IRI="#isProjectLeaderOf"/>
+        <Class abbreviatedIRI="ontology:Project"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isResearcherAt"/>
+        <Class abbreviatedIRI="ontology:Project"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#worksAt"/>
@@ -284,43 +278,23 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class IRI="#FundingProgram"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasCountry"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
         <DataProperty IRI="#hasEndDate"/>
-        <Class IRI="#FundingProgram"/>
+        <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasEndYear"/>
         <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasFOAF"/>
+        <DataProperty IRI="#hasFOAFLink"/>
         <Class abbreviatedIRI="ontology:Employee"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingCallConcessionYear"/>
-        <Class IRI="#FundingCall"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingCallFullName"/>
-        <Class IRI="#FundingCall"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
-        <Class IRI="#FundingCall"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingCallShortName"/>
-        <Class IRI="#FundingCall"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasFundingProgramFullName"/>
         <Class IRI="#FundingProgram"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasFundingProgramObservations"/>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
         <Class IRI="#FundingProgram"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -330,6 +304,10 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
     <DataPropertyDomain>
         <DataProperty IRI="#hasGeographicalScope"/>
         <Class IRI="#FundingProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasOrganizationCountry"/>
+        <Class abbreviatedIRI="ontology:Organization"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasOrganizationHomepage"/>
@@ -345,7 +323,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasProjectCode"/>
-        <Class IRI="#FundingProgram"/>
+        <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasProjectHomepage"/>
@@ -361,7 +339,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasStartDate"/>
-        <Class IRI="#FundingProgram"/>
+        <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#hasStartYear"/>
@@ -376,7 +354,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#hasTotalFundsDeusto"/>
+        <DataProperty IRI="#hasTotalOwnFunds"/>
         <Class abbreviatedIRI="ontology:Project"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -392,10 +370,6 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Datatype abbreviatedIRI="xsd:gYear"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasCountry"/>
-        <Datatype abbreviatedIRI="xsd:anyURI"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
         <DataProperty IRI="#hasEndDate"/>
         <Datatype abbreviatedIRI="xsd:gYearMonth"/>
     </DataPropertyRange>
@@ -404,32 +378,16 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Datatype abbreviatedIRI="xsd:gYear"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasFOAF"/>
+        <DataProperty IRI="#hasFOAFLink"/>
         <Datatype abbreviatedIRI="xsd:anyURI"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty IRI="#hasFundingCallConcessionYear"/>
-        <Datatype abbreviatedIRI="xsd:gYear"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty IRI="#hasFundingCallFullName"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty IRI="#hasFundingCallGeographicalScope"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty IRI="#hasFundingCallShortName"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
     </DataPropertyRange>
     <DataPropertyRange>
         <DataProperty IRI="#hasFundingProgramFullName"/>
         <Datatype abbreviatedIRI="rdfs:Literal"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasFundingProgramObservations"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
+        <DataProperty IRI="#hasFundingProgramLogo"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
     </DataPropertyRange>
     <DataPropertyRange>
         <DataProperty IRI="#hasFundingProgramShortName"/>
@@ -438,6 +396,10 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
     <DataPropertyRange>
         <DataProperty IRI="#hasGeographicalScope"/>
         <Datatype abbreviatedIRI="rdfs:Literal"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasOrganizationCountry"/>
+        <Datatype abbreviatedIRI="xsd:anyURI"/>
     </DataPropertyRange>
     <DataPropertyRange>
         <DataProperty IRI="#hasOrganizationHomepage"/>
@@ -484,7 +446,7 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <Datatype abbreviatedIRI="xsd:decimal"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#hasTotalFundsDeusto"/>
+        <DataProperty IRI="#hasTotalOwnFunds"/>
         <Datatype abbreviatedIRI="xsd:decimal"/>
     </DataPropertyRange>
     <DataPropertyRange>
@@ -495,11 +457,6 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
         <IRI>#FundingAmount</IRI>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the year it was conceeded.</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>#FundingCall</IRI>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">The funding call the project is presented to for finding finance.</Literal>
     </AnnotationAssertion>
 </Ontology>
 
