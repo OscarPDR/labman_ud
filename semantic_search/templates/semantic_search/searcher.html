@@ -84,7 +84,7 @@
         {% if and_or == 'AND' %}{% for researcher in researchers %}
         ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; .{% endfor %}
         {% else %}{% for researcher in researchers %}
-         { ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; }{% if not forloop.last %}
+        { ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; }{% if not forloop.last %}
          UNION{% endif %}{% endfor %}{% endif %}
     }
             </pre>

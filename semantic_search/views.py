@@ -9,7 +9,7 @@ from django.db.models import Sum, Min, Max
 
 from funding_programs.models import FundingProgram
 
-from projects.models import Project
+from projects.models import Project, AssignedEmployee
 
 from semantic_search.forms import SemanticSearchForm
 
@@ -45,20 +45,46 @@ def semantic_search(request):
             end_year = int(cd['end_year'])
             and_or = cd['and_or']
 
-            projects = Project.objects.all()
+            probable_projects = Project.objects.all()
 
             if title != '':
-                projects = projects.filter(title__contains = title)
+                probable_projects = probable_projects.filter(title__contains = title)
 
             if status != 'Any':
-                projects = projects.filter(status = status)
+                probable_projects = probable_projects.filter(status = status)
 
             if scope != 'All':
                 funding_program_ids = FundingProgram.objects.filter(geographical_scope = scope).values("id")
-                projects = projects.filter(funding_program__in = funding_program_ids)
+                probable_projects = probable_projects.filter(funding_program__in = funding_program_ids)
 
-            projects = projects.filter(start_year__gte = start_year)
-            projects = projects.filter(end_year__lte = end_year)
+            probable_projects = probable_projects.filter(start_year__gte = start_year)
+            probable_projects = probable_projects.filter(end_year__lte = end_year)
+
+            # TODO: Researchers filter
+
+            researcher_ids = []
+            for researcher in researchers:
+                researcher_ids.append(researcher.id)
+
+            print "rids: " + str(researcher_ids)
+
+            projects = []
+
+            for project in probable_projects:
+                assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+                employees_ids = []
+                for employee in assigned_employees:
+                    employees_ids.append(employee.employee_id)
+
+                print "Project: " + str(project.id) + ",   r_ids: " + str(researcher_ids) + ",   e_ids: " + str(employees_ids)
+
+                if set(researcher_ids).issubset(employees_ids) and and_or == 'AND':
+                    projects.append(project)
+
+                if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
+                    projects.append(project)
+
+            print projects
 
     else:
         form = SemanticSearchForm()
