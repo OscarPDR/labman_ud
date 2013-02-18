@@ -55,9 +55,9 @@ AND_OR = (
 
 class SemanticSearchForm(forms.Form):
     title = forms.CharField(max_length = 150, required = False)
-    researchers = forms.ModelMultipleChoiceField(queryset = Employee.objects.all(), required = False)
     status = forms.ChoiceField(choices = PROJECT_STATUS, initial = "Any", required = False)
     scope = forms.ChoiceField(choices = GEOGRAPHICAL_SCOPE, initial = "All", required = False)
     start_year = forms.ChoiceField(choices = YEARS, initial = 2004, required = False)
     end_year = forms.ChoiceField(choices = YEARS, initial = 2013, required = False)
+    researchers = forms.ModelMultipleChoiceField(queryset = Employee.objects.all(), required = False)
     and_or = forms.ChoiceField(widget = forms.RadioSelect(), choices = AND_OR, required = False)

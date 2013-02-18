@@ -75,24 +75,17 @@
         ?project dc:title ?title .
         FILTER regex(?title, "{{ title }}", "i") .
         {% endif %}
-        {% if status != "Any" %}
-        ?project swrcfe:hasStatus "{{ status }}" .
+        {% if status != "Any" %}?project swrcfe:hasStatus "{{ status }}" .
+        {% endif %}
+        {% if scope != "All" %}?project swrcfe:hasGeographicalScope "{{ scope }}"
         {% endif %}
         ?project swrcfe:hasStartYear {{ start_year }} .
         ?project swrcfe:hasEndYear {{ end_year }} .
-        {% if and_or == 'AND' %}
-            {% for researcher in researchers %}
-        ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; .
-            {% endfor %}
-        {% else %}
-            {% for researcher in researchers %}
-         { ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; }
-         UNION
-            {% endfor %}
-        {% endif %}
-        {% if scope != "All" %}
-        { ?project swrcfe:hasGeographicalScope "{{ scope }}" }
-        {% endif %}
+        {% if and_or == 'AND' %}{% for researcher in researchers %}
+        ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; .{% endfor %}
+        {% else %}{% for researcher in researchers %}
+         { ?project swrcfe:hasResearcher &lt;http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/{{ researcher.slug }}&gt; }{% if not forloop.last %}
+         UNION{% endif %}{% endfor %}{% endif %}
     }
             </pre>
 
