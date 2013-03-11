@@ -17,14 +17,20 @@
 
         {% if funding_program.name %}
             <p>
-                <strong>Supported by:</strong> {{ funding_program.name }}, {{ funding_program.organization.name }}
+                <strong>Supported by:</strong> {{ funding_program.full_name }}, {{ funding_program.organization.name }}
             </p>
         {% endif %}
 
-        {% if project.total_funding_amount %}
+        {% if funding_program.concession_year %}
             <p>
-                <strong>Funding amount for DeustoTech:</strong> {{ total_deusto.amount__sum|intcomma|intword }} €
-                    (from a total project funding of {{ project.total_funding_amount|intcomma|intword }})
+                <strong>Conceeded in:</strong> {{ funding_program.concession_year }}, with a geographical scope for {{ funding_program.geographical_scope }}
+            </p>
+        {% endif %}
+
+        {% if project.total_funds %}
+            <p>
+                <strong>Funding amount for DeustoTech:</strong> {{ project.total_funds_deusto|intcomma|intword }} €
+                    (from a total project funding of {{ project.total_funds|intcomma|intword }})
             </p>
         {% endif %}
 
@@ -53,7 +59,7 @@
         <p>
             <strong>Consortium members:</strong>
             <ul>
-                <li><strong>{{ project_leader.organization.name }}</strong></li>
+                <li><strong>{{ project_leader.name }}</strong></li>
                 {% for organization in consortium_members %}
                     <li>{{ organization }}</li>
                 {% endfor %}
