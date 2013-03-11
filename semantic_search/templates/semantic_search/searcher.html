@@ -77,7 +77,8 @@
         {% endif %}
         {% if status != "Any" %}?project swrcfe:hasStatus "{{ status }}" .
         {% endif %}
-        {% if scope != "All" %}?project swrcfe:hasGeographicalScope "{{ scope }}"
+	{% if scope != "All" %}?project swrcfe:hasFundingProgram ?fundingProgram .
+        ?fundingProgram swrcfe:hasGeographicalScope "{{ scope }}" .
         {% endif %}
         ?project swrcfe:hasStartYear ?startYear .
         FILTER (?startYear >= "{{ start_year }}"^^xsd:gYear) .
