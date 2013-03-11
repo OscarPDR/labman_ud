@@ -1,0 +1,19 @@
+{% extends "projects_morelab/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <ul>
+        {% for project in projects %}
+            <li>
+                <a href="{% url incomes_by_project project.slug %}">
+                    {{ project.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
