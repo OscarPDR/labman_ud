@@ -493,11 +493,15 @@ def edit_project(request, slug):
 def email_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
+    funding_program = FundingProgram.objects.get(id = project.funding_program)
+
     lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Project manager').values('employee_id')
-    projectss = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
+    project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
 
     lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
+
+    project_leader = Organization.objects.get(id = project.project_leader)
 
     consortium_members = []
 
@@ -507,8 +511,10 @@ def email_project(request, slug):
 
     html_content = render_to_string('projects/project_email_template.html', {
         'project': project,
-        'projectss': projectss,
+        'funding_program': funding_program,
+        'project_managers': project_managers,
         'principal_researchers': principal_researchers,
+        'project_leader': project_leader,
         'consortium_members': consortium_members,
     })
     text_content = strip_tags(html_content)
@@ -516,7 +522,7 @@ def email_project(request, slug):
     msg = EmailMultiAlternatives(
         '[NEW PROJECT]: ' + project.title,                # subject
         text_content,                                             # message
-        'oscar.pdr@gmail.com',                              # from
+        settings.PROJECTS_SENDER_EMAIL,              # from
         settings.PROJECTS_RECEPTOR_EMAILS,       # to
     )
 
