@@ -109,7 +109,7 @@ class Project(models.Model):
     )
 
     start_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'Start year *',      # Required
     )
 
@@ -122,7 +122,7 @@ class Project(models.Model):
     )
 
     end_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2015)],
+        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
         verbose_name = 'End year *',    # Required
     )
 
