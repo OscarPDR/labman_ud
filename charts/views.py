@@ -136,6 +136,7 @@ def incomes_by_project(request, project_slug):
         project_incomes.append({'key': funding_amount.year, 'value': funding_amount.amount})
 
     return render_to_response("charts/incomes_by_project.html", {
+            'project': project,
             'project_incomes': project_incomes,
         },
         context_instance = RequestContext(request))
