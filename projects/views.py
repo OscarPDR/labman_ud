@@ -493,7 +493,7 @@ def edit_project(request, slug):
 def email_project(request, slug):
     project = get_object_or_404(Project, slug = slug)
 
-    funding_program = FundingProgram.objects.get(id = project.funding_program)
+    funding_program = FundingProgram.objects.get(id = project.funding_program_id)
 
     lpms = AssignedEmployee.objects.filter(project_id = project.id, role = 'Project manager').values('employee_id')
     project_managers = Employee.objects.filter(id__in = lpms).order_by('name', 'first_surname', 'second_surname')
@@ -501,7 +501,7 @@ def email_project(request, slug):
     lprs = AssignedEmployee.objects.filter(project_id = project.id, role = 'Principal researcher').values('employee_id')
     principal_researchers = Employee.objects.filter(id__in = lprs).order_by('name', 'first_surname', 'second_surname')
 
-    project_leader = Organization.objects.get(id = project.project_leader)
+    project_leader = Organization.objects.get(id = project.project_leader_id)
 
     consortium_members = []
 

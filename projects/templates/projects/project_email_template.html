@@ -30,7 +30,7 @@
         {% if project.total_funds %}
             <p>
                 <strong>Funding amount for DeustoTech:</strong> {{ project.total_funds_deusto|intcomma|intword }} €
-                    (from a total project funding of {{ project.total_funds|intcomma|intword }})
+                    (from a total project funding of {{ project.total_funds|intcomma|intword }} €)
             </p>
         {% endif %}
 
@@ -66,8 +66,10 @@
             </ul>
         </p>
 
-        <p style="margin-top: 1em; margin-bottom: 1em;">
-            {{ project.description }}
+        <p style="margin-top: 2em; margin-bottom: 2em;">
+            <strong>Description:</strong>
+	    <br>
+	    {{ project.description }}
         </p>
 
         <p>
