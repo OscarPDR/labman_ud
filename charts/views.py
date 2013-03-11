@@ -106,3 +106,36 @@ def incomes_by_year_and_scope(request, year, scope):
             'scope': scope,
         },
         context_instance = RequestContext(request))
+
+
+#########################
+# View: incomes_by_project_index
+#########################
+
+def incomes_by_project_index(request):
+    projects = Project.objects.all().order_by('title')
+
+    return render_to_response("charts/incomes_by_project_index.html", {
+            'projects': projects,
+        },
+        context_instance = RequestContext(request))
+
+
+#########################
+# View: incomes_by_project
+#########################
+
+def incomes_by_project(request, project_slug):
+    project_incomes = []
+
+    project = Project.objects.get(slug = project_slug)
+
+    funding_amounts = FundingAmount.objects.filter(project_id = project.id)
+
+    for funding_amount in funding_amounts:
+        project_incomes.append({'key': funding_amount.year, 'value': funding_amount.amount})
+
+    return render_to_response("charts/incomes_by_project.html", {
+            'project_incomes': project_incomes,
+        },
+        context_instance = RequestContext(request))
