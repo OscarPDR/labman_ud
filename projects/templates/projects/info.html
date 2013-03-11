@@ -127,6 +127,12 @@
                             <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
                         {% endfor %}
                     </ul>
+
+                    <br>
+
+                    <div id="chart-div">
+                        <div id="chart_div" style="width: 500px; height: 350px;"></div>
+                    </div>
                 {% else %}
                     <p>
                         No information available
@@ -227,4 +233,29 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Incomes'],
+                {% for funding_amount in funding_amounts %}
+                    ["{{ funding_amount.year }}", {{ funding_amount.amount }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: 'Income breakdown',
+            };
+
+            // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            // var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+
 {% endblock %}

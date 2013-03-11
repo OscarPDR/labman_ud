@@ -8,7 +8,9 @@
     </div>
 
     <br>
-    <a class="center" href="{% url chart_index %}">Go back</a>
+    <a class="center btn btn-info" href="{% url project_info project.slug %}">View project's info</a>
+    <br>
+    <a class="center" href="{% url incomes_by_project_index %}">Go back</a>
     <br>
 
 {% endblock %}
