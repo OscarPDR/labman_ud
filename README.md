@@ -32,6 +32,7 @@ In order to have the application fully running all the features correctly, the f
     EMAIL_USE_TLS = True
     
     PROJECTS_RECEPTOR_EMAILS = ['']
+    PROJECTS_SENDER_EMAIL = ''
     
 # Database initialization
     
