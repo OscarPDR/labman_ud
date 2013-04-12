@@ -126,7 +126,7 @@
                 <ul>
                     {% for project in projects %}
                         <li>
-                            {{ project.title }}
+                            <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/project/{{ project.slug }}">{{ project.title }}</a>
                         </li>
                     {% empty %}
                         No projects match your query
