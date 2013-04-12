@@ -86,7 +86,7 @@ def semantic_search(request):
                     if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
                         projects.append(project)
 
-            projects = projects.order_by('title')
+            # projects = projects.order_by('title')
 
     else:
         form = SemanticSearchForm()
@@ -176,7 +176,7 @@ def semantic_searcher(request):
                     if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
                         projects.append(project)
 
-            projects = projects.order_by('title')
+            # projects = projects.order_by('title')
 
     else:
         form = SemanticSearchForm()
