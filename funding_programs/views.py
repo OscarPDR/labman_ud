@@ -55,6 +55,8 @@ def add_funding_program(request):
         if form.is_valid():
             cd = form.cleaned_data
 
+            print 'Organization: ' + cd['organization']
+
             funding_program = FundingProgram(
                 organization = cd['organization'],
                 full_name = cd['full_name'].encode('utf-8'),
