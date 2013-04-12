@@ -48,6 +48,12 @@ h4 {
     padding-top: 10em;
 }
 
+#main-container2 {
+    display: block;
+    min-height: 500px;
+    padding-top: 1em;
+}
+
 .edit-organization-logo {
     margin: 1em;
     width: 25%;
