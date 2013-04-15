@@ -1,0 +1,197 @@
+[
+    {
+        "pk": 5,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Almeida",
+            "name": "Aitor",
+            "foaf_link": "http://www.morelab.deusto.es/page/aitor-almeida",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "aitor-almeida"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Gomez-Goiri",
+            "name": "Aitor",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "aitor-gomez-goiri"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Lago",
+            "name": "Ana Bel\u00e9n",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "ana-belen-lago"
+        }
+    },
+    {
+        "pk": 17,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Garc\u00eda",
+            "name": "Bego\u00f1a",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Zapirain",
+            "organization": null,
+            "slug": "begona-garcia-zapirain"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Klein",
+            "name": "Bernhard",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "bernhard-klein"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Buj\u00e1n",
+            "name": "David",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "david-bujan"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "L\u00f3pez de Ipi\u00f1a",
+            "name": "Diego",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Artaza",
+            "organization": null,
+            "slug": "diego-lopez-de-ipina-artaza"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Castillejo",
+            "name": "Eduardo",
+            "foaf_link": "http://paginaspersonales.deusto.es/eduardo.castillejo/foaf.rdf",
+            "external": false,
+            "second_surname": "Gil",
+            "organization": null,
+            "slug": "eduardo-castillejo-gil"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Castanedo",
+            "name": "Federico",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Sotela",
+            "organization": null,
+            "slug": "federico-castanedo-sotela"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "V\u00e1zquez",
+            "name": "I\u00f1aki",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "inaki-vazquez"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "L\u00e1zaro",
+            "name": "Jon",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Aduna",
+            "organization": null,
+            "slug": "jon-lazaro-aduna"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Emaldi",
+            "name": "Mikel",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Manrique",
+            "organization": null,
+            "slug": "mikel-emaldi-manrique"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Pe\u00f1a",
+            "name": "Oscar",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "del Rio",
+            "organization": null,
+            "slug": "oscar-pena-del-rio"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Ordu\u00f1a",
+            "name": "Pablo",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "pablo-orduna"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Aguilera",
+            "name": "Unai",
+            "foaf_link": "http://paginaspersonales.deusto.es/unai.aguilera/foaf.rdf",
+            "external": false,
+            "second_surname": "",
+            "organization": null,
+            "slug": "unai-aguilera"
+        }
+    }
+]
