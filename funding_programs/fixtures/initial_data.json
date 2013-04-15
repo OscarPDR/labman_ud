@@ -278,5 +278,271 @@
             "logo": "",
             "slug": "galileo-2007"
         }
+    },
+    {
+        "pk": 22,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2009,
+            "short_name": "Acci\u00f3n Estrat\u00e9gica de Telecomunicaciones y Sociedad de la Informaci\u00f3n. Avanza I+D",
+            "geographical_scope": "Spain",
+            "observations": "",
+            "full_name": "Acci\u00f3n Estrat\u00e9gica de Telecomunicaciones y Sociedad de la Informaci\u00f3n. Avanza I+D",
+            "organization": 138,
+            "logo": "",
+            "slug": "accion-estrategica-de-telecomunicaciones-y-sociedad-de-la-informacion-avanza-id"
+        }
+    },
+    {
+        "pk": 21,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2009,
+            "short_name": "MICINN: Ministerio de Ciencia e Innovaci\u00f3n, Subprograma de Proyectos de Investigaci\u00f3n Fundamental no orientada, TIN2009-14406-C05-05 (subprograma TSI)",
+            "geographical_scope": "Spain",
+            "observations": "",
+            "full_name": "Subprograma de Proyectos de Investigaci\u00f3n Fundamental no orientada (subprograma TSI) ",
+            "organization": 2,
+            "logo": "",
+            "slug": "micinn-ministerio-de-ciencia-e-innovacion-subprograma-de-proyectos-de-investigacion-fundamental-no-orientada-tin2009-14406-c05-05-subprograma-tsi"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "ETORTEK 2008",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "ETORTEK 2008 - Proyectos de Investigaci\u00f3n Estrat\u00e9gica",
+            "organization": 8,
+            "logo": "",
+            "slug": "etortek-2008"
+        }
+    },
+    {
+        "pk": 24,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "GAITEK 2008",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "GAITEK 2008",
+            "organization": 8,
+            "logo": "",
+            "slug": "gaitek-2008"
+        }
+    },
+    {
+        "pk": 25,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2007,
+            "short_name": "Comisi\u00f3n Europea (FP7)",
+            "geographical_scope": "Europe",
+            "observations": "",
+            "full_name": "Comisi\u00f3n Europea (FP7)",
+            "organization": 22,
+            "logo": "",
+            "slug": "comision-europea-fp7"
+        }
+    },
+    {
+        "pk": 26,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "ETORGAI 2008 - Proyectos Integrados de Investigaci\u00f3n Industrial, Departamento de Industria, Comercio y Turismo",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "ETORGAI 2008 - Proyectos Integrados de Investigaci\u00f3n Industrial, Departamento de Industria, Comercio y Turismo",
+            "organization": 8,
+            "logo": "",
+            "slug": "etorgai-2008-proyectos-integrados-de-investigacion-industrial-departamento-de-industria-comercio-y-turismo"
+        }
+    },
+    {
+        "pk": 27,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "4\u00aa convocatoria CENIT",
+            "geographical_scope": "Spain",
+            "observations": "",
+            "full_name": "4\u00aa convocatoria CENIT",
+            "organization": 2,
+            "logo": "",
+            "slug": "4a-convocatoria-cenit"
+        }
+    },
+    {
+        "pk": 28,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "Plan Avanza I+D 2008, Proyecto Singular Estrat\u00e9gico",
+            "geographical_scope": "Spain",
+            "observations": "",
+            "full_name": "Plan Avanza I+D 2008, Proyecto Singular Estrat\u00e9gico",
+            "organization": 138,
+            "logo": "",
+            "slug": "plan-avanza-id-2008-proyecto-singular-estrategico"
+        }
+    },
+    {
+        "pk": 29,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2007,
+            "short_name": "DEPARTAMENTO DE EDUCACION, UNIVERSIDADES E INVESTIGACION",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "DEPARTAMENTO DE EDUCACION, UNIVERSIDADES E INVESTIGACION",
+            "organization": 8,
+            "logo": "",
+            "slug": "departamento-de-educacion-universidades-e-investigacion"
+        }
+    },
+    {
+        "pk": 30,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2007,
+            "short_name": "EKINBERRI 2007 - Departamento de Innovaci\u00f3n y Promoci\u00f3n Econ\u00f3mica de la Diputaci\u00f3n Foral de Vizcaya",
+            "geographical_scope": "Bizkaia",
+            "observations": "",
+            "full_name": "EKINBERRI 2007 - Departamento de Innovaci\u00f3n y Promoci\u00f3n Econ\u00f3mica de la Diputaci\u00f3n Foral de Vizcaya",
+            "organization": 8,
+            "logo": "",
+            "slug": "ekinberri-2007-departamento-de-innovacion-y-promocion-economica-de-la-diputacion-foral-de-vizcaya"
+        }
+    },
+    {
+        "pk": 31,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2007,
+            "short_name": "Programa Investigaci\u00f3n B\u00e1sica y Aplicada, Departamento de Educaci\u00f3n, Universidades e Investigaci\u00f3n",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "Programa Investigaci\u00f3n B\u00e1sica y Aplicada, Departamento de Educaci\u00f3n, Universidades e Investigaci\u00f3n",
+            "organization": 8,
+            "logo": "",
+            "slug": "programa-investigacion-basica-y-aplicada-departamento-de-educacion-universidades-e-investigacion"
+        }
+    },
+    {
+        "pk": 32,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2007,
+            "short_name": "SAIOTEK 2007",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "SAIOTEK 2007",
+            "organization": 8,
+            "logo": "",
+            "slug": "saiotek-2007"
+        }
+    },
+    {
+        "pk": 33,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2008,
+            "short_name": "INTEK 2008",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "INTEK 2008",
+            "organization": 8,
+            "logo": "",
+            "slug": "intek-2008"
+        }
+    },
+    {
+        "pk": 34,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2006,
+            "short_name": "C\u00e1tedra Movistar",
+            "geographical_scope": "Spain",
+            "observations": "",
+            "full_name": "C\u00e1tedra Movistar",
+            "organization": 3,
+            "logo": "",
+            "slug": "catedra-movistar"
+        }
+    },
+    {
+        "pk": 35,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2006,
+            "short_name": "SAIOTEK 2006",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "SAIOTEK 2006",
+            "organization": 8,
+            "logo": "",
+            "slug": "saiotek-2006"
+        }
+    },
+    {
+        "pk": 36,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2006,
+            "short_name": "INTEK 2006",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "INTEK 2006",
+            "organization": 8,
+            "logo": "",
+            "slug": "intek-2006"
+        }
+    },
+    {
+        "pk": 37,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2006,
+            "short_name": "EKINBERRI 2006 - Departamento de Innovaci\u00f3n y Promoci\u00f3n Econ\u00f3mica de la Diputaci\u00f3n Foral de Vizcaya",
+            "geographical_scope": "Bizkaia",
+            "observations": "",
+            "full_name": "EKINBERRI 2006 - Departamento de Innovaci\u00f3n y Promoci\u00f3n Econ\u00f3mica de la Diputaci\u00f3n Foral de Vizcaya",
+            "organization": 8,
+            "logo": "",
+            "slug": "ekinberri-2006-departamento-de-innovacion-y-promocion-economica-de-la-diputacion-foral-de-vizcaya"
+        }
+    },
+    {
+        "pk": 38,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2005,
+            "short_name": "SAIOTEK 2005",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "SAIOTEK 2005",
+            "organization": 8,
+            "logo": "",
+            "slug": "saiotek-2005"
+        }
+    },
+    {
+        "pk": 39,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "concession_year": 2005,
+            "short_name": "Dpto. de Educaci\u00f3n, Universidades e Investigaci\u00f3n",
+            "geographical_scope": "Euskadi",
+            "observations": "",
+            "full_name": "Dpto. de Educaci\u00f3n, Universidades e Investigaci\u00f3n",
+            "organization": 8,
+            "logo": "",
+            "slug": "dpto-de-educacion-universidades-e-investigacion"
+        }
     }
 ]
