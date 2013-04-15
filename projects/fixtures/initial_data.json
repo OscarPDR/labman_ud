@@ -414,6 +414,29 @@
         }
     },
     {
+        "pk": 28,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "In development",
+            "start_year": 2012,
+            "description": "TBD",
+            "title": "KONTATU: KOmunikazioa laguNTzeko plataforma Adimentsua eta tesTUinguruarekiko sentikorra",
+            "project_code": "Kontatu",
+            "end_year": 2013,
+            "total_funds_deusto": "71069.42",
+            "project_leader": 24,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "71069.42",
+            "funding_program": 16,
+            "homepage": "",
+            "slug": "KONTAT"
+        }
+    },
+    {
         "pk": 12,
         "model": "projects.project",
         "fields": {
@@ -756,29 +779,6 @@
             "funding_program": 13,
             "homepage": "",
             "slug": "SmartWork"
-        }
-    },
-    {
-        "pk": 28,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "In development",
-            "start_year": 2012,
-            "description": "TBD",
-            "title": "KONTATU: KOmunikazioa laguNTzeko plataforma Adimentsua eta tesTUinguruarekiko sentikorra",
-            "project_code": "Kontatu",
-            "end_year": 2013,
-            "total_funds_deusto": "71069.42",
-            "project_leader": 24,
-            "end_month": "12",
-            "observations": "",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "71069.42",
-            "funding_program": 16,
-            "homepage": "",
-            "slug": "KONTAT"
         }
     },
     {
