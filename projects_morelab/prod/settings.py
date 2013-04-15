@@ -181,6 +181,11 @@ LOGGING = {
     }
 }
 
+EMPLOYEES_PAGINATION = 5
+FUNDING_PROGRAMS_PAGINATION = 5
+ORGANIZATIONS_PAGINATION = 5
+PROJECTS_PAGINATION = 5
+
 # Django email settings
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'projects.morelab@gmail.com'

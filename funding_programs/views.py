@@ -15,7 +15,7 @@ from projects.models import Project
 
 # Create your views here.
 
-PAGINATION_NUMBER = 5
+PAGINATION_NUMBER = settings.FUNDING_PROGRAMS_PAGINATION
 
 
 #########################

@@ -29,7 +29,7 @@ from funding_programs.forms import FundingProgramForm
 
 # Create your views here.
 
-PAGINATION_NUMBER = 5
+PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
 
 #########################

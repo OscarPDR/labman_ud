@@ -15,7 +15,7 @@ from projects.models import Project, AssignedEmployee
 
 # Create your views here.
 
-PAGINATION_NUMBER = 5
+PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
 
 
 #########################

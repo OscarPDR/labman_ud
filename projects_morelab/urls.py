@@ -1,3 +1,10 @@
+
+##########################################
+###         DEVELOPMENT URLS FOR projects_morelab                   ###
+###                                                                                                   ###
+### Last update: 15-04-2013                                                          ###
+##########################################
+
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
@@ -29,7 +36,7 @@ urlpatterns = patterns('',
     url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Just for development purposes, serve in another way in production
-    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()
