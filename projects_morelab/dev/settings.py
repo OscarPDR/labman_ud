@@ -1,3 +1,4 @@
+# coding: utf-8
 
 ##########################################
 ###         DEVELOPMENT SETTINGS FOR projects_morelab           ###

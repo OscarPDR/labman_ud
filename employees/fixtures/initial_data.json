@@ -143,6 +143,19 @@
         }
     },
     {
+        "pk": 18,
+        "model": "employees.employee",
+        "fields": {
+            "first_surname": "Abaitua",
+            "name": "Joseba",
+            "foaf_link": "",
+            "external": false,
+            "second_surname": "Odriozola",
+            "organization": null,
+            "slug": "joseba-abaitua-odriozola"
+        }
+    },
+    {
         "pk": 2,
         "model": "employees.employee",
         "fields": {
