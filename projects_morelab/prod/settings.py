@@ -1,3 +1,4 @@
+# coding: utf-8
 
 #########################################
 ###         PRODUCTION SETTINGS FOR projects_morelab           ###
@@ -181,10 +182,10 @@ LOGGING = {
     }
 }
 
-EMPLOYEES_PAGINATION = 5
-FUNDING_PROGRAMS_PAGINATION = 5
-ORGANIZATIONS_PAGINATION = 5
-PROJECTS_PAGINATION = 5
+EMPLOYEES_PAGINATION = 10
+FUNDING_PROGRAMS_PAGINATION = 10
+ORGANIZATIONS_PAGINATION = 10
+PROJECTS_PAGINATION = 10
 
 # Django email settings
 EMAIL_HOST = 'smtp.gmail.com'
