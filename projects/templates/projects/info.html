@@ -35,7 +35,17 @@
                     <div class="project-logo">
                         <img src="{{ MEDIA_URL }}{{ project.logo }}" height="150" />
                     </div>
-                 {% endif %}
+                {% endif %}
+
+                {% if project.homepage %}
+                    <h5>Homepage:</h5>
+                    <p>
+                        <a target="_blank" href="{{ project.homepage }}">
+                            {{ project.homepage }}
+                        </a>
+                    </p>
+                    <br>
+                {% endif %}
 
                 <h5>Proyect type:</h5>
                 <p>
