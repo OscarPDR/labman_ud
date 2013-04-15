@@ -792,6 +792,17 @@
         }
     },
     {
+        "pk": 138,
+        "model": "organizations.organization",
+        "fields": {
+            "country": "",
+            "slug": "ministerio-de-industria-turismo-y-comercio",
+            "homepage": "",
+            "name": "Ministerio de Industria, Turismo y Comercio",
+            "logo": ""
+        }
+    },
+    {
         "pk": 36,
         "model": "organizations.organization",
         "fields": {
@@ -1034,7 +1045,7 @@
         }
     },
     {
-        "pk": 83,
+        "pk": 99,
         "model": "organizations.organization",
         "fields": {
             "country": "Spain",
@@ -1045,7 +1056,7 @@
         }
     },
     {
-        "pk": 99,
+        "pk": 83,
         "model": "organizations.organization",
         "fields": {
             "country": "Spain",
