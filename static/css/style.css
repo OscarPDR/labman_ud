@@ -188,6 +188,15 @@ ul.nav.nav-tabs {
     margin: 0;
 }
 
+.rdf-icon {
+    margin-left: 3px;
+    margin-top: -3px;
+}
+
+.semantic-searcher-results li a {
+    line-height: 24px;
+}
+
 #chart_div {
     margin: 0 auto;
 }
