@@ -25,9 +25,9 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Geographical scope', 'Incomes'],
-                ['Europe', {{ europe }}],
-                ['Spain', {{ spain }}],
-                ['Euskadi', {{ euskadi }}]
+                ['Europe', parseFloat({{ europe }})],
+                ['Spain', parseFloat({{ spain }})],
+                ['Euskadi', parseFloat({{ euskadi }})]
             ]);
 
             var options = {

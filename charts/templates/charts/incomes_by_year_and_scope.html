@@ -26,7 +26,7 @@
             var data = google.visualization.arrayToDataTable([
                 ['Geographical scope', 'Incomes'],
                 {% for project_income in project_incomes %}
-                    ["{{ project_income.key }}", {{ project_income.value }}],
+                    ["{{ project_income.key }}", parseFloat({{ project_income.value }})],
                 {% endfor %}
             ]);
 
