@@ -60,9 +60,9 @@ def semantic_search(request):
             probable_projects = probable_projects.filter(start_year__gte = start_year)
             probable_projects = probable_projects.filter(end_year__lte = end_year)
 
-            # TODO: Researchers filter
+            probable_projects = probable_projects.order_by('title')
 
-            print researchers
+            # TODO: Researchers filter
 
             if researchers == []:
                 projects = probable_projects
@@ -85,10 +85,6 @@ def semantic_search(request):
 
                     if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
                         projects.append(project)
-
-                print projects
-
-            # projects = projects.order_by('title')
 
     else:
         form = SemanticSearchForm()
@@ -152,9 +148,9 @@ def semantic_searcher(request):
             probable_projects = probable_projects.filter(start_year__gte = start_year)
             probable_projects = probable_projects.filter(end_year__lte = end_year)
 
-            # TODO: Researchers filter
+            probable_projects = probable_projects.order_by('title')
 
-            print researchers
+            # TODO: Researchers filter
 
             if researchers == []:
                 projects = probable_projects
@@ -177,8 +173,6 @@ def semantic_searcher(request):
 
                     if (len(set(researcher_ids) & set(employees_ids)) > 0) and and_or == 'OR':
                         projects.append(project)
-
-            # projects = projects.order_by('title')
 
     else:
         form = SemanticSearchForm()

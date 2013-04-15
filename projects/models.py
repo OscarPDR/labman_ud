@@ -72,24 +72,24 @@ class Project(models.Model):
     project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
 
     project_type = models.CharField(
-        max_length = 25,
+        max_length = 50,
         choices = PROJECT_TYPES,
         default = 'Project',
         verbose_name = 'Project type *',     # Required
     )
 
     title = models.CharField(
-        max_length = 100,
+        max_length = 150,
         verbose_name = 'Title *',    # Required
     )
 
     slug = models.SlugField(
-        max_length = 100,
+        max_length = 150,
         blank = True,
     )
 
     description = models.TextField(
-        max_length = 500,
+        max_length = 1000,
         verbose_name = 'Description *',     # Required
     )
 
@@ -163,7 +163,7 @@ class Project(models.Model):
     )
 
     observations = models.TextField(
-        max_length = 500,
+        max_length = 1000,
         verbose_name = 'Observations',
         blank = True,
     )
