@@ -257,4 +257,4 @@ class ConsortiumMember(models.Model):
         ordering = ["organization"]
 
     def __unicode__(self):
-        return u'Project ID %s - Organization ID %s' % (self.project.title, self.organization.id)
+        return u'Project: %s - Organization: %s' % (self.project.title, self.organization.name)

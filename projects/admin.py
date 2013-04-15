@@ -1,7 +1,29 @@
-from django.contrib import admin
-from projects.models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+# coding: utf-8
 
-admin.site.register(Project)
-admin.site.register(FundingAmount)
-admin.site.register(AssignedEmployee)
-admin.site.register(ConsortiumMember)
+from django.contrib import admin
+from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    search_fields = ['title']
+    list_display = ['title', 'start_year', 'end_year', 'status', 'total_funds', 'total_funds_deusto']
+    list_filter = ['start_year', 'end_year', 'status']
+
+
+class FundingAmountAdmin(admin.ModelAdmin):
+    list_display = ['project', 'amount', 'year']
+    list_filter = ['year']
+
+
+class AssignedEmployeeAdmin(admin.ModelAdmin):
+    list_display = ['employee', 'project', 'role']
+    list_filter = ['role']
+
+
+class ConsortiumMemberAdmin(admin.ModelAdmin):
+    list_display = ['project', 'organization']
+
+admin.site.register(Project, ProjectAdmin)
+admin.site.register(FundingAmount, FundingAmountAdmin)
+admin.site.register(AssignedEmployee, AssignedEmployeeAdmin)
+admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)

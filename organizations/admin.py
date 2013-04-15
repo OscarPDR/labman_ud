@@ -1,4 +1,11 @@
-from django.contrib import admin
-from organizations.models import Organization
+# coding: utf-8
 
-admin.site.register(Organization)
+from django.contrib import admin
+from .models import Organization
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_filter = ['country']
+
+admin.site.register(Organization, OrganizationAdmin)
