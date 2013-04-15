@@ -33,12 +33,12 @@ class FundingProgram(models.Model):
     organization = models.ForeignKey(Organization, verbose_name = 'Organization *')
 
     full_name = models.CharField(
-        max_length = 150,
+        max_length = 250,
         verbose_name = 'Funding call full name',
     )
 
     short_name = models.CharField(
-        max_length = 50,
+        max_length = 150,
         verbose_name = 'Funding call short name',
         blank = True,
     )
@@ -49,7 +49,7 @@ class FundingProgram(models.Model):
     )
 
     geographical_scope = models.CharField(
-        max_length = 25,
+        max_length = 50,
         choices = GEOGRAPHICAL_SCOPE,
         default = 'Spain',
         verbose_name = 'Geographical scope *',
@@ -63,14 +63,14 @@ class FundingProgram(models.Model):
     )
 
     observations = models.TextField(
-        max_length = 500,
+        max_length = 1000,
         verbose_name = 'Observations',
         blank = True,
         null = True,
     )
 
     slug = models.SlugField(
-        max_length = 100,
+        max_length = 150,
         blank = True,
     )
 
