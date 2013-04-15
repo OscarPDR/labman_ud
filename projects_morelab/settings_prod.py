@@ -5,8 +5,6 @@
 ### Last update: 15-04-2013                                                          ###
 #########################################
 
-import django
-
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
