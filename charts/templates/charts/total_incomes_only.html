@@ -1,0 +1,80 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+<!doctype html>
+    <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <head>
+        <title>MORElab project management</title>
+        <link rel="shortcut icon" href="{{ STATIC_PREFIX }}img/favicon.ico">
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap.css"/>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap-responsive.css"/>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/style.css"/>
+    </head>
+
+    <body>
+
+        <div id="main-container2" class="container">
+
+        <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+        <div id="chart-div">
+            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+        </div>
+
+        <br>
+
+        <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+        </div>
+
+    </body>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Incomes'],
+                {% for income in incomes %}
+                    ["{{ income.key }}", parseFloat({{ income.value.amount__sum }})],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: 'DeustoTech total incomes',
+                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}},
+                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+            };
+
+            var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var year = data.getValue(item.row, item.column-1);
+                    window.location.replace("/sourceplanet/charts/incomes_only/" + year);
+                }
+            }
+        }
+    </script>
+
+</html>
