@@ -140,3 +140,89 @@ def incomes_by_project(request, project_slug):
             'project_incomes': project_incomes,
         },
         context_instance = RequestContext(request))
+
+
+###########################################################################
+###########################################################################
+
+
+#########################
+# View: total_incomes_only
+#########################
+
+def total_incomes_only(request):
+    min_year = FundingAmount.objects.aggregate(Min('year'))
+    max_year = FundingAmount.objects.aggregate(Max('year'))
+
+    min_year = min_year.get('year__min')
+    max_year = max_year.get('year__max')
+
+    incomes = []
+
+    for year in range(min_year, max_year + 1):
+        income = FundingAmount.objects.filter(year = year).aggregate(Sum('amount'))
+        incomes.append({'key': year, 'value': income})
+
+    return render_to_response("charts/total_incomes_only.html", {
+                'incomes': incomes,
+        },
+        context_instance = RequestContext(request))
+
+
+#########################
+# View: incomes_by_year_only
+#########################
+
+def incomes_by_year_only(request, year):
+    europe = 0
+    spain = 0
+    euskadi = 0
+
+    year_incomes = FundingAmount.objects.filter(year = year)
+
+    for year_income in year_incomes:
+        project = Project.objects.get(id = year_income.project_id)
+        funding_program = FundingProgram.objects.get(id = project.funding_program_id)
+
+        area = funding_program.geographical_scope
+
+        if area == 'Europe':
+            europe += year_income.amount
+        if area == 'Spain':
+            spain += year_income.amount
+        if area == 'Euskadi':
+            euskadi += year_income.amount
+
+    return render_to_response("charts/incomes_by_year_only.html", {
+            'europe': europe,
+            'spain': spain,
+            'euskadi': euskadi,
+            'year': year,
+        },
+        context_instance = RequestContext(request))
+
+
+#########################
+# View: incomes_by_year_and_scope_only
+#########################
+
+def incomes_by_year_and_scope_only(request, year, scope):
+    project_incomes = []
+
+    year_incomes = FundingAmount.objects.filter(year = year)
+
+    for year_income in year_incomes:
+        project = Project.objects.get(id = year_income.project_id)
+        funding_program = FundingProgram.objects.get(id = project.funding_program_id)
+
+        area = funding_program.geographical_scope
+
+        if area == scope:
+            project_incomes.append({'key': project.title, 'value': year_income.amount})
+
+    return render_to_response("charts/incomes_by_year_and_scope_only.html", {
+            'project_incomes': project_incomes,
+            'year': year,
+            'scope': scope,
+        },
+        context_instance = RequestContext(request))
