@@ -16,7 +16,7 @@ from projects.forms import *
 
 # Create your views here.
 
-PAGINATION_NUMBER = 5
+PAGINATION_NUMBER = settings.ORGANIZATIONS_PAGINATION
 
 
 #########################

@@ -47,7 +47,17 @@
                         </a>
                     </td>
                     <td class="span2">{{ project.start_year }} - {{ project.end_year }}</td>
-                    <td class="span1">{{ project.status }}</td>
+                    <td class="span1">
+                        {% ifequal project.status 'Not started' %}
+                            <span class="label">{{ project.status }}</span>
+                        {% endifequal %}
+                        {% ifequal project.status 'In development' %}
+                            <span class="label label-info">{{ project.status }}</span>
+                        {% endifequal %}
+                        {% ifequal project.status 'Finished' %}
+                            <span class="label label-success">{{ project.status }}</span>
+                        {% endifequal %}
+                    </td>
                     <td class="span1">
                         {% if project.homepage %}
                         <a target="_blank" href="{{ project.homepage }}">
