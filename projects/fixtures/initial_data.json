@@ -1,5 +1,28 @@
 [
     {
+        "pk": 1,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "10",
+            "status": "In development",
+            "start_year": 2010,
+            "description": "THOFU is a large multidisciplinary R&D project which aims to enhance the offer of the hospitality sector through joint research on a new conception of the future hotel, from the spaces and their construction, to objects that reside in it, the interaction with guests, as well as the symbiosis with the Internet.",
+            "title": "THOFU: Tecnolog\u00edas del Hotel del Futuro",
+            "project_code": "THOFU",
+            "end_year": 2013,
+            "total_funds_deusto": "609233",
+            "project_leader": 44,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Development project",
+            "logo": "",
+            "total_funds": "1000000",
+            "funding_program": 10,
+            "homepage": "http://www.thofu.es/inicio",
+            "slug": "thofu"
+        }
+    },
+    {
         "pk": 2,
         "model": "projects.project",
         "fields": {
@@ -10,62 +33,16 @@
             "title": "SELENE",
             "project_code": "CIT-430000-2009-43",
             "end_year": 2011,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 3,
             "end_month": "December",
             "observations": "",
             "project_type": "Applied research project",
             "logo": "",
-            "total_funds": "0.00",
+            "total_funds": "0",
             "funding_program": 1,
             "homepage": "http://www.morelab.deusto.es/selene/",
             "slug": "selene"
-        }
-    },
-    {
-        "pk": 4,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "10",
-            "status": "In development",
-            "start_year": 2012,
-            "description": "TBD",
-            "title": " UCADAMI: User and Context-aware Dynamically Adaptable Mobile Interfaces ",
-            "project_code": "UCADAMI",
-            "end_year": 2013,
-            "total_funds_deusto": "59678.40",
-            "project_leader": 3,
-            "end_month": "12",
-            "observations": "",
-            "project_type": "Development project",
-            "logo": "",
-            "total_funds": "59678.40",
-            "funding_program": 2,
-            "homepage": "",
-            "slug": "UCADAMI"
-        }
-    },
-    {
-        "pk": 36,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2010,
-            "description": "DomoRIA: Domotic Rich Internet Applications",
-            "title": "DomoRIA: Domotic Rich Internet Applications",
-            "project_code": "DomoRia",
-            "end_year": 2010,
-            "total_funds_deusto": "51320.00",
-            "project_leader": 18,
-            "end_month": "12",
-            "observations": "",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "51320.00",
-            "funding_program": 1,
-            "homepage": "",
-            "slug": "DomoRIA"
         }
     },
     {
@@ -79,39 +56,39 @@
             "title": "LAGUNFC",
             "project_code": "",
             "end_year": 2012,
-            "total_funds_deusto": "126364.00",
+            "total_funds_deusto": "126364",
             "project_leader": 3,
             "end_month": "",
             "observations": "",
             "project_type": "Research project",
             "logo": "",
-            "total_funds": "0.00",
+            "total_funds": "0",
             "funding_program": 2,
             "homepage": "",
             "slug": "lagunfc"
         }
     },
     {
-        "pk": 44,
+        "pk": 4,
         "model": "projects.project",
         "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2008,
-            "description": "DESARROLLO E INTEGRACION DE MICRORREDES ELECTRICAS EN LA RED DE DISTRIBUCI\u00d3N",
-            "title": "DESARROLLO E INTEGRACION DE MICRORREDES ELECTRICAS EN LA RED DE DISTRIBUCION (PSE-120000-2005-4) ",
-            "project_code": "DI-microrredes",
-            "end_year": 2009,
-            "total_funds_deusto": "63200.00",
+            "start_month": "10",
+            "status": "In development",
+            "start_year": 2012,
+            "description": "TBD",
+            "title": " UCADAMI: User and Context-aware Dynamically Adaptable Mobile Interfaces ",
+            "project_code": "UCADAMI",
+            "end_year": 2013,
+            "total_funds_deusto": "59678.4",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
-            "project_type": "Research project",
+            "project_type": "Development project",
             "logo": "",
-            "total_funds": "63200.00",
-            "funding_program": 11,
+            "total_funds": "59678.4",
+            "funding_program": 2,
             "homepage": "",
-            "slug": "DI-microrredes"
+            "slug": "UCADAMI"
         }
     },
     {
@@ -125,13 +102,13 @@
             "title": "SmarTUR: el turismo en destinos inteligentes ",
             "project_code": "SmarTUR",
             "end_year": 2014,
-            "total_funds_deusto": "80802.00",
+            "total_funds_deusto": "80802",
             "project_leader": 8,
             "end_month": "12",
             "observations": "Not official website yet",
             "project_type": "Development project",
             "logo": "",
-            "total_funds": "80802.00",
+            "total_funds": "80802",
             "funding_program": 3,
             "homepage": "http://www.tourgune.org/es/4/78/0/0/projects-smartur.html",
             "slug": "SmarTUR"
@@ -148,13 +125,13 @@
             "title": " ADIZAIN: Monitor Inteligente de superficies comerciales  ",
             "project_code": "ADIZAIN",
             "end_year": 2013,
-            "total_funds_deusto": "30115.00",
+            "total_funds_deusto": "30115",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "30115.00",
+            "total_funds": "30115",
             "funding_program": 2,
             "homepage": "",
             "slug": "Adizain"
@@ -171,13 +148,13 @@
             "title": " SONOPA: SOcial Networks for Older adults to Promote an Active life  ",
             "project_code": "SONOPA",
             "end_year": 2015,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Development project",
             "logo": "",
-            "total_funds": "108017.00",
+            "total_funds": "108017",
             "funding_program": 4,
             "homepage": "",
             "slug": "SONOPA"
@@ -194,13 +171,13 @@
             "title": "IES Cities: Internet Enabled Services for the Cities accross Europe ",
             "project_code": "IES",
             "end_year": 2015,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 22,
             "end_month": "12",
             "observations": "Homepage is EU project information page",
             "project_type": "Innovation project",
             "logo": "",
-            "total_funds": "276475.00",
+            "total_funds": "276475",
             "funding_program": 5,
             "homepage": "http://ec.europa.eu/information_society/apps/projects/factsheet/index.cfm?project_ref=325097",
             "slug": "IES-Cities"
@@ -217,39 +194,16 @@
             "title": "DYNUI: Capability and Context-aware Dynamic Adaptation of User Interfaces for Ambient Assisted Livin",
             "project_code": "DYNUI",
             "end_year": 2014,
-            "total_funds_deusto": "29091.00",
+            "total_funds_deusto": "29091",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Innovation project",
             "logo": "",
-            "total_funds": "29091.00",
+            "total_funds": "29091",
             "funding_program": 8,
             "homepage": "http://www.tecnologico.deusto.es/projects/dynui/",
             "slug": "DYNUI"
-        }
-    },
-    {
-        "pk": 45,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2008,
-            "description": "Context Based Digital Personality",
-            "title": "CBDP (Context Based Digital Personality)   ",
-            "project_code": " CBDP",
-            "end_year": 2010,
-            "total_funds_deusto": "1004517.26",
-            "project_leader": 2,
-            "end_month": "12",
-            "observations": "Funding call: Ministerio de Industria, Comercio y Turismo, Plan Avanza I+D 2008, (TSI-020400-2008-15, TSI-020400-2009-156 y TSI-020400-2010-33 con sello CELTIC CP5-004) ",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "183000.00",
-            "funding_program": 8,
-            "homepage": "",
-            "slug": "CBDP"
         }
     },
     {
@@ -263,39 +217,16 @@
             "title": "FUTURE INTERNET II ",
             "project_code": "FUTURE INTERNET II ",
             "end_year": 2013,
-            "total_funds_deusto": "142359.00",
+            "total_funds_deusto": "142359",
             "project_leader": 24,
             "end_month": "12",
             "observations": "",
             "project_type": "Innovation project",
             "logo": "",
-            "total_funds": "142359.00",
+            "total_funds": "142359",
             "funding_program": 9,
             "homepage": "",
             "slug": "Future-internet-II"
-        }
-    },
-    {
-        "pk": 49,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "10",
-            "status": "Finished",
-            "start_year": 2008,
-            "description": "Retos y oportunidades digitales para una mejor calidad de vida en la poblaci\u00f3n de personas mayores ",
-            "title": "ROAD60: Retos y oportunidades digitales para una mejor calidad de vida en la poblaci\u00f3n de personas m",
-            "project_code": "ROAD60",
-            "end_year": 2010,
-            "total_funds_deusto": "168878.30",
-            "project_leader": 83,
-            "end_month": "12",
-            "observations": "Funding call is ETORGAI 2008 - Proyectos Integrados de Investigaci\u00f3n Industrial, Departamento de Industria, Comercio y Turismo, Gobierno Vasco",
-            "project_type": "Development project",
-            "logo": "",
-            "total_funds": "168878.30",
-            "funding_program": 13,
-            "homepage": "",
-            "slug": "ROAD60"
         }
     },
     {
@@ -309,13 +240,13 @@
             "title": "4GIZAR",
             "project_code": "4GIZAR",
             "end_year": 2013,
-            "total_funds_deusto": "50053.00",
+            "total_funds_deusto": "50053",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Innovation project",
             "logo": "",
-            "total_funds": "50053.00",
+            "total_funds": "50053",
             "funding_program": 7,
             "homepage": "http://www.nts-solutions.com/i+d+i.html",
             "slug": "4GIZAR"
@@ -332,13 +263,13 @@
             "title": "ADAPTA. Adecuaci\u00f3n, validaci\u00f3n e integraci\u00f3n de datos abiertos por gobiernos y empresas ",
             "project_code": "",
             "end_year": 2013,
-            "total_funds_deusto": "152567.00",
+            "total_funds_deusto": "152567",
             "project_leader": 5,
             "end_month": "12",
             "observations": "",
             "project_type": "Development project",
             "logo": "",
-            "total_funds": "152567.00",
+            "total_funds": "152567",
             "funding_program": 6,
             "homepage": "",
             "slug": "ADAPTA"
@@ -355,154 +286,16 @@
             "title": "Migraci\u00f3n Avanzada hacia el Cloud - mCLOUD ",
             "project_code": "mCLOUD",
             "end_year": 2014,
-            "total_funds_deusto": "150633.00",
+            "total_funds_deusto": "150633",
             "project_leader": 3,
             "end_month": "6",
             "observations": "",
             "project_type": "Development project",
             "logo": "",
-            "total_funds": "150633.00",
+            "total_funds": "150633",
             "funding_program": 6,
             "homepage": "",
             "slug": "mCLOUD"
-        }
-    },
-    {
-        "pk": 34,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2011,
-            "description": "Red tem\u00e1tica espa\u00f1ola de Linked Data",
-            "title": "Red tem\u00e1tica espa\u00f1ola de Linked Data ",
-            "project_code": "Red-espa\u00f1ola-Linked-Data",
-            "end_year": 2012,
-            "total_funds_deusto": "0.00",
-            "project_leader": 1,
-            "end_month": "12",
-            "observations": "",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "22000.00",
-            "funding_program": 11,
-            "homepage": "",
-            "slug": "Red-espanola-Linked-Data"
-        }
-    },
-    {
-        "pk": 46,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2007,
-            "description": "Plataforma Software Aut\u00f3noma para la Integraci\u00f3n y Coordinaci\u00f3n de Servicios Sem\u00e1nticos en Entornos Residenciales ",
-            "title": "AUTOSEMAMI: Plataforma Software Aut\u00f3noma para la Integraci\u00f3n y Coordinaci\u00f3n de Servicios Sem\u00e1nticos ",
-            "project_code": "AUTOSEMAMI",
-            "end_year": 2008,
-            "total_funds_deusto": "41506.00",
-            "project_leader": 1,
-            "end_month": "12",
-            "observations": "Bad funding call.",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "145372.30",
-            "funding_program": 4,
-            "homepage": "",
-            "slug": "AUTOSEMAMI"
-        }
-    },
-    {
-        "pk": 35,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2010,
-            "description": "DEUSTEK2: Grupo reconocido del Sistema Universitario Vasco ",
-            "title": "DEUSTEK2: Grupo reconocido del Sistema Universitario Vasco ",
-            "project_code": "DEUSTEK2",
-            "end_year": 2012,
-            "total_funds_deusto": "138000.00",
-            "project_leader": 3,
-            "end_month": "12",
-            "observations": "Fix funding program (no information whatsoever).",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "138000.00",
-            "funding_program": 7,
-            "homepage": "",
-            "slug": "DEUSTEK2"
-        }
-    },
-    {
-        "pk": 38,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "12",
-            "status": "Finished",
-            "start_year": 2009,
-            "description": "Plataforma integral de gesti\u00f3n de equipamientos tur\u00edsticos ",
-            "title": "BaliaTour: Plataforma integral de gesti\u00f3n de equipamientos tur\u00edsticos ",
-            "project_code": "BaliaTour",
-            "end_year": 2011,
-            "total_funds_deusto": "50337.00",
-            "project_leader": 54,
-            "end_month": "12",
-            "observations": "Funding program should be from year 2009",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "50337.00",
-            "funding_program": 17,
-            "homepage": "",
-            "slug": "BaliaTour"
-        }
-    },
-    {
-        "pk": 37,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2009,
-            "description": "Habitaci\u00f3n Dom\u00f3tica Infantil",
-            "title": "Habitaci\u00f3n Dom\u00f3tica Infantil (HDI) ",
-            "project_code": "HDI",
-            "end_year": 2009,
-            "total_funds_deusto": "15893.00",
-            "project_leader": 24,
-            "end_month": "12",
-            "observations": "Founding program is GAITEK-INTEK 2009, cannot add it to the system.",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "15893.00",
-            "funding_program": 15,
-            "homepage": "",
-            "slug": "HDI"
-        }
-    },
-    {
-        "pk": 50,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2008,
-            "description": "Personalizable Interactions with Resources on AMI-Enabled Mobile Dynamic Environments  ",
-            "title": "PIRAmIDE. Personalizable Interactions with Resources on AMI-Enabled Mobile Dynamic Environments  ",
-            "project_code": "PIRAmIDE",
-            "end_year": 2010,
-            "total_funds_deusto": "2972731.90",
-            "project_leader": 1,
-            "end_month": "12",
-            "observations": "Funding call: Ministerio de Industria, Comercio y Turismo, Plan Avanza I+D 2008, Proyecto Singular Estrat\u00e9gico (TSI-020301-2008-2)  ",
-            "project_type": "Innovation project",
-            "logo": "",
-            "total_funds": "2972731.90",
-            "funding_program": 12,
-            "homepage": "",
-            "slug": "PIRAmIDE"
         }
     },
     {
@@ -516,39 +309,16 @@
             "title": "Social Awareness Based Emergency Situation Solver. SABESS",
             "project_code": "SABESS",
             "end_year": 2013,
-            "total_funds_deusto": "147173.00",
+            "total_funds_deusto": "147173",
             "project_leader": 2,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "147174.00",
+            "total_funds": "147174",
             "funding_program": 6,
             "homepage": "",
             "slug": "SABESS"
-        }
-    },
-    {
-        "pk": 23,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "In development",
-            "start_year": 2012,
-            "description": "The Go-Lab project will open up remote science laboratories, their data archives, and virtual models (\u201conline labs\u201d) for large-scale use in education. Go-Lab enables science inquiry-based learning that promotes acquisition of deep conceptual domain knowledge and inquiry skills and directs students to careers in science. For students (10 to 18-years old), Go-lab offers the opportunity to perform personalized scientific experiments with online labs in pedagogically structured and scaffolded learning spaces that are extended with social communication facilities. For teachers, Go-Lab offers pedagogical \u201cplug, share, and play\u201d through a Web-based interface and a community framework to disseminate best practices and find mutual support. A modular approach and inquiry classroom scenarios promote a seamless incorporation of online labs into the classroom. For lab-owners, Go-Lab provides open interfacing solutions to easily plug in their online labs, construct their virtual didactic counterparts, and share them in the Go-Lab federation of online labs. Go-Lab will thus promote their scientific activities. The project starts with a set of online labs from worldwide renowned research organisations (e.g., CERN, ESA) and then from selected universities and, based on initial in-depth pilots, will gradually improve and expand its series of online labs and associated inquiry learning opportunities with the increasing contribution of teacher and lab-owner communities. More advanced and later versions will be evaluated and validated in large scale pilots. The Go-Lab project throughout Europe will expand the resources for teaching science in schools and provide more challenging, authentic and higher-order learning experiences for students. Its sustainability will come from the opportunity for the larger science education community to add new online labs. An open and Web-based community will capitalize on the \u2018collective intelligence\u2019 of students, teachers, and scientists.",
-            "title": "Go-Lab: Global Online Science Labs for Inquiry Learning at School ",
-            "project_code": "Go-Lab",
-            "end_year": 2016,
-            "total_funds_deusto": "0.00",
-            "project_leader": 15,
-            "end_month": "12",
-            "observations": "",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "191177.28",
-            "funding_program": 4,
-            "homepage": "",
-            "slug": "Go-Lab"
         }
     },
     {
@@ -562,16 +332,39 @@
             "title": "TALIS+ENGINE: Razonamiento H\u00edbrido Cooperativo y Sem\u00e1ntico para la Orquestaci\u00f3n de Servicios en Ento",
             "project_code": "TALIS",
             "end_year": 2013,
-            "total_funds_deusto": "40837.50",
+            "total_funds_deusto": "40837.5",
             "project_leader": 48,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "40837.50",
+            "total_funds": "40837.5",
             "funding_program": 11,
             "homepage": "",
             "slug": "TALIS"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "In development",
+            "start_year": 2012,
+            "description": "The Go-Lab project will open up remote science laboratories, their data archives, and virtual models (\u201conline labs\u201d) for large-scale use in education. Go-Lab enables science inquiry-based learning that promotes acquisition of deep conceptual domain knowledge and inquiry skills and directs students to careers in science. For students (10 to 18-years old), Go-lab offers the opportunity to perform personalized scientific experiments with online labs in pedagogically structured and scaffolded learning spaces that are extended with social communication facilities. For teachers, Go-Lab offers pedagogical \u201cplug, share, and play\u201d through a Web-based interface and a community framework to disseminate best practices and find mutual support. A modular approach and inquiry classroom scenarios promote a seamless incorporation of online labs into the classroom. For lab-owners, Go-Lab provides open interfacing solutions to easily plug in their online labs, construct their virtual didactic counterparts, and share them in the Go-Lab federation of online labs. Go-Lab will thus promote their scientific activities. The project starts with a set of online labs from worldwide renowned research organisations (e.g., CERN, ESA) and then from selected universities and, based on initial in-depth pilots, will gradually improve and expand its series of online labs and associated inquiry learning opportunities with the increasing contribution of teacher and lab-owner communities. More advanced and later versions will be evaluated and validated in large scale pilots. The Go-Lab project throughout Europe will expand the resources for teaching science in schools and provide more challenging, authentic and higher-order learning experiences for students. Its sustainability will come from the opportunity for the larger science education community to add new online labs. An open and Web-based community will capitalize on the \u2018collective intelligence\u2019 of students, teachers, and scientists.",
+            "title": "Go-Lab: Global Online Science Labs for Inquiry Learning at School ",
+            "project_code": "Go-Lab",
+            "end_year": 2016,
+            "total_funds_deusto": "0",
+            "project_leader": 15,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "191177.28",
+            "funding_program": 4,
+            "homepage": "",
+            "slug": "Go-Lab"
         }
     },
     {
@@ -631,7 +424,7 @@
             "title": "Smart Work in the Future Internet",
             "project_code": "Smartworks",
             "end_year": 2012,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 37,
             "end_month": "12",
             "observations": "Some member need to be added",
@@ -641,6 +434,29 @@
             "funding_program": 13,
             "homepage": "",
             "slug": "SmartWork"
+        }
+    },
+    {
+        "pk": 27,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2010,
+            "description": "Impact of personal spheres in real, augmented and virtual tourism spaces. Areas of Research: Tourism Sciences, Semantic Technologies \u2013 ontologies \u2013 Contextual Computing, Emotional Computing, Services Architecture, The Internet of Things, Urban Computing, Boolean Algebra, Travel & Tourism Technology, Advanced Information and Communication Services, Augmented & Virtual Reality, Tourism Resources Management, Statistics: measurement of tourism flows",
+            "title": "tourSPHERES: Incidencia de las esferas personales en espacios tur\u00edsticos reales, aumentados y virtua",
+            "project_code": "tourSPHERES",
+            "end_year": 2012,
+            "total_funds_deusto": "0",
+            "project_leader": 9,
+            "end_month": "12",
+            "observations": "Funding information and consortium members (euve, robotiker) left",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "0",
+            "funding_program": 17,
+            "homepage": "http://www.tourgune.org/en/4/43/0/0/proiektuak-tourspheres.html",
+            "slug": "tourSPHERES"
         }
     },
     {
@@ -667,29 +483,6 @@
         }
     },
     {
-        "pk": 27,
-        "model": "projects.project",
-        "fields": {
-            "start_month": "1",
-            "status": "Finished",
-            "start_year": 2010,
-            "description": "Impact of personal spheres in real, augmented and virtual tourism spaces. Areas of Research: Tourism Sciences, Semantic Technologies \u2013 ontologies \u2013 Contextual Computing, Emotional Computing, Services Architecture, The Internet of Things, Urban Computing, Boolean Algebra, Travel & Tourism Technology, Advanced Information and Communication Services, Augmented & Virtual Reality, Tourism Resources Management, Statistics: measurement of tourism flows",
-            "title": "tourSPHERES: Incidencia de las esferas personales en espacios tur\u00edsticos reales, aumentados y virtua",
-            "project_code": "tourSPHERES",
-            "end_year": 2012,
-            "total_funds_deusto": "0.00",
-            "project_leader": 9,
-            "end_month": "12",
-            "observations": "Funding information and consortium members (euve, robotiker) left",
-            "project_type": "Project",
-            "logo": "",
-            "total_funds": "0.00",
-            "funding_program": 17,
-            "homepage": "http://www.tourgune.org/en/4/43/0/0/proiektuak-tourspheres.html",
-            "slug": "tourSPHERES"
-        }
-    },
-    {
         "pk": 29,
         "model": "projects.project",
         "fields": {
@@ -700,13 +493,13 @@
             "title": "DEUSTEK3: Grupo reconocido del Sistema Universitario Vasco, IT745-13",
             "project_code": "DEUSTEK3",
             "end_year": 2015,
-            "total_funds_deusto": "70300.00",
+            "total_funds_deusto": "70300",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "70300.00",
+            "total_funds": "70300",
             "funding_program": 1,
             "homepage": "",
             "slug": "DEUSTEK3"
@@ -746,13 +539,13 @@
             "title": "OpenDash: Dashboard y Business Intelligence (BI) utilizando OpenData  ",
             "project_code": "OpenDash",
             "end_year": 2012,
-            "total_funds_deusto": "10000.00",
+            "total_funds_deusto": "10000",
             "project_leader": 24,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "10000.00",
+            "total_funds": "10000",
             "funding_program": 2,
             "homepage": "",
             "slug": "OpenDash"
@@ -769,13 +562,13 @@
             "title": "SORELCOM: SOcial Routes Empowered by Linked COntents and context Mining",
             "project_code": "SORELCOM",
             "end_year": 2013,
-            "total_funds_deusto": "10259.90",
+            "total_funds_deusto": "10259.9",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "10259.90",
+            "total_funds": "10259.9",
             "funding_program": 2,
             "homepage": "",
             "slug": "SORELCOM"
@@ -805,6 +598,121 @@
         }
     },
     {
+        "pk": 34,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2011,
+            "description": "Red tem\u00e1tica espa\u00f1ola de Linked Data",
+            "title": "Red tem\u00e1tica espa\u00f1ola de Linked Data ",
+            "project_code": "Red-espa\u00f1ola-Linked-Data",
+            "end_year": 2012,
+            "total_funds_deusto": "0",
+            "project_leader": 1,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "22000",
+            "funding_program": 11,
+            "homepage": "",
+            "slug": "Red-espanola-Linked-Data"
+        }
+    },
+    {
+        "pk": 35,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2010,
+            "description": "DEUSTEK2: Grupo reconocido del Sistema Universitario Vasco ",
+            "title": "DEUSTEK2: Grupo reconocido del Sistema Universitario Vasco ",
+            "project_code": "DEUSTEK2",
+            "end_year": 2012,
+            "total_funds_deusto": "138000",
+            "project_leader": 3,
+            "end_month": "12",
+            "observations": "Fix funding program (no information whatsoever).",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "138000",
+            "funding_program": 7,
+            "homepage": "",
+            "slug": "DEUSTEK2"
+        }
+    },
+    {
+        "pk": 36,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2010,
+            "description": "DomoRIA: Domotic Rich Internet Applications",
+            "title": "DomoRIA: Domotic Rich Internet Applications",
+            "project_code": "DomoRia",
+            "end_year": 2010,
+            "total_funds_deusto": "51320",
+            "project_leader": 18,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "51320",
+            "funding_program": 1,
+            "homepage": "",
+            "slug": "DomoRIA"
+        }
+    },
+    {
+        "pk": 37,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2009,
+            "description": "Habitaci\u00f3n Dom\u00f3tica Infantil",
+            "title": "Habitaci\u00f3n Dom\u00f3tica Infantil (HDI) ",
+            "project_code": "HDI",
+            "end_year": 2009,
+            "total_funds_deusto": "15893",
+            "project_leader": 24,
+            "end_month": "12",
+            "observations": "Founding program is GAITEK-INTEK 2009, cannot add it to the system.",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "15893",
+            "funding_program": 15,
+            "homepage": "",
+            "slug": "HDI"
+        }
+    },
+    {
+        "pk": 38,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "12",
+            "status": "Finished",
+            "start_year": 2009,
+            "description": "Plataforma integral de gesti\u00f3n de equipamientos tur\u00edsticos ",
+            "title": "BaliaTour: Plataforma integral de gesti\u00f3n de equipamientos tur\u00edsticos ",
+            "project_code": "BaliaTour",
+            "end_year": 2011,
+            "total_funds_deusto": "50337",
+            "project_leader": 54,
+            "end_month": "12",
+            "observations": "Funding program should be from year 2009",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "50337",
+            "funding_program": 17,
+            "homepage": "",
+            "slug": "BaliaTour"
+        }
+    },
+    {
         "pk": 39,
         "model": "projects.project",
         "fields": {
@@ -815,13 +723,13 @@
             "title": "TALISMAN: RAZONAMIENTO SEMANTICO DISTRIBUIDO Y ORQUESTACION DE SERVICIOS EN ENTORNOS REACTIVOS ",
             "project_code": "TALISMAN",
             "end_year": 2010,
-            "total_funds_deusto": "10000.00",
+            "total_funds_deusto": "10000",
             "project_leader": 3,
             "end_month": "12",
             "observations": "Funding call should be fixed",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "10000.00",
+            "total_funds": "10000",
             "funding_program": 6,
             "homepage": "",
             "slug": "TALISMAN"
@@ -838,13 +746,13 @@
             "title": " FUTURE INTERNET \u2013 ELKARLANEKO IKERKUNTZA ESTRATEGIKORAKO PROGRAMA",
             "project_code": "FUTURE-INTERNET",
             "end_year": 2010,
-            "total_funds_deusto": "54472.00",
+            "total_funds_deusto": "54472",
             "project_leader": 3,
             "end_month": "12",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "54472.00",
+            "total_funds": "54472",
             "funding_program": 17,
             "homepage": "",
             "slug": "FUTURE-INTERNET"
@@ -861,13 +769,13 @@
             "title": "MUGGES: Mobile User-Generated Geo Services  ",
             "project_code": "MUGGES",
             "end_year": 2011,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 10,
             "end_month": "12",
             "observations": "Incorrect funding call",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "150120.00",
+            "total_funds": "150120",
             "funding_program": 4,
             "homepage": "",
             "slug": "MUGGES"
@@ -884,13 +792,13 @@
             "title": "MIO! TECNOLOGIAS PARA PRESTAR SERVICIOS EN MOVILIDAD EN EL FUTURO UNIVERSO INTELIGENTE  ",
             "project_code": "MIO",
             "end_year": 2011,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 80,
             "end_month": "12",
             "observations": "Funding call is cenit 2008",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "263194.00",
+            "total_funds": "263194",
             "funding_program": 10,
             "homepage": "",
             "slug": "MIO"
@@ -907,16 +815,85 @@
             "title": "AGUREZAINA/ZAINGUNE2: Plataforma de Automatizaci\u00f3n y Control de Entornos Residenciales Asistivos ",
             "project_code": "Agurezaina-zaingune",
             "end_year": 2010,
-            "total_funds_deusto": "0.00",
+            "total_funds_deusto": "0",
             "project_leader": 8,
             "end_month": "3",
             "observations": "",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "214733.00",
+            "total_funds": "214733",
             "funding_program": 17,
             "homepage": "",
             "slug": "Agurezaina-zaingune"
+        }
+    },
+    {
+        "pk": 44,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2008,
+            "description": "DESARROLLO E INTEGRACION DE MICRORREDES ELECTRICAS EN LA RED DE DISTRIBUCI\u00d3N",
+            "title": "DESARROLLO E INTEGRACION DE MICRORREDES ELECTRICAS EN LA RED DE DISTRIBUCION (PSE-120000-2005-4) ",
+            "project_code": "DI-microrredes",
+            "end_year": 2009,
+            "total_funds_deusto": "63200",
+            "project_leader": 3,
+            "end_month": "12",
+            "observations": "",
+            "project_type": "Research project",
+            "logo": "",
+            "total_funds": "63200",
+            "funding_program": 11,
+            "homepage": "",
+            "slug": "DI-microrredes"
+        }
+    },
+    {
+        "pk": 45,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2008,
+            "description": "Context Based Digital Personality",
+            "title": "CBDP (Context Based Digital Personality)   ",
+            "project_code": " CBDP",
+            "end_year": 2010,
+            "total_funds_deusto": "1004517.26",
+            "project_leader": 2,
+            "end_month": "12",
+            "observations": "Funding call: Ministerio de Industria, Comercio y Turismo, Plan Avanza I+D 2008, (TSI-020400-2008-15, TSI-020400-2009-156 y TSI-020400-2010-33 con sello CELTIC CP5-004) ",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "183000",
+            "funding_program": 8,
+            "homepage": "",
+            "slug": "CBDP"
+        }
+    },
+    {
+        "pk": 46,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2007,
+            "description": "Plataforma Software Aut\u00f3noma para la Integraci\u00f3n y Coordinaci\u00f3n de Servicios Sem\u00e1nticos en Entornos Residenciales ",
+            "title": "AUTOSEMAMI: Plataforma Software Aut\u00f3noma para la Integraci\u00f3n y Coordinaci\u00f3n de Servicios Sem\u00e1nticos ",
+            "project_code": "AUTOSEMAMI",
+            "end_year": 2008,
+            "total_funds_deusto": "41506",
+            "project_leader": 1,
+            "end_month": "12",
+            "observations": "Bad funding call.",
+            "project_type": "Project",
+            "logo": "",
+            "total_funds": "145372.3",
+            "funding_program": 4,
+            "homepage": "",
+            "slug": "AUTOSEMAMI"
         }
     },
     {
@@ -930,39 +907,98 @@
             "title": "ACROSS. Auto-Configurable Robots for Social Services ",
             "project_code": "ACROSS",
             "end_year": 2011,
-            "total_funds_deusto": "211884.50",
+            "total_funds_deusto": "211884.5",
             "project_leader": 1,
             "end_month": "12",
             "observations": "Correct funding call: Ministerio de Industria, Turismo y Comercio, Acci\u00f3n Estrat\u00e9gica de Telecomunicaciones y Sociedad de la Informaci\u00f3n. Avanza I+D, Acci\u00f3n Estrat\u00e9gica de Telecomunicaciones y Sociedad de la Informaci\u00f3n A\u00f1o 2009, TSI-020301-2009-27 ",
             "project_type": "Project",
             "logo": "",
-            "total_funds": "211884.50",
+            "total_funds": "211884.5",
             "funding_program": 12,
             "homepage": "",
             "slug": "ACROSS"
         }
     },
     {
-        "pk": 1,
+        "pk": 49,
         "model": "projects.project",
         "fields": {
             "start_month": "10",
-            "status": "In development",
-            "start_year": 2010,
-            "description": "THOFU is a large multidisciplinary R&D project which aims to enhance the offer of the hospitality sector through joint research on a new conception of the future hotel, from the spaces and their construction, to objects that reside in it, the interaction with guests, as well as the symbiosis with the Internet.",
-            "title": "THOFU: Tecnolog\u00edas del Hotel del Futuro",
-            "project_code": "THOFU",
-            "end_year": 2013,
-            "total_funds_deusto": "609233.00",
-            "project_leader": 44,
+            "status": "Finished",
+            "start_year": 2008,
+            "description": "Retos y oportunidades digitales para una mejor calidad de vida en la poblaci\u00f3n de personas mayores ",
+            "title": "ROAD60: Retos y oportunidades digitales para una mejor calidad de vida en la poblaci\u00f3n de personas m",
+            "project_code": "ROAD60",
+            "end_year": 2010,
+            "total_funds_deusto": "168878.3",
+            "project_leader": 83,
             "end_month": "12",
-            "observations": "",
+            "observations": "Funding call is ETORGAI 2008 - Proyectos Integrados de Investigaci\u00f3n Industrial, Departamento de Industria, Comercio y Turismo, Gobierno Vasco",
             "project_type": "Development project",
             "logo": "",
-            "total_funds": "1000000.00",
-            "funding_program": 10,
-            "homepage": "http://www.thofu.es/inicio",
-            "slug": "thofu"
+            "total_funds": "168878.3",
+            "funding_program": 13,
+            "homepage": "",
+            "slug": "ROAD60"
+        }
+    },
+    {
+        "pk": 50,
+        "model": "projects.project",
+        "fields": {
+            "start_month": "1",
+            "status": "Finished",
+            "start_year": 2008,
+            "description": "Personalizable Interactions with Resources on AMI-Enabled Mobile Dynamic Environments  ",
+            "title": "PIRAmIDE. Personalizable Interactions with Resources on AMI-Enabled Mobile Dynamic Environments  ",
+            "project_code": "PIRAmIDE",
+            "end_year": 2010,
+            "total_funds_deusto": "2972731.9",
+            "project_leader": 1,
+            "end_month": "12",
+            "observations": "Funding call: Ministerio de Industria, Comercio y Turismo, Plan Avanza I+D 2008, Proyecto Singular Estrat\u00e9gico (TSI-020301-2008-2)  ",
+            "project_type": "Innovation project",
+            "logo": "",
+            "total_funds": "2972731.9",
+            "funding_program": 12,
+            "homepage": "",
+            "slug": "PIRAmIDE"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": "65183",
+            "year": 2010
+        }
+    },
+    {
+        "pk": 2,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": "130060",
+            "year": 2011
+        }
+    },
+    {
+        "pk": 3,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": "223760",
+            "year": 2012
+        }
+    },
+    {
+        "pk": 4,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 1,
+            "amount": "190230",
+            "year": 2013
         }
     },
     {
@@ -970,7 +1006,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 2,
-            "amount": "2460.00",
+            "amount": "2460",
             "year": 2009
         }
     },
@@ -979,7 +1015,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 2,
-            "amount": "7928.00",
+            "amount": "7928",
             "year": 2010
         }
     },
@@ -988,8 +1024,26 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 2,
-            "amount": "7945.00",
+            "amount": "7945",
             "year": 2011
+        }
+    },
+    {
+        "pk": 8,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": "47945",
+            "year": 2011
+        }
+    },
+    {
+        "pk": 9,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 3,
+            "amount": "78419",
+            "year": 2012
         }
     },
     {
@@ -1011,29 +1065,11 @@
         }
     },
     {
-        "pk": 92,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 48,
-            "amount": "40778.25",
-            "year": 2009
-        }
-    },
-    {
-        "pk": 93,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 48,
-            "amount": "84166.75",
-            "year": 2010
-        }
-    },
-    {
         "pk": 14,
         "model": "projects.fundingamount",
         "fields": {
             "project": 6,
-            "amount": "12137.00",
+            "amount": "12137",
             "year": 2012
         }
     },
@@ -1042,7 +1078,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 6,
-            "amount": "36318.00",
+            "amount": "36318",
             "year": 2013
         }
     },
@@ -1051,7 +1087,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 6,
-            "amount": "32347.00",
+            "amount": "32347",
             "year": 2014
         }
     },
@@ -1060,7 +1096,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 7,
-            "amount": "15077.00",
+            "amount": "15077",
             "year": 2012
         }
     },
@@ -1069,7 +1105,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 7,
-            "amount": "15038.00",
+            "amount": "15038",
             "year": 2013
         }
     },
@@ -1078,7 +1114,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 10,
-            "amount": "10015.00",
+            "amount": "10015",
             "year": 2012
         }
     },
@@ -1087,7 +1123,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 10,
-            "amount": "9126.00",
+            "amount": "9126",
             "year": 2013
         }
     },
@@ -1096,7 +1132,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 10,
-            "amount": "9950.00",
+            "amount": "9950",
             "year": 2014
         }
     },
@@ -1105,7 +1141,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 11,
-            "amount": "9000.00",
+            "amount": "9000",
             "year": 2011
         }
     },
@@ -1114,7 +1150,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 11,
-            "amount": "68985.00",
+            "amount": "68985",
             "year": 2012
         }
     },
@@ -1123,7 +1159,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 11,
-            "amount": "64374.00",
+            "amount": "64374",
             "year": 2013
         }
     },
@@ -1132,7 +1168,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 12,
-            "amount": "11040.00",
+            "amount": "11040",
             "year": 2011
         }
     },
@@ -1141,7 +1177,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 12,
-            "amount": "16000.00",
+            "amount": "16000",
             "year": 2012
         }
     },
@@ -1150,7 +1186,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 12,
-            "amount": "23013.00",
+            "amount": "23013",
             "year": 2013
         }
     },
@@ -1159,7 +1195,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 13,
-            "amount": "15301.00",
+            "amount": "15301",
             "year": 2011
         }
     },
@@ -1168,7 +1204,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 13,
-            "amount": "68633.00",
+            "amount": "68633",
             "year": 2012
         }
     },
@@ -1177,7 +1213,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 13,
-            "amount": "68633.00",
+            "amount": "68633",
             "year": 2013
         }
     },
@@ -1186,7 +1222,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 14,
-            "amount": "18400.00",
+            "amount": "18400",
             "year": 2011
         }
     },
@@ -1195,7 +1231,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 14,
-            "amount": "48663.00",
+            "amount": "48663",
             "year": 2012
         }
     },
@@ -1204,7 +1240,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 14,
-            "amount": "49383.00",
+            "amount": "49383",
             "year": 2013
         }
     },
@@ -1213,44 +1249,8 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 14,
-            "amount": "34187.00",
+            "amount": "34187",
             "year": 2014
-        }
-    },
-    {
-        "pk": 94,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 48,
-            "amount": "86939.50",
-            "year": 2011
-        }
-    },
-    {
-        "pk": 95,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 49,
-            "amount": "17493.80",
-            "year": 2008
-        }
-    },
-    {
-        "pk": 96,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 49,
-            "amount": "79249.30",
-            "year": 2009
-        }
-    },
-    {
-        "pk": 97,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 49,
-            "amount": "72135.20",
-            "year": 2010
         }
     },
     {
@@ -1258,7 +1258,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 20,
-            "amount": "13860.00",
+            "amount": "13860",
             "year": 2011
         }
     },
@@ -1267,7 +1267,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 20,
-            "amount": "72571.00",
+            "amount": "72571",
             "year": 2012
         }
     },
@@ -1276,17 +1276,8 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 20,
-            "amount": "60742.00",
+            "amount": "60742",
             "year": 2013
-        }
-    },
-    {
-        "pk": 98,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 50,
-            "amount": "273825.80",
-            "year": 2008
         }
     },
     {
@@ -1339,7 +1330,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 28,
-            "amount": "50000.00",
+            "amount": "50000",
             "year": 2013
         }
     },
@@ -1348,7 +1339,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 29,
-            "amount": "22100.00",
+            "amount": "22100",
             "year": 2013
         }
     },
@@ -1357,7 +1348,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 29,
-            "amount": "26100.00",
+            "amount": "26100",
             "year": 2014
         }
     },
@@ -1366,7 +1357,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 29,
-            "amount": "22100.00",
+            "amount": "22100",
             "year": 2015
         }
     },
@@ -1384,7 +1375,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 31,
-            "amount": "10000.00",
+            "amount": "10000",
             "year": 2012
         }
     },
@@ -1393,7 +1384,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 32,
-            "amount": "10259.90",
+            "amount": "10259.9",
             "year": 2012
         }
     },
@@ -1402,7 +1393,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 32,
-            "amount": "0.00",
+            "amount": "0",
             "year": 2013
         }
     },
@@ -1429,7 +1420,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 35,
-            "amount": "46000.00",
+            "amount": "46000",
             "year": 2010
         }
     },
@@ -1438,7 +1429,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 35,
-            "amount": "46000.00",
+            "amount": "46000",
             "year": 2011
         }
     },
@@ -1447,7 +1438,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 35,
-            "amount": "46000.00",
+            "amount": "46000",
             "year": 2012
         }
     },
@@ -1456,8 +1447,17 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 36,
-            "amount": "51320.00",
+            "amount": "51320",
             "year": 2010
+        }
+    },
+    {
+        "pk": 74,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 37,
+            "amount": "15893",
+            "year": 2009
         }
     },
     {
@@ -1465,7 +1465,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 38,
-            "amount": "0.00",
+            "amount": "0",
             "year": 2009
         }
     },
@@ -1474,7 +1474,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 38,
-            "amount": "30202.20",
+            "amount": "30202.2",
             "year": 2010
         }
     },
@@ -1483,35 +1483,8 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 38,
-            "amount": "20134.80",
+            "amount": "20134.8",
             "year": 2011
-        }
-    },
-    {
-        "pk": 74,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 37,
-            "amount": "15893.00",
-            "year": 2009
-        }
-    },
-    {
-        "pk": 8,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 3,
-            "amount": "47945.00",
-            "year": 2011
-        }
-    },
-    {
-        "pk": 9,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 3,
-            "amount": "78419.00",
-            "year": 2012
         }
     },
     {
@@ -1519,7 +1492,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 39,
-            "amount": "10000.00",
+            "amount": "10000",
             "year": 2010
         }
     },
@@ -1528,7 +1501,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 40,
-            "amount": "9939.00",
+            "amount": "9939",
             "year": 2008
         }
     },
@@ -1537,7 +1510,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 40,
-            "amount": "22228.00",
+            "amount": "22228",
             "year": 2009
         }
     },
@@ -1546,8 +1519,26 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 40,
-            "amount": "22305.00",
+            "amount": "22305",
             "year": 2010
+        }
+    },
+    {
+        "pk": 82,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 44,
+            "amount": "38100",
+            "year": 2008
+        }
+    },
+    {
+        "pk": 83,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 44,
+            "amount": "25100",
+            "year": 2009
         }
     },
     {
@@ -1578,29 +1569,11 @@
         }
     },
     {
-        "pk": 82,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 44,
-            "amount": "38100.00",
-            "year": 2008
-        }
-    },
-    {
-        "pk": 83,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 44,
-            "amount": "25100.00",
-            "year": 2009
-        }
-    },
-    {
         "pk": 87,
         "model": "projects.fundingamount",
         "fields": {
             "project": 46,
-            "amount": "11206.50",
+            "amount": "11206.5",
             "year": 2007
         }
     },
@@ -1609,7 +1582,70 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 46,
-            "amount": "30299.50",
+            "amount": "30299.5",
+            "year": 2008
+        }
+    },
+    {
+        "pk": 92,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 48,
+            "amount": "40778.25",
+            "year": 2009
+        }
+    },
+    {
+        "pk": 93,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 48,
+            "amount": "84166.75",
+            "year": 2010
+        }
+    },
+    {
+        "pk": 94,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 48,
+            "amount": "86939.5",
+            "year": 2011
+        }
+    },
+    {
+        "pk": 95,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 49,
+            "amount": "17493.8",
+            "year": 2008
+        }
+    },
+    {
+        "pk": 96,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 49,
+            "amount": "79249.3",
+            "year": 2009
+        }
+    },
+    {
+        "pk": 97,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 49,
+            "amount": "72135.2",
+            "year": 2010
+        }
+    },
+    {
+        "pk": 98,
+        "model": "projects.fundingamount",
+        "fields": {
+            "project": 50,
+            "amount": "273825.8",
             "year": 2008
         }
     },
@@ -1618,7 +1654,7 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 50,
-            "amount": "1353609.80",
+            "amount": "1353609.8",
             "year": 2009
         }
     },
@@ -1627,44 +1663,8 @@
         "model": "projects.fundingamount",
         "fields": {
             "project": 50,
-            "amount": "1345296.30",
+            "amount": "1345296.3",
             "year": 2010
-        }
-    },
-    {
-        "pk": 1,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 1,
-            "amount": "65183.00",
-            "year": 2010
-        }
-    },
-    {
-        "pk": 2,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 1,
-            "amount": "130060.00",
-            "year": 2011
-        }
-    },
-    {
-        "pk": 3,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 1,
-            "amount": "223760.00",
-            "year": 2012
-        }
-    },
-    {
-        "pk": 4,
-        "model": "projects.fundingamount",
-        "fields": {
-            "project": 1,
-            "amount": "190230.00",
-            "year": 2013
         }
     },
     {
@@ -2109,6 +2109,14 @@
         }
     },
     {
+        "pk": 175,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 125
+        }
+    },
+    {
         "pk": 173,
         "model": "projects.consortiummember",
         "fields": {
@@ -2133,11 +2141,11 @@
         }
     },
     {
-        "pk": 175,
+        "pk": 97,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 50,
-            "organization": 125
+            "project": 37,
+            "organization": 73
         }
     },
     {
@@ -2145,14 +2153,6 @@
         "model": "projects.consortiummember",
         "fields": {
             "project": 50,
-            "organization": 73
-        }
-    },
-    {
-        "pk": 97,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 37,
             "organization": 73
         }
     },
@@ -2173,18 +2173,18 @@
         }
     },
     {
-        "pk": 192,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 1,
-            "organization": 49
-        }
-    },
-    {
         "pk": 53,
         "model": "projects.consortiummember",
         "fields": {
             "project": 14,
+            "organization": 49
+        }
+    },
+    {
+        "pk": 192,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 1,
             "organization": 49
         }
     },
@@ -2221,10 +2221,10 @@
         }
     },
     {
-        "pk": 184,
+        "pk": 102,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 1,
+            "project": 38,
             "organization": 45
         }
     },
@@ -2237,10 +2237,10 @@
         }
     },
     {
-        "pk": 102,
+        "pk": 184,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 38,
+            "project": 1,
             "organization": 45
         }
     },
@@ -2277,14 +2277,6 @@
         }
     },
     {
-        "pk": 52,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 14,
-            "organization": 6
-        }
-    },
-    {
         "pk": 12,
         "model": "projects.consortiummember",
         "fields": {
@@ -2293,10 +2285,10 @@
         }
     },
     {
-        "pk": 72,
+        "pk": 52,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 30,
+            "project": 14,
             "organization": 6
         }
     },
@@ -2305,6 +2297,14 @@
         "model": "projects.consortiummember",
         "fields": {
             "project": 26,
+            "organization": 6
+        }
+    },
+    {
+        "pk": 72,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 30,
             "organization": 6
         }
     },
@@ -2333,14 +2333,6 @@
         }
     },
     {
-        "pk": 19,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 8,
-            "organization": 19
-        }
-    },
-    {
         "pk": 6,
         "model": "projects.consortiummember",
         "fields": {
@@ -2357,6 +2349,14 @@
         }
     },
     {
+        "pk": 19,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 8,
+            "organization": 19
+        }
+    },
+    {
         "pk": 73,
         "model": "projects.consortiummember",
         "fields": {
@@ -2365,18 +2365,18 @@
         }
     },
     {
-        "pk": 129,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 45,
-            "organization": 54
-        }
-    },
-    {
         "pk": 77,
         "model": "projects.consortiummember",
         "fields": {
             "project": 32,
+            "organization": 54
+        }
+    },
+    {
+        "pk": 129,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 45,
             "organization": 54
         }
     },
@@ -2421,18 +2421,18 @@
         }
     },
     {
-        "pk": 66,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 26,
-            "organization": 24
-        }
-    },
-    {
         "pk": 25,
         "model": "projects.consortiummember",
         "fields": {
             "project": 9,
+            "organization": 24
+        }
+    },
+    {
+        "pk": 66,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 26,
             "organization": 24
         }
     },
@@ -2509,14 +2509,6 @@
         }
     },
     {
-        "pk": 161,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 49,
-            "organization": 107
-        }
-    },
-    {
         "pk": 150,
         "model": "projects.consortiummember",
         "fields": {
@@ -2525,11 +2517,11 @@
         }
     },
     {
-        "pk": 74,
+        "pk": 161,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 31,
-            "organization": 55
+            "project": 49,
+            "organization": 107
         }
     },
     {
@@ -2589,22 +2581,6 @@
         }
     },
     {
-        "pk": 122,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 44,
-            "organization": 89
-        }
-    },
-    {
-        "pk": 158,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 49,
-            "organization": 118
-        }
-    },
-    {
         "pk": 111,
         "model": "projects.consortiummember",
         "fields": {
@@ -2618,6 +2594,22 @@
         "fields": {
             "project": 49,
             "organization": 119
+        }
+    },
+    {
+        "pk": 122,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 44,
+            "organization": 89
+        }
+    },
+    {
+        "pk": 158,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 49,
+            "organization": 118
         }
     },
     {
@@ -2685,14 +2677,6 @@
         }
     },
     {
-        "pk": 159,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 49,
-            "organization": 84
-        }
-    },
-    {
         "pk": 118,
         "model": "projects.consortiummember",
         "fields": {
@@ -2705,6 +2689,14 @@
         "model": "projects.consortiummember",
         "fields": {
             "project": 46,
+            "organization": 84
+        }
+    },
+    {
+        "pk": 159,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 49,
             "organization": 84
         }
     },
@@ -2746,14 +2738,6 @@
         "fields": {
             "project": 44,
             "organization": 92
-        }
-    },
-    {
-        "pk": 144,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 48,
-            "organization": 102
         }
     },
     {
@@ -2805,6 +2789,14 @@
         }
     },
     {
+        "pk": 179,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 127
+        }
+    },
+    {
         "pk": 119,
         "model": "projects.consortiummember",
         "fields": {
@@ -2818,14 +2810,6 @@
         "fields": {
             "project": 48,
             "organization": 103
-        }
-    },
-    {
-        "pk": 179,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 50,
-            "organization": 127
         }
     },
     {
@@ -2917,6 +2901,46 @@
         }
     },
     {
+        "pk": 7,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 6,
+            "organization": 10
+        }
+    },
+    {
+        "pk": 23,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 9,
+            "organization": 10
+        }
+    },
+    {
+        "pk": 39,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 11,
+            "organization": 10
+        }
+    },
+    {
+        "pk": 54,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 14,
+            "organization": 10
+        }
+    },
+    {
+        "pk": 112,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 40,
+            "organization": 10
+        }
+    },
+    {
         "pk": 135,
         "model": "projects.consortiummember",
         "fields": {
@@ -2933,14 +2957,6 @@
         }
     },
     {
-        "pk": 138,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 46,
-            "organization": 99
-        }
-    },
-    {
         "pk": 120,
         "model": "projects.consortiummember",
         "fields": {
@@ -2949,50 +2965,18 @@
         }
     },
     {
-        "pk": 39,
+        "pk": 138,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 11,
-            "organization": 10
+            "project": 46,
+            "organization": 99
         }
     },
     {
-        "pk": 112,
+        "pk": 114,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 40,
-            "organization": 10
-        }
-    },
-    {
-        "pk": 23,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 9,
-            "organization": 10
-        }
-    },
-    {
-        "pk": 54,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 14,
-            "organization": 10
-        }
-    },
-    {
-        "pk": 7,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 6,
-            "organization": 10
-        }
-    },
-    {
-        "pk": 170,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 50,
+            "project": 41,
             "organization": 80
         }
     },
@@ -3005,10 +2989,10 @@
         }
     },
     {
-        "pk": 114,
+        "pk": 170,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 41,
+            "project": 50,
             "organization": 80
         }
     },
@@ -3045,18 +3029,18 @@
         }
     },
     {
-        "pk": 101,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 38,
-            "organization": 39
-        }
-    },
-    {
         "pk": 43,
         "model": "projects.consortiummember",
         "fields": {
             "project": 12,
+            "organization": 39
+        }
+    },
+    {
+        "pk": 101,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 38,
             "organization": 39
         }
     },
@@ -3125,11 +3109,43 @@
         }
     },
     {
-        "pk": 81,
+        "pk": 8,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 6,
+            "organization": 12
+        }
+    },
+    {
+        "pk": 40,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 11,
+            "organization": 12
+        }
+    },
+    {
+        "pk": 69,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 27,
+            "organization": 12
+        }
+    },
+    {
+        "pk": 96,
         "model": "projects.consortiummember",
         "fields": {
             "project": 34,
-            "organization": 70
+            "organization": 12
+        }
+    },
+    {
+        "pk": 113,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 40,
+            "organization": 12
         }
     },
     {
@@ -3141,11 +3157,91 @@
         }
     },
     {
-        "pk": 82,
+        "pk": 81,
         "model": "projects.consortiummember",
         "fields": {
             "project": 34,
-            "organization": 52
+            "organization": 70
+        }
+    },
+    {
+        "pk": 90,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 62
+        }
+    },
+    {
+        "pk": 91,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 60
+        }
+    },
+    {
+        "pk": 182,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 129
+        }
+    },
+    {
+        "pk": 61,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 20,
+            "organization": 48
+        }
+    },
+    {
+        "pk": 92,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 48
+        }
+    },
+    {
+        "pk": 110,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 39,
+            "organization": 48
+        }
+    },
+    {
+        "pk": 178,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 48
+        }
+    },
+    {
+        "pk": 93,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 59
+        }
+    },
+    {
+        "pk": 177,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 59
+        }
+    },
+    {
+        "pk": 94,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 63
         }
     },
     {
@@ -3153,6 +3249,14 @@
         "model": "projects.consortiummember",
         "fields": {
             "project": 22,
+            "organization": 52
+        }
+    },
+    {
+        "pk": 82,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
             "organization": 52
         }
     },
@@ -3165,46 +3269,6 @@
         }
     },
     {
-        "pk": 38,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 11,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 117,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 42,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 137,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 46,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 100,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 38,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 147,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 48,
-            "organization": 3
-        }
-    },
-    {
         "pk": 1,
         "model": "projects.consortiummember",
         "fields": {
@@ -3213,34 +3277,10 @@
         }
     },
     {
-        "pk": 24,
+        "pk": 4,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 9,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 163,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 49,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 83,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 3
-        }
-    },
-    {
-        "pk": 79,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 33,
+            "project": 4,
             "organization": 3
         }
     },
@@ -3253,10 +3293,18 @@
         }
     },
     {
-        "pk": 180,
+        "pk": 24,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 50,
+            "project": 9,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 38,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 11,
             "organization": 3
         }
     },
@@ -3277,10 +3325,10 @@
         }
     },
     {
-        "pk": 4,
+        "pk": 68,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 4,
+            "project": 27,
             "organization": 3
         }
     },
@@ -3293,10 +3341,34 @@
         }
     },
     {
-        "pk": 68,
+        "pk": 79,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 27,
+            "project": 33,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 83,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 100,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 38,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 117,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 42,
             "organization": 3
         }
     },
@@ -3309,6 +3381,38 @@
         }
     },
     {
+        "pk": 137,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 46,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 147,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 48,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 163,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 49,
+            "organization": 3
+        }
+    },
+    {
+        "pk": 180,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 50,
+            "organization": 3
+        }
+    },
+    {
         "pk": 149,
         "model": "projects.consortiummember",
         "fields": {
@@ -3317,19 +3421,19 @@
         }
     },
     {
-        "pk": 84,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 67
-        }
-    },
-    {
         "pk": 85,
         "model": "projects.consortiummember",
         "fields": {
             "project": 34,
             "organization": 66
+        }
+    },
+    {
+        "pk": 84,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 34,
+            "organization": 67
         }
     },
     {
@@ -3381,83 +3485,11 @@
         }
     },
     {
-        "pk": 90,
+        "pk": 148,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 34,
-            "organization": 62
-        }
-    },
-    {
-        "pk": 91,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 60
-        }
-    },
-    {
-        "pk": 182,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 50,
-            "organization": 129
-        }
-    },
-    {
-        "pk": 92,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 48
-        }
-    },
-    {
-        "pk": 110,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 39,
-            "organization": 48
-        }
-    },
-    {
-        "pk": 61,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 20,
-            "organization": 48
-        }
-    },
-    {
-        "pk": 178,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 50,
-            "organization": 48
-        }
-    },
-    {
-        "pk": 93,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 59
-        }
-    },
-    {
-        "pk": 177,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 50,
-            "organization": 59
-        }
-    },
-    {
-        "pk": 94,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 63
+            "project": 48,
+            "organization": 112
         }
     },
     {
@@ -3469,14 +3501,6 @@
         }
     },
     {
-        "pk": 148,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 48,
-            "organization": 112
-        }
-    },
-    {
         "pk": 15,
         "model": "projects.consortiummember",
         "fields": {
@@ -3485,43 +3509,11 @@
         }
     },
     {
-        "pk": 40,
+        "pk": 115,
         "model": "projects.consortiummember",
         "fields": {
-            "project": 11,
-            "organization": 12
-        }
-    },
-    {
-        "pk": 96,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 34,
-            "organization": 12
-        }
-    },
-    {
-        "pk": 113,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 40,
-            "organization": 12
-        }
-    },
-    {
-        "pk": 69,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 27,
-            "organization": 12
-        }
-    },
-    {
-        "pk": 8,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 6,
-            "organization": 12
+            "project": 41,
+            "organization": 81
         }
     },
     {
@@ -3549,14 +3541,6 @@
         }
     },
     {
-        "pk": 115,
-        "model": "projects.consortiummember",
-        "fields": {
-            "project": 41,
-            "organization": 81
-        }
-    },
-    {
         "pk": 34,
         "model": "projects.consortiummember",
         "fields": {
@@ -3578,6 +3562,22 @@
         "fields": {
             "project": 12,
             "organization": 43
+        }
+    },
+    {
+        "pk": 74,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 31,
+            "organization": 55
+        }
+    },
+    {
+        "pk": 144,
+        "model": "projects.consortiummember",
+        "fields": {
+            "project": 48,
+            "organization": 102
         }
     },
     {
