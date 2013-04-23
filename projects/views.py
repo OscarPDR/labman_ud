@@ -536,6 +536,16 @@ def email_project(request, slug):
     except:
         pass
 
+    try:
+        image_file = open(funding_program.logo.path, 'rb')
+        msg_image = MIMEImage(image_file.read())
+        image_file.close()
+
+        msg_image.add_header('Content-ID', '<image>', filename = funding_program.logo.path)
+        msg.attach(msg_image)
+    except:
+        pass
+
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
