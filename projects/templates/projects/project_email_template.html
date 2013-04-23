@@ -11,9 +11,7 @@
             {{ project.title }}
         </h2>
 
-        {% if project.logo %}
-            <img src="http://dev.morelab.deusto.es/{{ project.logo.url }}" width="150" />
-        {% endif %}
+
 
         <table cellspacing="0" cellpadding="0" width="100%">
                 <tbody>
@@ -27,7 +25,7 @@
                         <td><div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em; width: 100%;"></div></td>
                     </tr>
 
-                    {% if funding_program.name %}
+                    {% if funding_program %}
                     <tr>
                         <td><strong>Supported by:</strong></td>
                         <td>{{ funding_program.full_name }}, {{ funding_program.organization.name }}</td>
@@ -100,11 +98,18 @@
                 </p>
             </div>
 
-        <p style="text-align: center;">
-            For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
-        </p>
+            {% if project.homepage %}
+                <p style="text-align: center;">
+                    For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
+                </p>
+            {% endif %}
 
-            <div style="text-align: center;"><img src="http://iescities.eu/wp-content/uploads/2013/04/intestazione-ies.png" border="0" alt="IES cities" width="315" height="80" style="border: 0;"></div>
+
+            {% if project.logo %}
+                <div style="text-align: center;">
+                    <img src="http://dev.morelab.deusto.es/{{ project.logo.url }}" width="150" />
+                </div>
+            {% endif %}
 
             <div class="item-separator"></div>
 
