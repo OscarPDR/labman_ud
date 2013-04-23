@@ -95,16 +95,16 @@
 
             <div class="tab-pane" id="pr_funding_details">
 
-                <h5>Supported by:</h5>
-                <p>
-                    {{ funding_program.full_name }}, {{ funding_program.organization.name }}
-                </p>
-
                 {% if funding_program.logo %}
                     <div class="funding-program-logo">
                         <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
                     </div>
                 {% endif %}
+
+                <h5>Supported by:</h5>
+                <p>
+                    {{ funding_program.full_name }}, {{ funding_program.organization.name }}
+                </p>
 
                 <br>
 

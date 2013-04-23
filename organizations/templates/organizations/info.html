@@ -31,13 +31,13 @@
         <div class="span6">
             <h6>Project leader in</h6>
 
-            <ul>
+            <table class="table table-striped">
                 {% for project in projects_leaded %}
-                    <li>
+                    <tr>
                         <a href="{% url project_info project.slug %}">{{ project.title }}</a>
-                    </li>
+                    </tr>
                 {% endfor %}
-            </ul>
+            </table>
         </div>
 
         <div class="span6">
