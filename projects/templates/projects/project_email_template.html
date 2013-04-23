@@ -20,17 +20,11 @@
                     <td>{{ project.start_year }} - {{ project.end_year }}</td>
                 </tr>
 
-                <tr>
-                    <td><div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em; width: 100%;"></div></td>
-                    <td><div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em; width: 100%;"></div></td>
-                </tr>
-
                 {% if funding_program %}
                 <tr>
                     <td><strong>Supported by:</strong></td>
                     <td>{{ funding_program.full_name }}, {{ funding_program.organization.name }}</td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
 
                 {% if project.project_code %}
@@ -38,7 +32,6 @@
                     <td><strong>Project code:</strong></td>
                     <td>{{ project.project_code }}</td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
 
                 {% if funding_program.concession_year %}
@@ -46,7 +39,6 @@
                     <td><strong>Conceeded in:</strong></td>
                     <td>{{ funding_program.concession_year }}, with a geographical scope for {{ funding_program.geographical_scope }}</td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
 
                 {% if project.total_funds %}
@@ -55,7 +47,6 @@
                     <td>{{ project.total_funds_deusto|intcomma|intword }} €
                         (from a total project funding of {{ project.total_funds|intcomma|intword }} €)</td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
 
                 {% if project_managers %}
@@ -68,7 +59,6 @@
                         {% endfor %}
                     </td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
 
                 {% if principal_researchers %}
@@ -81,7 +71,6 @@
                         {% endfor %}
                     </td>
                 </tr>
-                <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                 {% endif %}
             </tbody>
         </table>
