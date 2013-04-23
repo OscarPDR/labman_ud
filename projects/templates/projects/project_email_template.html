@@ -33,6 +33,14 @@
                     <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
 
+                    {% if project.project_code %}
+                    <tr>
+                        <td><strong>Project code:</strong></td>
+                        <td>{{ project.project_code }}</td>
+                    </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
+                    {% endif %}
+
                     {% if funding_program.concession_year %}
                     <tr>
                         <td><strong>Conceeded in:</strong></td>
