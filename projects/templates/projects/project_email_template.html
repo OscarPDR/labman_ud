@@ -22,11 +22,14 @@
                         <td>{{ project.start_year }} - {{ project.end_year }}</td>
                     </tr>
 
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
+
                     {% if funding_program.name %}
                     <tr>
                         <td><strong>Supported by:</strong></td>
                         <td>{{ funding_program.full_name }}, {{ funding_program.organization.name }}</td>
                     </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
 
                     {% if funding_program.concession_year %}
@@ -34,6 +37,7 @@
                         <td><strong>Conceeded in:</strong></td>
                         <td>{{ funding_program.concession_year }}, with a geographical scope for {{ funding_program.geographical_scope }}</td>
                     </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
 
                     {% if project.total_funds %}
@@ -42,6 +46,7 @@
                         <td>{{ project.total_funds_deusto|intcomma|intword }} €
                             (from a total project funding of {{ project.total_funds|intcomma|intword }} €)</td>
                     </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
 
                     {% if project_managers %}
@@ -54,6 +59,7 @@
                             {% endfor %}
                         </td>
                     </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
 
                     {% if principal_researchers %}
@@ -66,6 +72,7 @@
                             {% endfor %}
                         </td>
                     </tr>
+                    <div style="border: 1px solid #ddd; margin-top: 1em; margin-bottom: 1em;"></div>
                     {% endif %}
                 </tbody>
             </table>
@@ -74,7 +81,7 @@
 
             <div>
                 <strong>Consortium members:</strong>
-                <ul>
+                <ul style="text-align: justify; padding-left: 40px;">
                     <li><strong>{{ project_leader.name }}</strong></li>
                     {% for organization in consortium_members %}
                         <li>{{ organization }}</li>
@@ -82,19 +89,17 @@
                 </ul>
             </div>
 
-            <br>
-
             <p style="margin-top: 2em; margin-bottom: 2em;">
                 <strong>Description:</strong>
                     <br>
                     {{ project.description }}
             </p>
 
-        <p class="centered-text">
+        <p style="text-align: center;">
             For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
         </p>
 
-            <div class="centered-text"><img src="http://iescities.eu/wp-content/uploads/2013/04/intestazione-ies.png" border="0" alt="IES cities" width="315" height="80" style="border: 0;"></div>
+            <div style="text-align: center;"><img src="http://iescities.eu/wp-content/uploads/2013/04/intestazione-ies.png" border="0" alt="IES cities" width="315" height="80" style="border: 0;"></div>
 
             <div class="item-separator"></div>
 
