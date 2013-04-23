@@ -1,6 +1,10 @@
 {% load humanize %}
 
 <html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="http://dev.morelab.deusto.es/sourceplanet/static/css/project_email_template.css">
+    </head>
+
     <body>
 
         <h2>
@@ -11,7 +15,7 @@
             <img src="http://dev.morelab.deusto.es/{{ project.logo.url }}" width="150" />
         {% endif %}
 
-        <table style="border: 4px solid transparent;" cellspacing="0" cellpadding="0" width="100%">
+        <table cellspacing="0" cellpadding="0" width="100%">
                 <tbody>
                     <tr>
                         <td><strong>Duration:</strong></td>
@@ -68,7 +72,7 @@
 
             <div>
                 <strong>Consortium members:</strong>
-                <ul style="text-align: justify; padding-left: 40px;">
+                <ul>
                     <li><strong>{{ project_leader.name }}</strong></li>
                     {% for organization in consortium_members %}
                         <li>{{ organization }}</li>
@@ -82,11 +86,11 @@
                 {{ project.description }}
         </p>
 
-        <p style="text-align: center;">
+        <p class="centered-text">
             For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
         </p>
 
-            <div style="text-align: center;"><img src="http://iescities.eu/wp-content/uploads/2013/04/intestazione-ies.png" border="0" alt="IES cities" width="315" height="80" style="border: 0;"></div>
+            <div class="centered-text"><img src="http://iescities.eu/wp-content/uploads/2013/04/intestazione-ies.png" border="0" alt="IES cities" width="315" height="80" style="border: 0;"></div>
 
             <div class="item-separator"></div>
 
