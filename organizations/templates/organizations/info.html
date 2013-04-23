@@ -32,24 +32,32 @@
             <h6>Project leader in</h6>
 
             <table class="table table-striped">
-                {% for project in projects_leaded %}
-                    <tr>
-                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
-                    </tr>
-                {% endfor %}
+                <tbody>
+                    {% for project in projects_leaded %}
+                        <tr>
+                            <td>
+                                <a href="{% url project_info project.slug %}"><i class="icon-chevron-right"></i> {{ project.title }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
         <div class="span6">
             <h6>Consortium member in</h6>
 
-            <ul>
-                {% for project in projects %}
-                    <li>
-                        <a href="{% url project_info project.slug %}">{{ project.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
+            <table class="table table-striped">
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td>
+                                <a href="{% url project_info project.slug %}"><i class="icon-chevron-right"></i> {{ project.title }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
     </div>
