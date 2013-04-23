@@ -25,21 +25,24 @@
     <Prefix name="ontology" IRI="http://swrc.ontoware.org/ontology#"/>
     <Import>http://data.semanticweb.org/ns/swc/swrc</Import>
     <Annotation>
-        <AnnotationProperty abbreviatedIRI="owl:backwardCompatibleWith"/>
-        <Literal datatypeIRI="&xsd;anyURI">
-            http://data.semanticweb.org/ns/swc/swrc
-        </Literal>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">SWRCFE (SWRC Funding Extension) es una extensión de la ontología SWRC (http://ontoware.org/swrc/) cuya finalidad es representar la financiación en proyectos de I+D+i (quién financia el proyecto, en que período de tiempo y con que cuantía).
+La versión más reciente de esta ontología es la v4.1 (23 de Abril, 2013).
+Desarrollada por el grupo de investigación MORElab, DeustoTech (Universidad de Deusto, España).</Literal>
     </Annotation>
     <Annotation>
         <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
-        <Literal datatypeIRI="&xsd;double">4.0</Literal>
+        <Literal datatypeIRI="&xsd;double">4.1</Literal>
     </Annotation>
     <Annotation>
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">
-            SWRCFE (SWRC Funding Extension) is an extension of the SWRC ontology, used to represent funding of R&amp;D projects (who finances the project, in what period of time and with which amount of money).
-The most recent version of the ontology is v4 (6th february, 2013).
-Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">SWRCFE (SWRC Funding Extension) is an extension of the SWRC ontology (http://ontoware.org/swrc/), used to represent funding in R&amp;D projects (who finances the project, in what period of time and with which amount of money).
+The most recent version of the ontology is v4.1 (23rd April, 2013).
+Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:backwardCompatibleWith"/>
+        <Literal datatypeIRI="&xsd;anyURI">http://www.morelab.deusto.es/ontologies/swrcfe-v4.0.owl
         </Literal>
     </Annotation>
     <Declaration>
@@ -162,8 +165,8 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <ObjectProperty IRI="#isFundingAmountOf"/>
     </InverseObjectProperties>
     <InverseObjectProperties>
-        <ObjectProperty IRI="#hasFundingProgram"/>
         <ObjectProperty IRI="#isFundingProgramOf"/>
+        <ObjectProperty IRI="#hasFundingProgram"/>
     </InverseObjectProperties>
     <InverseObjectProperties>
         <ObjectProperty IRI="#isProjectLeaderOf"/>
@@ -458,9 +461,104 @@ Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).
         <IRI>#FundingAmount</IRI>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the year it was conceeded.</Literal>
     </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingAmount</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Financiación recibida, incluyendo la cantidad y el año en que fue concedida.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FundingAmount</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Cuantía de la financiación</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FundingAmount</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding amount</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingProgram</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding program that funded the project. It should describe the funding program&apos;s name, which organization promotes it and the geographical scope of the funding.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FundingProgram</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Programa de financiación que financia el proyecto. Debería especificar el nombre del programa, la organización que lo patrocina y el ámbito geográfico del mismo.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FundingProgram</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding program</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FundingProgram</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Programa de financiación</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasConsortiumMember</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">An organization which is a consortium member of the project.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasConsortiumMember</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Una organización que es miembro del consorcio del proyecto.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasFundingAmount</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">A funding amount which funds the project.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasFundingAmount</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Una cuantía que financia el proyecto.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasFundingProgram</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding program which funds the project.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasFundingProgram</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Programa de financiación que financia el proyecto.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasProjectLeader</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Organización que actúa como líder del proyecto.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasProjectLeader</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Organization which acts as project leader.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasResearcher</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Empleado que trabaja en el proyecto.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasResearcher</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Employee working in the project.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isConceededBy</IRI>
+        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Organización que concede un programa de financiación.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isConceededBy</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Organization promoting the funding program.</Literal>
+    </AnnotationAssertion>
 </Ontology>
 
 
 
-<!-- Generated by the OWL API (version 3.3.1957) http://owlapi.sourceforge.net -->
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
 
