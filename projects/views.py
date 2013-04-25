@@ -5,27 +5,26 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 
 from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
 
-from django.db.models import Sum
 from email.mime.image import MIMEImage
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from projects.models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
-from projects.forms import *
+from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+from .forms import ProjectForm, ProjectSearchForm
 
 from employees.models import Employee
 
 from organizations.models import Organization
 
 from funding_programs.models import FundingProgram
-from funding_programs.forms import FundingProgramForm
 
 # Create your views here.
 
@@ -38,6 +37,25 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
 def project_index(request):
     projects = Project.objects.all().order_by('title')
+
+    if request.method == 'POST':
+        form = ProjectSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            projs = []
+
+            for project in projects:
+
+                if query in slugify(project.title):
+                    projs.append(project)
+
+            projects = projs
+
+    else:
+        form = ProjectSearchForm()
+
     paginator = Paginator(projects, PAGINATION_NUMBER)
 
     page = request.GET.get('page')
@@ -55,6 +73,7 @@ def project_index(request):
 
     return render_to_response("projects/index.html", {
             "projects": projects,
+            'form': form,
         },
         context_instance = RequestContext(request))
 
