@@ -33,6 +33,7 @@ def organization_index(request):
         form = OrganizationSearchForm(request.POST)
         if form.is_valid():
             query = form.cleaned_data['text']
+            query = slugify(query)
 
             orgs = []
 

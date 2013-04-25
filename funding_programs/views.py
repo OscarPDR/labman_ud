@@ -32,6 +32,7 @@ def funding_program_index(request):
         form = FundingProgramSearchForm(request.POST)
         if form.is_valid():
             query = form.cleaned_data['text']
+            query = slugify(query)
 
             fps = []
 

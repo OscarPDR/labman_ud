@@ -7,7 +7,6 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
@@ -33,6 +32,7 @@ def employee_index(request):
         form = EmployeeSearchForm(request.POST)
         if form.is_valid():
             query = form.cleaned_data['text']
+            query = slugify(query)
 
             emps = []
 
