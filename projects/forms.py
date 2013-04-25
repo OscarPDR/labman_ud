@@ -4,7 +4,7 @@ from django import forms
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 
-from projects.models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
 
 # Create the form class.
 
@@ -19,6 +19,14 @@ ConsortiumMemberFormSet = inlineformset_factory(Project, ConsortiumMember, extra
 
 class URLInput(widgets.Input):
     input_type = 'url'
+
+
+#########################
+# Class: ProjectSearchForm
+#########################
+
+class ProjectSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
 
 
 #########################
