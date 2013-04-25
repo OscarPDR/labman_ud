@@ -2,14 +2,22 @@
 
 from django import forms
 
-from funding_programs.models import FundingProgram
+from .models import FundingProgram
 
 # Create the form class.
+
+
+#########################
+# Class: FundingProgramSearchForm
+#########################
+
+class FundingProgramSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
+
 
 #########################
 # Form: FundingProgramForm
 #########################
-
 
 class FundingProgramForm(forms.ModelForm):
     class Meta:
