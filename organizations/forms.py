@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import widgets
 
-from organizations.models import Organization
+from .models import Organization
 
 # Create your forms here.
 
@@ -14,6 +14,14 @@ from organizations.models import Organization
 
 class URLInput(widgets.Input):
     input_type = 'url'
+
+
+#########################
+# Class: FundingProgramSearchForm
+#########################
+
+class OrganizationSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
 
 
 #########################

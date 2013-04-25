@@ -1,6 +1,17 @@
 {% extends "projects_morelab/base.html" %}
 
+
+
 {% block content %}
+
+    <form class="form-search" action="" method="post">
+        {% csrf_token %}
+        <div class="input-append">
+            {{ form.text }}
+            <a class="close" href="{% url organization_index %}">&times;</a>
+            <button type="submit" class="btn">Search</button>
+        </div>
+    <form>
 
     {% if user.is_authenticated %}
         <div class="center">
