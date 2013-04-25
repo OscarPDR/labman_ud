@@ -5,13 +5,15 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
+
 
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
 from employees.models import Employee
-from employees.forms import EmployeeForm
+from employees.forms import EmployeeForm, EmployeeSearchForm
 
 from projects.models import Project, AssignedEmployee
 
@@ -26,6 +28,25 @@ PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
 
 def employee_index(request):
     employees = Employee.objects.all().order_by('name', 'first_surname', 'second_surname')
+
+    if request.method == 'POST':
+        form = EmployeeSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+
+            emps = []
+
+            for employee in employees:
+                full_name = slugify(employee.name + ' ' + employee.first_surname + ' ' + employee.second_surname)
+
+                if query in full_name:
+                    emps.append(employee)
+
+            employees = emps
+
+    else:
+        form = EmployeeSearchForm()
+
     paginator = Paginator(employees, PAGINATION_NUMBER)
 
     page = request.GET.get('page')
@@ -43,6 +64,7 @@ def employee_index(request):
 
     return render_to_response("employees/index.html", {
             'employees': employees,
+            'form': form,
         },
         context_instance = RequestContext(request))
 

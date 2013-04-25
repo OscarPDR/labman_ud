@@ -17,6 +17,14 @@ class URLInput(widgets.Input):
 
 
 #########################
+# Class: EmployeeSearchForm
+#########################
+
+class EmployeeSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
+
+
+#########################
 # Class: EmployeeForm
 #########################
 
