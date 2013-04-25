@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import widgets
 
-from employees.models import Employee
+from .models import Employee
 
 # Create your forms here.
 

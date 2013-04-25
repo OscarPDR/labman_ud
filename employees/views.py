@@ -12,8 +12,8 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
-from employees.models import Employee
-from employees.forms import EmployeeForm, EmployeeSearchForm
+from .models import Employee
+from .forms import EmployeeForm, EmployeeSearchForm
 
 from projects.models import Project, AssignedEmployee
 
