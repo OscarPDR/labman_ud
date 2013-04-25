@@ -39,6 +39,10 @@
 
                     <!-- Start of the nav bar content -->
                     <div class="nav-collapse"><!-- Other nav bar content -->
+
+                        {% block search-form %}
+                        {% endblock %}
+
                         <!-- The drop down menu -->
                         <ul class="nav pull-right">
                             {% if user.is_authenticated %}
