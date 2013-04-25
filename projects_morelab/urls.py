@@ -33,3 +33,5 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += staticfiles_urlpatterns()
+
+handler404 = 'projects_morelab.views.view404'
