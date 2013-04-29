@@ -4,13 +4,13 @@ from django import forms
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 
-from projects.models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
 
 # Create the form class.
 
-FundingAmountFormSet = inlineformset_factory(Project, FundingAmount, extra = 10)
-AssignedEmployeeFormSet = inlineformset_factory(Project, AssignedEmployee, extra = 1)
-ConsortiumMemberFormSet = inlineformset_factory(Project, ConsortiumMember, extra = 1)
+FundingAmountFormSet = inlineformset_factory(Project, FundingAmount, extra=10)
+AssignedEmployeeFormSet = inlineformset_factory(Project, AssignedEmployee, extra=1)
+ConsortiumMemberFormSet = inlineformset_factory(Project, ConsortiumMember, extra=1)
 
 
 #########################
