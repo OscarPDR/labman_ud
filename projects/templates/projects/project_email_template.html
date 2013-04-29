@@ -8,73 +8,98 @@
         </h2>
 
         {% if project.logo %}
-            <img src="http://dev.morelab.deusto.es/{{ project.logo.url }}" width="150" />
+            <div style="text-align: center;">
+                <img src="http://dev.morelab.deusto.es/{{ project.logo.url }}" style="width: 40%;" />
+            </div>
         {% endif %}
 
-        <p>
-            <strong>Duration:</strong> {{ project.start_year }} - {{ project.end_year }}
-        </p>
+        <table cellspacing="0" cellpadding="0" width="100%">
+            <tbody>
+                <tr>
+                    <td><strong>Duration:</strong></td>
+                    <td>{{ project.start_year }} - {{ project.end_year }}</td>
+                </tr>
 
-        {% if funding_program.name %}
-            <p>
-                <strong>Supported by:</strong> {{ funding_program.full_name }}, {{ funding_program.organization.name }}
-            </p>
-        {% endif %}
+                {% if funding_program %}
+                <tr>
+                    <td><strong>Supported by:</strong></td>
+                    <td>{{ funding_program.full_name }}, {{ funding_program.organization.name }}</td>
+                </tr>
+                {% endif %}
 
-        {% if funding_program.concession_year %}
-            <p>
-                <strong>Conceeded in:</strong> {{ funding_program.concession_year }}, with a geographical scope for {{ funding_program.geographical_scope }}
-            </p>
-        {% endif %}
+                {% if project.project_code %}
+                <tr>
+                    <td><strong>Project code:</strong></td>
+                    <td>{{ project.project_code }}</td>
+                </tr>
+                {% endif %}
 
-        {% if project.total_funds %}
-            <p>
-                <strong>Funding amount for DeustoTech:</strong> {{ project.total_funds_deusto|intcomma|intword }} €
-                    (from a total project funding of {{ project.total_funds|intcomma|intword }} €)
-            </p>
-        {% endif %}
+                {% if funding_program.concession_year %}
+                <tr>
+                    <td><strong>Conceeded in:</strong></td>
+                    <td>{{ funding_program.concession_year }}, with a geographical scope for {{ funding_program.geographical_scope }}</td>
+                </tr>
+                {% endif %}
 
-        {% if project_managers %}
-            <p>
-                <strong>Project manager{{ project_managers|pluralize }}:</strong>
-                <ul>
-                    {% for project_manager in project_managers %}
-                        <li>{{ project_manager }}</li>
-                    {% endfor %}
-                </ul>
-            </p>
-        {% endif %}
+                {% if project.total_funds %}
+                <tr>
+                    <td><strong>Funding amount for DeustoTech:</strong>:</td>
+                    <td>{{ project.total_funds_deusto|intcomma|intword }} €
+                        (from a total project funding of {{ project.total_funds|intcomma|intword }} €)</td>
+                </tr>
+                {% endif %}
 
-        {% if principal_researchers %}
-            <p>
-                <strong>Principal researcher{{ principal_researchers|pluralize }}:</strong>
-                <ul>
-                    {% for principal_researcher in principal_researchers %}
-                        <li>{{ principal_researcher }}</li>
-                    {% endfor %}
-                </ul>
-            </p>
-        {% endif %}
+                {% if project_managers %}
+                <tr>
+                    <td><strong>Project manager{{ project_managers|pluralize }}:</strong></td>
+                    <td>
+                        {% for project_manager in project_managers %}
+                            {{ project_manager }}
+                            <br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
 
-        <p>
+                {% if principal_researchers %}
+                <tr>
+                    <td><strong>Principal researcher{{ principal_researchers|pluralize }}:</strong></td>
+                    <td>
+                        {% for principal_researcher in principal_researchers %}
+                            {{ principal_researcher }}
+                            <br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <br>
+
+        <div>
             <strong>Consortium members:</strong>
-            <ul>
+            <ul style="text-align: justify; padding-left: 40px;">
                 <li><strong>{{ project_leader.name }}</strong></li>
                 {% for organization in consortium_members %}
                     <li>{{ organization }}</li>
                 {% endfor %}
             </ul>
-        </p>
+        </div>
 
-        <p style="margin-top: 2em; margin-bottom: 2em;">
+        <div style="text-align: justify; margin-top: 2em; margin-bottom: 2em;">
             <strong>Description:</strong>
-	    <br>
-	    {{ project.description }}
-        </p>
+            <br>
+            <p>
+                {{ project.description }}
+            </p>
+        </div>
 
-        <p>
-            For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
-        </p>
+        {% if project.homepage %}
+            <p style="text-align: center;">
+                For further information, please visit the <a href="{{ project.homepage }}">project's website</a>.
+            </p>
+        {% endif %}
 
         <div style="border-top: 3px solid #CCCCCC; width: 100%; margin-top: 1em; margin-bottom: 1em;"></div>
 

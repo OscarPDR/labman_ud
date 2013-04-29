@@ -22,6 +22,14 @@ class URLInput(widgets.Input):
 
 
 #########################
+# Class: ProjectSearchForm
+#########################
+
+class ProjectSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
+
+
+#########################
 # Form: ProjectForm
 #########################
 

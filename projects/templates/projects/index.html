@@ -1,7 +1,17 @@
 {% extends "projects_morelab/base.html" %}
-{% load i18n %}
+
+
 
 {% block content %}
+
+    <form class="form-search" action="" method="post">
+        {% csrf_token %}
+        <div class="input-append">
+            {{ form.text }}
+            <a class="close" href="{% url project_index %}">&times;</a>
+            <button type="submit" class="btn">Search</button>
+        </div>
+    <form>
 
     {% if user.is_authenticated %}
         <div class="center">
@@ -42,6 +52,9 @@
             {% for project in projects %}
                 <tr>
                     <td class="span6">
+                        <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/project/{{ project.slug }}">
+                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                        </a>
                         <a href="info/{{ project.slug }}">
                             {{ project.title }}
                         </a>

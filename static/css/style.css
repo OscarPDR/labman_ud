@@ -37,7 +37,7 @@ h4 {
     max-height: 75px;
 }
 
-.funding-call-logo {
+.funding-program-logo {
     float: right;
     max-height: 75px;
 }
@@ -93,6 +93,10 @@ ul.nav.nav-tabs {
     display: block;
     width: 100%;
     text-align: center;
+}
+
+.project-logo > img {
+    width: 40%;
 }
 
 .project-template {
@@ -225,4 +229,9 @@ footer {
 
 footer img {
     margin: 1em;
+}
+
+.form-search {
+    margin-top: 5px;
+    margin-bottom: 0px;
 }

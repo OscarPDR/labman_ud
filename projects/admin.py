@@ -11,16 +11,19 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class FundingAmountAdmin(admin.ModelAdmin):
+    search_fields = ['project__title']
     list_display = ['project', 'amount', 'year']
     list_filter = ['year']
 
 
 class AssignedEmployeeAdmin(admin.ModelAdmin):
+    search_fields = ['project__title']
     list_display = ['employee', 'project', 'role']
     list_filter = ['role']
 
 
 class ConsortiumMemberAdmin(admin.ModelAdmin):
+    search_fields = ['project__title']
     list_display = ['project', 'organization']
 
 admin.site.register(Project, ProjectAdmin)

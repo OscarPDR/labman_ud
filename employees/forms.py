@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import widgets
 
-from employees.models import Employee
+from .models import Employee
 
 # Create your forms here.
 
@@ -14,6 +14,14 @@ from employees.models import Employee
 
 class URLInput(widgets.Input):
     input_type = 'url'
+
+
+#########################
+# Class: EmployeeSearchForm
+#########################
+
+class EmployeeSearchForm(forms.Form):
+    text = forms.CharField(max_length=50)
 
 
 #########################
