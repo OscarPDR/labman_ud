@@ -4,6 +4,10 @@
 
 {% block content %}
 
+    <a class="pull-right" target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/project/{{ project.slug }}">
+        <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+    </a>
+
     <h2>
         <a href="{% url project_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ project.title }}
@@ -94,6 +98,12 @@
             <!-- begin tab-pane #pr_funding_details -->
 
             <div class="tab-pane" id="pr_funding_details">
+
+                {% if funding_program.logo %}
+                    <div class="funding-program-logo">
+                        <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+                    </div>
+                {% endif %}
 
                 <h5>Supported by:</h5>
                 <p>

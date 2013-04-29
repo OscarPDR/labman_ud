@@ -22,3 +22,10 @@ def logout_view(request):
     logout(request)
     # Redirect to a success page.
     return render_to_response('projects_morelab/index.html')
+
+#########################
+# View: view404
+#########################
+
+def view404(request):
+    return render_to_response('projects_morelab/404.html')

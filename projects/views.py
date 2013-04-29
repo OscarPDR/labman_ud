@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 
 from django.contrib.auth.decorators import login_required
 
@@ -17,7 +18,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
-from .forms import ProjectForm, FundingAmountFormSet, AssignedEmployeeFormSet, ConsortiumMemberFormSet
+from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedEmployeeFormSet, ConsortiumMemberFormSet
 
 from employees.models import Employee
 
@@ -36,6 +37,25 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
 def project_index(request):
     projects = Project.objects.all().order_by('title')
+
+    if request.method == 'POST':
+        form = ProjectSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            projs = []
+
+            for project in projects:
+
+                if query in slugify(project.title):
+                    projs.append(project)
+
+            projects = projs
+
+    else:
+        form = ProjectSearchForm()
+
     paginator = Paginator(projects, PAGINATION_NUMBER)
 
     page = request.GET.get('page')
@@ -53,6 +73,7 @@ def project_index(request):
 
     return render_to_response("projects/index.html", {
             "projects": projects,
+            'form': form,
         },
         context_instance = RequestContext(request))
 
@@ -530,6 +551,16 @@ def email_project(request, slug):
         image_file.close()
 
         msg_image.add_header('Content-ID', '<image>', filename=project.logo.path)
+        msg.attach(msg_image)
+    except:
+        pass
+
+    try:
+        image_file = open(funding_program.logo.path, 'rb')
+        msg_image = MIMEImage(image_file.read())
+        image_file.close()
+
+        msg_image.add_header('Content-ID', '<image>', filename = funding_program.logo.path)
         msg.attach(msg_image)
     except:
         pass

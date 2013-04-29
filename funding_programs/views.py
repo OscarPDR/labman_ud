@@ -5,13 +5,14 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
-from funding_programs.models import FundingProgram
-from funding_programs.forms import FundingProgramForm
+from .models import FundingProgram
+from .forms import FundingProgramForm, FundingProgramSearchForm
 
 from projects.models import Project
 
@@ -26,6 +27,24 @@ PAGINATION_NUMBER = settings.FUNDING_PROGRAMS_PAGINATION
 
 def funding_program_index(request):
     funding_programs = FundingProgram.objects.all().order_by('full_name')
+
+    if request.method == 'POST':
+        form = FundingProgramSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            fps = []
+
+            for funding_program in funding_programs:
+                if query in slugify(funding_program.full_name):
+                    fps.append(funding_program)
+
+            funding_programs = fps
+
+    else:
+        form = FundingProgramSearchForm()
+
     paginator = Paginator(funding_programs, PAGINATION_NUMBER)
 
     page = request.GET.get('page')
@@ -42,6 +61,7 @@ def funding_program_index(request):
         funding_programs = paginator.page(paginator.num_pages)
     return render_to_response("funding_programs/index.html", {
             "funding_programs": funding_programs,
+            'form': form,
         },
         context_instance = RequestContext(request))
 
