@@ -235,3 +235,8 @@ footer img {
     margin-top: 5px;
     margin-bottom: 0px;
 }
+
+sub {
+    font-weight: bold;
+    color: white;
+}
