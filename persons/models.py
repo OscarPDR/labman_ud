@@ -9,10 +9,10 @@ from organizations.models import Organization
 
 
 #########################
-# Model: Employee
+# Model: Person
 #########################
 
-class Employee(models.Model):
+class Person(models.Model):
     name = models.CharField(
         max_length = 25,
         verbose_name = 'Name *',    # Required
@@ -52,7 +52,7 @@ class Employee(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name) + str(' ' + self.first_surname) + str(' ' + self.second_surname))
-        super(Employee, self).save(*args, **kwargs)
+        super(Person, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['name', 'first_surname', 'second_surname']

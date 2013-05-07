@@ -5,9 +5,15 @@
     <form action="" method="post" class="form-horizontal">
         {% csrf_token %}
 
-        <legend><strong>Edit:</strong> {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}</legend>
+        <legend>Add a new person</legend>
+
+        <br>
 
         <fieldset>
+
+            {% for error in errors %}
+                {{ error }}
+            {% endfor %}
 
             {% for field in form %}
 
@@ -23,7 +29,7 @@
 
                 {% else %}
 
-                    <div class="control-group"  id="employee-{{ field.label|lower }}-form">
+                    <div class="control-group" id="person-{{ field.label|lower }}-form">
                         <label class="control-label">{{ field.label }}</label>
                         <div class="controls">
                             {{ field }}
@@ -35,12 +41,11 @@
             {% endfor %}
 
             <div class="form-actions">
-                <button type="submit" name="submit" class="btn btn-primary">Accept</button>
-                <a class="btn btn-danger" href="{% url employee_index %}">Cancel</a>
+                <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                <button type="reset" class="btn">Clean</button>
+                <a class="btn btn-danger" href="{% url person_index %}">Cancel</a>
             </div>
-
         </fieldset>
-
     </form>
 
 {% endblock %}
@@ -48,22 +53,17 @@
 {% block scripts %}
 
     <script>
-
-        {% if employee.external %}
-            $("#employee-organization-form").css("visibility", "visible");
-        {% else %}
-            $("#employee-organization-form").css("visibility", "hidden");
-        {% endif %}
+        $("#person-organization-form").css("visibility", "hidden");
 
         $('#id_external').change(function() {
             if ($('#id_external').is(':checked')) {
-                $("#employee-organization-form").css("visibility", "visible");
+                $("#person-organization-form").css("visibility", "visible");
             }
             else {
-                $("#employee-organization-form").css("visibility", "hidden");
+                $("#person-organization-form").css("visibility", "hidden");
             }
         });
-
     </script>
+
 
 {% endblock %}

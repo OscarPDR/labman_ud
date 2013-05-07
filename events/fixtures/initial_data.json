@@ -1,0 +1,18 @@
+[
+    {
+        "pk": 1,
+        "model": "events.event",
+        "fields": {
+            "end_date": "2013-03-15",
+            "description": "The IEEE Global Engineering Education Conference is the fourth of a series of conferences that rotates among central locations in IEEE Region 8, Europe, Middle East and North Africa.\r\n\r\nIEEE EDUCON 2013 will be held at Technische Universit\u00e4t Berlin, Berlin, Germany from March 13-15, 2013.",
+            "short_name": "IEEE EDUCON",
+            "slug": "ieee-educon",
+            "location": "Berlin, Germany",
+            "full_name": "IEEE Global Engineering Education Conference",
+            "year": 2013,
+            "homepage": "http://www.educon-conference.org/educon2013/",
+            "start_date": "2013-03-13",
+            "observations": ""
+        }
+    }
+]

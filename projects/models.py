@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from employees.models import Employee
+from persons.models import Person
 from funding_programs.models import FundingProgram
 from organizations.models import Organization
 
@@ -226,12 +226,12 @@ class FundingAmount(models.Model):
 
 
 #########################
-# Model: AssignedEmployee
+# Model: AssignedPerson
 #########################
 
-class AssignedEmployee(models.Model):
+class AssignedPerson(models.Model):
     project = models.ForeignKey(Project)
-    employee = models.ForeignKey(Employee, verbose_name = "Employee *")     # Required
+    person = models.ForeignKey(Person, verbose_name = "Person *")     # Required
 
     role = models.CharField(
         max_length = 50,
@@ -242,7 +242,7 @@ class AssignedEmployee(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s - %s' % (self.employee, self.project)
+        return u'%s - %s' % (self.person, self.project)
 
 
 #########################

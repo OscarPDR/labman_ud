@@ -2,7 +2,7 @@
 
 from django import forms
 
-from employees.models import Employee
+from persons.models import Person
 
 # Create your forms here.
 
@@ -59,5 +59,5 @@ class SemanticSearchForm(forms.Form):
     scope = forms.ChoiceField(choices = GEOGRAPHICAL_SCOPE, initial = "All", required = False)
     start_year = forms.ChoiceField(choices = YEARS, initial = 2004, required = False)
     end_year = forms.ChoiceField(choices = YEARS, initial = 2013, required = False)
-    researchers = forms.ModelMultipleChoiceField(queryset = Employee.objects.all(), required = False)
+    researchers = forms.ModelMultipleChoiceField(queryset = Person.objects.all(), required = False)
     and_or = forms.ChoiceField(widget = forms.RadioSelect(), choices = AND_OR, required = False)
