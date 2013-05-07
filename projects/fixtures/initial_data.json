@@ -2031,550 +2031,550 @@
     },
     {
         "pk": 2,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 1,
-            "employee": 8,
+            "person": 8,
             "role": "Project manager"
         }
     },
     {
         "pk": 5,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 2,
-            "employee": 8,
+            "person": 8,
             "role": "Project manager"
         }
     },
     {
         "pk": 6,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 2,
-            "employee": 1,
+            "person": 1,
             "role": "Researcher"
         }
     },
     {
         "pk": 7,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 2,
-            "employee": 4,
+            "person": 4,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 8,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 2,
-            "employee": 7,
+            "person": 7,
             "role": "Researcher"
         }
     },
     {
         "pk": 9,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 3,
-            "employee": 7,
+            "person": 7,
             "role": "Project manager"
         }
     },
     {
         "pk": 10,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 3,
-            "employee": 5,
+            "person": 5,
             "role": "Researcher"
         }
     },
     {
         "pk": 11,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 4,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 12,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 4,
-            "employee": 7,
+            "person": 7,
             "role": "Project manager"
         }
     },
     {
         "pk": 13,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 6,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 14,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 7,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 15,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 8,
-            "employee": 9,
+            "person": 9,
             "role": "Researcher"
         }
     },
     {
         "pk": 16,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 10,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 17,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 11,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 18,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 12,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 19,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 13,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 20,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 13,
-            "employee": 6,
+            "person": 6,
             "role": "Project manager"
         }
     },
     {
         "pk": 21,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 14,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 22,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 14,
-            "employee": 7,
+            "person": 7,
             "role": "Project manager"
         }
     },
     {
         "pk": 23,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 20,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 24,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 20,
-            "employee": 12,
+            "person": 12,
             "role": "Project manager"
         }
     },
     {
         "pk": 26,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 22,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 27,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 25,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 28,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 26,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 29,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 27,
-            "employee": 8,
+            "person": 8,
             "role": "Project manager"
         }
     },
     {
         "pk": 30,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 30,
-            "employee": 13,
+            "person": 13,
             "role": "Project manager"
         }
     },
     {
         "pk": 31,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 30,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 32,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 31,
-            "employee": 6,
+            "person": 6,
             "role": "Project manager"
         }
     },
     {
         "pk": 33,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 31,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 35,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 33,
-            "employee": 14,
+            "person": 14,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 36,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 35,
-            "employee": 12,
+            "person": 12,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 37,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 36,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 38,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 37,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 39,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 38,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 40,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 38,
-            "employee": 15,
+            "person": 15,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 41,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 40,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 42,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 40,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 43,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 41,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 44,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 41,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 45,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 42,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 46,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 42,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 47,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 43,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 48,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 44,
-            "employee": 14,
+            "person": 14,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 49,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 45,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 50,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 46,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 51,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 46,
-            "employee": 6,
+            "person": 6,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 52,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 48,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 53,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 49,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 54,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 50,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 55,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 51,
-            "employee": 8,
+            "person": 8,
             "role": "Principal researcher"
         }
     },
     {
         "pk": 56,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 52,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 57,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 53,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 58,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 54,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 59,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 55,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 60,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 56,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 61,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 57,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 62,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 58,
-            "employee": 8,
+            "person": 8,
             "role": "Researcher"
         }
     },
     {
         "pk": 63,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 59,
-            "employee": 15,
+            "person": 15,
             "role": "Researcher"
         }
     },
     {
         "pk": 64,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 61,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 65,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 62,
-            "employee": 16,
+            "person": 16,
             "role": "Researcher"
         }
     },
     {
         "pk": 66,
-        "model": "projects.assignedemployee",
+        "model": "projects.assignedperson",
         "fields": {
             "project": 63,
-            "employee": 18,
+            "person": 18,
             "role": "Researcher"
         }
     },

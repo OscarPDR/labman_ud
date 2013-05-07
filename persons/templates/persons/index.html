@@ -8,29 +8,29 @@
         {% csrf_token %}
         <div class="input-append">
             {{ form.text }}
-            <a class="close" href="{% url employee_index %}">&times;</a>
+            <a class="close" href="{% url person_index %}">&times;</a>
             <button type="submit" class="btn">Search</button>
         </div>
     <form>
 
     {% if user.is_authenticated %}
         <div class="center">
-            <a class="btn btn-info" href="{% url add_employee %}">Add employee</a>
+            <a class="btn btn-info" href="{% url add_person %}">Add person</a>
         </div>
     {% endif %}
 
     <div class="pagination">
         <span class="step-links">
-            {% if employees.has_previous %}
-                <a href="?page={{ employees.previous_page_number }}"><< previous</a>
+            {% if persons.has_previous %}
+                <a href="?page={{ persons.previous_page_number }}"><< previous</a>
             {% endif %}
 
             <span class="current">
-                Page {{ employees.number }} of {{ employees.paginator.num_pages }}
+                Page {{ persons.number }} of {{ persons.paginator.num_pages }}
             </span>
 
-            {% if employees.has_next %}
-                <a href="?page={{ employees.next_page_number }}">next >></a>
+            {% if persons.has_next %}
+                <a href="?page={{ persons.next_page_number }}">next >></a>
             {% endif %}
         </span>
     </div>
@@ -48,31 +48,31 @@
             </thead>
 
             <tbody>
-                {% for employee in employees %}
+                {% for person in persons %}
                     <tr>
                         <td class="span6">
-                            <a href="{% url employee_info employee.slug %}">
-                                {% if employee.external %}
+                            <a href="{% url person_info person.slug %}">
+                                {% if person.external %}
                                     <i class="icon-road"></i>
                                 {% endif %}
-                                {{ employee.name }} {{ employee.first_surname }} {{ employee.second_surname }}
+                                {{ person.name }} {{ person.first_surname }} {{ person.second_surname }}
                             </a>
-                            {% if employee.external %}
-                                <a target="_blank" href="{% url organization_info employee.organization.slug%}">
-                                    ({{ employee.organization.name }})
+                            {% if person.external %}
+                                <a target="_blank" href="{% url organization_info person.organization.slug%}">
+                                    ({{ person.organization.name }})
                                 </a>
                             {% endif %}
                         </td>
                         <td class="span1">
-                            {% if employee.foaf_link %}
-                                <a target="_blank" href="{{ employee.foaf_link }}">View</a>
+                            {% if person.foaf_link %}
+                                <a target="_blank" href="{{ person.foaf_link }}">View</a>
                             {% endif %}
                         </td>
 
                         {% if user.is_authenticated %}
                             <td class="span2">
-                                <a class="btn btn-mini btn-inverse" href="{% url edit_employee employee.slug %}">Edit</a>
-                                <a class="btn btn-mini btn-danger" href="{% url delete_employee employee.slug %}">Delete</a>
+                                <a class="btn btn-mini btn-inverse" href="{% url edit_person person.slug %}">Edit</a>
+                                <a class="btn btn-mini btn-danger" href="{% url delete_person person.slug %}">Delete</a>
                             </td>
                         {% endif %}
                     </tr>

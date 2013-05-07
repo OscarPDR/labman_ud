@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import widgets
 
-from .models import Employee
+from .models import Person
 
 # Create your forms here.
 
@@ -17,20 +17,20 @@ class URLInput(widgets.Input):
 
 
 #########################
-# Class: EmployeeSearchForm
+# Class: PersonSearchForm
 #########################
 
-class EmployeeSearchForm(forms.Form):
+class PersonSearchForm(forms.Form):
     text = forms.CharField(max_length=50)
 
 
 #########################
-# Class: EmployeeForm
+# Class: PersonForm
 #########################
 
-class EmployeeForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
     class Meta:
-        model = Employee
+        model = Person
         widgets = {
             'foaf_link': URLInput(attrs={'placeholder': 'http://'}),
         }
@@ -43,7 +43,7 @@ class EmployeeForm(forms.ModelForm):
 
         if external:
             if organization is None:
-                raise forms.ValidationError("You must provide the organization the employee belongs to.")
+                raise forms.ValidationError("You must provide the organization the Person belongs to.")
             else:
                 pass
 

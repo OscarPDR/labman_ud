@@ -1,7 +1,7 @@
 [
     {
         "pk": 5,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Almeida",
             "name": "Aitor",
@@ -14,7 +14,7 @@
     },
     {
         "pk": 13,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Gomez-Goiri",
             "name": "Aitor",
@@ -27,7 +27,7 @@
     },
     {
         "pk": 14,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Lago",
             "name": "Ana Bel\u00e9n",
@@ -40,7 +40,7 @@
     },
     {
         "pk": 17,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Garc\u00eda",
             "name": "Bego\u00f1a",
@@ -53,7 +53,7 @@
     },
     {
         "pk": 12,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Klein",
             "name": "Bernhard",
@@ -66,7 +66,7 @@
     },
     {
         "pk": 15,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Buj\u00e1n",
             "name": "David",
@@ -79,7 +79,7 @@
     },
     {
         "pk": 8,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "L\u00f3pez de Ipi\u00f1a",
             "name": "Diego",
@@ -92,7 +92,7 @@
     },
     {
         "pk": 4,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Castillejo",
             "name": "Eduardo",
@@ -105,7 +105,7 @@
     },
     {
         "pk": 9,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Castanedo",
             "name": "Federico",
@@ -118,7 +118,7 @@
     },
     {
         "pk": 16,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "V\u00e1zquez",
             "name": "I\u00f1aki",
@@ -131,7 +131,7 @@
     },
     {
         "pk": 3,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "L\u00e1zaro",
             "name": "Jon",
@@ -144,7 +144,7 @@
     },
     {
         "pk": 18,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Abaitua",
             "name": "Joseba",
@@ -157,7 +157,7 @@
     },
     {
         "pk": 2,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Emaldi",
             "name": "Mikel",
@@ -170,7 +170,7 @@
     },
     {
         "pk": 1,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Pe\u00f1a",
             "name": "Oscar",
@@ -183,7 +183,7 @@
     },
     {
         "pk": 7,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Ordu\u00f1a",
             "name": "Pablo",
@@ -196,7 +196,7 @@
     },
     {
         "pk": 6,
-        "model": "employees.employee",
+        "model": "persons.person",
         "fields": {
             "first_surname": "Aguilera",
             "name": "Unai",

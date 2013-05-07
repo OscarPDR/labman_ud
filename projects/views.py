@@ -17,10 +17,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
-from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedEmployeeFormSet, ConsortiumMemberFormSet
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
+from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
 
-from employees.models import Employee
+from persons.models import Person
 
 from organizations.models import Organization
 
@@ -93,7 +93,7 @@ def add_project(request):
 
     project_form = ProjectForm(prefix='project_form')
     funding_amount_formset = FundingAmountFormSet(instance=Project(), prefix='funding_amount_formset')
-    assigned_employee_formset = AssignedEmployeeFormSet(instance=Project(), prefix='assigned_employee_formset')
+    assigned_employee_formset = AssignedPersonFormSet(instance=Project(), prefix='assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance=Project(), prefix='consortium_member_formset')
 
     if request.POST:
@@ -105,7 +105,7 @@ def add_project(request):
             project = project_form.save(commit=False)
 
             funding_amount_formset = FundingAmountFormSet(request.POST, instance=project, prefix='funding_amount_formset')
-            assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance=project, prefix='assigned_employee_formset')
+            assigned_employee_formset = AssignedPersonFormSet(request.POST, instance=project, prefix='assigned_employee_formset')
             consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance=project, prefix='consortium_member_formset')
 
             cd_p = project_form.cleaned_data
@@ -247,7 +247,7 @@ def add_project(request):
     else:
         project_form = ProjectForm(prefix='project_form')
         funding_amount_formset = FundingAmountFormSet(instance=Project(), prefix='funding_amount_formset')
-        assigned_employee_formset = AssignedEmployeeFormSet(instance=Project(), prefix='assigned_employee_formset')
+        assigned_employee_formset = AssignedPersonFormSet(instance=Project(), prefix='assigned_employee_formset')
         consortium_member_formset = ConsortiumMemberFormSet(instance=Project(), prefix='consortium_member_formset')
 
     return render_to_response("projects/add.html", {
@@ -269,14 +269,14 @@ def project_info(request, slug):
 
     funding_program = FundingProgram.objects.get(id=project.funding_program_id)
 
-    lprs = AssignedEmployee.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
-    principal_researchers = Employee.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
+    lprs = AssignedPerson.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
+    principal_researchers = Person.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
 
-    lpms = AssignedEmployee.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
-    project_managers = Employee.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
+    lpms = AssignedPerson.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
+    project_managers = Person.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
 
-    rs = AssignedEmployee.objects.filter(project_id=project.id, role='Researcher').values('employee_id')
-    researchers = Employee.objects.filter(id__in=rs).order_by('name', 'first_surname', 'second_surname')
+    rs = AssignedPerson.objects.filter(project_id=project.id, role='Researcher').values('employee_id')
+    researchers = Person.objects.filter(id__in=rs).order_by('name', 'first_surname', 'second_surname')
 
     funding_amounts = FundingAmount.objects.filter(project_id=project.id)
 
@@ -303,7 +303,7 @@ def edit_project(request, slug):
     error_badges = []
 
     project = get_object_or_404(Project, slug=slug)
-    assigned_employees = AssignedEmployee.objects.filter(project_id=project.id)
+    assigned_employees = AssignedPerson.objects.filter(project_id=project.id)
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id)
     funding_amounts = FundingAmount.objects.filter(project_id=project.id).order_by('year')
 
@@ -312,7 +312,7 @@ def edit_project(request, slug):
 
     project_form = ProjectForm(prefix='project_form')
     funding_amount_formset = FundingAmountFormSet(instance=Project(), prefix='funding_amount_formset')
-    assigned_employee_formset = AssignedEmployeeFormSet(instance=Project(), prefix='assigned_employee_formset')
+    assigned_employee_formset = AssignedPersonFormSet(instance=Project(), prefix='assigned_employee_formset')
     consortium_member_formset = ConsortiumMemberFormSet(instance=Project(), prefix='consortium_member_formset')
 
     if request.POST:
@@ -323,7 +323,7 @@ def edit_project(request, slug):
         if project_form.is_valid():
 
             funding_amount_formset = FundingAmountFormSet(request.POST, instance=project, prefix='funding_amount_formset')
-            assigned_employee_formset = AssignedEmployeeFormSet(request.POST, instance=project, prefix='assigned_employee_formset')
+            assigned_employee_formset = AssignedPersonFormSet(request.POST, instance=project, prefix='assigned_employee_formset')
             consortium_member_formset = ConsortiumMemberFormSet(request.POST, instance=project, prefix='consortium_member_formset')
 
             cd_p = project_form.cleaned_data
@@ -481,7 +481,7 @@ def edit_project(request, slug):
             prefix='funding_amount_formset'
         )
 
-        assigned_employee_formset = AssignedEmployeeFormSet(
+        assigned_employee_formset = AssignedPersonFormSet(
             instance=Project(),
             prefix='assigned_employee_formset'
         )
@@ -514,11 +514,11 @@ def email_project(request, slug):
 
     funding_program = FundingProgram.objects.get(id=project.funding_program_id)
 
-    lpms = AssignedEmployee.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
-    project_managers = Employee.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
+    lpms = AssignedPerson.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
+    project_managers = Person.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
 
-    lprs = AssignedEmployee.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
-    principal_researchers = Employee.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
+    lprs = AssignedPerson.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
+    principal_researchers = Person.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
 
     project_leader = Organization.objects.get(id=project.project_leader_id)
 
@@ -590,9 +590,9 @@ def delete_project(request, slug):
 @login_required
 def delete_employee_from_project(request, employee_slug, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    employee = get_object_or_404(Employee, slug=employee_slug)
+    employee = get_object_or_404(Person, slug=employee_slug)
 
-    assigned_employee = get_object_or_404(AssignedEmployee, project_id=project.id, employee_id=employee.id)
+    assigned_employee = get_object_or_404(AssignedPerson, project_id=project.id, employee_id=employee.id)
     assigned_employee.delete()
 
     return HttpResponseRedirect(reverse('edit_project', args=(project.slug,)))

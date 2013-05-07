@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Project, FundingAmount, AssignedEmployee, ConsortiumMember
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -16,9 +16,9 @@ class FundingAmountAdmin(admin.ModelAdmin):
     list_filter = ['year']
 
 
-class AssignedEmployeeAdmin(admin.ModelAdmin):
+class AssignedPersonAdmin(admin.ModelAdmin):
     search_fields = ['project__title']
-    list_display = ['employee', 'project', 'role']
+    list_display = ['person', 'project', 'role']
     list_filter = ['role']
 
 
@@ -28,5 +28,5 @@ class ConsortiumMemberAdmin(admin.ModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(FundingAmount, FundingAmountAdmin)
-admin.site.register(AssignedEmployee, AssignedEmployeeAdmin)
+admin.site.register(AssignedPerson, AssignedPersonAdmin)
 admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)

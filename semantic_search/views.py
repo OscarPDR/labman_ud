@@ -9,7 +9,7 @@ from django.db.models import Sum, Min, Max
 
 from funding_programs.models import FundingProgram
 
-from projects.models import Project, AssignedEmployee
+from projects.models import Project, AssignedPerson
 
 from semantic_search.forms import SemanticSearchForm
 
@@ -75,7 +75,7 @@ def semantic_search(request):
                     researcher_ids.append(researcher.id)
 
                 for project in probable_projects:
-                    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+                    assigned_employees = AssignedPerson.objects.filter(project_id = project.id)
                     employees_ids = []
                     for employee in assigned_employees:
                         employees_ids.append(employee.employee_id)
@@ -163,7 +163,7 @@ def semantic_searcher(request):
                     researcher_ids.append(researcher.id)
 
                 for project in probable_projects:
-                    assigned_employees = AssignedEmployee.objects.filter(project_id = project.id)
+                    assigned_employees = AssignedPerson.objects.filter(project_id = project.id)
                     employees_ids = []
                     for employee in assigned_employees:
                         employees_ids.append(employee.employee_id)
