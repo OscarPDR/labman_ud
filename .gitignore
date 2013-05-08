@@ -6,9 +6,7 @@
 
 projects_morelab/settings.py
 
-/media/projects/*
-/media/organizations/*
-/media/funding_calls/*
+/media/*
 
 /static_prod/*
 

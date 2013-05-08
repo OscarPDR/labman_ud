@@ -6,8 +6,17 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
+TYPES = (
+    ('Academic event', 'Academic event'),
+    ('Conference', 'Conference'),
+    ('Non-academic event', 'Non-academic event'),
+    ('Talk', 'Talk'),
+    ('Workshop', 'Workshop'),
+)
+
+
 def event_logo_path(self, filename):
-    return '%s/%s%s' % ('events', self.slug, os.path.splitext(filename)[-1])
+    return '%s/%s%s' % ('events', self.event.slug, os.path.splitext(filename)[-1])
 
 
 # Create your models here.
@@ -17,7 +26,12 @@ def event_logo_path(self, filename):
 #########################
 
 class Event(models.Model):
-    # type
+    event_type = models.CharField(
+        max_length=50,
+        verbose_name=u'Event type *',
+        choices=TYPES,
+        default=u'Academic event',
+    )
 
     full_name = models.CharField(
         max_length=250,

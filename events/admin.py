@@ -1,7 +1,12 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Event
+from .models import Event, EventLogo
+
+
+class EventLogoInline(admin.TabularInline):
+    model = EventLogo
+    extra = 1
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -9,5 +14,6 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ['short_name', 'full_name', 'year']
     list_filter = ['year']
     exclude = ['slug']
+    inlines = [EventLogoInline]
 
 admin.site.register(Event, EventAdmin)
