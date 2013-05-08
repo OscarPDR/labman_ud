@@ -19,6 +19,11 @@ class PublicationType(models.Model):
         verbose_name=u'Name',
     )
 
+    slug = models.SlugField(
+        max_length=100,
+        blank=True,
+    )
+
     description = models.TextField(
         max_length=1500,
         blank=True,
@@ -26,6 +31,10 @@ class PublicationType(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name))
+        super(PublicationType, self).save(*args, **kwargs)
 
 
 #########################

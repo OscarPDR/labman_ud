@@ -6,32 +6,47 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-TYPES = (
-    ('Academic event', 'Academic event'),
-    ('Conference', 'Conference'),
-    ('Non-academic event', 'Non-academic event'),
-    ('Talk', 'Talk'),
-    ('Workshop', 'Workshop'),
-)
+# Create your models here.
 
 
 def event_logo_path(self, filename):
     return '%s/%s%s' % ('events', self.event.slug, os.path.splitext(filename)[-1])
 
 
-# Create your models here.
+#########################
+# Model: EventType
+#########################
+
+class EventType(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name=u'Name',
+    )
+
+    slug = models.SlugField(
+        max_length=100,
+        blank=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name))
+        super(EventType, self).save(*args, **kwargs)
+
 
 #########################
 # Model: Event
 #########################
 
 class Event(models.Model):
-    event_type = models.CharField(
-        max_length=50,
-        verbose_name=u'Event type *',
-        choices=TYPES,
-        default=u'Academic event',
-    )
+    event_type = models.ForeignKey(EventType)
 
     full_name = models.CharField(
         max_length=250,
