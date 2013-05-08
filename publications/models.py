@@ -1,11 +1,32 @@
 # coding: utf-8
 
 from django.db import models
+from django.template.defaultfilters import slugify
 
 from events.models import Event
 
 
 # Create your models here.
+
+
+#########################
+# Model: PublicationType
+#########################
+
+class PublicationType(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name=u'Name',
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 
 #########################
 # Model: Publication
@@ -14,15 +35,20 @@ from events.models import Event
 class Publication(models.Model):
     presented_at = models.ForeignKey(Event)
 
-    # type
+    publication_type = models.ForeignKey(PublicationType)
 
     title = models.CharField(
-        max_length=150,
+        max_length=250,
         verbose_name=u'Title *',    # Required
     )
 
+    slug = models.SlugField(
+        max_length=250,
+        blank=True,
+    )
+
     abstract = models.TextField(
-        max_length=1500,
+        max_length=5000,
         verbose_name=u'Abstract',
         blank=True,
     )
@@ -51,9 +77,9 @@ class Publication(models.Model):
         null=True,
     )
 
-    number = models.PositiveIntegerField(
+    volume = models.PositiveIntegerField(
         default=1,
-        verbose_name=u'Number',
+        verbose_name=u'Volume',
         blank=True,
     )
 
@@ -80,4 +106,13 @@ class Publication(models.Model):
         decimal_places=8,
         verbose_name=u'Impact factor',
         blank=True,
+        null=True,
     )
+
+    def __unicode__(self):
+        return u'%s' % (self.title)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.title))
+
+        super(Publication, self).save(*args, **kwargs)
