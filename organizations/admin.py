@@ -1,7 +1,16 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Organization, OrganizationType
+from .models import Organization, OrganizationType, OrganizationLogo
+
+
+#########################
+# Class: OrganizationLogoInline
+#########################
+
+class OrganizationLogoInline(admin.StackedInline):
+    model = OrganizationLogo
+    extra = 1
 
 
 #########################
@@ -13,6 +22,9 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'short_name', 'homepage']
     list_filter = ['country__full_name']
     exclude = ['slug']
+    inlines = [
+        OrganizationLogoInline,
+    ]
 
 
 #########################

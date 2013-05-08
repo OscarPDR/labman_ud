@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python manage.py graph_models employees organizations projects funding_programs -g -o projects_morelab_models.png
+python manage.py graph_models persons organizations projects funding_programs events publications -g -o projects_morelab_models.png

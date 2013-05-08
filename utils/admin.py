@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Country, GeographicalScope
+from .models import Country, GeographicalScope, Role
 
 
 #########################
@@ -20,9 +20,18 @@ class GeographicalScopeAdmin(admin.ModelAdmin):
     model = GeographicalScope
 
 
+#########################
+# Class: RoleAdmin
+#########################
+
+class RoleAdmin(admin.ModelAdmin):
+    model = Role
+
+
 ##################################################
 # Register classes
 ##################################################
 
 admin.site.register(Country, CountryAdmin)
 admin.site.register(GeographicalScope, GeographicalScopeAdmin)
+admin.site.register(Role, RoleAdmin)
