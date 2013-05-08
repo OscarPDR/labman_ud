@@ -4,10 +4,18 @@ from django.contrib import admin
 from .models import Event, EventLogo
 
 
+#########################
+# Class: EventLogoInline
+#########################
+
 class EventLogoInline(admin.TabularInline):
     model = EventLogo
     extra = 1
 
+
+#########################
+# Class: EventAdmin
+#########################
 
 class EventAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'short_name', 'location', 'year']
@@ -15,5 +23,10 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [EventLogoInline]
+
+
+##################################################
+# Register classes
+##################################################
 
 admin.site.register(Event, EventAdmin)
