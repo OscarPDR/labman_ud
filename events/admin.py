@@ -22,7 +22,9 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ['short_name', 'full_name', 'year']
     list_filter = ['year']
     exclude = ['slug']
-    inlines = [EventLogoInline]
+    inlines = [
+        EventLogoInline,
+    ]
 
 
 ##################################################

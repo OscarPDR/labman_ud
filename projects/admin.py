@@ -5,8 +5,8 @@ from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    search_fields = ['title']
-    list_display = ['title', 'start_year', 'end_year', 'status', 'total_funds', 'total_funds_deusto']
+    search_fields = ['full_name', 'short_name']
+    list_display = ['full_name', 'short_name', 'start_year', 'end_year', 'status', 'total_funds']
     list_filter = ['start_year', 'end_year', 'status']
 
 
@@ -17,13 +17,13 @@ class FundingAmountAdmin(admin.ModelAdmin):
 
 
 class AssignedPersonAdmin(admin.ModelAdmin):
-    search_fields = ['project__title']
+    search_fields = ['project__short_name']
     list_display = ['person', 'project', 'role']
     list_filter = ['role']
 
 
 class ConsortiumMemberAdmin(admin.ModelAdmin):
-    search_fields = ['project__title']
+    search_fields = ['project__short_name']
     list_display = ['project', 'organization']
 
 admin.site.register(Project, ProjectAdmin)

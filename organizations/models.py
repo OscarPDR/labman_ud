@@ -5,6 +5,8 @@ import os
 from django.db import models
 from django.template.defaultfilters import slugify
 
+from utils.models import Country
+
 # Create your models here.
 
 
@@ -13,37 +15,23 @@ def organization_logo_path(self, filename):
 
 
 #########################
-# Model: Organization
+# Model: OrganizationType
 #########################
 
-class Organization(models.Model):
+class OrganizationType(models.Model):
     name = models.CharField(
-        max_length = 75,
-        verbose_name = 'Name *',    # Required
-    )
-
-    country = models.CharField(
-        max_length = 500,
-        verbose_name = 'Country',
-        blank = True,
-    )
-
-    homepage = models.URLField(
-        verbose_name = 'Homepage',
-        blank = True,
-        null = True,
-    )
-
-    logo = models.ImageField(
-        upload_to = organization_logo_path,
-        verbose_name = 'Logo',
-        blank = True,
-        null = True,
+        max_length=100,
+        verbose_name=u'Name',
     )
 
     slug = models.SlugField(
-        max_length = 100,
-        blank = True,
+        max_length=100,
+        blank=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
     )
 
     def __unicode__(self):
@@ -51,32 +39,45 @@ class Organization(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
+        super(OrganizationType, self).save(*args, **kwargs)
+
+
+#########################
+# Model: Organization
+#########################
+
+class Organization(models.Model):
+    sub_organization_of = models.ForeignKey(
+        'self',
+        blank=True,
+        null=True,
+    )
+
+    full_name = models.CharField(
+        max_length=250,
+    )
+
+    short_name = models.CharField(
+        max_length=250,
+    )
+
+    slug = models.SlugField(
+        max_length=250,
+        blank=True,
+    )
+
+    country = models.ForeignKey(Country)
+
+    homepage = models.URLField(
+        blank=True,
+        null=True,
+    )
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.short_name, self.full_name)
+
+    def save(self, *args, **kwargs):
+        if not self.short_name:
+            self.short_name = self.full_name.encode('utf-8')
+        self.slug = slugify(str(self.short_name))
         super(Organization, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        if self.logo:
-            storage = self.logo.storage
-            path = self.logo.path
-            # Delete the model before the file
-            super(Organization, self).delete(*args, **kwargs)
-            # Delete the file after the model
-            storage.delete(path)
-        else:
-            super(Organization, self).delete(*args, **kwargs)
-
-    def update(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-
-        try:
-            path = self.logo.path
-            os.remove(path)
-            # Delete the file after the model
-            storage.delete(path)
-        except:
-            pass
-            # No previous logo
-
-    class Meta:
-        ordering = ['name']
