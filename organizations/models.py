@@ -11,7 +11,7 @@ from utils.models import Country
 
 
 def organization_logo_path(self, filename):
-    return '%s/%s%s' % ('organizations', self.slug, os.path.splitext(filename)[-1])
+    return '%s/%s%s' % ('organizations', self.organization.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -81,3 +81,21 @@ class Organization(models.Model):
             self.short_name = self.full_name.encode('utf-8')
         self.slug = slugify(str(self.short_name))
         super(Organization, self).save(*args, **kwargs)
+
+
+#########################
+# Model: OrganizationLogo
+#########################
+
+class OrganizationLogo(models.Model):
+    organization = models.ForeignKey(Organization)
+
+    logo = models.ImageField(
+        upload_to=organization_logo_path,
+        verbose_name='Logo',
+        blank=True,
+        null=True,
+    )
+
+    def __unicode__(self):
+        return u'Logo for organization: %s' % (self.organization.short_name)

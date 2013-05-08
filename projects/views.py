@@ -18,7 +18,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
-from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
+# from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
+from .forms import ProjectSearchForm
 
 from persons.models import Person
 

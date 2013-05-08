@@ -10,6 +10,8 @@ from persons.models import Person
 from funding_programs.models import FundingProgram
 from organizations.models import Organization
 
+from utils.models import Role
+
 
 # Create your models here.
 
@@ -84,8 +86,7 @@ ROLES = (
 #########################
 
 class Project(models.Model):
-    funding_program = models.ForeignKey(FundingProgram, verbose_name='Funding program *')     # Required
-    project_leader = models.ForeignKey(Organization, verbose_name="Leader organization *")      # Required
+    project_leader = models.ForeignKey(Organization)
 
     project_type = models.ForeignKey(ProjectType)
 
@@ -146,12 +147,7 @@ class Project(models.Model):
     #     blank=True,
     # )
 
-    total_funds = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-    )
+
 
     # total_funds_deusto = models.DecimalField(
     #     max_digits=10,
@@ -201,23 +197,53 @@ class ProjectLogo(models.Model):
 
 
 #########################
+# Model: FundedProject
+#########################
+
+class FundedProject(models.Model):
+    project = models.ForeignKey(Project)
+
+    funding_program = models.ForeignKey(FundingProgram)
+
+    project_code = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
+    total_funds = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    def __unicode__(self):
+        return u'%s funded with %s by %s - Project code: %s' % (self.project.full_name, self.total_funds, self.funding_program.short_name, self.project_code)
+
+
+#########################
 # Model: FundingAmount
 #########################
 
 class FundingAmount(models.Model):
-    project = models.ForeignKey(Project)
+    funded_project = models.ForeignKey(FundedProject)
 
-    amount = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        verbose_name = 'Amount',
-        blank = True,
+    consortium_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+    )
+
+    own_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
     )
 
     year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
-        verbose_name = 'Concession year',
-        blank = True,
+        validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
+        blank=True,
     )
 
     def __unicode__(self):
@@ -230,18 +256,13 @@ class FundingAmount(models.Model):
 
 class AssignedPerson(models.Model):
     project = models.ForeignKey(Project)
-    person = models.ForeignKey(Person, verbose_name = "Person *")     # Required
 
-    role = models.CharField(
-        max_length = 50,
-        choices = ROLES,
-        default = 'Researcher',
-        verbose_name = 'Role *',    # Required
-        blank = True,
-    )
+    person = models.ForeignKey(Person)
+
+    role = models.ForeignKey(Role)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.person, self.project)
+        return u'%s is working at %s as a %s' % (self.person.full_name, self.project.short_name, self.role.name)
 
 
 #########################
@@ -250,10 +271,8 @@ class AssignedPerson(models.Model):
 
 class ConsortiumMember(models.Model):
     project = models.ForeignKey(Project)
-    organization = models.ForeignKey(Organization, verbose_name = "Organization *")     # Required
 
-    class Meta:
-        ordering = ["organization"]
+    organization = models.ForeignKey(Organization)
 
     def __unicode__(self):
-        return u'Project: %s - Organization: %s' % (self.project.title, self.organization.name)
+        return u'%s is taking part in %s' % (self.organization.short_name, self.project.short_name)

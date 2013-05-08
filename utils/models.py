@@ -27,7 +27,7 @@ class Country(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % (self.full_name)
 
     def save(self, *args, **kwargs):
         if not self.short_name:
@@ -62,3 +62,30 @@ class GeographicalScope(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
         super(GeographicalScope, self).save(*args, **kwargs)
+
+
+#########################
+# Model: Role
+#########################
+
+class Role(models.Model):
+    name = models.CharField(
+        max_length=100,
+    )
+
+    slug = models.SlugField(
+        max_length=100,
+        blank=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name))
+        super(Role, self).save(*args, **kwargs)
