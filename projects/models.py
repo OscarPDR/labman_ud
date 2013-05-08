@@ -10,14 +10,17 @@ from persons.models import Person
 from funding_programs.models import FundingProgram
 from organizations.models import Organization
 
-PROJECT_TYPES = (
-    ('Project', 'Project'),
-    ('Development project', 'Development project'),
-    ('Innovation project', 'Innovation project'),
-    ('Research project', 'Research project'),
-    ('Basic research project', 'Basic research project'),
-    ('Applied research project', 'Applied research project'),
-)
+
+# Create your models here.
+
+
+def project_logo_path(self, filename):
+    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
+
+
+MIN_YEAR_LIMIT = 2000
+MAX_YEAR_LIMIT = 2020
+
 
 PROJECT_STATUS = (
     ('Not started', 'Not started'),
@@ -40,15 +43,34 @@ MONTHS = (
     ('12', 'December'),
 )
 
-GEOGRAPHICAL_SCOPE = (
-    ('Araba', 'Araba'),
-    ('Bizkaia', 'Bizkaia'),
-    ('Gipuzkoa', 'Gipuzkoa'),
-    ('Euskadi', 'Euskadi'),
-    ('Spain', 'Spain'),
-    ('Europe', 'Europe'),
-    ('International', 'International'),
-)
+
+#########################
+# Model: ProjectType
+#########################
+
+class ProjectType(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name=u'Name',
+    )
+
+    slug = models.SlugField(
+        max_length=100,
+        blank=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name))
+        super(ProjectType, self).save(*args, **kwargs)
+
 
 ROLES = (
     ('Researcher', 'Researcher'),
@@ -56,116 +78,100 @@ ROLES = (
     ('Project manager', 'Project manager'),
 )
 
-# Create your models here.
-
-
-def project_logo_path(self, filename):
-    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
-
 
 #########################
 # Model: Project
 #########################
 
 class Project(models.Model):
-    funding_program = models.ForeignKey(FundingProgram, verbose_name = 'Funding program *')     # Required
-    project_leader = models.ForeignKey(Organization, verbose_name = "Leader organization *")      # Required
+    funding_program = models.ForeignKey(FundingProgram, verbose_name='Funding program *')     # Required
+    project_leader = models.ForeignKey(Organization, verbose_name="Leader organization *")      # Required
 
-    project_type = models.CharField(
-        max_length = 50,
-        choices = PROJECT_TYPES,
-        default = 'Project',
-        verbose_name = 'Project type *',     # Required
+    project_type = models.ForeignKey(ProjectType)
+
+    full_name = models.CharField(
+        max_length=250,
     )
 
-    title = models.CharField(
-        max_length = 150,
-        verbose_name = 'Title *',    # Required
+    short_name = models.CharField(
+        max_length=150,
     )
 
     slug = models.SlugField(
-        max_length = 150,
-        blank = True,
+        max_length=150,
+        blank=True,
     )
 
     description = models.TextField(
-        max_length = 1000,
-        verbose_name = 'Description *',     # Required
+        max_length=3000,
     )
 
     homepage = models.URLField(
-        max_length = 150,
-        verbose_name = 'Homepage',
-        blank = True,
-        null = True,
+        max_length=150,
+        blank=True,
+        null=True,
     )
 
     start_month = models.CharField(
-        max_length= 25,
-        choices = MONTHS,
-        default = '1',
-        verbose_name = 'Start month',
-        blank = True,
+        max_length=25,
+        choices=MONTHS,
+        default='1',
+        blank=True,
     )
 
     start_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
-        verbose_name = 'Start year *',      # Required
+        validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
     end_month = models.CharField(
-        max_length= 25,
-        choices = MONTHS,
-        default = '12',
-        verbose_name = 'End month',
-        blank = True,
+        max_length=25,
+        choices=MONTHS,
+        default='12',
+        blank=True,
     )
 
     end_year = models.IntegerField(
-        validators = [MinValueValidator(1990), MaxValueValidator(2030)],
-        verbose_name = 'End year *',    # Required
+        validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
     status = models.CharField(
-        max_length = 25,
-        choices = PROJECT_STATUS,
-        default = 'NotStarted',
-        verbose_name = 'Status *',      # Required
+        max_length=25,
+        choices=PROJECT_STATUS,
+        default='Not started',
     )
 
-    project_code = models.CharField(
-        max_length = 100,
-        verbose_name = 'Project code',
-        blank = True,
-    )
+    # project_code = models.CharField(
+    #     max_length=100,
+    #     verbose_name='Project code',
+    #     blank=True,
+    # )
 
     total_funds = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        blank = True,
-        null = True,
-        verbose_name = 'Total funds',
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
     )
 
-    total_funds_deusto = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        blank = True,
-        null = True,
-        verbose_name = 'Total funds (Deusto)',
-    )
+    # total_funds_deusto = models.DecimalField(
+    #     max_digits=10,
+    #     decimal_places=2,
+    #     blank=True,
+    #     null=True,
+    #     verbose_name='Total funds (Deusto)',
+    # )
 
-    logo = models.ImageField(
-        upload_to = project_logo_path,
-        verbose_name = 'Logo',
-        blank = True,
-        null = True,
-    )
+    # logo = models.ImageField(
+    #     upload_to=project_logo_path,
+    #     verbose_name='Logo',
+    #     blank=True,
+    #     null=True,
+    # )
 
     observations = models.TextField(
-        max_length = 1000,
-        verbose_name = 'Observations',
-        blank = True,
+        max_length=1000,
+        verbose_name='Observations',
+        blank=True,
     )
 
     def __unicode__(self):
@@ -176,29 +182,22 @@ class Project(models.Model):
             self.slug = slugify(str(self.title))
         super(Project, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        if self.logo:
-            storage = self.logo.storage
-            path = self.logo.path
-            # Delete the model before the file
-            super(Project, self).delete(*args, **kwargs)
-            # Delete the file after the model
-            storage.delete(path)
-        else:
-            super(Project, self).delete(*args, **kwargs)
 
-    def update(self, *args, **kwargs):
-        # You have to prepare what you need before delete the model
-        storage = self.logo.storage
-        try:
-            path = self.logo.path
-            os.remove(path)
-            # Delete the file after the model
-            storage.delete(path)
-        except:
-            pass
-            # No previous logo
+#########################
+# Model: ProjectLogo
+#########################
+
+class ProjectLogo(models.Model):
+    project = models.ForeignKey(Project)
+
+    logo = models.ImageField(
+        upload_to=project_logo_path,
+        blank=True,
+        null=True,
+    )
+
+    def __unicode__(self):
+        return u'Logo for project: %s' % (self.project.short_name)
 
 
 #########################
