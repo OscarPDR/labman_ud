@@ -1,8 +1,8 @@
 
 ##########################################
-###         PRODUCTION URLS FOR projects_morelab                      ###
-###                                                                                                   ###
-### Last update: 15-04-2013                                                          ###
+###         PRODUCTION URLS FOR projects_morelab
+###
+### Last update: 15-04-2013
 ##########################################
 
 from django.conf.urls import patterns, include, url
@@ -10,7 +10,13 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.contrib.sites.models import Site
+
+
 admin.autodiscover()
+
+admin.site.unregister(Site)
+
 
 urlpatterns = patterns('',
     url(r'^$', 'projects_morelab.views.home', name='home'),

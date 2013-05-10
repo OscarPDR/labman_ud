@@ -3,7 +3,7 @@
 from django.contrib import admin
 from nested_inlines.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember
+from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication
 
 
 #########################
@@ -55,18 +55,32 @@ class AssignedPersonInline(NestedTabularInline):
 
 
 #########################
+# Class: RelatedPublicationInline
+#########################
+
+class RelatedPublicationInline(NestedTabularInline):
+    model = RelatedPublication
+    extra = 1
+
+
+#########################
 # Class: ProjectAdmin
 #########################
 
 class ProjectAdmin(NestedModelAdmin):
+    model = Project
     search_fields = ['full_name', 'short_name']
     list_display = ['full_name', 'short_name', 'start_year', 'end_year', 'status']
     list_filter = ['start_year', 'end_year', 'status']
+    exclude = [
+        'slug',
+    ]
     inlines = [
         FundingInline,
         ConsortiumMemberInline,
         AssignedPersonInline,
         ProjectLogoInline,
+        RelatedPublicationInline,
     ]
 
 
@@ -84,6 +98,7 @@ class ProjectTypeAdmin(admin.ModelAdmin):
 #########################
 
 class FundingAdmin(admin.ModelAdmin):
+    model = Funding
     search_fields = ['project__short_name', 'funding_program__short_name']
     list_display = ['project', 'funding_program', 'project_code', 'total_funds']
     inlines = [
@@ -96,6 +111,7 @@ class FundingAdmin(admin.ModelAdmin):
 #########################
 
 class FundingAmountAdmin(admin.ModelAdmin):
+    model = FundingAmount
     search_fields = ['funding__project__short_name']
     list_display = ['funding', 'consortium_amount', 'own_amount', 'year']
     list_filter = ['year']
@@ -106,6 +122,7 @@ class FundingAmountAdmin(admin.ModelAdmin):
 #########################
 
 class AssignedPersonAdmin(admin.ModelAdmin):
+    model = AssignedPerson
     search_fields = ['project__short_name', 'person__full_name']
     list_display = ['person', 'project', 'role']
     list_filter = ['role']
@@ -116,8 +133,19 @@ class AssignedPersonAdmin(admin.ModelAdmin):
 #########################
 
 class ConsortiumMemberAdmin(admin.ModelAdmin):
+    model = ConsortiumMember
     search_fields = ['project__short_name', 'organization__short_name', 'organization__full_name']
     list_display = ['project', 'organization']
+
+
+#########################
+# Class: RelatedPublicationAdmin
+#########################
+
+class RelatedPublicationAdmin(admin.ModelAdmin):
+    model = RelatedPublication
+    search_fields = ['project__short_name', 'publication__title']
+    list_display = ['project', 'publication']
 
 
 ##################################################
@@ -128,5 +156,6 @@ admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectType, ProjectTypeAdmin)
 admin.site.register(Funding, FundingAdmin)
 admin.site.register(FundingAmount, FundingAmountAdmin)
-admin.site.register(AssignedPerson, AssignedPersonAdmin)
 admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)
+admin.site.register(AssignedPerson, AssignedPersonAdmin)
+admin.site.register(RelatedPublication, RelatedPublicationAdmin)

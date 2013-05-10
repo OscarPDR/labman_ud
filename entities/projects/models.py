@@ -9,6 +9,7 @@ from django.template.defaultfilters import slugify
 from entities.persons.models import Person
 from entities.funding_programs.models import FundingProgram
 from entities.organizations.models import Organization
+from entities.publications.models import Publication
 
 from entities.utils.models import Role
 
@@ -31,15 +32,15 @@ PROJECT_STATUS = (
 )
 
 MONTHS = (
-    ('1', 'January'),
-    ('2', 'February'),
-    ('3', 'March'),
-    ('4', 'April'),
-    ('5', 'May'),
-    ('6', 'June'),
-    ('7', 'July'),
-    ('8', 'August'),
-    ('9', 'September'),
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
     ('10', 'October'),
     ('11', 'November'),
     ('12', 'December'),
@@ -53,7 +54,6 @@ MONTHS = (
 class ProjectType(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name=u'Name',
     )
 
     slug = models.SlugField(
@@ -70,15 +70,8 @@ class ProjectType(models.Model):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name))
+        self.slug = slugify(self.name.encode('utf-8'))
         super(ProjectType, self).save(*args, **kwargs)
-
-
-ROLES = (
-    ('Researcher', 'Researcher'),
-    ('Principal researcher', 'Principal researcher'),
-    ('Project manager', 'Project manager'),
-)
 
 
 #########################
@@ -95,11 +88,12 @@ class Project(models.Model):
     )
 
     short_name = models.CharField(
-        max_length=150,
+        max_length=250,
+        blank=True,
     )
 
     slug = models.SlugField(
-        max_length=150,
+        max_length=250,
         blank=True,
     )
 
@@ -116,7 +110,7 @@ class Project(models.Model):
     start_month = models.CharField(
         max_length=25,
         choices=MONTHS,
-        default='1',
+        default='01',
         blank=True,
     )
 
@@ -141,41 +135,19 @@ class Project(models.Model):
         default='Not started',
     )
 
-    # project_code = models.CharField(
-    #     max_length=100,
-    #     verbose_name='Project code',
-    #     blank=True,
-    # )
-
-
-
-    # total_funds_deusto = models.DecimalField(
-    #     max_digits=10,
-    #     decimal_places=2,
-    #     blank=True,
-    #     null=True,
-    #     verbose_name='Total funds (Deusto)',
-    # )
-
-    # logo = models.ImageField(
-    #     upload_to=project_logo_path,
-    #     verbose_name='Logo',
-    #     blank=True,
-    #     null=True,
-    # )
-
     observations = models.TextField(
         max_length=1000,
-        verbose_name='Observations',
         blank=True,
     )
 
     def __unicode__(self):
-        return u'%s' % (self.title)
+        return u'%s' % (self.full_name)
 
     def save(self, *args, **kwargs):
-        if self.slug == "":
-            self.slug = slugify(str(self.title))
+        if not self.short_name:
+            self.short_name = self.full_name.encode('utf-8')
+
+        self.slug = slugify(str(self.full_name))
         super(Project, self).save(*args, **kwargs)
 
 
@@ -233,12 +205,14 @@ class FundingAmount(models.Model):
         max_digits=10,
         decimal_places=2,
         blank=True,
+        null=True,
     )
 
     own_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
+        null=True,
     )
 
     year = models.IntegerField(
@@ -247,7 +221,7 @@ class FundingAmount(models.Model):
     )
 
     def __unicode__(self):
-        return u'Year %s - %s €' % (self.year, self.amount)
+        return u'Year %s - (%s € Deusto / %s € Consortium)' % (self.year, self.own_amount, self.consortium_amount)
 
 
 #########################
@@ -276,3 +250,16 @@ class ConsortiumMember(models.Model):
 
     def __unicode__(self):
         return u'%s is taking part in %s' % (self.organization.short_name, self.project.short_name)
+
+
+#########################
+# Model: RelatedPublication
+#########################
+
+class RelatedPublication(models.Model):
+    project = models.ForeignKey(Project)
+
+    publication = models.ForeignKey(Publication)
+
+    def __unicode__(self):
+        return u'Project: %s - Publication: %s' % (self.project.short_name, self.publication.title)

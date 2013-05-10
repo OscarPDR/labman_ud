@@ -18,6 +18,7 @@ class OrganizationLogoInline(admin.StackedInline):
 #########################
 
 class OrganizationAdmin(admin.ModelAdmin):
+    model = Organization
     search_fields = ['full_name', 'short_name']
     list_display = ['full_name', 'short_name', 'homepage']
     list_filter = ['country__full_name']

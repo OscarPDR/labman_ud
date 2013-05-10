@@ -13,12 +13,6 @@
         </div>
     <form>
 
-    {% if user.is_authenticated %}
-        <div class="center">
-            <a class="btn btn-info" href="{% url add_project %}">Add project</a>
-        </div>
-    {% endif %}
-
     <div class="pagination">
         <span class="step-links">
             {% if projects.has_previous %}
@@ -42,9 +36,6 @@
                 <th class="span2">Duration</th>
                 <th class="span1">Status</th>
                 <th class="span1">Homepage</th>
-                {% if user.is_authenticated %}
-                    <th class="span2">Actions</th>
-                {% endif %}
             </tr>
         </thead>
 
@@ -56,7 +47,7 @@
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
                         <a href="info/{{ project.slug }}">
-                            {{ project.title }}
+                            {{ project.short_name }}
                         </a>
                     </td>
                     <td class="span2">{{ project.start_year }} - {{ project.end_year }}</td>
@@ -78,19 +69,14 @@
                         </a>
                         {% endif %}
                     </td>
-
-                    {% if user.is_authenticated %}
-                        <td class="span2">
-                            <a class="btn btn-mini btn-inverse" href="edit/{{ project.slug }}">Edit</a>
-                            <a class="btn btn-mini btn-danger" href="delete/{{ project.slug }}">Delete</a>
-                        </td>
-                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
 {% endblock %}
+
+
 
 {% block scripts %}
 {% endblock %}
