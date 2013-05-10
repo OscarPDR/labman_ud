@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import os
+
 from django.db import models
 from django.template.defaultfilters import slugify
 
@@ -9,6 +11,17 @@ from entities.events.models import Event
 # Create your models here.
 
 
+def publication_path(self, filename):
+    if self.presented_at:
+        year = self.presented_at.year
+        sub_folder = self.presented_at.slug
+    else:
+        year = self.year
+        sub_folder = self.publication_type.slug
+
+    return "%s/%s/%s/%s%s" % ("publications", year, sub_folder, self.slug, os.path.splitext(filename)[-1])
+
+
 #########################
 # Model: PublicationType
 #########################
@@ -16,7 +29,6 @@ from entities.events.models import Event
 class PublicationType(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name=u'Name',
     )
 
     slug = models.SlugField(
@@ -42,13 +54,16 @@ class PublicationType(models.Model):
 #########################
 
 class Publication(models.Model):
-    presented_at = models.ForeignKey(Event)
+    presented_at = models.ForeignKey(
+        Event,
+        blank=True,
+        null=True,
+    )
 
     publication_type = models.ForeignKey(PublicationType)
 
     title = models.CharField(
         max_length=250,
-        verbose_name=u'Title *',    # Required
     )
 
     slug = models.SlugField(
@@ -58,7 +73,6 @@ class Publication(models.Model):
 
     abstract = models.TextField(
         max_length=5000,
-        verbose_name=u'Abstract',
         blank=True,
     )
 
@@ -68,7 +82,11 @@ class Publication(models.Model):
         blank=True,
     )
 
-    # pdf_link = models.
+    pdf = models.FileField(
+        upload_to=publication_path,
+        blank=True,
+        null=True,
+    )
 
     # see_also = models.
 
@@ -81,20 +99,17 @@ class Publication(models.Model):
     # journal
 
     number = models.PositiveIntegerField(
-        verbose_name=u'Number',
         blank=True,
         null=True,
     )
 
     volume = models.PositiveIntegerField(
         default=1,
-        verbose_name=u'Volume',
         blank=True,
     )
 
     pages = models.CharField(
         max_length=25,
-        verbose_name=u'Pages',
         blank=True,
     )
 
@@ -113,9 +128,13 @@ class Publication(models.Model):
     impact_factor = models.DecimalField(
         max_digits=10,
         decimal_places=8,
-        verbose_name=u'Impact factor',
         blank=True,
         null=True,
+    )
+
+    observations = models.TextField(
+        max_length=3000,
+        blank=True,
     )
 
     def __unicode__(self):

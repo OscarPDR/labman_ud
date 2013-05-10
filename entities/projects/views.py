@@ -17,7 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding
 # from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
 from .forms import ProjectSearchForm
 
@@ -37,7 +37,7 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 #########################
 
 def project_index(request):
-    projects = Project.objects.all().order_by('title')
+    projects = Project.objects.all().order_by('full_name')
 
     if request.method == 'POST':
         form = ProjectSearchForm(request.POST)
@@ -49,7 +49,7 @@ def project_index(request):
 
             for project in projects:
 
-                if query in slugify(project.title):
+                if query in slugify(project.full_name):
                     projs.append(project)
 
             projects = projs
@@ -86,31 +86,32 @@ def project_index(request):
 def project_info(request, slug):
     project = get_object_or_404(Project, slug=slug)
 
-    funding_program = FundingProgram.objects.get(id=project.funding_program_id)
+    fundings = Funding.objects.filter(project_id=project.id)
 
-    lprs = AssignedPerson.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
-    principal_researchers = Person.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
+    funding_ids = []
+    funding_program_ids = []
 
-    lpms = AssignedPerson.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
-    project_managers = Person.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
+    for funding in fundings:
+        funding_ids.append(funding.id)
+        funding_program_ids.append(funding.funding_program.id)
 
-    rs = AssignedPerson.objects.filter(project_id=project.id, role='Researcher').values('employee_id')
-    researchers = Person.objects.filter(id__in=rs).order_by('name', 'first_surname', 'second_surname')
+    funding_programs = FundingProgram.objects.filter(pk__in=funding_program_ids)
 
-    funding_amounts = FundingAmount.objects.filter(project_id=project.id)
+    funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
-    consortium_members = ConsortiumMember.objects.filter(project_id=project.id)
+    persons = AssignedPerson.objects.filter(project_id=project.id)
+
+    consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
     return render_to_response("projects/info.html", {
             'project': project,
-            'funding_program': funding_program,
-            'principal_researchers': principal_researchers,
-            'project_managers': project_managers,
-            'researchers': researchers,
+            'persons': persons,
+            'fundings': fundings,
+            'funding_programs': funding_programs,
             'funding_amounts': funding_amounts,
             'consortium_members': consortium_members,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################

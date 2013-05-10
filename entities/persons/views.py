@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 
 from .models import Person
-from .forms import PersonForm, PersonSearchForm
+from .forms import PersonSearchForm
 
 from entities.projects.models import Project, AssignedPerson
 

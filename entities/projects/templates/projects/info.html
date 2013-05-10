@@ -10,7 +10,7 @@
 
     <h2>
         <a href="{% url project_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
-        {{ project.title }}
+        {{ project.full_name }}
     </h2>
 
     <br>
@@ -25,7 +25,6 @@
             {% if user.is_authenticated %}
                 <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
                 <br>
-                <a id="edit-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../edit/{{ project.slug }}"><i class="icon-edit icon-white"></i> Edit</a>
             {% endif %}
         </ul>
 
@@ -34,12 +33,6 @@
             <!-- begin tab-pane #pr_general_info -->
 
             <div class="tab-pane active" id="pr_general_info">
-
-                {% if project.logo %}
-                    <div class="project-logo">
-                        <img src="{{ MEDIA_URL }}{{ project.logo }}" height="150" />
-                    </div>
-                {% endif %}
 
                 {% if project.homepage %}
                     <h5>Homepage:</h5>
@@ -53,7 +46,7 @@
 
                 <h5>Proyect type:</h5>
                 <p>
-                     {{ project.project_type }}
+                     {{ project.project_type.name }}
                 </p>
 
                 <br>
@@ -82,15 +75,6 @@
 
                 <br>
 
-                {% if user.is_authenticated %}
-                    {% if project.observations %}
-                        <h5>Observations:</h5>
-                        <p>
-                            {{ project.observations }}
-                        </p>
-                    {% endif %}
-                {% endif %}
-
             </div>
 
             <!-- end tab-pane #pr_general_info -->
@@ -99,65 +83,87 @@
 
             <div class="tab-pane" id="pr_funding_details">
 
-                {% if funding_program.logo %}
-                    <div class="funding-program-logo">
-                        <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
-                    </div>
-                {% endif %}
+                <div class="accordion" id="accordion">
+                    {% for funding in fundings %}
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#funding_{{ forloop.counter }}">
+                                    Funding #{{ forloop.counter }}
+                                </a>
+                            </div>
 
-                <h5>Supported by:</h5>
-                <p>
-                    {{ funding_program.full_name }}, {{ funding_program.organization.name }}
-                </p>
+                            <div id="funding_{{ forloop.counter }}" class="accordion-body collapse in">
+                                <div class="accordion-inner">
 
-                <br>
+                                    {% for funding_program in funding_programs %}
+                                        {% if funding_program.id == funding.funding_program.id %}
 
-                <h5>Project code:</h5>
-                <p>
-                    {% if project.project_code %}
-                        {{ project.project_code }}
-                    {% else %}
-                        No information available
-                    {% endif %}
-                </p>
+                                            {% if funding_program.logo %}
+                                                <div class="funding-program-logo">
+                                                    <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+                                                </div>
+                                            {% endif %}
 
-                <br>
+                                            <h5>Supported by:</h5>
+                                            <p>
+                                                {{ funding_program.full_name }}, {{ funding_program.organization.name }}
+                                            </p>
 
-                <h5>Funding duration:</h5>
-                <p>
-                    {% if funding_program.concession_year %}
-                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
-                    {% else %}
-                        No information available
-                    {% endif %}
-                </p>
+                                            <br>
 
-                <br>
+                                            <h5>Project code:</h5>
+                                            <p>
+                                                {% if funding.project_code %}
+                                                    {{ funding.project_code }}
+                                                {% else %}
+                                                    No information available
+                                                {% endif %}
+                                            </p>
 
-                <h5>Funding amount:</h5>
-                {% if project.total_funds %}
-                    <p>
-                         The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_funds_deusto|intcomma|intword }} € in the following way:
-                    </p>
-                {% endif %}
+                                            <br>
 
-                {% if funding_amounts %}
-                    <ul>
-                        {% for funding_amount in funding_amounts %}
-                            <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
-                        {% endfor %}
-                    </ul>
+                                            <h5>Funding duration:</h5>
+                                            <p>
+                                                {% if funding_program.concession_year %}
+                                                    Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
+                                                {% else %}
+                                                    No information available
+                                                {% endif %}
+                                            </p>
 
-                    <br>
+                                            <br>
 
-                    <div id="chart-div">
-                        <div id="chart_div" style="width: 850px; height: 500px;"></div>
-                    </div>
-                {% else %}
-                    <p>
-                        No information available
-                    </p>
-                {% endif %}
+                                            <h5>Funding amount:</h5>
+                                            {% if project.total_funds %}
+                                                <p>
+                                                     The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_funds_deusto|intcomma|intword }} € in the following way:
+                                                </p>
+                                            {% endif %}
+
+                                            {% if funding_amounts %}
+                                                <ul>
+                                                    {% for funding_amount in funding_amounts %}
+                                                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
+                                                    {% endfor %}
+                                                </ul>
+
+                                                <br>
+
+                                                <div id="chart-div">
+                                                    <div id="chart_div" style="width: 850px; height: 500px;"></div>
+                                                </div>
+                                            {% else %}
+                                                <p>
+                                                    No information available
+                                                </p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
 
             </div>
 
@@ -197,13 +203,13 @@
                     <br>
                 {% endif %}
 
-                {% if researchers %}
-                    <h5>Researcher{{ researchers|pluralize }}:</h5>
+                {% if persons %}
+                    <h5>Researcher{{ persons|pluralize }}:</h5>
                     <ul>
-                        {% for researcher in researchers %}
+                        {% for person in persons %}
                             <li>
-                                <a target="_blank" href="{% url employee_info researcher.slug %}">
-                                    {{ researcher.name }} {{ researcher.first_surname }} {{ researcher.second_surname }}
+                                <a target="_blank" href="{% url employee_info person.slug %}">
+                                    {{ person.full_name }}
                                 </a>
                             </li>
                         {% endfor %}
@@ -222,7 +228,7 @@
                 <ul>
                     <li>
                         <a target="_blank" href="{% url organization_info project.project_leader.slug %}">
-                            {{ project.project_leader.name }}
+                            {{ project.project_leader.full_name }}
                         </a>
                     </li>
                 </ul>
@@ -235,7 +241,7 @@
                         {% for consortium_member in consortium_members %}
                             <li>
                                 <a target="_blank" href="{% url organization_info consortium_member.organization.slug %}">
-                                    {{ consortium_member.organization.name }}
+                                    {{ consortium_member.organization.full_name }}
                                 </a>
                             </li>
                         {% endfor %}

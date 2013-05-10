@@ -1,0 +1,40 @@
+[
+    {
+        "pk": 1, 
+        "model": "projects.projecttype", 
+        "fields": {
+            "description": "", 
+            "name": "Innovation project", 
+            "slug": "innovation-project"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "projects.project", 
+        "fields": {
+            "start_month": "01", 
+            "status": "In development", 
+            "start_year": 2011, 
+            "description": "El proyecto 4GIZAR tiene como objetivo fundamental investigar y desarrollar tecnolog\u00edas, productos y procesos que favorezcan el despliegue de las redes LTE en Euskadi as\u00ed como su r\u00e1pida adopci\u00f3n tanto en la industria como en la propia sociedad, tomando como escenario concreto el de las comunicaciones M2M, dado su gran potencial en el mundo empresarial as\u00ed como el gran inter\u00e9s de las operadoras, que ven en este mercado una fuente de beneficios muy interesante y en constante crecimiento. NTS colabora como proveedor experto en soluciones de movilidad aportando su experiencia en el desarrollo de aplicaciones con demanda de gran ancho de banda de datos.", 
+            "short_name": "4GIZAR", 
+            "end_year": 2013, 
+            "project_type": 1, 
+            "project_leader": 2, 
+            "end_month": "12", 
+            "observations": "", 
+            "full_name": "4GIZAR", 
+            "homepage": "", 
+            "slug": "4gizar"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "projects.funding", 
+        "fields": {
+            "project": 1, 
+            "funding_program": 1, 
+            "total_funds": null, 
+            "project_code": "ER-2011/00018"
+        }
+    }
+]

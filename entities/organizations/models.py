@@ -59,6 +59,7 @@ class Organization(models.Model):
 
     short_name = models.CharField(
         max_length=250,
+        blank=True,
     )
 
     slug = models.SlugField(
