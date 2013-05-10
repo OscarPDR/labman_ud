@@ -14,8 +14,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Organization
 from .forms import OrganizationForm, OrganizationSearchForm
 
-from projects.models import Project
-from projects.forms import *
+from entities.projects.models import Project
+from entities.projects.forms import *
 
 # Create your views here.
 
@@ -27,7 +27,7 @@ PAGINATION_NUMBER = settings.ORGANIZATIONS_PAGINATION
 #########################
 
 def organization_index(request):
-    organizations = Organization.objects.all().order_by('name')
+    organizations = Organization.objects.all().order_by('full_name')
 
     if request.method == 'POST':
         form = OrganizationSearchForm(request.POST)

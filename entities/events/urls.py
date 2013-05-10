@@ -4,8 +4,8 @@ from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('',
-    url(r'^$', 'persons.views.person_index', name='person_index'),
-    url(r'^info/(\S+)$', 'persons.views.person_info', name='person_info'),
+    url(r'^$', 'entities.events.views.project_index', name='event_index'),
+    url(r'^info/(\S+)$', 'entities.events.views.event_info', name='event_info'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

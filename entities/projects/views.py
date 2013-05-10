@@ -21,11 +21,11 @@ from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember
 # from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
 from .forms import ProjectSearchForm
 
-from persons.models import Person
+from entities.persons.models import Person
 
-from organizations.models import Organization
+from entities.organizations.models import Organization
 
-from funding_programs.models import FundingProgram
+from entities.funding_programs.models import FundingProgram
 
 # Create your views here.
 

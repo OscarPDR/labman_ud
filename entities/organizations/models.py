@@ -5,7 +5,7 @@ import os
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from utils.models import Country
+from entities.utils.models import Country
 
 # Create your models here.
 

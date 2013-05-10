@@ -6,9 +6,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from organizations.models import Organization
+from entities.organizations.models import Organization
 
-from utils.models import GeographicalScope
+from entities.utils.models import GeographicalScope
 
 
 # Create your models here.

@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Person
 from .forms import PersonForm, PersonSearchForm
 
-from projects.models import Project, AssignedPerson
+from entities.projects.models import Project, AssignedPerson
 
 # Create your views here.
 

@@ -3,7 +3,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from organizations.models import Organization
+from entities.organizations.models import Organization
 
 # Create your models here.
 

@@ -3,7 +3,7 @@
 from django.contrib import admin
 from nested_inlines.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from .models import Project, ProjectType, ProjectLogo, FundedProject, FundingAmount, AssignedPerson, ConsortiumMember
+from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember
 
 
 #########################
@@ -12,16 +12,19 @@ from .models import Project, ProjectType, ProjectLogo, FundedProject, FundingAmo
 
 class FundingAmountInline(NestedStackedInline):
     model = FundingAmount
-
-
-#########################
-# Class: FundedProjectInline
-#########################
-
-class FundedProjectInline(NestedStackedInline):
-    model = FundedProject
     extra = 1
-    inlines = [FundingAmountInline,]
+
+
+#########################
+# Class: FundingInline
+#########################
+
+class FundingInline(NestedStackedInline):
+    model = Funding
+    extra = 1
+    inlines = [
+        FundingAmountInline,
+    ]
 
 
 #########################
@@ -60,7 +63,7 @@ class ProjectAdmin(NestedModelAdmin):
     list_display = ['full_name', 'short_name', 'start_year', 'end_year', 'status']
     list_filter = ['start_year', 'end_year', 'status']
     inlines = [
-        FundedProjectInline,
+        FundingInline,
         ConsortiumMemberInline,
         AssignedPersonInline,
         ProjectLogoInline,
@@ -77,10 +80,10 @@ class ProjectTypeAdmin(admin.ModelAdmin):
 
 
 #########################
-# Class: FundedProjectAdmin
+# Class: FundingAdmin
 #########################
 
-class FundedProjectAdmin(admin.ModelAdmin):
+class FundingAdmin(admin.ModelAdmin):
     search_fields = ['project__short_name', 'funding_program__short_name']
     list_display = ['project', 'funding_program', 'project_code', 'total_funds']
     inlines = [
@@ -93,8 +96,8 @@ class FundedProjectAdmin(admin.ModelAdmin):
 #########################
 
 class FundingAmountAdmin(admin.ModelAdmin):
-    search_fields = ['funded_project__project__short_name']
-    list_display = ['funded_project', 'consortium_amount', 'own_amount', 'year']
+    search_fields = ['funding__project__short_name']
+    list_display = ['funding', 'consortium_amount', 'own_amount', 'year']
     list_filter = ['year']
 
 
@@ -123,7 +126,7 @@ class ConsortiumMemberAdmin(admin.ModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectType, ProjectTypeAdmin)
-admin.site.register(FundedProject, FundedProjectAdmin)
+admin.site.register(Funding, FundingAdmin)
 admin.site.register(FundingAmount, FundingAmountAdmin)
 admin.site.register(AssignedPerson, AssignedPersonAdmin)
 admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)

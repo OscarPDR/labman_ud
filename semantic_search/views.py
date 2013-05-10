@@ -7,9 +7,9 @@ from django.template import RequestContext
 
 from django.db.models import Sum, Min, Max
 
-from funding_programs.models import FundingProgram
+from entities.funding_programs.models import FundingProgram
 
-from projects.models import Project, AssignedPerson
+from entities.projects.models import Project, AssignedPerson
 
 from semantic_search.forms import SemanticSearchForm
 

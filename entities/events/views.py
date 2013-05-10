@@ -19,14 +19,14 @@ from django.utils.html import strip_tags
 
 from .models import Event
 
-from projects.models import Project, FundingAmount, AssignedPerson, ConsortiumMember
-from projects.forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
+from entities.projects.models import Project, FundingAmount, AssignedPerson, ConsortiumMember
+from entities.projects.forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
 
-from persons.models import Person
+from entities.persons.models import Person
 
-from organizations.models import Organization
+from entities.organizations.models import Organization
 
-from funding_programs.models import FundingProgram
+from entities.funding_programs.models import FundingProgram
 
 # Create your views here.
 
