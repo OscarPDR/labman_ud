@@ -2,7 +2,7 @@
 
 from django import forms
 
-from persons.models import Person
+from entities.persons.models import Person
 
 # Create your forms here.
 

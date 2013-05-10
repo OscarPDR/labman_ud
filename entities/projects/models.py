@@ -6,11 +6,11 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from persons.models import Person
-from funding_programs.models import FundingProgram
-from organizations.models import Organization
+from entities.persons.models import Person
+from entities.funding_programs.models import FundingProgram
+from entities.organizations.models import Organization
 
-from utils.models import Role
+from entities.utils.models import Role
 
 
 # Create your models here.
@@ -197,10 +197,10 @@ class ProjectLogo(models.Model):
 
 
 #########################
-# Model: FundedProject
+# Model: Funding
 #########################
 
-class FundedProject(models.Model):
+class Funding(models.Model):
     project = models.ForeignKey(Project)
 
     funding_program = models.ForeignKey(FundingProgram)
@@ -227,7 +227,7 @@ class FundedProject(models.Model):
 #########################
 
 class FundingAmount(models.Model):
-    funded_project = models.ForeignKey(FundedProject)
+    funding = models.ForeignKey(Funding)
 
     consortium_amount = models.DecimalField(
         max_digits=10,

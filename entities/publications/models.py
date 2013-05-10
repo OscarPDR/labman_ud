@@ -3,7 +3,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
-from events.models import Event
+from entities.events.models import Event
 
 
 # Create your models here.

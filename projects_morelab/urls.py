@@ -23,10 +23,10 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^organizations/', include('organizations.urls')),
-    url(r'^persons/', include('persons.urls')),
-    url(r'^projects/', include('projects.urls')),
-    url(r'^funding_programs/', include('funding_programs.urls')),
+    url(r'^organizations/', include('entities.organizations.urls')),
+    url(r'^persons/', include('entities.persons.urls')),
+    url(r'^projects/', include('entities.projects.urls')),
+    url(r'^funding_programs/', include('entities.funding_programs.urls')),
 
     url(r'^charts/', include('charts.urls')),
     url(r'^semantic_search/', include('semantic_search.urls')),

@@ -1,9 +1,11 @@
+# coding: utf-8
+
 from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('',
-    url(r'^$', 'organizations.views.organization_index', name = 'organization_index'),
-    url(r'^info/(\S+)$', 'organizations.views.organization_info', name = 'organization_info'),
+    url(r'^$', 'entities.persons.views.person_index', name='person_index'),
+    url(r'^info/(\S+)$', 'entities.persons.views.person_info', name='person_info'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

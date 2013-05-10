@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from .models import FundingProgram
 from .forms import FundingProgramForm, FundingProgramSearchForm
 
-from projects.models import Project
+from entities.projects.models import Project
 
 # Create your views here.
 
