@@ -48,19 +48,19 @@ def semantic_search(request):
             probable_projects = Project.objects.all()
 
             if title != '':
-                probable_projects = probable_projects.filter(title__contains = title)
+                probable_projects = probable_projects.filter(full_name__contains=title)
 
             if status != 'Any':
-                probable_projects = probable_projects.filter(status = status)
+                probable_projects = probable_projects.filter(status=status)
 
             if scope != 'All':
-                funding_program_ids = FundingProgram.objects.filter(geographical_scope = scope).values("id")
-                probable_projects = probable_projects.filter(funding_program__in = funding_program_ids)
+                funding_program_ids = FundingProgram.objects.filter(geographical_scope=scope).values("id")
+                probable_projects = probable_projects.filter(funding_program__in=funding_program_ids)
 
-            probable_projects = probable_projects.filter(start_year__gte = start_year)
-            probable_projects = probable_projects.filter(end_year__lte = end_year)
+            probable_projects = probable_projects.filter(start_year__gte=start_year)
+            probable_projects = probable_projects.filter(end_year__lte=end_year)
 
-            probable_projects = probable_projects.order_by('title')
+            probable_projects = probable_projects.order_by('full_name')
 
             # TODO: Researchers filter
 

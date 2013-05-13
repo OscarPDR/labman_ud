@@ -113,7 +113,7 @@ def incomes_by_year_and_scope(request, year, scope):
 #########################
 
 def incomes_by_project_index(request):
-    projects = Project.objects.all().order_by('title')
+    projects = Project.objects.all().order_by('full_name')
 
     return render_to_response("charts/incomes_by_project_index.html", {
             'projects': projects,
@@ -128,7 +128,7 @@ def incomes_by_project_index(request):
 def incomes_by_project(request, project_slug):
     project_incomes = []
 
-    project = Project.objects.get(slug = project_slug)
+    project = Project.objects.get(slug=project_slug)
 
     funding_amounts = FundingAmount.objects.filter(project_id = project.id)
 
@@ -160,7 +160,7 @@ def total_incomes_only(request):
     incomes = []
 
     for year in range(min_year, max_year + 1):
-        income = FundingAmount.objects.filter(year = year).aggregate(Sum('amount'))
+        income = FundingAmount.objects.filter(year = year).aggregate(Sum('own_amount'))
         incomes.append({'key': year, 'value': income})
 
     return render_to_response("charts/total_incomes_only.html", {

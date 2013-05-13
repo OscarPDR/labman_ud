@@ -36,9 +36,6 @@
                 <th>Full name</th>
                 <th>Country</th>
                 <th>Homepage</th>
-                {% if user.is_authenticated %}
-                    <th class="span2">Actions</th>
-                {% endif %}
             </tr>
         </thead>
 
@@ -57,7 +54,7 @@
                     </td>
                     <td>
                         {% if organization.country %}
-                            {{ organization.country }}
+                            {{ organization.country.full_name }}
                         {% endif %}
                     </td>
                     <td>
@@ -65,19 +62,14 @@
                             <a target="_blank" href="{{ organization.homepage }}">View</a>
                         {% endif %}
                     </td>
-
-                    {% if user.is_authenticated %}
-                        <td>
-                            <a class="btn btn-mini btn-inverse" href="{% url edit_organization organization.slug %}">Edit</a>
-                            <a class="btn btn-mini btn-danger" href="{% url delete_organization organization.slug %}">Delete</a>
-                        </td>
-                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
 {% endblock %}
+
+
 
 {% block scripts %}
 {% endblock %}

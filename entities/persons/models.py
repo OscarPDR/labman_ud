@@ -57,6 +57,7 @@ class Person(models.Model):
     slug = models.SlugField(
         max_length=100,
         blank=True,
+        unique=True,
     )
 
     profile_picture = models.ImageField(
@@ -92,6 +93,7 @@ class Role(models.Model):
     slug = models.SlugField(
         max_length=50,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(

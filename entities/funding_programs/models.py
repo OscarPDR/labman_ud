@@ -14,7 +14,7 @@ from entities.utils.models import GeographicalScope
 # Create your models here.
 
 MIN_YEAR_LIMIT = 2000
-MAX_YEAR_LIMIT = 2020
+MAX_YEAR_LIMIT = 2030
 
 
 def funding_program_logo_path(self, filename):
@@ -40,6 +40,7 @@ class FundingProgram(models.Model):
     slug = models.SlugField(
         max_length=250,
         blank=True,
+        unique=True,
     )
 
     concession_year = models.IntegerField(
@@ -60,7 +61,9 @@ class FundingProgram(models.Model):
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
-        self.slug = slugify(self.short_name)
+
+        self.slug = slugify(self.short_name + ' ' + str(self.concession_year))
+
         super(FundingProgram, self).save(*args, **kwargs)
 
 

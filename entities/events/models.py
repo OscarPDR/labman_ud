@@ -20,12 +20,12 @@ def event_logo_path(self, filename):
 class EventType(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name=u'Name',
     )
 
     slug = models.SlugField(
         max_length=100,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(
@@ -50,18 +50,17 @@ class Event(models.Model):
 
     full_name = models.CharField(
         max_length=250,
-        verbose_name=u'Full name *',    # Required
     )
 
     short_name = models.CharField(
         max_length=150,
-        verbose_name=u'Short name',
         blank=True,
     )
 
     slug = models.SlugField(
         max_length=150,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(
@@ -102,11 +101,11 @@ class Event(models.Model):
         return u'%s %s' % (self.short_name, self.year)
 
     def save(self, *args, **kwargs):
-        event_name = u'%s %s' % (self.short_name, self.year)
-        self.slug = slugify(event_name)
-
         if (not self.year) and (self.start_date):
             self.year = self.start_date.year
+
+        event_name = u'%s %s' % (self.short_name, self.year)
+        self.slug = slugify(event_name)
 
         super(Event, self).save(*args, **kwargs)
 
