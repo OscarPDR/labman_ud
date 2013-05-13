@@ -11,7 +11,7 @@ from django.db.models import Sum, Min, Max
 
 from entities.funding_programs.models import FundingProgram
 
-from entities.projects.models import Project, FundingAmount
+from entities.projects.models import Project, FundingAmount, Funding
 
 # Create your views here.
 
@@ -130,10 +130,16 @@ def incomes_by_project(request, project_slug):
 
     project = Project.objects.get(slug=project_slug)
 
-    funding_amounts = FundingAmount.objects.filter(project_id = project.id)
+    funding_ids = Funding.objects.filter(project_id=project.id).values('id')
 
-    for funding_amount in funding_amounts:
-        project_incomes.append({'key': funding_amount.year, 'value': funding_amount.amount})
+    # funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids)
+
+    project_incomes = FundingAmount.objects.filter(funding_id__in=funding_ids).values('year').annotate(total=Sum('own_amount'))
+
+    print project_incomes
+
+    # for funding_amount in funding_amounts:
+    #     project_incomes.append({'key': funding_amount.year, 'value': funding_amount.amount})
 
     return render_to_response("charts/incomes_by_project.html", {
             'project': project,
