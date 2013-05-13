@@ -85,84 +85,114 @@
 
                 <div class="accordion" id="accordion">
                     {% for funding in fundings %}
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#funding_{{ forloop.counter }}">
-                                    Funding #{{ forloop.counter }}
-                                </a>
-                            </div>
 
-                            <div id="funding_{{ forloop.counter }}" class="accordion-body collapse in">
-                                <div class="accordion-inner">
+                        {% with forloop.counter as funding_loop %}
 
-                                    {% for funding_program in funding_programs %}
-                                        {% if funding_program.id == funding.funding_program.id %}
+                        {% for funding_program in funding_programs %}
+                            {% if funding_program.id == funding.funding_program.id %}
 
-                                            {% if funding_program.logo %}
-                                                <div class="funding-program-logo">
-                                                    <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
-                                                </div>
-                                            {% endif %}
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#funding_{{ funding_loop }}">
+                                            {{ funding_program.full_name }}
+                                        </a>
+                                    </div>
 
-                                            <h5>Supported by:</h5>
-                                            <p>
-                                                {{ funding_program.full_name }}, {{ funding_program.organization.name }}
-                                            </p>
+                                    <div id="funding_{{ forloop.counter }}" class="accordion-body collapse {% if funding_loop == 1 %}in{% endif %}">
+                                        <div class="accordion-inner row-fluid">
 
-                                            <br>
+                                            <div class="span6">
 
-                                            <h5>Project code:</h5>
-                                            <p>
-                                                {% if funding.project_code %}
-                                                    {{ funding.project_code }}
-                                                {% else %}
-                                                    No information available
+                                                {% if funding_program.logo %}
+                                                    <div class="funding-program-logo">
+                                                        <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+                                                    </div>
                                                 {% endif %}
-                                            </p>
 
-                                            <br>
-
-                                            <h5>Funding duration:</h5>
-                                            <p>
-                                                {% if funding_program.concession_year %}
-                                                    Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
-                                                {% else %}
-                                                    No information available
-                                                {% endif %}
-                                            </p>
-
-                                            <br>
-
-                                            <h5>Funding amount:</h5>
-                                            {% if project.total_funds %}
+                                                <h5>Supported by:</h5>
                                                 <p>
-                                                     The project is valued in {{ project.total_funds|intcomma|intword }} €, DeustoTech receiving {{ project.total_funds_deusto|intcomma|intword }} € in the following way:
+                                                    {{ funding_program.full_name }} - {{ funding_program.organization.full_name }}
+                                                    {% if funding_program.organization.sub_organization_of %}
+                                                        ({{ funding_program.organization.sub_organization_of.full_name }})
+                                                    {% endif %}
                                                 </p>
-                                            {% endif %}
-
-                                            {% if funding_amounts %}
-                                                <ul>
-                                                    {% for funding_amount in funding_amounts %}
-                                                        <li><strong>Year {{ funding_amount.year }}:</strong> {{ funding_amount.amount|intcomma|intword }} €</li>
-                                                    {% endfor %}
-                                                </ul>
 
                                                 <br>
 
-                                                <div id="chart-div">
-                                                    <div id="chart_div" style="width: 850px; height: 500px;"></div>
-                                                </div>
-                                            {% else %}
+                                                <h5>Project code:</h5>
                                                 <p>
-                                                    No information available
+                                                    {% if funding.project_code %}
+                                                        {{ funding.project_code }}
+                                                    {% else %}
+                                                        No information available
+                                                    {% endif %}
                                                 </p>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
+
+                                                <br>
+
+                                                <h5>Duration:</h5>
+                                                <p>
+                                                    {% if funding_program.concession_year %}
+                                                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
+                                                    {% else %}
+                                                        No information available
+                                                    {% endif %}
+                                                </p>
+
+                                                <br>
+
+                                            </div>
+
+                                                {% if funding_amounts %}
+
+                                                    <div class="span6">
+
+                                                        <h5>Amounts:</h5>
+
+                                                        <table class="table table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Year</th>
+                                                                    <th>DeustoTech</th>
+                                                                    <th>Consortium</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                {% for funding_amount in funding_amounts %}
+                                                                    {% if funding_amount.funding.id = funding.id %}
+
+                                                                        <tr>
+                                                                            <td>{{ funding_amount.year }}</td>
+                                                                            <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
+                                                                            <td>{{ funding_amount.consortium_amount|intcomma|intword }} €</td>
+                                                                        </tr>
+
+                                                                    {% endif %}
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+
+                                                        <br>
+
+                                                        <div id="chart_{{ funding_loop }}"></div>
+                                                    </div>
+
+                                                {% else %}
+                                                    <p>
+                                                        No information available
+                                                    </p>
+                                                {% endif %}
+
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+
+                            {% endif %} <!-- funding_program.id == funding.funding_program.id -->
+                        {% endfor %} <!-- funding_program in funding_programs -->
+
+                        {% endwith %}
+                    {% endfor %} <!-- funding in fundings -->
                 </div>
 
             </div>
@@ -266,21 +296,29 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Incomes'],
-                {% for funding_amount in funding_amounts %}
-                    ["{{ funding_amount.year }}", parseFloat({{ funding_amount.amount }})],
-                {% endfor %}
-            ]);
+            {% for funding in fundings %}
 
-            var options = {
-                title: 'Income breakdown',
-            };
+                {% with forloop.counter as funding_loop %}
 
-            // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-            // var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+                var data_{{ forloop.counter }} = google.visualization.arrayToDataTable([
+                    ['Year', 'Incomes'],
+                    {% for funding_amount in funding_amounts %}
+                        {% if funding_amount.funding.id == funding.id %}
+                            ["{{ funding_amount.year }}", parseFloat({{ funding_amount.own_amount }})],
+                        {% endif %}
+                    {% endfor %}
+                ]);
+
+                var options = {
+                    title: 'Income breakdown for DeustoTech Internet',
+                };
+
+                var chart_{{ funding_loop }} = new google.visualization.PieChart(document.getElementById('chart_{{ funding_loop }}'));
+                chart_{{ funding_loop }}.draw(data_{{ funding_loop }}, options);
+
+                {% endwith %}
+
+            {% endfor %}
         }
     </script>
 
