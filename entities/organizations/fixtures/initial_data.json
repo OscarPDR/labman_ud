@@ -1,0 +1,323 @@
+[
+    {
+        "pk": 1, 
+        "model": "organizations.organizationtype", 
+        "fields": {
+            "description": "", 
+            "name": "Company", 
+            "slug": "company"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Deusto", 
+            "country": 1, 
+            "full_name": "Universidad de Deusto", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-deusto"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Gobierno Vasco", 
+            "country": 1, 
+            "full_name": "Gobierno Vasco", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "gobierno-vasco"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Departamento de Industria, Innovaci\u00f3n, Comercio y Turismo", 
+            "country": 1, 
+            "full_name": "Departamento de Industria, Innovaci\u00f3n, Comercio y Turismo", 
+            "organization_type": 1, 
+            "sub_organization_of": 2, 
+            "homepage": "", 
+            "slug": "departamento-de-industria-innovacion-comercio-y-turismo"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Dorlet", 
+            "country": 1, 
+            "full_name": "Dorlet", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "dorlet"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Euskaltel", 
+            "country": 1, 
+            "full_name": "Euskaltel", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "euskaltel"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ikusi", 
+            "country": 1, 
+            "full_name": "Ikusi", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ikusi"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Symplio", 
+            "country": 1, 
+            "full_name": "Symplio", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "symplio"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Thaumat", 
+            "country": 1, 
+            "full_name": "Thaumat", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "thaumat"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "ZIV media", 
+            "country": 1, 
+            "full_name": "ZIV media", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ziv-media"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Gobierno de Espa\u00f1a", 
+            "country": 1, 
+            "full_name": "Gobierno de Espa\u00f1a", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "gobierno-de-espana"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ministerio de Industria", 
+            "country": 1, 
+            "full_name": "Ministerio de Industria", 
+            "organization_type": 1, 
+            "sub_organization_of": 10, 
+            "homepage": "", 
+            "slug": "ministerio-de-industria"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Alimerka", 
+            "country": 1, 
+            "full_name": "Alimerka", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "alimerka"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Bizintek Innova", 
+            "country": 1, 
+            "full_name": "Bizintek Innova", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "bizintek-innova"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Consorcio sanitario del Garraf", 
+            "country": 1, 
+            "full_name": "Consorcio sanitario del Garraf", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "consorcio-sanitario-del-garraf"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "European Centre for Soft Computing", 
+            "country": 1, 
+            "full_name": "European Centre for Soft Computing", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "european-centre-for-soft-computing"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Tecnalia", 
+            "country": 1, 
+            "full_name": "Tecnalia", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "tecnalia"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Fatronik", 
+            "country": 1, 
+            "full_name": "Fatronik", 
+            "organization_type": 1, 
+            "sub_organization_of": 16, 
+            "homepage": "", 
+            "slug": "fatronik"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Hospital Virgen del Roc\u00edo", 
+            "country": 1, 
+            "full_name": "Hospital Virgen del Roc\u00edo", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "hospital-virgen-del-rocio"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "m-BOT solutions", 
+            "country": 1, 
+            "full_name": "m-BOT solutions", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "m-bot-solutions"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Omicron electronic", 
+            "country": 1, 
+            "full_name": "Omicron electronic", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "omicron-electronic"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Telem\u00e1tica y L\u00f3gica Racional para la Empresa", 
+            "country": 1, 
+            "full_name": "Telem\u00e1tica y L\u00f3gica Racional para la Empresa", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "telematica-y-logica-racional-para-la-empresa"
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Treelogic", 
+            "country": 1, 
+            "full_name": "Treelogic", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "http://www.treelogic.com/", 
+            "slug": "treelogic"
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Extremadura", 
+            "country": 1, 
+            "full_name": "Universidad de Extremadura", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-extremadura"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universitat Polit\u00e9cnica de Catalunya", 
+            "country": 1, 
+            "full_name": "Universitat Polit\u00e9cnica de Catalunya", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universitat-politecnica-de-catalunya"
+        }
+    }
+]

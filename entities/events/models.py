@@ -37,7 +37,7 @@ class EventType(models.Model):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name))
+        self.slug = slugify(str(self.name.encode('utf-8')))
         super(EventType, self).save(*args, **kwargs)
 
 
