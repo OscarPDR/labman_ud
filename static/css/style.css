@@ -32,6 +32,12 @@ h4 {
     padding-top: 1em;
 }
 
+#funding_program_full_name {
+    padding-top: 0em;
+    padding-left: 7.5em;
+    font-weight: normal;
+}
+
 .organization-logo {
     float: right;
     max-height: 75px;

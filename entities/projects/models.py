@@ -59,6 +59,7 @@ class ProjectType(models.Model):
     slug = models.SlugField(
         max_length=100,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(
@@ -95,6 +96,7 @@ class Project(models.Model):
     slug = models.SlugField(
         max_length=250,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(

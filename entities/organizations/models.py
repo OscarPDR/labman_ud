@@ -21,12 +21,12 @@ def organization_logo_path(self, filename):
 class OrganizationType(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name=u'Name',
     )
 
     slug = models.SlugField(
         max_length=100,
         blank=True,
+        unique=True,
     )
 
     description = models.TextField(
@@ -65,6 +65,7 @@ class Organization(models.Model):
     slug = models.SlugField(
         max_length=250,
         blank=True,
+        unique=True,
     )
 
     country = models.ForeignKey(Country)

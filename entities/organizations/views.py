@@ -73,12 +73,12 @@ def organization_index(request):
 #########################
 
 def organization_info(request, slug):
-    organization = get_object_or_404(Organization, slug = slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
-    projects_leaded = Project.objects.filter(project_leader = organization.id).order_by('title')
+    projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('full_name')
 
-    consortium_ids = ConsortiumMember.objects.filter(organization_id = organization.id).values('project_id')
-    projects = Project.objects.filter(id__in = consortium_ids).order_by('title')
+    consortium_ids = ConsortiumMember.objects.filter(organization_id=organization.id).values('project_id')
+    projects = Project.objects.filter(id__in=consortium_ids).order_by('full_name')
 
     return render_to_response("organizations/info.html", {
             'organization': organization,
