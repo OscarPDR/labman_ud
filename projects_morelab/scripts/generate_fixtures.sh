@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -a apps=( 'events' 'funding_programs' 'organizations' 'persons' 'projects' 'publications' )
+declare -a apps=( 'events' 'funding_programs' 'organizations' 'persons' 'projects' 'publications' 'utils' )
 
 today=$(date +"%m_%d_%Y")
 

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-rm entities/persons/fixtures/initial_data.json
-rm entities/funding_programs/fixtures/initial_data.json
-rm entities/organizations/fixtures/initial_data.json
-rm entities/projects/fixtures/initial_data.json
-rm entities/events/fixtures/initial_data.json
-rm entities/publications/fixtures/initial_data.json
+declare -a apps=( 'events' 'funding_programs' 'organizations' 'persons' 'projects' 'publications' 'utils' )
+
+for app in ${apps[*]}; do
+    rm entities/$app/fixtures/initial_data.json
+done

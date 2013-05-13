@@ -104,5 +104,5 @@ class Role(models.Model):
         return u'Role: %s' % (self.name)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.name.encode('utf-8'))
         super(Role, self).save(*args, **kwargs)

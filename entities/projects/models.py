@@ -193,7 +193,7 @@ class Funding(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s funded with %s by %s - Project code: %s' % (self.project.full_name, self.total_funds, self.funding_program.short_name, self.project_code)
+        return u'%s funded by %s - Project code: %s' % (self.project.full_name, self.funding_program.short_name, self.project_code)
 
 
 #########################

@@ -38,7 +38,7 @@ class OrganizationType(models.Model):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name))
+        self.slug = slugify(str(self.name.encode('utf-8')))
         super(OrganizationType, self).save(*args, **kwargs)
 
 
@@ -47,6 +47,8 @@ class OrganizationType(models.Model):
 #########################
 
 class Organization(models.Model):
+    organization_type = models.ForeignKey(OrganizationType)
+
     sub_organization_of = models.ForeignKey(
         'self',
         blank=True,
@@ -76,12 +78,15 @@ class Organization(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.short_name, self.full_name)
+        if self.short_name == self.full_name:
+            return u'%s' % (self.full_name)
+        else:
+            return u'%s (%s)' % (self.short_name, self.full_name)
 
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
-        self.slug = slugify(str(self.short_name))
+        self.slug = slugify(str(self.short_name.encode('utf-8')))
         super(Organization, self).save(*args, **kwargs)
 
 

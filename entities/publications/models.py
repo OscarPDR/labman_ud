@@ -45,7 +45,7 @@ class PublicationType(models.Model):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name))
+        self.slug = slugify(str(self.name.encode('utf-8')))
         super(PublicationType, self).save(*args, **kwargs)
 
 
@@ -141,6 +141,6 @@ class Publication(models.Model):
         return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.title))
+        self.slug = slugify(str(self.title.encode('utf-8')))
 
         super(Publication, self).save(*args, **kwargs)
