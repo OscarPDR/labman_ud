@@ -1,11 +1,15 @@
-Projects MORElab
+LabMan UD
 ================
 
-Web app to manage project's data within the MORElab research group at deustotech.
+Web app to manage data within the MORElab research group at deustotech.
 
 In order to have the application fully running all the features correctly, the following parameters need to be filled:
 
-    > projects_morelab/settings.py
+    > labman_ud/settings.py
+    
+    { ... }
+    
+    HOST_URL = ''
     
     { ... }
     
@@ -19,6 +23,13 @@ In order to have the application fully running all the features correctly, the f
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
       }
     }
+    
+    { ... }
+    
+    EMPLOYEES_PAGINATION = 10
+    FUNDING_PROGRAMS_PAGINATION = 10
+    ORGANIZATIONS_PAGINATION = 10
+    PROJECTS_PAGINATION = 10
     
     { ... }
     
