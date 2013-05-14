@@ -1,7 +1,7 @@
 LabMan UD
 ================
 
-Web app to manage data within the MORElab research group at deustotech.
+Web app to manage data within the MORElab research group at DeustoTech Internet.
 
 In order to have the application fully running all the features correctly, the following parameters need to be filled:
 
