@@ -1,9 +1,9 @@
 # coding: utf-8
 
 #########################################
-###         PRODUCTION SETTINGS FOR projects_morelab           ###
-###                                                                                                   ###
-### Last update: 15-04-2013                                                          ###
+###         PRODUCTION SETTINGS FOR labman_ud
+###
+### Last update: 15-04-2013
 #########################################
 
 DEBUG = False

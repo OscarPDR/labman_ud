@@ -4,13 +4,13 @@
 
 *.DS_Store
 
-projects_morelab/settings.py
+labman_ud/settings.py
 
 /media/*
 
 /static_prod/*
 
-projects_morelab.sublime-project
-projects_morelab.sublime-workspace
+labman_ud.sublime-project
+labman_ud.sublime-workspace
 
 *.db

@@ -3,6 +3,7 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth import logout
 
+
 # Create your views here.
 
 
@@ -11,7 +12,7 @@ from django.contrib.auth import logout
 #########################
 
 def home(request):
-    return render_to_response('projects_morelab/index.html')
+    return render_to_response('labman_ud/index.html')
 
 
 #########################
@@ -21,11 +22,11 @@ def home(request):
 def logout_view(request):
     logout(request)
     # Redirect to a success page.
-    return render_to_response('projects_morelab/index.html')
+    return render_to_response('labman_ud/index.html')
 
 #########################
 # View: view404
 #########################
 
 def view404(request):
-    return render_to_response('projects_morelab/404.html')
+    return render_to_response('labman_ud/404.html')
