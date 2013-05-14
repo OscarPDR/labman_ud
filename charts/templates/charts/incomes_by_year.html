@@ -1,5 +1,6 @@
-{% extends "projects_morelab/base.html" %}
-{% load i18n %}
+{% extends base_template %}
+
+
 
 {% block content %}
 
@@ -14,6 +15,8 @@
     <br>
 
 {% endblock %}
+
+
 
 {% block scripts %}
 
@@ -47,7 +50,7 @@
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace("/sourceplanet/charts/incomes/" + {{ year }} + "/" +  scope);
+                    window.location.replace('{{ path }}' + scope);
                 }
             }
         }
