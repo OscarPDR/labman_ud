@@ -1,5 +1,5 @@
 """
-WSGI PROD config for projects_morelab project.
+WSGI PROD config for labman_ud project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -15,11 +15,11 @@ framework.
 """
 import os, sys
 
-sys.path.append('/home/morelab/projects_morelab')
-sys.path.append('/home/morelab/projects_morelab/projects_morelab')
+sys.path.append('/home/morelab/labman_ud')
+sys.path.append('/home/morelab/labman_ud/labman_ud')
 
-#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projects_morelab.settings")
-os.environ["DJANGO_SETTINGS_MODULE"] = "projects_morelab.settings"
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "labman_ud.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "labman_ud.settings"
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

@@ -16,8 +16,8 @@ from entities.projects.models import Project, FundingAmount, Funding
 from entities.utils.models import GeographicalScope
 
 
-BASE_TEMPLATE = 'projects_morelab/base.html'
-CLEAN_BASE_TEMPLATE = 'projects_morelab/clean_base.html'
+BASE_TEMPLATE = 'labman_ud/base.html'
+CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
 
 
 # Create your views here.

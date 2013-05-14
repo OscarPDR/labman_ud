@@ -1,8 +1,8 @@
 
 ##########################################
-###         PRODUCTION URLS FOR projects_morelab
+###         PRODUCTION URLS FOR labman_ud
 ###
-### Last update: 15-04-2013
+### Last update: 14-05-2013
 ##########################################
 
 from django.conf.urls import patterns, include, url
@@ -19,9 +19,9 @@ admin.site.unregister(Site)
 
 
 urlpatterns = patterns('',
-    url(r'^$', 'projects_morelab.views.home', name='home'),
+    url(r'^$', 'labman_ud.views.home', name='home'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/$', 'projects_morelab.views.logout_view', name='logout_view'),
+    url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -40,4 +40,4 @@ urlpatterns = patterns('',
 
 urlpatterns += staticfiles_urlpatterns()
 
-handler404 = 'projects_morelab.views.view404'
+handler404 = 'labman_ud.views.view404'
