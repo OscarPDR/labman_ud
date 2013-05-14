@@ -5,15 +5,20 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
-from django.db.models import Sum, Min, Max
+from django.conf import settings
 
-# from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Min, Max
 
 from entities.funding_programs.models import FundingProgram
 
 from entities.projects.models import Project, FundingAmount, Funding
 
 from entities.utils.models import GeographicalScope
+
+
+BASE_TEMPLATE = 'projects_morelab/base.html'
+CLEAN_BASE_TEMPLATE = 'projects_morelab/clean_base.html'
+
 
 # Create your views here.
 
@@ -23,9 +28,7 @@ from entities.utils.models import GeographicalScope
 #########################
 
 def chart_index(request):
-    return render_to_response("charts/index.html", {
-        },
-        context_instance = RequestContext(request))
+    return render_to_response("charts/index.html", {}, context_instance=RequestContext(request))
 
 
 #########################
@@ -33,6 +36,9 @@ def chart_index(request):
 #########################
 
 def total_incomes(request):
+    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+    path = str(request.path).replace('total_', '')
+
     min_year = FundingAmount.objects.aggregate(Min('year'))
     max_year = FundingAmount.objects.aggregate(Max('year'))
 
@@ -46,9 +52,11 @@ def total_incomes(request):
         incomes.append({'key': year, 'value': income})
 
     return render_to_response("charts/total_incomes.html", {
-                'incomes': incomes,
+            'incomes': incomes,
+            'base_template': base_template,
+            'path': path,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -56,6 +64,9 @@ def total_incomes(request):
 #########################
 
 def incomes_by_year(request, year):
+    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+    path = str(request.path).replace('total_', '') + '/'
+
     incomes = {}
 
     geographical_scopes = GeographicalScope.objects.all()
@@ -74,8 +85,10 @@ def incomes_by_year(request, year):
     return render_to_response("charts/incomes_by_year.html", {
             'incomes': incomes,
             'year': year,
+            'base_template': base_template,
+            'path': path,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -83,6 +96,8 @@ def incomes_by_year(request, year):
 #########################
 
 def incomes_by_year_and_scope(request, year, scope):
+    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+
     project_incomes = []
 
     year_incomes = FundingAmount.objects.filter(year=year)
@@ -99,8 +114,9 @@ def incomes_by_year_and_scope(request, year, scope):
             'project_incomes': project_incomes,
             'year': year,
             'scope': scope,
+            'base_template': base_template,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -113,7 +129,7 @@ def incomes_by_project_index(request):
     return render_to_response("charts/incomes_by_project_index.html", {
             'projects': projects,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -121,109 +137,14 @@ def incomes_by_project_index(request):
 #########################
 
 def incomes_by_project(request, project_slug):
-    project_incomes = []
-
     project = Project.objects.get(slug=project_slug)
 
     funding_ids = Funding.objects.filter(project_id=project.id).values('id')
 
-    # funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids)
-
     project_incomes = FundingAmount.objects.filter(funding_id__in=funding_ids).values('year').annotate(total=Sum('own_amount'))
-
-    print project_incomes
-
-    # for funding_amount in funding_amounts:
-    #     project_incomes.append({'key': funding_amount.year, 'value': funding_amount.amount})
 
     return render_to_response("charts/incomes_by_project.html", {
             'project': project,
             'project_incomes': project_incomes,
         },
-        context_instance = RequestContext(request))
-
-
-###########################################################################
-###########################################################################
-
-
-#########################
-# View: total_incomes_only
-#########################
-
-def total_incomes_only(request):
-    min_year = FundingAmount.objects.aggregate(Min('year'))
-    max_year = FundingAmount.objects.aggregate(Max('year'))
-
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
-
-    incomes = []
-
-    for year in range(min_year, max_year + 1):
-        income = FundingAmount.objects.filter(year = year).aggregate(Sum('own_amount'))
-        incomes.append({'key': year, 'value': income})
-
-    return render_to_response("charts/total_incomes_only.html", {
-            'incomes': incomes,
-        },
-        context_instance = RequestContext(request))
-
-
-#########################
-# View: incomes_by_year_only
-#########################
-
-def incomes_by_year_only(request, year):
-    europe = 0
-    spain = 0
-    euskadi = 0
-
-    year_incomes = FundingAmount.objects.filter(year = year)
-
-    for year_income in year_incomes:
-        project = Project.objects.get(id = year_income.project_id)
-        funding_program = FundingProgram.objects.get(id = project.funding_program_id)
-
-        area = funding_program.geographical_scope
-
-        if area == 'Europe':
-            europe += year_income.amount
-        if area == 'Spain':
-            spain += year_income.amount
-        if area == 'Euskadi':
-            euskadi += year_income.amount
-
-    return render_to_response("charts/incomes_by_year_only.html", {
-            'europe': europe,
-            'spain': spain,
-            'euskadi': euskadi,
-            'year': year,
-        },
-        context_instance = RequestContext(request))
-
-
-#########################
-# View: incomes_by_year_and_scope_only
-#########################
-
-def incomes_by_year_and_scope_only(request, year, scope):
-    project_incomes = []
-
-    year_incomes = FundingAmount.objects.filter(year = year)
-
-    for year_income in year_incomes:
-        project = Project.objects.get(id = year_income.project_id)
-        funding_program = FundingProgram.objects.get(id = project.funding_program_id)
-
-        area = funding_program.geographical_scope
-
-        if area == scope:
-            project_incomes.append({'key': project.title, 'value': year_income.amount})
-
-    return render_to_response("charts/incomes_by_year_and_scope_only.html", {
-            'project_incomes': project_incomes,
-            'year': year,
-            'scope': scope,
-        },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))

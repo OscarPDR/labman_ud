@@ -1,5 +1,6 @@
-{% extends "projects_morelab/base.html" %}
-{% load i18n %}
+{% extends base_template %}
+
+
 
 {% block content %}
 
@@ -14,6 +15,8 @@
     <br>
 
 {% endblock %}
+
+
 
 {% block scripts %}
 
@@ -36,22 +39,8 @@
                 vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
             };
 
-            // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-            // var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
-
-            // Add selection handler.
-            google.visualization.events.addListener(chart, 'select', selectHandler);
-
-            function selectHandler() {
-                var selection = chart.getSelection();
-                for (var i = 0; i < selection.length; i++) {
-                    var item = selection[i];
-                    var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace("/sourceplanet/charts/incomes/" + {{ year }} + "/" +  scope);
-                }
-            }
         }
     </script>
 
