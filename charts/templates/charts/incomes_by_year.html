@@ -25,9 +25,9 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Geographical scope', 'Incomes'],
-                ['Europe', parseFloat({{ europe }})],
-                ['Spain', parseFloat({{ spain }})],
-                ['Euskadi', parseFloat({{ euskadi }})]
+                {% for key, value in incomes.items %}
+                    ["{{ key }}", parseFloat({{ value }})],
+                {% endfor %}
             ]);
 
             var options = {
@@ -36,8 +36,6 @@
                 vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
             };
 
-            // var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-            // var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
             chart.draw(data, options);
 
