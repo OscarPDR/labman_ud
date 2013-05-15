@@ -52,41 +52,59 @@
 
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="">Projects</a>
+                                            <a href="{% url project_index %}">
+                                                Projects
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Demos</a>
+                                            <a href="">
+                                                Demos
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Publications</a>
+                                            <a href="">
+                                                Publications
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Events</a>
+                                            <a href="">
+                                                Events
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href=""><i class="icon-user"></i> Persons</a>
+                                            <a href="{% url person_index %}">
+                                                <i class="icon-user"></i> Persons
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Organizations</a>
+                                            <a href="{% url organization_index %}">
+                                                Organizations
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Funding programs</a>
+                                            <a href="{% url funding_program_index %}">
+                                                Funding programs
+                                            </a>
                                         </li>
 
                                         <li class="divider"></li>
 
                                         <li>
-                                            <a href="">Charts</a>
+                                            <a href="{% url chart_index %}">
+                                                Charts
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <a href="">Semantic search</a>
+                                            <a href="{% url semantic_search %}">
+                                                Semantic search
+                                            </a>
                                         </li>
                                     </ul>
                                 </li>

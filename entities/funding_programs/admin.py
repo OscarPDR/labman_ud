@@ -19,8 +19,8 @@ class FundingProgramLogoInline(admin.StackedInline):
 
 class FundingProgramAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'short_name']
-    list_display = ['short_name', 'full_name', 'concession_year', 'geographical_scope']
-    list_filter = ['concession_year', 'geographical_scope']
+    list_display = ['short_name', 'full_name', 'geographical_scope']
+    list_filter = ['geographical_scope']
     exclude = ['slug']
     inlines = [
         FundingProgramLogoInline,
