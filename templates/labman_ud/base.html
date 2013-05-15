@@ -25,99 +25,105 @@
     </head>
 
     <body>
-        <div class="navbar navbar-fixed-top navbar-inverse">
-            <div class="navbar-inner">
-                <div class="container"><!-- Collapsable nav bar -->
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
 
-                    <!-- Your site name for the upper left corner of the site -->
-                    <a class="brand" href="{% url home %}">LabMan UD</a>
+        <div id="wrap">
 
-                    <!-- Start of the nav bar content -->
-                    <div class="nav-collapse"><!-- Other nav bar content -->
+            <div class="navbar navbar-fixed-top navbar-inverse">
+                <div class="navbar-inner">
+                    <div class="container"><!-- Collapsable nav bar -->
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
 
-                        <ul class="nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    MORElab
-                                    <b class="caret"></b>
-                                </a>
+                        <!-- Your site name for the upper left corner of the site -->
+                        <a class="brand" href="{% url home %}">LabMan UD</a>
 
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="">Projects</a>
-                                    </li>
+                        <!-- Start of the nav bar content -->
+                        <div class="nav-collapse"><!-- Other nav bar content -->
 
-                                    <li>
-                                        <a href="">Demos</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="">Publications</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="">Events</a>
-                                    </li>
-
-                                    <li>
-                                        <a href=""><i class="icon-user"></i> Persons</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="">Organizations</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="">Funding programs</a>
-                                    </li>
-
-                                    <li class="divider"></li>
-
-                                    <li>
-                                        <a href="">Charts</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="">Semantic search</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <!-- The drop down menu -->
-                        <ul class="nav pull-right">
-                            {% if user.is_authenticated %}
-                                <li>
-                                    <a href="">
-                                        Welcome, {{ user.username }}.
+                            <ul class="nav">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        MORElab
+                                        <b class="caret"></b>
                                     </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="">Projects</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Demos</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Publications</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Events</a>
+                                        </li>
+
+                                        <li>
+                                            <a href=""><i class="icon-user"></i> Persons</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Organizations</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Funding programs</a>
+                                        </li>
+
+                                        <li class="divider"></li>
+
+                                        <li>
+                                            <a href="">Charts</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="">Semantic search</a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="divider-vertical"></li>
-                                <li>
-                                    <a href="{% url logout_view %}">
-                                        Logout
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a href="{% url django.contrib.auth.views.login %}">
-                                        Sign In
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
+                            </ul>
+
+                            <!-- The drop down menu -->
+                            <ul class="nav pull-right">
+                                {% if user.is_authenticated %}
+                                    <li>
+                                        <a href="">
+                                            Welcome, {{ user.username }}.
+                                        </a>
+                                    </li>
+                                    <li class="divider-vertical"></li>
+                                    <li>
+                                        <a href="{% url logout_view %}">
+                                            Logout
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url django.contrib.auth.views.login %}">
+                                            Sign In
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="main-container" class="container">
-            {% block content %}{% endblock %}
+            <div id="main-container" class="container">
+                {% block content %}{% endblock %}
+            </div>
+
+            <div id="push"></div>
         </div>
 
         <footer>
