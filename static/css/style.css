@@ -7,8 +7,17 @@ a:hover {
     text-decoration: none;
 }
 
+body {
+    /*background: url('../img/morelab.png') no-repeat fixed center;
+    background-size: 20%;*/
+}
+
 textarea {
     width: 90%;
+}
+
+.centered {
+    text-align: center;
 }
 
 .main-page > .span3 > a {
@@ -226,15 +235,17 @@ ul.nav.nav-tabs {
 footer {
     text-align: center;
     width: 100%;
-    line-height: 8em;
-    min-height: 11em;
-    background-color: whiteSmoke;
-    border-top: #999 0.5em solid;
+    line-height: 2.5em;
+    min-height: 2.5em;
+    background-color: #1b1b1b;
+    border-top: #252525 0.5em solid;
     margin: 0 auto;
 }
 
-footer img {
-    margin: 1em;
+footer > a {
+    color: #999;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 .form-search {

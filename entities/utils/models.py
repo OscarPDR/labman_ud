@@ -89,3 +89,25 @@ class Role(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
         super(Role, self).save(*args, **kwargs)
+
+
+#########################
+# Model: Tag
+#########################
+
+class Tag(models.Model):
+    tag = models.CharField(
+        max_length=50,
+    )
+
+    slug = models.SlugField(
+        max_length=50,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'%s' % (self.tag)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.tag.encode('utf-8')))
+        super(Role, self).save(*args, **kwargs)

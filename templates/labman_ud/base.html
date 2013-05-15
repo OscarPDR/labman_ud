@@ -35,13 +35,59 @@
                     </a>
 
                     <!-- Your site name for the upper left corner of the site -->
-                    <a class="brand" href="{% url home %}">MORElab</a>
+                    <a class="brand" href="{% url home %}">LabMan UD</a>
 
                     <!-- Start of the nav bar content -->
                     <div class="nav-collapse"><!-- Other nav bar content -->
 
-                        {% block search-form %}
-                        {% endblock %}
+                        <ul class="nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    MORElab
+                                    <b class="caret"></b>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="">Projects</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Demos</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Publications</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Events</a>
+                                    </li>
+
+                                    <li>
+                                        <a href=""><i class="icon-user"></i> Persons</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Organizations</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Funding programs</a>
+                                    </li>
+
+                                    <li class="divider"></li>
+
+                                    <li>
+                                        <a href="">Charts</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">Semantic search</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
 
                         <!-- The drop down menu -->
                         <ul class="nav pull-right">
@@ -75,8 +121,13 @@
         </div>
 
         <footer>
-            <img id="logo-left" src="{{ STATIC_PREFIX }}img/morelab.png" width="150" />
-            <img id="logo-right" src="{{ STATIC_PREFIX }}img/deustotech.png" width="150" />
+            <a target="_blank" href="http://www.morelab.deusto.es/">
+                MORElab
+            </a>
+
+            <a target="_blank" href="http://www.deustotech.deusto.es/">
+                DeustoTech
+            </a>
         </footer>
 
     </body>
