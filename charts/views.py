@@ -48,8 +48,10 @@ def total_incomes(request):
     incomes = []
 
     for year in range(min_year, max_year + 1):
-        income = FundingAmount.objects.filter(year=year).aggregate(Sum('own_amount'))
-        incomes.append({'key': year, 'value': income})
+        income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
+        if income['value'] is None:
+            income['value'] = 0
+        incomes.append({'key': year, 'value': income['value']})
 
     return render_to_response("charts/total_incomes.html", {
             'incomes': incomes,

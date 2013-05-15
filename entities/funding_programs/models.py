@@ -2,7 +2,6 @@
 
 import os
 
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 
@@ -12,9 +11,6 @@ from entities.utils.models import GeographicalScope
 
 
 # Create your models here.
-
-MIN_YEAR_LIMIT = 2000
-MAX_YEAR_LIMIT = 2030
 
 
 def funding_program_logo_path(self, filename):
@@ -43,10 +39,6 @@ class FundingProgram(models.Model):
         unique=True,
     )
 
-    concession_year = models.IntegerField(
-        validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
-    )
-
     geographical_scope = models.ForeignKey(GeographicalScope)
 
     observations = models.TextField(
@@ -62,7 +54,7 @@ class FundingProgram(models.Model):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
 
-        self.slug = slugify(self.short_name + ' ' + str(self.concession_year))
+        self.slug = slugify(self.short_name)
 
         super(FundingProgram, self).save(*args, **kwargs)
 

@@ -1,0 +1,29 @@
+[
+    {
+        "pk": 1, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Spain", 
+            "full_name": "Spain", 
+            "slug": "spain"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "utils.geographicalscope", 
+        "fields": {
+            "description": "", 
+            "name": "Spain", 
+            "slug": "spain"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "utils.geographicalscope", 
+        "fields": {
+            "description": "", 
+            "name": "Euskadi", 
+            "slug": "euskadi"
+        }
+    }
+]

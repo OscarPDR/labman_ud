@@ -33,7 +33,6 @@
         <thead>
             <tr>
                 <th>Short name</th>
-                <th>Concession year</th>
                 <th>Funded by</th>
             </tr>
         </thead>
@@ -46,9 +45,7 @@
                             {{ funding_program.short_name }}
                         </a>
                     </td>
-                    <td>
-                        {{ funding_program.concession_year }}
-                    </td>
+
                     <td>
                         <a target="_blank" href="{% url organization_info funding_program.organization.slug %}">
                             {{ funding_program.organization.full_name }}

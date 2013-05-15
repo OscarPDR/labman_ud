@@ -29,7 +29,7 @@
             var data = google.visualization.arrayToDataTable([
                 ['Year', 'Incomes'],
                 {% for income in incomes %}
-                    ["{{ income.key }}", parseFloat({{ income.value.own_amount__sum }})],
+                    ["{{ income.key }}", parseFloat({{ income.value }})],
                 {% endfor %}
             ]);
 
