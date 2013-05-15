@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Country, GeographicalScope, Role
+from .models import Country, GeographicalScope, Role, Tag
 
 
 #########################
@@ -28,6 +28,14 @@ class RoleAdmin(admin.ModelAdmin):
     model = Role
 
 
+#########################
+# Class: TagAdmin
+#########################
+
+class TagAdmin(admin.ModelAdmin):
+    model = Tag
+
+
 ##################################################
 # Register classes
 ##################################################
@@ -35,3 +43,4 @@ class RoleAdmin(admin.ModelAdmin):
 admin.site.register(Country, CountryAdmin)
 admin.site.register(GeographicalScope, GeographicalScopeAdmin)
 admin.site.register(Role, RoleAdmin)
+admin.site.register(Tag, TagAdmin)

@@ -149,7 +149,7 @@ class Project(models.Model):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
 
-        self.slug = slugify(str(self.full_name))
+        self.slug = slugify(str(self.short_name))
         super(Project, self).save(*args, **kwargs)
 
 
