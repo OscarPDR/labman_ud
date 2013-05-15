@@ -12,6 +12,17 @@ body {
     background-size: 20%;*/
 }
 
+html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -3em;
+}
+
 textarea {
     width: 90%;
 }
@@ -232,11 +243,15 @@ ul.nav.nav-tabs {
     font-size: 10px;
 }
 
+#push {
+    height: 3em;
+}
+
 footer {
     text-align: center;
     width: 100%;
     line-height: 2.5em;
-    min-height: 2.5em;
+    height: 2.5em;
     background-color: #1b1b1b;
     border-top: #252525 0.5em solid;
     margin: 0 auto;
