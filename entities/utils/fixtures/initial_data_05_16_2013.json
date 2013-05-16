@@ -9,6 +9,15 @@
         }
     }, 
     {
+        "pk": 2, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Netherlands", 
+            "full_name": "Netherlands", 
+            "slug": "netherlands"
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "utils.geographicalscope", 
         "fields": {
