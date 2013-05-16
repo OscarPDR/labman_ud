@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Organization
 from .forms import OrganizationForm, OrganizationSearchForm
 
-from entities.projects.models import Project
+from entities.projects.models import Project, ConsortiumMember
 from entities.projects.forms import *
 
 # Create your views here.

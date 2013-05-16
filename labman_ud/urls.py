@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^organizations/', include('entities.organizations.urls')),
-    url(r'^persons/', include('entities.persons.urls')),
+    url(r'^people/', include('entities.persons.urls')),
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^funding_programs/', include('entities.funding_programs.urls')),
 
