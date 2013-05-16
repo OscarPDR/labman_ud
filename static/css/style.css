@@ -7,13 +7,13 @@ a:hover {
     text-decoration: none;
 }
 
-body {
-    /*background: url('../img/morelab.png') no-repeat fixed center;
-    background-size: 20%;*/
-}
-
 html, body {
     height: 100%;
+}
+
+#main-index {
+    background: url('../img/morelab.png') no-repeat fixed center;
+    background-size: 20%;
 }
 
 #wrap {
