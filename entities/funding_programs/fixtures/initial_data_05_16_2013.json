@@ -1,0 +1,62 @@
+[
+    {
+        "pk": 1,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "short_name": "ETORGAI",
+            "geographical_scope": 1,
+            "observations": "",
+            "full_name": "Ayudas ETORGAI a proyectos integrados de investigaci\u00f3n industrial de car\u00e1cter estrat\u00e9gico",
+            "organization": 3,
+            "slug": "etorgai"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "short_name": "AVANZA",
+            "geographical_scope": 2,
+            "observations": "",
+            "full_name": "Acci\u00f3n Estrat\u00e9gica de Telecomunicaciones y Sociedad de la Informaci\u00f3n. Avanza I+D",
+            "organization": 11,
+            "slug": "avanza"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "short_name": "INNPACTO",
+            "geographical_scope": 1,
+            "observations": "",
+            "full_name": "Convocatoria INNPACTO",
+            "organization": 25,
+            "slug": "innpacto"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "short_name": "GAITEK",
+            "geographical_scope": 2,
+            "observations": "",
+            "full_name": "GAITEK",
+            "organization": 3,
+            "slug": "gaitek"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "funding_programs.fundingprogram",
+        "fields": {
+            "short_name": "SAIOTEK",
+            "geographical_scope": 2,
+            "observations": "",
+            "full_name": "SAIOTEK",
+            "organization": 34,
+            "slug": "saiotek"
+        }
+    }
+]
