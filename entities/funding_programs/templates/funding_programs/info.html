@@ -25,6 +25,10 @@
 
     <br>
 
+    <div id="chart_div" style="width: 450px; height: 250px;"></div>
+
+    <br>
+
     <h6>Projects funded:</h6>
 
     <table class="table table-striped table-bordered">
@@ -58,4 +62,35 @@
 
 
 {% block scripts %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Number of projects', 'Funding amount'],
+
+                {% for data in datum %}
+                    {{ data }},
+                {% endfor %}
+
+            ]);
+
+            var options = {
+                vAxes: {
+                    0: {minValue: 0, maxValue: 4, format: '#'},
+                },
+                hAxis: {minValue: {{ min_year }}, maxValue: {{ max_year }}, format: '#'},
+                series: {
+                    0: { type: "bars", targetAxisIndex: 0 },
+                    1: { type: "line", targetAxisIndex: 1}
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
 {% endblock %}

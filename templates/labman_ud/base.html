@@ -53,60 +53,67 @@
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="{% url project_index %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
                                                 Projects
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="">
+                                                <img src="{{ STATIC_PREFIX }}img/index/demo_micro.png"/>
                                                 Demos
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="">
+                                                <img src="{{ STATIC_PREFIX }}img/index/publication_micro.png"/>
                                                 Publications
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="">
+                                                <img src="{{ STATIC_PREFIX }}img/index/event_micro.png"/>
                                                 Events
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url person_index %}">
-                                                <i class="icon-user"></i> Persons
+                                                <img src="{{ STATIC_PREFIX }}img/index/person_micro.png"/>
+                                                Persons
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url organization_index %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/organization_micro.png"/>
                                                 Organizations
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url funding_program_index %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/funding_program_micro.png"/>
                                                 Funding programs
                                             </a>
                                         </li>
-
-                                        <li class="divider"></li>
-
-                                        <li>
-                                            <a href="{% url chart_index %}">
-                                                Charts
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="{% url semantic_search %}">
-                                                Semantic search
-                                            </a>
-                                        </li>
                                     </ul>
+                                </li>
+
+                                <li>
+                                    <a href="{% url chart_index %}">
+                                        <img src="{{ STATIC_PREFIX }}img/index/chart_micro.png"/>
+                                        Charts
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url semantic_search %}">
+                                        <img src="{{ STATIC_PREFIX }}img/index/search_micro.png"/>
+                                        Semantic search
+                                    </a>
                                 </li>
                             </ul>
 
