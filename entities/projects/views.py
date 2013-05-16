@@ -84,6 +84,14 @@ def project_index(request):
 #########################
 
 def project_info(request, slug):
+
+    from_page = ''
+
+    http_referer = request.META['HTTP_REFERER']
+
+    if '?page=' in http_referer:
+        from_page = http_referer[http_referer.rfind('/')+1:]
+
     project = get_object_or_404(Project, slug=slug)
 
     fundings = Funding.objects.filter(project_id=project.id)
@@ -110,6 +118,7 @@ def project_info(request, slug):
             'funding_programs': funding_programs,
             'funding_amounts': funding_amounts,
             'consortium_members': consortium_members,
+            'from_page': from_page,
         },
         context_instance=RequestContext(request))
 
