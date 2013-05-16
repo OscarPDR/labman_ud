@@ -13,12 +13,6 @@
         </div>
     <form>
 
-    {% if user.is_authenticated %}
-        <div class="center">
-            <a class="btn btn-info" href="{% url add_person %}">Add person</a>
-        </div>
-    {% endif %}
-
     <div class="pagination">
         <span class="step-links">
             {% if persons.has_previous %}
@@ -41,9 +35,6 @@
                 <tr>
                     <th class="span6">Full name</th>
                     <th class="span1">FOAF</th>
-                    {% if user.is_authenticated %}
-                        <th class="span2">Actions</th>
-                    {% endif %}
                 </tr>
             </thead>
 
@@ -55,11 +46,11 @@
                                 {% if person.external %}
                                     <i class="icon-road"></i>
                                 {% endif %}
-                                {{ person.name }} {{ person.first_surname }} {{ person.second_surname }}
+                                {{ person.full_name }}
                             </a>
                             {% if person.external %}
                                 <a target="_blank" href="{% url organization_info person.organization.slug%}">
-                                    ({{ person.organization.name }})
+                                    ({{ person.organization.full_name }})
                                 </a>
                             {% endif %}
                         </td>
@@ -68,13 +59,6 @@
                                 <a target="_blank" href="{{ person.foaf_link }}">View</a>
                             {% endif %}
                         </td>
-
-                        {% if user.is_authenticated %}
-                            <td class="span2">
-                                <a class="btn btn-mini btn-inverse" href="{% url edit_person person.slug %}">Edit</a>
-                                <a class="btn btn-mini btn-danger" href="{% url delete_person person.slug %}">Delete</a>
-                            </td>
-                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
