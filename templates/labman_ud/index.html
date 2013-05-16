@@ -4,59 +4,61 @@
 
 {% block content %}
 
-    <div class="row-fluid">
-        <div class="span4 well">
-            <a href="{% url project_index %}">
-                <h2>
-                    <img src="{{ STATIC_PREFIX }}img/index/project_mini.png">
-                    Projects
-                </h2>
+    <div id="main-index">
+        <div class="row-fluid">
+            <div class="span4 well">
+                <a href="{% url project_index %}">
+                    <h2>
+                        <img src="{{ STATIC_PREFIX }}img/index/project_mini.png">
+                        Projects
+                    </h2>
 
-                <p>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                </p>
-            </a>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                </a>
+            </div>
+
+            <div class="span4 offset4 well">
+                <a href="">
+                    <h2>
+                        <img src="{{ STATIC_PREFIX }}img/index/demo_mini.png">
+                        Demos
+                    </h2>
+
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                </a>
+            </div>
         </div>
 
-        <div class="span4 offset4 well">
-            <a href="">
-                <h2>
-                    <img src="{{ STATIC_PREFIX }}img/index/demo_mini.png">
-                    Demos
-                </h2>
+        <div class="row-fluid">
+            <div class="span4 well">
+                <a href="{% url project_index %}">
+                    <h2>
+                        <img src="{{ STATIC_PREFIX }}img/index/publication_mini.png">
+                        Publications
+                    </h2>
 
-                <p>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                </p>
-            </a>
-        </div>
-    </div>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                </a>
+            </div>
 
-    <div class="row-fluid">
-        <div class="span4 well">
-            <a href="{% url project_index %}">
-                <h2>
-                    <img src="{{ STATIC_PREFIX }}img/index/publication_mini.png">
-                    Publications
-                </h2>
+            <div class="span4 offset4 well">
+                <a href="{% url person_index %}">
+                    <h2>
+                        <img src="{{ STATIC_PREFIX }}img/index/person_mini.png">
+                        Persons
+                    </h2>
 
-                <p>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                </p>
-            </a>
-        </div>
-
-        <div class="span4 offset4 well">
-            <a href="{% url person_index %}">
-                <h2>
-                    <img src="{{ STATIC_PREFIX }}img/index/person_mini.png">
-                    Persons
-                </h2>
-
-                <p>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                </p>
-            </a>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                </a>
+            </div>
         </div>
     </div>
 
