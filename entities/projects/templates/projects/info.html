@@ -95,7 +95,7 @@
                                 <div class="accordion-group">
                                     <div class="accordion-heading">
                                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#funding_{{ funding_loop }}">
-                                            {{ funding_program.short_name }}
+                                            {{ funding_program.full_name }}
                                         </a>
                                     </div>
 
@@ -112,7 +112,7 @@
 
                                                 <h5>Supported by:</h5>
                                                 <p>
-                                                    {{ funding_program.full_name }} - {{ funding_program.organization.full_name }}
+                                                    {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
                                                     {% if funding_program.organization.sub_organization_of %}
                                                         ({{ funding_program.organization.sub_organization_of.full_name }})
                                                     {% endif %}
@@ -133,8 +133,8 @@
 
                                                 <h5>Duration:</h5>
                                                 <p>
-                                                    {% if funding_program.concession_year %}
-                                                        Funding conceeded in {{ funding_program.concession_year }}, to fund the {{ project.start_year }} - {{ project.end_year }} period.
+                                                    {% if project.start_year %}
+                                                        Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
                                                     {% else %}
                                                         No information available
                                                     {% endif %}
