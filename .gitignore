@@ -15,4 +15,4 @@ labman_ud.sublime-workspace
 
 *.db
 
-*/fixtures/*
+*.json
