@@ -10,7 +10,7 @@
     </a>
 
     <h2>
-        <a href="{% url project_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        <a href="{% url project_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ project.full_name }}
     </h2>
 
