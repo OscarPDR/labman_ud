@@ -126,7 +126,7 @@ def incomes_by_year_and_scope(request, year, scope):
 #########################
 
 def incomes_by_project_index(request):
-    projects = Project.objects.all().order_by('full_name')
+    projects = Project.objects.all().order_by('slug')
 
     return render_to_response("charts/incomes_by_project_index.html", {
             'projects': projects,
@@ -148,5 +148,54 @@ def incomes_by_project(request, project_slug):
     return render_to_response("charts/incomes_by_project.html", {
             'project': project,
             'project_incomes': project_incomes,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: total_incomes_by_scope
+#########################
+
+def total_incomes_by_scope(request):
+    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+
+    incomes = {}
+
+    geographical_scopes = GeographicalScope.objects.all()
+
+    for geographical_scope in geographical_scopes:
+        incomes[geographical_scope.name] = 0
+
+    funding_amounts = FundingAmount.objects.all()
+
+    min_year = FundingAmount.objects.aggregate(Min('year'))
+    max_year = FundingAmount.objects.aggregate(Max('year'))
+
+    min_year = min_year.get('year__min')
+    max_year = max_year.get('year__max')
+
+    incomes = {}
+
+    for year in range(min_year, max_year + 1):
+        incomes[year] = {}
+        for scope in geographical_scopes:
+            incomes[year][scope.name] = 0
+
+    for funding_amount in funding_amounts:
+        funding = Funding.objects.get(id=funding_amount.funding_id)
+        funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
+        scope = funding_program.geographical_scope.name
+        incomes[funding_amount.year][scope] = incomes[funding_amount.year][scope] + funding_amount.own_amount
+
+    total_incomes = []
+
+    for year in range(min_year, max_year + 1):
+        total_incomes.append([year, float(incomes[year]['Europe']), float(incomes[year]['Spain']), float(incomes[year]['Euskadi'])])
+
+    return render_to_response("charts/total_incomes_by_scope.html", {
+            'incomes': incomes,
+            'total_incomes': total_incomes,
+            'year': year,
+            'base_template': base_template,
         },
         context_instance=RequestContext(request))
