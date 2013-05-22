@@ -82,5 +82,101 @@
             "organization": 50, 
             "slug": "ekinberri"
         }
+    }, 
+    {
+        "pk": 9, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "ICT PSP", 
+            "geographical_scope": 3, 
+            "observations": "", 
+            "full_name": "ICT Policy Support Programme", 
+            "organization": 59, 
+            "slug": "ict-psp"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "Programa de Investigaci\u00f3n B\u00e1sica", 
+            "geographical_scope": 2, 
+            "observations": "", 
+            "full_name": "Programa de Investigaci\u00f3n B\u00e1sica", 
+            "organization": 80, 
+            "slug": "programa-de-investigacion-basica"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "ITEA2", 
+            "geographical_scope": 1, 
+            "observations": "", 
+            "full_name": "ITEA2", 
+            "organization": 81, 
+            "slug": "itea2"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "CENIT", 
+            "geographical_scope": 1, 
+            "observations": "", 
+            "full_name": "Convocatoria CENIT", 
+            "organization": 25, 
+            "slug": "cenit"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "FP7", 
+            "geographical_scope": 3, 
+            "observations": "", 
+            "full_name": "FP7", 
+            "organization": 59, 
+            "slug": "fp7"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "Subproyectos de Investigaci\u00f3n Fundamental", 
+            "geographical_scope": 1, 
+            "observations": "", 
+            "full_name": "Subproyectos de Investigaci\u00f3n Fundamental", 
+            "organization": 25, 
+            "slug": "subproyectos-de-investigacion-fundamental"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "Proyecto Singular Estrat\u00e9gico, Plan Avanza I+D", 
+            "geographical_scope": 1, 
+            "observations": "", 
+            "full_name": "Proyecto Singular Estrat\u00e9gico, Plan Avanza I+D", 
+            "organization": 81, 
+            "slug": "proyecto-singular-estrategico-plan-avanza-id"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "CTD", 
+            "geographical_scope": 1, 
+            "observations": "", 
+            "full_name": "C\u00e1tedra Telef\u00f3nica-Deusto", 
+            "organization": 82, 
+            "slug": "ctd"
+        }
     }
 ]
