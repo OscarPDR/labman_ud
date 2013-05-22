@@ -18,6 +18,51 @@
         }
     }, 
     {
+        "pk": 3, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Belgium", 
+            "full_name": "Belgium", 
+            "slug": "belgium"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Poland", 
+            "full_name": "Poland", 
+            "slug": "poland"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Italy", 
+            "full_name": "Italy", 
+            "slug": "italy"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "UK", 
+            "full_name": "United Kingdom", 
+            "slug": "uk"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "utils.country", 
+        "fields": {
+            "short_name": "Germany", 
+            "full_name": "Germany", 
+            "slug": "germany"
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "utils.geographicalscope", 
         "fields": {
@@ -33,6 +78,15 @@
             "description": "", 
             "name": "Euskadi", 
             "slug": "euskadi"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "utils.geographicalscope", 
+        "fields": {
+            "description": "", 
+            "name": "Europe", 
+            "slug": "europe"
         }
     }
 ]

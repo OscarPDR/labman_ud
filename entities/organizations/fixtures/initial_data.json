@@ -683,5 +683,1045 @@
             "homepage": "", 
             "slug": "university-of-twente"
         }
+    }, 
+    {
+        "pk": 53, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Agotek", 
+            "country": 1, 
+            "full_name": "Agotek", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "agotek"
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Dimitel 2000 SA", 
+            "country": 1, 
+            "full_name": "Dimitel 2000 SA", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "dimitel-2000-sa"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Kidy Froh SL", 
+            "country": 1, 
+            "full_name": "Kidy Froh SL", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "kidy-froh-sl"
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Robotiker", 
+            "country": 1, 
+            "full_name": "Robotiker", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "robotiker"
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Gerokon", 
+            "country": 1, 
+            "full_name": "Gerokon", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "gerokon"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ingema", 
+            "country": 1, 
+            "full_name": "Ingema", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ingema"
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "European Union", 
+            "country": 3, 
+            "full_name": "European Union", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "european-union"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Amis D.O.O", 
+            "country": 4, 
+            "full_name": "Amis D.O.O", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "amis-doo"
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ayuntamiento de Majadahonda", 
+            "country": 1, 
+            "full_name": "Ayuntamiento de Majadahonda", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ayuntamiento-de-majadahonda"
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ayuntamiento de Zaragoza", 
+            "country": 1, 
+            "full_name": "Ayuntamiento de Zaragoza", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ayuntamiento-de-zaragoza"
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Comune di Rovereto", 
+            "country": 5, 
+            "full_name": "Comune di Rovereto", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "comune-di-rovereto"
+        }
+    }, 
+    {
+        "pk": 64, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Bristol city council", 
+            "country": 6, 
+            "full_name": "Bristol city council", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "bristol-city-council"
+        }
+    }, 
+    {
+        "pk": 65, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Geko NavSat", 
+            "country": 1, 
+            "full_name": "Geko NavSat", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "geko-navsat"
+        }
+    }, 
+    {
+        "pk": 66, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "FBK", 
+            "country": 5, 
+            "full_name": "Fondazione Bruno Kessler", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "fbk"
+        }
+    }, 
+    {
+        "pk": 67, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "KWMC", 
+            "country": 6, 
+            "full_name": "Knowle West Media Centre", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "kwmc"
+        }
+    }, 
+    {
+        "pk": 68, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "ZIB-Berlin", 
+            "country": 7, 
+            "full_name": "Konrad-Zuse-Zentrum fur Informationstechnik Berlin", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "zib-berlin"
+        }
+    }, 
+    {
+        "pk": 69, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Toshiba Europe Research Labs", 
+            "country": 6, 
+            "full_name": "Toshiba Europe Research Labs", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "toshiba-europe-research-labs"
+        }
+    }, 
+    {
+        "pk": 70, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Eurohelp consulting SL", 
+            "country": 1, 
+            "full_name": "Eurohelp consulting SL", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "eurohelp-consulting-sl"
+        }
+    }, 
+    {
+        "pk": 71, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "DataCloud Norte SL", 
+            "country": 1, 
+            "full_name": "DataCloud Norte SL", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "datacloud-norte-sl"
+        }
+    }, 
+    {
+        "pk": 72, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Dinycon Systemas SL", 
+            "country": 1, 
+            "full_name": "Dinycon Systemas SL", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "dinycon-systemas-sl"
+        }
+    }, 
+    {
+        "pk": 73, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Factor CO2 Integral Services S.L.", 
+            "country": 1, 
+            "full_name": "Factor CO2 Integral Services S.L.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "factor-co2-integral-services-sl"
+        }
+    }, 
+    {
+        "pk": 74, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "IKOR Sistemas Electronicos", 
+            "country": 1, 
+            "full_name": "IKOR Sistemas Electronicos", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ikor-sistemas-electronicos"
+        }
+    }, 
+    {
+        "pk": 75, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "INBISA servicios y medio ambiente S.A.", 
+            "country": 1, 
+            "full_name": "INBISA servicios y medio ambiente S.A.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "inbisa-servicios-y-medio-ambiente-sa"
+        }
+    }, 
+    {
+        "pk": 76, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Innevento comunicaciones en vivo S.A.", 
+            "country": 1, 
+            "full_name": "Innevento comunicaciones en vivo S.A.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "innevento-comunicaciones-en-vivo-sa"
+        }
+    }, 
+    {
+        "pk": 77, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Intermedio Montajes S.L.", 
+            "country": 1, 
+            "full_name": "Intermedio Montajes S.L.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "intermedio-montajes-sl"
+        }
+    }, 
+    {
+        "pk": 78, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "SAITEC S.A.", 
+            "country": 1, 
+            "full_name": "SAITEC S.A.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "saitec-sa"
+        }
+    }, 
+    {
+        "pk": 79, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Mondragon Unibertsitatea", 
+            "country": 1, 
+            "full_name": "Mondragon Unibertsitatea", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "mondragon-unibertsitatea"
+        }
+    }, 
+    {
+        "pk": 80, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Departamento de Educacion, Universidades e Investigacion", 
+            "country": 1, 
+            "full_name": "Departamento de Educacion, Universidades e Investigacion", 
+            "organization_type": 1, 
+            "sub_organization_of": 2, 
+            "homepage": "", 
+            "slug": "departamento-de-educacion-universidades-e-investigacion"
+        }
+    }, 
+    {
+        "pk": 81, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ministerio de Industria, Comercio y Turismo", 
+            "country": 1, 
+            "full_name": "Ministerio de Industria, Comercio y Turismo", 
+            "organization_type": 1, 
+            "sub_organization_of": 10, 
+            "homepage": "", 
+            "slug": "ministerio-de-industria-comercio-y-turismo"
+        }
+    }, 
+    {
+        "pk": 82, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Telefonica", 
+            "country": 1, 
+            "full_name": "Telefonica", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "telefonica"
+        }
+    }, 
+    {
+        "pk": 83, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "VTT", 
+            "country": 1, 
+            "full_name": "VTT", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "vtt"
+        }
+    }, 
+    {
+        "pk": 84, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "YDREAMS", 
+            "country": 1, 
+            "full_name": "YDREAMS", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ydreams"
+        }
+    }, 
+    {
+        "pk": 85, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "UPV-EHU", 
+            "country": 1, 
+            "full_name": "UPV-EHU", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "upv-ehu"
+        }
+    }, 
+    {
+        "pk": 86, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Avento consultoria deportiva", 
+            "country": 1, 
+            "full_name": "Avento consultoria deportiva", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "avento-consultoria-deportiva"
+        }
+    }, 
+    {
+        "pk": 87, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Fidenet", 
+            "country": 1, 
+            "full_name": "Fidenet", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "fidenet"
+        }
+    }, 
+    {
+        "pk": 88, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Prospektiker", 
+            "country": 1, 
+            "full_name": "Prospektiker", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "prospektiker"
+        }
+    }, 
+    {
+        "pk": 89, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "zylk.net", 
+            "country": 1, 
+            "full_name": "zylk.net", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "zylknet"
+        }
+    }, 
+    {
+        "pk": 90, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "jacobsstaff", 
+            "country": 1, 
+            "full_name": "jacobsstaff", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "jacobsstaff"
+        }
+    }, 
+    {
+        "pk": 91, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Abama Technologies", 
+            "country": 1, 
+            "full_name": "Abama Technologies", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "abama-technologies"
+        }
+    }, 
+    {
+        "pk": 92, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "AECOC", 
+            "country": 1, 
+            "full_name": "AECOC", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "aecoc"
+        }
+    }, 
+    {
+        "pk": 93, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Asociacion de Investigacion Industrias Carnicas Principado de Asturias", 
+            "country": 1, 
+            "full_name": "Asociacion de Investigacion Industrias Carnicas Principado de Asturias", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "asociacion-de-investigacion-industrias-carnicas-principado-de-asturias"
+        }
+    }, 
+    {
+        "pk": 94, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Inixa del principado", 
+            "country": 1, 
+            "full_name": "Inixa del principado", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "inixa-del-principado"
+        }
+    }, 
+    {
+        "pk": 95, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Nomasystems", 
+            "country": 1, 
+            "full_name": "Nomasystems", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "nomasystems"
+        }
+    }, 
+    {
+        "pk": 96, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "ONCE", 
+            "country": 1, 
+            "full_name": "ONCE", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "once"
+        }
+    }, 
+    {
+        "pk": 97, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Servinform", 
+            "country": 1, 
+            "full_name": "Servinform", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "servinform"
+        }
+    }, 
+    {
+        "pk": 98, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Siemens", 
+            "country": 1, 
+            "full_name": "Siemens", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "siemens"
+        }
+    }, 
+    {
+        "pk": 99, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidade da Coruna", 
+            "country": 1, 
+            "full_name": "Universidade da Coruna", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidade-da-coruna"
+        }
+    }, 
+    {
+        "pk": 100, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad Politecnica de Cartagena", 
+            "country": 1, 
+            "full_name": "Universidad Politecnica de Cartagena", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-politecnica-de-cartagena"
+        }
+    }, 
+    {
+        "pk": 101, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad Politecnica de Madrid", 
+            "country": 1, 
+            "full_name": "Universidad Politecnica de Madrid", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-politecnica-de-madrid"
+        }
+    }, 
+    {
+        "pk": 102, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad Rey Juan Carlos", 
+            "country": 1, 
+            "full_name": "Universidad Rey Juan Carlos", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-rey-juan-carlos"
+        }
+    }, 
+    {
+        "pk": 103, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Bizgorre", 
+            "country": 1, 
+            "full_name": "Bizgorre", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "bizgorre"
+        }
+    }, 
+    {
+        "pk": 104, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Establecimientos sumisan", 
+            "country": 1, 
+            "full_name": "Establecimientos sumisan", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "establecimientos-sumisan"
+        }
+    }, 
+    {
+        "pk": 105, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ibermatica", 
+            "country": 1, 
+            "full_name": "Ibermatica", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ibermatica"
+        }
+    }, 
+    {
+        "pk": 106, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Navarra tecnologia del software", 
+            "country": 1, 
+            "full_name": "Navarra tecnologia del software", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "navarra-tecnologia-del-software"
+        }
+    }, 
+    {
+        "pk": 107, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Talleres protegidos gureak", 
+            "country": 1, 
+            "full_name": "Talleres protegidos gureak", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "talleres-protegidos-gureak"
+        }
+    }, 
+    {
+        "pk": 108, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "ISEA S.COOP.", 
+            "country": 1, 
+            "full_name": "Innovacion en Servicios Empresariales Avanzados", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "isea-scoop"
+        }
+    }, 
+    {
+        "pk": 109, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "LKS S.COOP.", 
+            "country": 1, 
+            "full_name": "LKS S.COOP.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "lks-scoop"
+        }
+    }, 
+    {
+        "pk": 110, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "CIC TOURGUNE", 
+            "country": 1, 
+            "full_name": "CIC TOURGUNE", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "cic-tourgune"
+        }
+    }, 
+    {
+        "pk": 111, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Vicontech", 
+            "country": 1, 
+            "full_name": "Vicontech", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "vicontech"
+        }
+    }, 
+    {
+        "pk": 112, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Germibus XXI", 
+            "country": 1, 
+            "full_name": "Germibus XXI", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "germibus-xxi"
+        }
+    }, 
+    {
+        "pk": 113, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Kisale Services 2010", 
+            "country": 1, 
+            "full_name": "Kisale Services 2010", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "kisale-services-2010"
+        }
+    }, 
+    {
+        "pk": 114, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Alicante", 
+            "country": 1, 
+            "full_name": "Universidad de Alicante", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-alicante"
+        }
+    }, 
+    {
+        "pk": 115, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Castilla La Mancha", 
+            "country": 1, 
+            "full_name": "Universidad de Castilla La Mancha", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-castilla-la-mancha"
+        }
+    }, 
+    {
+        "pk": 116, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Informatica Gesfor", 
+            "country": 1, 
+            "full_name": "Informatica Gesfor", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "informatica-gesfor"
+        }
+    }, 
+    {
+        "pk": 117, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Daedalus", 
+            "country": 1, 
+            "full_name": "Daedalus", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "daedalus"
+        }
+    }, 
+    {
+        "pk": 118, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Deimos-Space Immomatica", 
+            "country": 1, 
+            "full_name": "Deimos-Space Immomatica", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "deimos-space-immomatica"
+        }
+    }, 
+    {
+        "pk": 119, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Fractalia Remote Systems", 
+            "country": 1, 
+            "full_name": "Fractalia Remote Systems", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "fractalia-remote-systems"
+        }
+    }, 
+    {
+        "pk": 120, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Inerza", 
+            "country": 1, 
+            "full_name": "Inerza", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "inerza"
+        }
+    }, 
+    {
+        "pk": 121, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Paradigma tecnologico", 
+            "country": 1, 
+            "full_name": "Paradigma tecnologico", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "paradigma-tecnologico"
+        }
+    }, 
+    {
+        "pk": 122, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Sacyr-Vallehermoso", 
+            "country": 1, 
+            "full_name": "Sacyr-Vallehermoso", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "sacyr-vallehermoso"
+        }
+    }, 
+    {
+        "pk": 123, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Sensing & control systems", 
+            "country": 1, 
+            "full_name": "Sensing & control systems", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "sensing-control-systems"
+        }
+    }, 
+    {
+        "pk": 124, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "TB-Solutions Advanced Technologies", 
+            "country": 1, 
+            "full_name": "TB-Solutions Advanced Technologies", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "tb-solutions-advanced-technologies"
+        }
+    }, 
+    {
+        "pk": 125, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad Carlos III de Madrid", 
+            "country": 1, 
+            "full_name": "Universidad Carlos III de Madrid", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-carlos-iii-de-madrid"
+        }
+    }, 
+    {
+        "pk": 126, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidade de Vigo", 
+            "country": 1, 
+            "full_name": "Universidade de Vigo", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidade-de-vigo"
+        }
+    }, 
+    {
+        "pk": 127, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "VisualTis", 
+            "country": 1, 
+            "full_name": "VisualTis", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "visualtis"
+        }
+    }, 
+    {
+        "pk": 128, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Eroski", 
+            "country": 1, 
+            "full_name": "Eroski", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "eroski"
+        }
+    }, 
+    {
+        "pk": 129, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Angulas Aguinaga", 
+            "country": 1, 
+            "full_name": "Angulas Aguinaga", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "angulas-aguinaga"
+        }
+    }, 
+    {
+        "pk": 130, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Bacalao Giraldo", 
+            "country": 1, 
+            "full_name": "Bacalao Giraldo", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "bacalao-giraldo"
+        }
+    }, 
+    {
+        "pk": 131, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Mirari Iniciativas Creativas S.L.", 
+            "country": 1, 
+            "full_name": "Mirari Iniciativas Creativas S.L.", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "mirari-iniciativas-creativas-sl"
+        }
+    }, 
+    {
+        "pk": 132, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "ULMA", 
+            "country": 1, 
+            "full_name": "ULMA", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ulma"
+        }
     }
 ]
