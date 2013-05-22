@@ -1723,5 +1723,356 @@
             "homepage": "", 
             "slug": "ulma"
         }
+    }, 
+    {
+        "pk": 133, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "IK4", 
+            "country": 1, 
+            "full_name": "IK4", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ik4"
+        }
+    }, 
+    {
+        "pk": 134, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Camera-contact", 
+            "country": 1, 
+            "full_name": "Camera-contact", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "camera-contact"
+        }
+    }, 
+    {
+        "pk": 135, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "CM", 
+            "country": 1, 
+            "full_name": "CM", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "cm"
+        }
+    }, 
+    {
+        "pk": 136, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Docobo United", 
+            "country": 1, 
+            "full_name": "Docobo United", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "docobo-united"
+        }
+    }, 
+    {
+        "pk": 137, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "E-seniors", 
+            "country": 1, 
+            "full_name": "E-seniors", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "e-seniors"
+        }
+    }, 
+    {
+        "pk": 138, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ghent university", 
+            "country": 3, 
+            "full_name": "Ghent university", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ghent-university"
+        }
+    }, 
+    {
+        "pk": 139, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Smart signs", 
+            "country": 1, 
+            "full_name": "Smart signs", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "smart-signs"
+        }
+    }, 
+    {
+        "pk": 140, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "SpringTechno", 
+            "country": 1, 
+            "full_name": "SpringTechno", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "springtechno"
+        }
+    }, 
+    {
+        "pk": 141, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Arteche Lantegi Elkartea", 
+            "country": 1, 
+            "full_name": "Arteche Lantegi Elkartea", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "arteche-lantegi-elkartea"
+        }
+    }, 
+    {
+        "pk": 142, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Iberdrola", 
+            "country": 1, 
+            "full_name": "Iberdrola", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "iberdrola"
+        }
+    }, 
+    {
+        "pk": 143, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ingelectric", 
+            "country": 1, 
+            "full_name": "Ingelectric", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ingelectric"
+        }
+    }, 
+    {
+        "pk": 144, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Ingeteam", 
+            "country": 1, 
+            "full_name": "Ingeteam", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "ingeteam"
+        }
+    }, 
+    {
+        "pk": 145, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Intekia", 
+            "country": 1, 
+            "full_name": "Intekia", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "intekia"
+        }
+    }, 
+    {
+        "pk": 146, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Labein", 
+            "country": 1, 
+            "full_name": "Labein", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "labein"
+        }
+    }, 
+    {
+        "pk": 147, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Sevilla", 
+            "country": 1, 
+            "full_name": "Universidad de Sevilla", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-sevilla"
+        }
+    }, 
+    {
+        "pk": 148, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Acciona", 
+            "country": 1, 
+            "full_name": "Acciona", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "acciona"
+        }
+    }, 
+    {
+        "pk": 149, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Indra sistemas", 
+            "country": 1, 
+            "full_name": "Indra sistemas", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "indra-sistemas"
+        }
+    }, 
+    {
+        "pk": 150, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Televes", 
+            "country": 1, 
+            "full_name": "Televes", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "televes"
+        }
+    }, 
+    {
+        "pk": 151, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Malaga", 
+            "country": 1, 
+            "full_name": "Universidad de Malaga", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-malaga"
+        }
+    }, 
+    {
+        "pk": 152, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Murcia", 
+            "country": 1, 
+            "full_name": "Universidad de Murcia", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-murcia"
+        }
+    }, 
+    {
+        "pk": 153, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Oviedo", 
+            "country": 1, 
+            "full_name": "Universidad de Oviedo", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-oviedo"
+        }
+    }, 
+    {
+        "pk": 154, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Santiago de Compostela", 
+            "country": 1, 
+            "full_name": "Universidad de Santiago de Compostela", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-santiago-de-compostela"
+        }
+    }, 
+    {
+        "pk": 155, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad de Zaragoza", 
+            "country": 1, 
+            "full_name": "Universidad de Zaragoza", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-de-zaragoza"
+        }
+    }, 
+    {
+        "pk": 156, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad Europea de Madrid", 
+            "country": 1, 
+            "full_name": "Universidad Europea de Madrid", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-europea-de-madrid"
+        }
+    }, 
+    {
+        "pk": 157, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "UNED", 
+            "country": 1, 
+            "full_name": "Universidad Nacional de Educacion a Distancia", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "uned"
+        }
+    }, 
+    {
+        "pk": 158, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universidad San Pablo CEU", 
+            "country": 1, 
+            "full_name": "Universidad San Pablo CEU", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universidad-san-pablo-ceu"
+        }
+    }, 
+    {
+        "pk": 159, 
+        "model": "organizations.organization", 
+        "fields": {
+            "short_name": "Universitat de Lleida", 
+            "country": 1, 
+            "full_name": "Universitat de Lleida", 
+            "organization_type": 1, 
+            "sub_organization_of": null, 
+            "homepage": "", 
+            "slug": "universitat-de-lleida"
+        }
     }
 ]

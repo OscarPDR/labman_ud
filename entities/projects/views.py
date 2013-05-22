@@ -27,6 +27,8 @@ from entities.organizations.models import Organization
 
 from entities.funding_programs.models import FundingProgram
 
+from entities.utils.models import Role
+
 # Create your views here.
 
 PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
@@ -107,7 +109,17 @@ def project_info(request, slug):
 
     funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
-    persons = AssignedPerson.objects.filter(project_id=project.id)
+
+    persons = {}
+
+    roles = Role.objects.all()
+
+    for role in roles:
+        persons[role.name] = []
+        person_ids = AssignedPerson.objects.filter(project_id=project.id, role=role.id).values('person_id')
+        person_objects = Person.objects.filter(id__in=person_ids).order_by('full_name')
+        for person in person_objects:
+            persons[role.name].append(person)
 
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
@@ -133,11 +145,20 @@ def email_project(request, slug):
 
     funding_program = FundingProgram.objects.get(id=project.funding_program_id)
 
-    lpms = AssignedPerson.objects.filter(project_id=project.id, role='Project manager').values('employee_id')
-    project_managers = Person.objects.filter(id__in=lpms).order_by('name', 'first_surname', 'second_surname')
+    project_manager = Role.objects.get(name='Project Manager')
 
-    lprs = AssignedPerson.objects.filter(project_id=project.id, role='Principal researcher').values('employee_id')
-    principal_researchers = Person.objects.filter(id__in=lprs).order_by('name', 'first_surname', 'second_surname')
+    lpms = AssignedPerson.objects.filter(project_id=project.id, role=project_manager.id).values('employee_id')
+    project_managers = Person.objects.filter(id__in=lpms).order_by('full_name')
+
+    principal_researcher = Role.objects.get(name='Principal Researcher')
+
+    lprs = AssignedPerson.objects.filter(project_id=project.id, role=principal_researcher.id).values('employee_id')
+    principal_researchers = Person.objects.filter(id__in=lprs).order_by('full_name')
+
+    lrs = AssignedPerson.objects.filter(project_id=project.id, role=researcher.id).values('employee_id')
+    researcher = Role.objects.get(name='Researcher')
+
+    persons = Person.objects.filter(id__in=lrs).order_by('full_name')
 
     project_leader = Organization.objects.get(id=project.project_leader_id)
 
