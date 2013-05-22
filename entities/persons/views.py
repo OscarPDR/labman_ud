@@ -39,9 +39,7 @@ def person_index(request):
             emps = []
 
             for person in persons:
-                full_name = slugify(person.name + ' ' + person.first_surname + ' ' + person.second_surname)
-
-                if query in full_name:
+                if query in person.slug:
                     emps.append(person)
 
             persons = emps
@@ -76,6 +74,13 @@ def person_index(request):
 #########################
 
 def person_info(request, slug):
+    from_page = ''
+
+    http_referer = request.META['HTTP_REFERER']
+
+    if '?page=' in http_referer:
+        from_page = http_referer[http_referer.rfind('/')+1:]
+
     person = get_object_or_404(Person, slug=slug)
 
     projects = {}
@@ -92,5 +97,6 @@ def person_info(request, slug):
     return render_to_response("persons/info.html", {
             'person': person,
             'projects': projects,
+            'from_page': from_page,
         },
         context_instance=RequestContext(request))
