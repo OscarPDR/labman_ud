@@ -5,7 +5,7 @@
 {% block content %}
 
     <h2>
-        <a href="{% url organization_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        <a href="{% url organization_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ organization.full_name}}
 
         {% if organization.logo %}
