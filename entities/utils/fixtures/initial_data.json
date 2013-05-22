@@ -88,5 +88,32 @@
             "name": "Europe", 
             "slug": "europe"
         }
+    }, 
+    {
+        "pk": 1, 
+        "model": "utils.role", 
+        "fields": {
+            "description": "", 
+            "name": "Project Manager", 
+            "slug": "project-manager"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "utils.role", 
+        "fields": {
+            "description": "", 
+            "name": "Researcher", 
+            "slug": "researcher"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "utils.role", 
+        "fields": {
+            "description": "", 
+            "name": "Principal Researcher", 
+            "slug": "principal-researcher"
+        }
     }
 ]

@@ -178,5 +178,29 @@
             "organization": 82, 
             "slug": "ctd"
         }
+    }, 
+    {
+        "pk": 17, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "IT", 
+            "geographical_scope": 2, 
+            "observations": "", 
+            "full_name": "IT", 
+            "organization": 80, 
+            "slug": "it"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "funding_programs.fundingprogram", 
+        "fields": {
+            "short_name": "Proyectos de Investigaci\u00f3n B\u00e1sica y/o Aplicada, Proyectos en Cooperaci\u00f3n y Proyectos en Humanidades y Ciencias Sociales", 
+            "geographical_scope": 2, 
+            "observations": "", 
+            "full_name": "Proyectos de Investigaci\u00f3n B\u00e1sica y/o Aplicada, Proyectos en Cooperaci\u00f3n y Proyectos en Humanidades y Ciencias Sociales", 
+            "organization": 2, 
+            "slug": "proyectos-de-investigacion-basica-yo-aplicada-proyectos-en-cooperacion-y-proyectos-en-humanidades-y-ciencias-sociales"
+        }
     }
 ]

@@ -204,48 +204,22 @@
 
             <div class="tab-pane" id="pr_assigned_employees">
 
-                {% if principal_researchers %}
-                    <h5>Principal researcher{{ principal_researchers|pluralize }}:</h5>
-                    <ul>
-                        {% for principal_researcher in principal_researchers %}
+                {% for key, value in persons.items %}
+                    {% if value %}
+                        <h5>{{ key }}</h5>
+
+                        {% for item in value %}
                             <li>
-                                <a target="_blank" href="{% url employee_info principal_researcher.slug %}">
-                                    {{ principal_researcher.name }} {{ principal_researcher.first_surname }} {{ principal_researcher.second_surname }}
+                                <a target="_blank" href="{% url person_info item.slug %}">
+                                    {{ item.full_name }}
                                 </a>
                             </li>
                         {% endfor %}
-                    </ul>
+
+                    {% endif %}
 
                     <br>
-                {% endif %}
-
-                {% if project_managers %}
-                    <h5>Project manager{{ project_managers|pluralize }}:</h5>
-                    <ul>
-                        {% for project_manager in project_managers %}
-                            <li>
-                                <a target="_blank" href="{% url employee_info project_manager.slug %}">
-                                    {{ project_manager.name }} {{ project_manager.first_surname }} {{ project_manager.second_surname }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                    <br>
-                {% endif %}
-
-                {% if persons %}
-                    <h5>Researcher{{ persons|pluralize }}:</h5>
-                    <ul>
-                        {% for person in persons %}
-                            <li>
-                                <a target="_blank" href="{% url employee_info person.slug %}">
-                                    {{ person.full_name }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                {% endfor %}
 
             </div>
 
