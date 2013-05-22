@@ -73,6 +73,13 @@ def organization_index(request):
 #########################
 
 def organization_info(request, slug):
+    from_page = ''
+
+    http_referer = request.META['HTTP_REFERER']
+
+    if '?page=' in http_referer:
+        from_page = http_referer[http_referer.rfind('/')+1:]
+
     organization = get_object_or_404(Organization, slug=slug)
 
     projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('full_name')
@@ -84,5 +91,6 @@ def organization_info(request, slug):
             'organization': organization,
             'projects_leaded': projects_leaded,
             'projects': projects,
+            'from_page': from_page,
         },
         context_instance = RequestContext(request))
