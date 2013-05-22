@@ -117,7 +117,7 @@ def project_info(request, slug):
     for role in roles:
         persons[role.name] = []
         person_ids = AssignedPerson.objects.filter(project_id=project.id, role=role.id).values('person_id')
-        person_objects = Person.objects.filter(id__in=person_ids).order_by('full_name')
+        person_objects = Person.objects.filter(id__in=person_ids).order_by('slug')
         for person in person_objects:
             persons[role.name].append(person)
 

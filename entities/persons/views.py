@@ -83,32 +83,14 @@ def person_info(request, slug):
     roles = Role.objects.all()
 
     for role in roles:
-        projects['As: ' + role.name] = []
+        projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=person.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('full_name')
+        project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
         for project in project_objects:
-            projects['As: ' + role.name].append(project)
-
-    project_manager = Role.objects.get(name='Project Manager')
-
-    apm = AssignedPerson.objects.filter(person_id=person.id, role=project_manager.id).values('project_id')
-    as_project_manager = Project.objects.filter(id__in=apm).order_by('full_name')
-
-    principal_researcher = Role.objects.get(name='Principal Researcher')
-
-    apr = AssignedPerson.objects.filter(person_id=person.id, role=principal_researcher.id).values('project_id')
-    as_principal_researcher = Project.objects.filter(id__in=apr).order_by('full_name')
-
-    researcher = Role.objects.get(name='Researcher')
-
-    ar = AssignedPerson.objects.filter(person_id=person.id, role=researcher.id).values('project_id')
-    as_researcher = Project.objects.filter(id__in=ar).order_by('full_name')
+            projects[role.name].append(project)
 
     return render_to_response("persons/info.html", {
             'person': person,
             'projects': projects,
-            'as_principal_researcher': as_principal_researcher,
-            'as_project_manager': as_project_manager,
-            'as_researcher': as_researcher,
         },
         context_instance=RequestContext(request))
