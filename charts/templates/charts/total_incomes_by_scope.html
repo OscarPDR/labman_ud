@@ -27,7 +27,7 @@
         google.setOnLoadCallback(drawChart);
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
-                ['Year', 'Europe', 'Spain', 'Euskadi'],
+                ['Year', 'Euskadi', 'Spain', 'Europe', 'Total'],
 
                 {% for income in total_incomes %}
                     {{ income }},
@@ -39,9 +39,12 @@
                 title: 'DeustoTech INTERNET incomes by scope',
                 hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}},
                 vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                colors: ['green', 'red', 'blue', 'black'],
+                seriesType: "area",
+                series: {3: {type: "line"}}
             };
 
-            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
             chart.draw(data, options);
 
             // Add selection handler.
@@ -51,8 +54,8 @@
                 var selection = chart.getSelection();
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
-                    var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace('{{ path }}' + scope);
+                    var year = data.getValue(item.row, 0);
+                    window.location.replace('/charts/incomes/' + year);
                 }
             }
         }
