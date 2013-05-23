@@ -190,7 +190,10 @@ def total_incomes_by_scope(request):
     total_incomes = []
 
     for year in range(min_year, max_year + 1):
-        total_incomes.append([year, float(incomes[year]['Europe']), float(incomes[year]['Spain']), float(incomes[year]['Euskadi'])])
+        euskadi = float(incomes[year]['Euskadi'])
+        spain = float(incomes[year]['Spain'])
+        europe = float(incomes[year]['Europe'])
+        total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe)])
 
     return render_to_response("charts/total_incomes_by_scope.html", {
             'incomes': incomes,
