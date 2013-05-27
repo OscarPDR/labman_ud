@@ -26,13 +26,6 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            // var data = google.visualization.arrayToDataTable([
-            //     ['Year', 'Incomes'],
-            //     {% for income in incomes %}
-            //         ["{{ income.key }}", parseFloat({{ income.value }})],
-            //     {% endfor %}
-            // ]);
-
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Year');
             data.addColumn('number', 'Income');
@@ -45,12 +38,20 @@
             ]);
 
             var options = {
-                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}, slantedTextAngle: 45, slantedText: true},
-                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                legend: {position: 'none'},
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedTextAngle: 45,
+                    slantedText: true,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                areaOpacity: 0.5,
                 colors: ['#132da3'],
                 connectSteps: false,
-                legend: {position: 'none'},
-                areaOpacity: 0.5,
             };
 
             var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
