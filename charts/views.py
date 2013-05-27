@@ -24,14 +24,6 @@ CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
 
 
 #########################
-# View: chart_index
-#########################
-
-def chart_index(request):
-    return render_to_response("charts/index.html", {}, context_instance=RequestContext(request))
-
-
-#########################
 # View: total_incomes
 #########################
 
