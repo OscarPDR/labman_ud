@@ -79,7 +79,7 @@ def incomes_by_year(request, year):
         funding = Funding.objects.get(id=year_income.funding_id)
         funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
         scope = funding_program.geographical_scope.name
-        incomes[scope] = incomes[scope] + year_income.own_amount
+        incomes[scope] = incomes[scope] + int(year_income.own_amount)
 
     return render_to_response("charts/incomes_by_year.html", {
             'incomes': incomes,
@@ -99,7 +99,7 @@ def incomes_by_year_and_scope(request, year, scope):
 
     project_incomes = []
 
-    year_incomes = FundingAmount.objects.filter(year=year)
+    year_incomes = FundingAmount.objects.filter(year=year).order_by('-own_amount')
 
     for year_income in year_incomes:
         funding = Funding.objects.get(id=year_income.funding_id)
@@ -107,7 +107,7 @@ def incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            project_incomes.append({'key': project.full_name, 'value': year_income.own_amount})
+            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'full_name': project.full_name,})
 
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
