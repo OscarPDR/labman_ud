@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from datetime import date
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -39,11 +41,14 @@ def total_incomes(request):
 
     incomes = []
 
+    current_year = date.today().year
+
     for year in range(min_year, max_year + 1):
         income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
         if income['value'] is None:
             income['value'] = 0
-        incomes.append({'key': year, 'value': income['value']})
+        certainty = False if (year > current_year) else True
+        incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
     return render_to_response("charts/total_incomes.html", {
             'incomes': incomes,
