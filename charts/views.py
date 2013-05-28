@@ -97,9 +97,10 @@ def incomes_by_year(request, year):
 def incomes_by_year_and_scope(request, year, scope):
     base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
 
+    p_i = []
     project_incomes = []
 
-    year_incomes = FundingAmount.objects.filter(year=year).order_by('-own_amount')
+    year_incomes = FundingAmount.objects.filter(year=year).order_by('own_amount')
 
     for year_income in year_incomes:
         funding = Funding.objects.get(id=year_income.funding_id)
@@ -107,7 +108,19 @@ def incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'full_name': project.full_name,})
+            p_i.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'full_name': project.full_name,})
+
+    project_incomes.append(p_i[0])
+    length = len(p_i)
+    el = 2
+    if length > 1:
+        for p in p_i[1:]:
+            direction = 'left' if ( ( (length % 2 == 0) and (el % 2 == 0) ) or ( (length % 2 == 1) and (el % 2 == 1) ) ) else 'right'
+            if direction == 'left':
+                project_incomes.insert(0, p)
+            else:
+                project_incomes.append(p)
+            el = el + 1
 
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
@@ -187,9 +200,9 @@ def total_incomes_by_scope(request):
     total_incomes = []
 
     for year in range(min_year, max_year + 1):
-        euskadi = float(incomes[year]['Euskadi'])
-        spain = float(incomes[year]['Spain'])
-        europe = float(incomes[year]['Europe'])
+        euskadi = int(incomes[year]['Euskadi'])
+        spain = int(incomes[year]['Spain'])
+        europe = int(incomes[year]['Europe'])
         total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe)])
 
     return render_to_response("charts/total_incomes_by_scope.html", {
