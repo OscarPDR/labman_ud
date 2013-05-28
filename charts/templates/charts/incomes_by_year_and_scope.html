@@ -37,7 +37,7 @@
             data.addColumn({type: 'string', role: 'tooltip'});
             data.addRows([
                 {% for project_income in project_incomes %}
-                    ['{{ project_income.short_name }}', {{ project_income.value }}, '{{ project_income.full_name }}'],
+                    ['{{ project_income.short_name }}', {{ project_income.value }}, '{{ project_income.slug }}'],
                 {% endfor %}
             ]);
 
@@ -50,6 +50,18 @@
 
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var project_slug = data.getValue(item.row, 2);
+                    window.location.replace('{{ path }}' + project_slug);
+                }
+            }
         }
     </script>
 

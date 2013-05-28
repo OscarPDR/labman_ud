@@ -4,18 +4,16 @@
 
 {% block content %}
 
-    <div id="chart-div">
+    <div id="chart-div" class="centered">
+        <h4>Income breakdown for: <a target="_blank" href="{% url project_info project.slug %}">{{ project.short_name }}</a></h4>
+        <br>
         <div id="chart_div" style="width: 900px; height: 500px;"></div>
     </div>
 
     <br>
     <div class="center">
-        <a class="btn btn-info" href="{% url project_info project.slug %}">View project's info</a>
     </div>
-    <br>
-    <div class="center">
-        <a class="btn btn-inverse" href="{% url incomes_by_project_index %}">Go back</a>
-    </div>
+
     <br>
 
 {% endblock %}
@@ -30,15 +28,21 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Incomes'],
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addRows([
                 {% for project_income in project_incomes %}
-                    ["{{ project_income.year }}", parseFloat({{ project_income.total }})],
+                    ['{{ project_income.year }}', parseInt({{ project_income.total }}), '{{ project_income.full_name }}'],
                 {% endfor %}
             ]);
 
             var options = {
-                title: 'Income breakdown for {{ project.full_name }}',
+                is3D: false,
+                tooltip: {
+                    text: 'value',
+                },
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
