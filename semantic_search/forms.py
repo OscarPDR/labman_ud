@@ -6,7 +6,9 @@ from entities.persons.models import Person
 
 from entities.utils.models import GeographicalScope
 
+
 # Create your forms here.
+
 
 PROJECT_STATUS = (
     ('Any', 'Any'),
