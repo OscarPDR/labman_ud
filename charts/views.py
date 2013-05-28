@@ -96,8 +96,8 @@ def incomes_by_year(request, year):
 
 def incomes_by_year_and_scope(request, year, scope):
     base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+    path = '/charts/incomes_by_project/'
 
-    p_i = []
     project_incomes = []
 
     year_incomes = FundingAmount.objects.filter(year=year).order_by('own_amount')
@@ -108,25 +108,29 @@ def incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            p_i.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'full_name': project.full_name,})
+            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'slug': project.slug,})
 
-    project_incomes.append(p_i[0])
-    length = len(p_i)
-    el = 2
-    if length > 1:
-        for p in p_i[1:]:
-            direction = 'left' if ( ( (length % 2 == 0) and (el % 2 == 0) ) or ( (length % 2 == 1) and (el % 2 == 1) ) ) else 'right'
-            if direction == 'left':
-                project_incomes.insert(0, p)
-            else:
-                project_incomes.append(p)
-            el = el + 1
+    project_incomes.insert(0, project_incomes.pop())
+
+    # Another ordering type for pie slices
+    # project_incomes.append(p_i[0])
+    # length = len(p_i)
+    # el = 2
+    # if length > 1:
+    #     for p in p_i[1:]:
+    #         direction = 'left' if ( ( (length % 2 == 0) and (el % 2 == 0) ) or ( (length % 2 == 1) and (el % 2 == 1) ) ) else 'right'
+    #         if direction == 'left':
+    #             project_incomes.insert(0, p)
+    #         else:
+    #             project_incomes.append(p)
+    #         el = el + 1
 
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
             'year': year,
             'scope': scope,
             'base_template': base_template,
+            'path': path,
         },
         context_instance=RequestContext(request))
 
