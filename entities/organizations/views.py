@@ -38,7 +38,7 @@ def organization_index(request):
             orgs = []
 
             for organization in organizations:
-                if query in slugify(organization.name):
+                if query in slugify(organization.full_name):
                     orgs.append(organization)
 
             organizations = orgs
