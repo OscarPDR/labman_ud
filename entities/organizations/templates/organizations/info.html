@@ -29,7 +29,7 @@
         {% if projects_leaded %}
 
         <div class="span6">
-            <h6>Project leader in</h6>
+            <h6>Project leader in {{ projects_leaded|length }} project{{ projects_leaded|pluralize }}</h6>
 
             <table class="table table-striped">
                 <tbody>
@@ -49,7 +49,7 @@
         {% if projects %}
 
         <div class="span6">
-            <h6>Consortium member in</h6>
+            <h6>Consortium member in {{ projects|length }} project{{ projects|pluralize }}</h6>
 
             <table class="table table-striped">
                 <tbody>

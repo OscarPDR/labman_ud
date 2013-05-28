@@ -199,11 +199,22 @@ def total_incomes_by_scope(request):
 
     total_incomes = []
 
+    current_year = date.today().year
+
     for year in range(min_year, max_year + 1):
         euskadi = int(incomes[year]['Euskadi'])
         spain = int(incomes[year]['Spain'])
         europe = int(incomes[year]['Europe'])
-        total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe)])
+        certainty = False if (year > current_year) else True
+        # total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe), certainty])
+        total_incomes.append({
+            'year': year,
+            'euskadi': euskadi,
+            'spain': spain,
+            'europe': europe,
+            'total': (euskadi+spain+europe),
+            'certainty': certainty,
+        })
 
     return render_to_response("charts/total_incomes_by_scope.html", {
             'incomes': incomes,
