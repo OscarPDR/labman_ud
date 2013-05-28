@@ -4,7 +4,9 @@
 
 {% block content %}
 
-    <div id="chart-div">
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET incomes by scope</h4>
+
         <div id="chart_div" style="width: 1000px; height: 500px;"></div>
     </div>
 
@@ -36,12 +38,21 @@
             ]);
 
             var options = {
-                title: 'DeustoTech INTERNET incomes by scope',
-                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}},
-                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedText: true,
+                    slantedTextAngle: 45,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                // isStacked: true,
                 colors: ['green', 'red', 'blue', 'black'],
-                seriesType: "area",
-                series: {3: {type: "line"}}
+                // seriesType: 'bars',
+                seriesType: 'area',
+                series: {3: {type: "line"}},
             };
 
             var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
