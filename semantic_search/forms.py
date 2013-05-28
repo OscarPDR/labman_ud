@@ -52,5 +52,5 @@ class SemanticSearchForm(forms.Form):
     scope = forms.ModelChoiceField(queryset=GeographicalScope.objects.all(), required=False)
     start_year = forms.ChoiceField(choices=YEARS, initial=2004, required=False)
     end_year = forms.ChoiceField(choices=YEARS, initial=2013, required=False)
-    researchers = forms.ModelMultipleChoiceField(queryset=Person.objects.all(), required=False)
+    researchers = forms.ModelMultipleChoiceField(queryset=Person.objects.all().order_by('full_name'), required=False)
     and_or = forms.ChoiceField(widget=forms.RadioSelect(), choices=AND_OR, required=False)
