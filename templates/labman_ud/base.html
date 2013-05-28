@@ -143,25 +143,11 @@
 
                             <!-- The drop down menu -->
                             <ul class="nav pull-right">
-                                {% if user.is_authenticated %}
-                                    <li>
-                                        <a href="">
-                                            Welcome, {{ user.username }}.
-                                        </a>
-                                    </li>
-                                    <li class="divider-vertical"></li>
-                                    <li>
-                                        <a href="{% url logout_view %}">
-                                            Logout
-                                        </a>
-                                    </li>
-                                {% else %}
-                                    <li>
-                                        <a href="{% url django.contrib.auth.views.login %}">
-                                            Sign In
-                                        </a>
-                                    </li>
-                                {% endif %}
+                                <li>
+                                    <a target="_blank" href="/admin">
+                                        Admin
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
