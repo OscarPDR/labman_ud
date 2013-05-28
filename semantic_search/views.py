@@ -65,7 +65,7 @@ def semantic_search(request):
             probable_projects = probable_projects.filter(start_year__gte=start_year)
             probable_projects = probable_projects.filter(end_year__lte=end_year)
 
-            probable_projects = probable_projects.order_by('full_name')
+            probable_projects = probable_projects.order_by('slug')
 
             # TODO: Researchers filter
 
