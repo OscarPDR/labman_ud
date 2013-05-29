@@ -9,7 +9,7 @@ from entities.events.models import Event
 
 from entities.persons.models import Person
 
-from entities.utils.models import Tag
+from entities.utils.models import Tag, Language
 
 
 # Create your models here.
@@ -48,6 +48,7 @@ class PublicationType(models.Model):
     description = models.TextField(
         max_length=1500,
         blank=True,
+        null=True,
     )
 
     def __unicode__(self):
@@ -81,12 +82,15 @@ class Publication(models.Model):
     # conferencePaper
     proceedings_title = models.CharField(
         max_length=250,
+        blank=True,
+        null=True,
     )
 
     # conferencePaper, journalArticle, bookSection, thesis
     short_title = models.CharField(
         max_length=150,
         blank=True,
+        null=True,
     )
 
     slug = models.SlugField(
@@ -95,9 +99,9 @@ class Publication(models.Model):
         unique=True,
     )
 
+    # REQUIRED
     abstract = models.TextField(
         max_length=5000,
-        blank=True,
     )
 
     # conferencePaper, journalArticle
@@ -105,6 +109,7 @@ class Publication(models.Model):
         max_length=100,
         verbose_name=u'DOI',
         blank=True,
+        null=True,
     )
 
     pdf = models.FileField(
@@ -113,9 +118,8 @@ class Publication(models.Model):
         null=True,
     )
 
-    language = models.CharField(
-        max_length=25,
-        blank=True,
+    language = models.ForeignKey(
+        Language,
         null=True,
     )
 
@@ -137,14 +141,15 @@ class Publication(models.Model):
     )
 
     volume = models.PositiveIntegerField(
-        default=1,
         blank=True,
+        null=True,
     )
 
     # conferencePaper, journalArticle, thesis, bookSection
     pages = models.CharField(
         max_length=25,
         blank=True,
+        null=True,
     )
 
     # journalArticle
@@ -152,6 +157,7 @@ class Publication(models.Model):
         max_length=100,
         verbose_name=u'ISSN',
         blank=True,
+        null=True,
     )
 
     # conferencePaper, bookSection
@@ -159,6 +165,7 @@ class Publication(models.Model):
         max_length=100,
         verbose_name=u'ISBN',
         blank=True,
+        null=True,
     )
 
     impact_factor = models.DecimalField(
@@ -171,6 +178,7 @@ class Publication(models.Model):
     observations = models.TextField(
         max_length=3000,
         blank=True,
+        null=True,
     )
 
     def __unicode__(self):
