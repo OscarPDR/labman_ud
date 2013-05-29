@@ -4,7 +4,11 @@ from django import forms
 
 from entities.persons.models import Person
 
+from entities.utils.models import GeographicalScope
+
+
 # Create your forms here.
+
 
 PROJECT_STATUS = (
     ('Any', 'Any'),
@@ -32,17 +36,6 @@ YEARS = (
     ('2019', '2019'),
 )
 
-GEOGRAPHICAL_SCOPE = (
-    ('All', 'All'),
-    ('Araba', 'Araba'),
-    ('Bizkaia', 'Bizkaia'),
-    ('Gipuzkoa', 'Gipuzkoa'),
-    ('Euskadi', 'Euskadi'),
-    ('Spain', 'Spain'),
-    ('Europe', 'Europe'),
-    ('International', 'International'),
-)
-
 AND_OR = (
     ('AND', 'AND'),
     ('OR', 'OR'),
@@ -54,10 +47,10 @@ AND_OR = (
 #########################
 
 class SemanticSearchForm(forms.Form):
-    title = forms.CharField(max_length = 150, required = False)
-    status = forms.ChoiceField(choices = PROJECT_STATUS, initial = "Any", required = False)
-    scope = forms.ChoiceField(choices = GEOGRAPHICAL_SCOPE, initial = "All", required = False)
-    start_year = forms.ChoiceField(choices = YEARS, initial = 2004, required = False)
-    end_year = forms.ChoiceField(choices = YEARS, initial = 2013, required = False)
-    researchers = forms.ModelMultipleChoiceField(queryset = Person.objects.all(), required = False)
-    and_or = forms.ChoiceField(widget = forms.RadioSelect(), choices = AND_OR, required = False)
+    title = forms.CharField(max_length=150, required=False)
+    status = forms.ChoiceField(choices=PROJECT_STATUS, initial='Any', required=False)
+    scope = forms.ModelChoiceField(queryset=GeographicalScope.objects.all(), required=False)
+    start_year = forms.ChoiceField(choices=YEARS, initial=2004, required=False)
+    end_year = forms.ChoiceField(choices=YEARS, initial=2013, required=False)
+    researchers = forms.ModelMultipleChoiceField(queryset=Person.objects.all().order_by('full_name'), required=False)
+    and_or = forms.ChoiceField(widget=forms.RadioSelect(), choices=AND_OR, required=False)

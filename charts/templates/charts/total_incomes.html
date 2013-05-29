@@ -1,17 +1,17 @@
 {% extends base_template %}
+{% load humanize %}
 
 
 
 {% block content %}
 
-    <div id="chart-div">
+
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET total incomes</h4>
+
         <div id="chart_div" style="width: 1000px; height: 500px;"></div>
     </div>
 
-    <br>
-    <div class="center">
-        <a class="btn btn-inverse" href="{% url chart_index %}">Go back</a>
-    </div>
     <br>
 
 {% endblock %}
@@ -26,17 +26,32 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Incomes'],
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addRows([
                 {% for income in incomes %}
-                    ["{{ income.key }}", parseFloat({{ income.value }})],
+                    ['{{ income.key }}', {{ income.value }}, '{{ income.value|intcomma }} € in {{ income.key }}', {{ income.certainty|lower }}],
                 {% endfor %}
             ]);
 
             var options = {
-                title: 'DeustoTech INTERNET total incomes',
-                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}},
-                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                legend: {position: 'none'},
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedTextAngle: 45,
+                    slantedText: true,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                areaOpacity: 0.5,
+                colors: ['#132da3'],
+                connectSteps: false,
             };
 
             var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));

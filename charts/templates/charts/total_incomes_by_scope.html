@@ -1,17 +1,16 @@
 {% extends base_template %}
+{% load humanize %}
 
 
 
 {% block content %}
 
-    <div id="chart-div">
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET incomes by scope</h4>
+
         <div id="chart_div" style="width: 1000px; height: 500px;"></div>
     </div>
 
-    <br>
-    <div class="center">
-        <a class="btn btn-inverse" href="{% url total_incomes %}">Go back</a>
-    </div>
     <br>
 
 {% endblock %}
@@ -26,22 +25,43 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Euskadi', 'Spain', 'Europe', 'Total'],
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn({'type': 'string', 'role': 'tooltip', 'p': {'html': true}});
+            data.addColumn('number', 'Euskadi');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Spain');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Europe');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Total');
+            data.addColumn({type: 'boolean', role: 'certainty'});
 
+            data.addRows([
                 {% for income in total_incomes %}
-                    {{ income }},
+                    ['{{ income.year }}', generateTooltipHTML({{ income.year }}, '{{ income.euskadi|intcomma }} €', '{{ income.spain|intcomma }} €', '{{ income.europe|intcomma }} €', '{{ income.total|intcomma }} €'), {{ income.euskadi }}, {{ income.certainty|lower }}, {{ income.spain }}, {{ income.certainty|lower }}, {{ income.europe }}, {{ income.certainty|lower }}, {{ income.total }}, {{ income.certainty|lower }} ],
                 {% endfor %}
-
             ]);
 
             var options = {
-                title: 'DeustoTech INTERNET incomes by scope',
-                hAxis: {title: 'Year',  titleTextStyle: {color: 'black'}},
-                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedText: true,
+                    slantedTextAngle: 45,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
                 colors: ['green', 'red', 'blue', 'black'],
-                seriesType: "area",
-                series: {3: {type: "line"}}
+                // seriesType: 'bars',
+                seriesType: 'area',
+                series: {3: {type: "line"}},
+                // This line makes the entire category's tooltip active.
+                focusTarget: 'category',
+                // Use an HTML tooltip.
+                tooltip: { isHtml: true }
             };
 
             var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
@@ -58,6 +78,40 @@
                     window.location.replace('/charts/incomes/' + year);
                 }
             }
+        }
+
+        function generateTooltipHTML(year, euskadi, spain, europe, total) {
+            return '<div style="padding:10px;">' +
+                            '<h5>' + year + '</h5>' +
+                            '<table id="medals_layout">' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/euskadi.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td>' +
+                                    euskadi +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/spain.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td>' +
+                                    spain +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/europe.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td>' +
+                                    europe +
+                                '</td>' +
+                            '</tr>' +
+                        '</table>' +
+                        '<br>' +
+                        '<b>Total: </b>' + total +
+                    '</div>';
         }
 
     </script>

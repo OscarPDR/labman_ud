@@ -111,3 +111,13 @@ class Tag(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.tag.encode('utf-8')))
         super(Role, self).save(*args, **kwargs)
+
+
+#########################
+# Model: Language
+#########################
+
+class Language(models.Model):
+    name = models.CharField(
+        max_length=50,
+    )

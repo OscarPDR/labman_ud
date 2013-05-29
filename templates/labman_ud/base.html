@@ -100,14 +100,38 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> <!-- end MORElab dropdown -->
 
-                                <li>
-                                    <a href="{% url chart_index %}">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <img src="{{ STATIC_PREFIX }}img/index/chart_micro.png"/>
                                         Charts
+                                        <b class="caret"></b>
                                     </a>
-                                </li>
+
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{% url total_incomes %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/event_micro.png"/>
+                                                Income breakdown by year
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url incomes_by_project_index %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
+                                                Incomes by project
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url total_incomes_by_scope %}">
+                                                <img src="{{ STATIC_PREFIX }}img/index/map_micro.png"/>
+                                                Income breakdown by scope
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li> <!-- end Charts dropdown -->
 
                                 <li>
                                     <a href="{% url semantic_search %}">
@@ -119,25 +143,11 @@
 
                             <!-- The drop down menu -->
                             <ul class="nav pull-right">
-                                {% if user.is_authenticated %}
-                                    <li>
-                                        <a href="">
-                                            Welcome, {{ user.username }}.
-                                        </a>
-                                    </li>
-                                    <li class="divider-vertical"></li>
-                                    <li>
-                                        <a href="{% url logout_view %}">
-                                            Logout
-                                        </a>
-                                    </li>
-                                {% else %}
-                                    <li>
-                                        <a href="{% url django.contrib.auth.views.login %}">
-                                            Sign In
-                                        </a>
-                                    </li>
-                                {% endif %}
+                                <li>
+                                    <a target="_blank" href="/admin">
+                                        Admin
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
