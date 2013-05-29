@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^people/', include('entities.persons.urls')),
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^funding_programs/', include('entities.funding_programs.urls')),
+    url(r'^publications/', include('entities.publications.urls')),
 
     url(r'^charts/', include('charts.urls')),
     url(r'^semantic_search/', include('semantic_search.urls')),
