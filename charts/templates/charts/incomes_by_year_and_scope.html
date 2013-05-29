@@ -1,17 +1,22 @@
 {% extends base_template %}
+{% load humanize %}
 
 
 
 {% block content %}
 
-    <div id="chart-div">
+    <ul class="breadcrumb">
+        <li><a href="{% url total_incomes %}">Total incomes</a><span class="divider">/</span></li>
+        <li><a href="{% url incomes_by_year year %}">{{ year }}</a><span class="divider">/</span></li>
+        <li class="active">{{ scope }}</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4>Breakdown for {{ scope }} in {{ year }}</h4>
+
         <div id="chart_div" style="width: 900px; height: 500px;"></div>
     </div>
 
-    <br>
-    <div class="center">
-        <a class="btn btn-inverse" href="{% url incomes_by_year year %}">Go back</a>
-    </div>
     <br>
 
 {% endblock %}
@@ -26,21 +31,37 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Geographical scope', 'Incomes'],
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addRows([
                 {% for project_income in project_incomes %}
-                    ["{{ project_income.key }}", parseFloat({{ project_income.value }})],
+                    ['{{ project_income.short_name }}', {{ project_income.value }}, '{{ project_income.slug }}'],
                 {% endfor %}
             ]);
 
             var options = {
-                title: 'Income breakdown from {{ scope }} in the year {{ year }}',
-                hAxis: {title: 'Geographical scope',  titleTextStyle: {color: 'black'}},
-                vAxis: {title: 'Incomes in €',  titleTextStyle: {color: 'black'}},
+                is3D: false,
+                tooltip: {
+                    text: 'value',
+                },
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var project_slug = data.getValue(item.row, 2);
+                    window.location.replace('{{ path }}' + project_slug);
+                }
+            }
         }
     </script>
 

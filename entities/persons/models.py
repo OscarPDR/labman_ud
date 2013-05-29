@@ -31,6 +31,7 @@ class Person(models.Model):
     second_surname = models.CharField(
         max_length=50,
         blank=True,
+        null=True,
     )
 
     full_name = models.CharField(
@@ -46,6 +47,7 @@ class Person(models.Model):
 
     external = models.BooleanField(
         blank=True,
+        default=False,
     )
 
     organization = models.ForeignKey(
@@ -78,6 +80,7 @@ class Person(models.Model):
         self.full_name = full_name
 
         self.slug = slugify(self.full_name)
+
         super(Person, self).save(*args, **kwargs)
 
 

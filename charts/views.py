@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from datetime import date
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -24,14 +26,6 @@ CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
 
 
 #########################
-# View: chart_index
-#########################
-
-def chart_index(request):
-    return render_to_response("charts/index.html", {}, context_instance=RequestContext(request))
-
-
-#########################
 # View: total_incomes
 #########################
 
@@ -47,11 +41,14 @@ def total_incomes(request):
 
     incomes = []
 
+    current_year = date.today().year
+
     for year in range(min_year, max_year + 1):
         income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
         if income['value'] is None:
             income['value'] = 0
-        incomes.append({'key': year, 'value': income['value']})
+        certainty = False if (year > current_year) else True
+        incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
     return render_to_response("charts/total_incomes.html", {
             'incomes': incomes,
@@ -82,7 +79,7 @@ def incomes_by_year(request, year):
         funding = Funding.objects.get(id=year_income.funding_id)
         funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
         scope = funding_program.geographical_scope.name
-        incomes[scope] = incomes[scope] + year_income.own_amount
+        incomes[scope] = incomes[scope] + int(year_income.own_amount)
 
     return render_to_response("charts/incomes_by_year.html", {
             'incomes': incomes,
@@ -99,10 +96,11 @@ def incomes_by_year(request, year):
 
 def incomes_by_year_and_scope(request, year, scope):
     base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+    path = '/charts/incomes_by_project/'
 
     project_incomes = []
 
-    year_incomes = FundingAmount.objects.filter(year=year)
+    year_incomes = FundingAmount.objects.filter(year=year).order_by('own_amount')
 
     for year_income in year_incomes:
         funding = Funding.objects.get(id=year_income.funding_id)
@@ -110,13 +108,29 @@ def incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            project_incomes.append({'key': project.full_name, 'value': year_income.own_amount})
+            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'slug': project.slug,})
+
+    project_incomes.insert(0, project_incomes.pop())
+
+    # Another ordering type for pie slices
+    # project_incomes.append(p_i[0])
+    # length = len(p_i)
+    # el = 2
+    # if length > 1:
+    #     for p in p_i[1:]:
+    #         direction = 'left' if ( ( (length % 2 == 0) and (el % 2 == 0) ) or ( (length % 2 == 1) and (el % 2 == 1) ) ) else 'right'
+    #         if direction == 'left':
+    #             project_incomes.insert(0, p)
+    #         else:
+    #             project_incomes.append(p)
+    #         el = el + 1
 
     return render_to_response("charts/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
             'year': year,
             'scope': scope,
             'base_template': base_template,
+            'path': path,
         },
         context_instance=RequestContext(request))
 
@@ -189,11 +203,22 @@ def total_incomes_by_scope(request):
 
     total_incomes = []
 
+    current_year = date.today().year
+
     for year in range(min_year, max_year + 1):
-        euskadi = float(incomes[year]['Euskadi'])
-        spain = float(incomes[year]['Spain'])
-        europe = float(incomes[year]['Europe'])
-        total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe)])
+        euskadi = int(incomes[year]['Euskadi'])
+        spain = int(incomes[year]['Spain'])
+        europe = int(incomes[year]['Europe'])
+        certainty = False if (year > current_year) else True
+        # total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe), certainty])
+        total_incomes.append({
+            'year': year,
+            'euskadi': euskadi,
+            'spain': spain,
+            'europe': europe,
+            'total': (euskadi+spain+europe),
+            'certainty': certainty,
+        })
 
     return render_to_response("charts/total_incomes_by_scope.html", {
             'incomes': incomes,
