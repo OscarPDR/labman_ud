@@ -14,15 +14,30 @@ class PublicationTagInline(admin.StackedInline):
 
 
 #########################
-# Class: PublicationType
+# Class: PublicationAuthorInline
+#########################
+
+class PublicationAuthorInline(admin.TabularInline):
+    model = PublicationAuthor
+    extra = 1
+
+
+#########################
+# Class: PublicationAdmin
 #########################
 
 class PublicationAdmin(admin.ModelAdmin):
+    class Media:
+        js = ('js/publications.js',)
+
+    model = Publication
+
     search_fields = ['title', 'presented_at__short_name']
     list_display = ['title', 'publication_type', 'presented_at']
     list_filter = ['publication_type__name']
     exclude = ['slug']
     inlines = [
+        PublicationAuthorInline,
         PublicationTagInline,
     ]
 

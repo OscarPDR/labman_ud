@@ -78,6 +78,9 @@ class Person(models.Model):
         self.full_name = full_name
 
         self.slug = slugify(self.full_name)
+
+        print 'New person added!'
+
         super(Person, self).save(*args, **kwargs)
 
 
