@@ -16,9 +16,14 @@ from entities.utils.models import Tag
 
 
 def publication_path(self, filename):
+    # if the publication is presented at any event (conference, workshop, etc.), it will be stored like:
+    #   publications/2012/ucami/title-of-the-paper.pdf
     if self.presented_at:
         year = self.presented_at.year
         sub_folder = self.presented_at.slug
+
+    # otherwise, it will be stored like:
+    #   publications/2012/book-chapter/title-of-the-paper.pdf
     else:
         year = self.year
         sub_folder = self.publication_type.slug
