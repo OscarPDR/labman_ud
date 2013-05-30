@@ -17,8 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding
-# from .forms import ProjectForm, ProjectSearchForm, FundingAmountFormSet, AssignedPersonFormSet, ConsortiumMemberFormSet
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication
 from .forms import ProjectSearchForm
 
 from entities.persons.models import Person
@@ -26,6 +25,8 @@ from entities.persons.models import Person
 from entities.organizations.models import Organization
 
 from entities.funding_programs.models import FundingProgram
+
+from entities.publications.models import Publication
 
 from entities.utils.models import Role
 
@@ -109,6 +110,8 @@ def project_info(request, slug):
 
     funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
+    related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
+    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-published')
 
     persons = {}
 
@@ -131,6 +134,7 @@ def project_info(request, slug):
             'funding_amounts': funding_amounts,
             'consortium_members': consortium_members,
             'from_page': from_page,
+            'related_publications': related_publications,
         },
         context_instance=RequestContext(request))
 
