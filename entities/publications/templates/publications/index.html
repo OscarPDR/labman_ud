@@ -6,7 +6,14 @@
 
     {% if tag %}
         <div class="centered">
-            <h1>Publications with tag <em>'{{ tag.tag }}'</em></h1>
+            <h1>{{ publications|length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.tag }}'</em></h1>
+        </div>
+        <br>
+    {% endif %}
+
+    {% if publication_type %}
+        <div class="centered">
+            <h1>{{ publications|length }} {{ publication_type.name }}{{ publications|pluralize }}</h1>
         </div>
         <br>
     {% endif %}

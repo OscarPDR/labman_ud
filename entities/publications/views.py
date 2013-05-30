@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 
 from django.conf import settings
 
-from .models import Publication, PublicationAuthor, PublicationTag
+from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
 from .forms import PublicationSearchForm
 
 from entities.projects.models import Project, RelatedPublication
@@ -158,5 +158,54 @@ def view_tag(request, tag_slug):
             'publications': publications,
             'form': form,
             'tag': tag,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: view_publication_type
+#########################
+
+def view_publication_type(request, publication_type_slug):
+    publication_type = PublicationType.objects.get(slug=publication_type_slug)
+
+    publications = Publication.objects.filter(publication_type=publication_type.id).order_by('-published')
+
+    paginator = Paginator(publications, PAGINATION_NUMBER)
+
+    page = request.GET.get('page')
+
+    if request.method == 'POST':
+        form = PublicationSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            pubs = []
+
+            for publication in publications:
+                if query in publication.slug:
+                    pubs.append(publication)
+
+            publications = pubs
+
+    else:
+        form = PublicationSearchForm()
+
+    try:
+        publications = paginator.page(page)
+
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        publications = paginator.page(1)
+
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        publications = paginator.page(paginator.num_pages)
+
+    return render_to_response('publications/index.html', {
+            'publications': publications,
+            'form': form,
+            'publication_type': publication_type,
         },
         context_instance=RequestContext(request))

@@ -12,7 +12,9 @@
 
     <blockquote id="publication-type">
         <p>
-            {{ publication.publication_type.name }}
+            <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
+                {{ publication.publication_type.name }}
+            </a>
         </p>
     </blockquote>
 
@@ -103,8 +105,9 @@
 
             <div class="tab-pane" id="related_tab">
 
-                <h5>Related projects:</h5>
+                <h5>{{ related_projects|length }} related project{{ related_projets|pluralize }}:</h5>
 
+                <br>
                 <table class="table table-striped">
                     <tbody>
                         {% for project in related_projects %}
@@ -123,8 +126,9 @@
 
                     <br>
 
-                    <h5>Related publications:</h5>
+                    <h5>{{ related_publications|length }} related publication{{ related_publications|pluralize }}</h5>
 
+                    <br>
                     <table class="table table-striped">
                         <tbody>
                             {% for publication in related_publications %}

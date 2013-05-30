@@ -110,26 +110,42 @@
                                     </a>
 
                                     <ul class="dropdown-menu">
+
+                                        <li class="nav-header">Incomes</li>
+
                                         <li>
                                             <a href="{% url total_incomes %}">
                                                 <img src="{{ STATIC_PREFIX }}img/index/event_micro.png"/>
-                                                Income breakdown by year
+                                                Breakdown by year
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url incomes_by_project_index %}">
                                                 <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
-                                                Incomes by project
+                                                By project
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url total_incomes_by_scope %}">
                                                 <img src="{{ STATIC_PREFIX }}img/index/map_micro.png"/>
-                                                Income breakdown by scope
+                                                Breakdown by scope
                                             </a>
                                         </li>
+
+                                        <li class="divider-horizontal"></li>
+
+                                        <li class="nav-header">Publications</li>
+
+                                        <li>
+                                            <a href="">
+                                                <img src="{{ STATIC_PREFIX }}"/>
+                                                Author's relationship
+                                            </a>
+                                        </li>
+
+
                                     </ul>
                                 </li> <!-- end Charts dropdown -->
 
