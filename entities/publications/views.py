@@ -12,6 +12,8 @@ from django.conf import settings
 from .models import Publication, PublicationAuthor, PublicationTag
 from .forms import PublicationSearchForm
 
+from entities.projects.models import Project, RelatedPublication
+
 from entities.persons.models import Person
 
 from entities.utils.models import Tag
@@ -89,6 +91,12 @@ def publication_info(request, slug):
         author = Person.objects.get(id=_id['author_id'])
         authors.append(author)
 
+    related_projects_ids = RelatedPublication.objects.filter(publication=publication.id).values('project_id')
+    related_projects = Project.objects.filter(id__in=related_projects_ids)
+
+    related_publications_ids = RelatedPublication.objects.filter(project_id__in=related_projects_ids).values('publication_id')
+    related_publications = Publication.objects.filter(id__in=related_publications_ids).exclude(id=publication.id)
+
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('id')
     tags = Tag.objects.filter(id__in=tag_ids)
     tags = tags.extra(select={'length': 'Length(tag)'}).order_by('length')
@@ -97,6 +105,8 @@ def publication_info(request, slug):
             'from_page': from_page,
             'publication': publication,
             'authors': authors,
+            'related_projects': related_projects,
+            'related_publications': related_publications,
             'tags': tags,
         },
         context_instance=RequestContext(request))

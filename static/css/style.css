@@ -68,6 +68,10 @@ h4 {
     float: right
 }
 
+.vertical-alignment > td {
+    vertical-align: middle;
+}
+
 #funding_program_full_name {
     padding-top: 0em;
     padding-left: 7.5em;

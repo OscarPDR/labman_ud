@@ -23,6 +23,14 @@
             <li><a href="#pr_assigned_employees" data-toggle="tab"><i class="icon-user"></i> Employees</a></li>
             <li><a href="#pr_consortium_members" data-toggle="tab"><i class="icon-home"></i> Consortium members</a></li>
 
+            {% if related_publications %}
+                <li>
+                    <a href="#pr_publications" data-toggle="tab">
+                        <i class="icon-resize-horizontal"></i> {{ related_publications|length }} publication{{ related_publications|pluralize }}
+                    </a>
+                </li>
+            {% endif %}
+
             {% if user.is_authenticated %}
                 <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
                 <br>
@@ -256,6 +264,31 @@
             </div>
 
             <!-- end tab-pane #pr_consortium_members -->
+
+            <div class="tab-pane" id="pr_publications">
+
+                <table class="table table-striped">
+                    <tbody>
+                        {% for publication in related_publications %}
+                            <tr class="vertical-alignment">
+                                <td class="span8">
+                                    <a target="_blank" href="{% url publication_info publication.slug %}">
+                                        {{ publication.title }}
+                                    </a>
+                                </td>
+
+                                <td class="span2">
+                                    {{ publication.published.year }}
+                                </td>
+
+                                <td class="span2">
+                                    {{ publication.publication_type.name }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div> <!-- end tab-pane #pr_publications -->
 
         </div>
 
