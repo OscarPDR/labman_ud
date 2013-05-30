@@ -1,0 +1,101 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+
+{% block content %}
+
+    <h2>
+        <a href="{% url publication_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ publication.title }}
+    </h2>
+
+    <blockquote id="publication-type">
+        <p>
+            {{ publication.publication_type.name }}
+        </p>
+    </blockquote>
+
+    <br>
+    <br>
+
+    <div class="tabbable tabs-left .hidden-phone">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#overview_tab" data-toggle="tab">
+                    <i class="icon-info-sign"></i> Overview
+                </a>
+            </li>
+
+            <li>
+                <a href="#extended_info_tab" data-toggle="tab">
+                    <i class="icon-list"></i> Extended info
+                </a>
+            </li>
+
+            <br>
+
+            <div class="centered">
+                {% for tag in tags %}
+                    <li class="tag">
+                        <a target="_blank" href="">
+                            <span class="label label-info">{{ tag.tag }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </div>
+        </ul>
+
+        <div class="tab-content project-template">
+
+            <div class="tab-pane active" id="overview_tab">
+
+                <div class="row-fluid">
+                    <div class="span8">
+                        <h5>Authors:</h5>
+
+                        <ol>
+                            {% for author in authors %}
+                                <li>
+                                    <a target="_blank" href="{% url person_info author.slug %}">
+                                        {{ author.full_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+
+                    {% if publication.pdf %}
+                        <div class="span4 well centered">
+                            <a id="document_download" target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
+                                <img src="{{ STATIC_PREFIX }}img/document_download.png"/>
+                                <br>
+                                View document
+                                <br>
+                                (&asymp; {{ publication.pdf.size|filesizeformat }})
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h5>Abstract:</h5>
+
+                <p>{{ publication.abstract }}</p>
+
+            </div> <!-- end tab-pane #overview_tab -->
+
+            <div class="tab-pane" id="extended_info_tab">
+
+            </div> <!-- end tab-pane #extended_info_tab -->
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}
+

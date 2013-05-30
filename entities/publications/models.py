@@ -25,7 +25,7 @@ def publication_path(self, filename):
     # otherwise, it will be stored like:
     #   publications/2012/book-chapter/title-of-the-paper.pdf
     else:
-        year = self.year
+        year = self.published.year
         sub_folder = self.publication_type.slug
 
     return "%s/%s/%s/%s%s" % ("publications", year, sub_folder, self.slug, os.path.splitext(filename)[-1])
@@ -186,7 +186,6 @@ class Publication(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
-
         super(Publication, self).save(*args, **kwargs)
 
 
@@ -216,4 +215,4 @@ class PublicationAuthor(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s tagged as: %s' % (self.publication.title, self.tag.tag)
+        return u'%s has written: %s' % (self.author.full_name, self.publication.title)

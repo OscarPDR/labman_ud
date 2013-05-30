@@ -9,10 +9,13 @@ from django.template.defaultfilters import slugify
 
 from django.conf import settings
 
-from django.contrib.auth.decorators import login_required
-
-from .models import Publication
+from .models import Publication, PublicationAuthor, PublicationTag
 from .forms import PublicationSearchForm
+
+from entities.persons.models import Person
+
+from entities.utils.models import Tag
+
 
 # Create your views here.
 
@@ -62,7 +65,7 @@ def publication_index(request):
             'publications': publications,
             'form': form,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -70,26 +73,30 @@ def publication_index(request):
 #########################
 
 def publication_info(request, slug):
-    # from_page = ''
+    from_page = ''
 
-    # http_referer = request.META['HTTP_REFERER']
+    http_referer = request.META['HTTP_REFERER']
 
-    # if '?page=' in http_referer:
-    #     from_page = http_referer[http_referer.rfind('/')+1:]
+    if '?page=' in http_referer:
+        from_page = http_referer[http_referer.rfind('/')+1:]
 
-    # person = get_object_or_404(Person, slug=slug)
+    publication = get_object_or_404(Publication, slug=slug)
 
-    # projects = {}
+    author_ids = PublicationAuthor.objects.filter(publication=publication.id).values('author_id').order_by('position')
+    authors = []
 
-    # roles = Role.objects.all()
+    for _id in author_ids:
+        author = Person.objects.get(id=_id['author_id'])
+        authors.append(author)
 
-    # for role in roles:
-    #     projects[role.name] = []
-    #     project_ids = AssignedPerson.objects.filter(person_id=person.id, role=role.id).values('project_id')
-    #     project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
-    #     for project in project_objects:
-    #         projects[role.name].append(project)
+    tag_ids = PublicationTag.objects.filter(publication=publication.id).values('id')
+    tags = Tag.objects.filter(id__in=tag_ids)
+    tags = tags.extra(select={'length': 'Length(tag)'}).order_by('length')
 
     return render_to_response('publications/info.html', {
+            'from_page': from_page,
+            'publication': publication,
+            'authors': authors,
+            'tags': tags,
         },
         context_instance=RequestContext(request))
