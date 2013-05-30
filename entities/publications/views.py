@@ -100,3 +100,53 @@ def publication_info(request, slug):
             'tags': tags,
         },
         context_instance=RequestContext(request))
+
+
+#########################
+# View: view_tag
+#########################
+
+def view_tag(request, tag_slug):
+    tag = Tag.objects.get(slug=tag_slug)
+
+    publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
+    publications = Publication.objects.filter(id__in=publication_ids)
+
+    paginator = Paginator(publications, PAGINATION_NUMBER)
+
+    page = request.GET.get('page')
+
+    if request.method == 'POST':
+        form = PublicationSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            pubs = []
+
+            for publication in publications:
+                if query in publication.slug:
+                    pubs.append(publication)
+
+            publications = pubs
+
+    else:
+        form = PublicationSearchForm()
+
+    try:
+        publications = paginator.page(page)
+
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        publications = paginator.page(1)
+
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        publications = paginator.page(paginator.num_pages)
+
+    return render_to_response('publications/index.html', {
+            'publications': publications,
+            'form': form,
+            'tag': tag,
+        },
+        context_instance=RequestContext(request))

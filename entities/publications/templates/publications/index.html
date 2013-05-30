@@ -4,6 +4,13 @@
 
 {% block content %}
 
+    {% if tag %}
+        <div class="centered">
+            <h1>Publications with tag <em>'{{ tag.tag }}'</em></h1>
+        </div>
+        <br>
+    {% endif %}
+
     <form class="form-search" action="" method="post">
         {% csrf_token %}
         <div class="input-append">
@@ -34,6 +41,7 @@
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Year</th>
                     <th>Type</th>
                 </tr>
             </thead>
@@ -46,6 +54,11 @@
                                 {{ publication.title }}
                             </a>
                         </td>
+
+                        <td>
+                            2000
+                        </td>
+
                         <td>
                             {{ publication.publication_type.name }}
                         </td>

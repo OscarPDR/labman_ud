@@ -1,0 +1,58 @@
+
+{% if publication.presented_at %}
+    <h5>Presented at:</h5>
+
+    <p>
+        {{ publication.presented_at.short_name }} {{ publication.presented_at.year }} //TODO: link
+    </p>
+
+    <br>
+{% endif %}
+
+
+
+{% if publication.doi %}
+    <h5>DOI:</h5>
+
+    <p>
+        {{ publication.doi }}
+    </p>
+
+    <br>
+{% endif %}
+
+
+
+{% if publication.isbn %}
+    <h5>ISBN:</h5>
+
+    <p>
+        {{ publication.isbn }}
+    </p>
+
+    <br>
+{% endif %}
+
+
+
+{% if publication.volume %}
+    <h5>Volume:</h5>
+
+    <p>
+        {{ publication.volume }}
+    </p>
+
+    <br>
+{% endif %}
+
+
+
+{% if publication.pages %}
+    <h5>Pages:</h5>
+
+    <p>
+        {{ publication.pages }}
+    </p>
+
+    <br>
+{% endif %}
