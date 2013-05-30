@@ -110,7 +110,7 @@ class Tag(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.tag.encode('utf-8')))
-        super(Role, self).save(*args, **kwargs)
+        super(Tag, self).save(*args, **kwargs)
 
 
 #########################

@@ -12,10 +12,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.contrib.sites.models import Site
 
+from django.conf import settings
+
 
 admin.autodiscover()
 
-admin.site.unregister(Site)
+# admin.site.unregister(Site)
 
 
 urlpatterns = patterns('',
@@ -37,6 +39,9 @@ urlpatterns = patterns('',
 
     url(r'^charts/', include('charts.urls')),
     url(r'^semantic_search/', include('semantic_search.urls')),
+
+    # Just for development purposes, serve in another way in production
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()

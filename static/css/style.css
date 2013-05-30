@@ -52,6 +52,22 @@ h4 {
     padding-top: 1em;
 }
 
+.tag {
+    margin-top: 0.5em;
+}
+
+#document_download {
+    margin: 0.5em;
+}
+
+#document_download > img {
+    margin-bottom: 1em;
+}
+
+#publication-type {
+    float: right
+}
+
 #funding_program_full_name {
     padding-top: 0em;
     padding-left: 7.5em;
