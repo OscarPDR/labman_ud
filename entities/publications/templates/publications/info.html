@@ -36,9 +36,10 @@
             <br>
 
             <div class="centered">
+                <h6>Tags</h6>
                 {% for tag in tags %}
                     <li class="tag">
-                        <a target="_blank" href="">
+                        <a target="_blank" href="{% url view_tag tag.slug %}">
                             <span class="label label-info">{{ tag.tag }}</span>
                         </a>
                     </li>
@@ -85,6 +86,10 @@
             </div> <!-- end tab-pane #overview_tab -->
 
             <div class="tab-pane" id="extended_info_tab">
+
+                {% if publication.publication_type.name == 'Conference paper' %}
+                    {% include 'publications/templates/conference_paper.html' %}
+                {% endif %}
 
             </div> <!-- end tab-pane #extended_info_tab -->
 
