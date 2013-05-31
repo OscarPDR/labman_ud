@@ -1,0 +1,90 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="centered">
+        <h4>Number of publications</h4>
+        <br>
+        <div class="chartdiv" id="number_of_publications">
+          <svg></svg>
+        </div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/d3.v2.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_PREFIX }}js/nv.d3.min.js" type="text/javascript"></script>
+
+    <script>
+
+        var jsonObj = []
+
+        maxvalue = 0;
+
+        // Adapt data to NVD3.js format
+        {% for item, values in publications.items %}
+            var tempjson = {};
+            tempjson['key'] = '{{ item }}';
+            tempjson['values'] = [];
+
+            {% for year, value in values.items %}
+                if ({{ value }} > maxvalue) {
+                    maxvalue = {{ value }};
+                }
+                tempjson['values'].push([{{ year }}, [{{ value }}]]);
+            {% endfor %}
+            jsonObj.push(tempjson);
+        {% endfor %}
+
+        nv.addGraph(function() {
+            // var chart = nv.models.multiBarChart();
+
+            var chart = nv.models.multiBarChart()
+                .x(function(d) { return d[0] })
+                .y(function(d) { return d[1] })
+                .clipEdge(true);
+
+            chart.xAxis.tickFormat(function(d) {
+                var date = new Date();
+                date.setYear(parseInt(d));
+                return d3.time.format("%Y")(date)
+            });
+
+            chart.yAxis.tickFormat(d3.format(".0d"));
+
+            // Max limit will be the maximum value + 0.5 rounded to 1 decimal
+            var maxlimit = maxvalue + 1;
+            chart.forceY([0, maxlimit]);
+
+            d3.select("#number_of_publications svg")
+                    .datum(jsonObj)
+                .transition().duration(500).call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            // chart.legend.dispatch.on("legendClick.updateExamples", function() {
+            //     setTimeout(function() {
+            //         for (var i = 0; i < chartlist.length; i++)
+            //             //alert(chartlist[i]);
+            //             chartlist[i].update();
+            //     }, 100);
+            // });
+
+            // chartlist.push(chart);
+
+            return chart;
+        });
+
+        function publicationsData() {
+        }
+    </script>
+
+{% endblock %}

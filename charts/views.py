@@ -15,6 +15,8 @@ from entities.funding_programs.models import FundingProgram
 
 from entities.projects.models import Project, FundingAmount, Funding
 
+from entities.publications.models import Publication, PublicationType
+
 from entities.utils.models import GeographicalScope
 
 
@@ -225,5 +227,47 @@ def total_incomes_by_scope(request):
             'total_incomes': total_incomes,
             'year': year,
             'base_template': base_template,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: number_of_publications
+#########################
+
+def number_of_publications(request):
+    publications = {}
+
+    publication_types = PublicationType.objects.all()
+
+    min_year = Publication.objects.aggregate(Min('published'))
+    max_year = Publication.objects.aggregate(Max('published'))
+
+    min_year = min_year.get('published__min').year
+    max_year = max_year.get('published__max').year
+
+    years = []
+    for year in range(min_year, max_year + 1):
+        years.append(year)
+
+    for publication_type in publication_types:
+        pub_type = publication_type.name.encode('utf-8')
+        publications[pub_type] = {}
+        for year in range(min_year, max_year + 1):
+            publications[pub_type][year] = 0
+
+    all_publications = Publication.objects.all()
+
+    for publication in all_publications:
+        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_year = publication.published.year
+        publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
+
+    print publications
+
+    return render_to_response("charts/number_of_publications.html", {
+            'publications': publications,
+            'publication_types': publication_types,
+            'years': years,
         },
         context_instance=RequestContext(request))
