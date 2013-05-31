@@ -72,6 +72,10 @@ h4 {
     vertical-align: middle;
 }
 
+#number_of_publications {
+    height: 500px;
+}
+
 #funding_program_full_name {
     padding-top: 0em;
     padding-left: 7.5em;

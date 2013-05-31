@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     url(r'^incomes/(?P<year>\d{4})$', 'charts.views.incomes_by_year', name='incomes_by_year'),
     url(r'^incomes_by_project/$', 'charts.views.incomes_by_project_index', name='incomes_by_project_index'),
     url(r'^incomes_by_project/(?P<project_slug>\S+)$', 'charts.views.incomes_by_project', name='incomes_by_project'),
+
+    url(r'^number_of_publications/$', 'charts.views.number_of_publications', name='number_of_publications'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
