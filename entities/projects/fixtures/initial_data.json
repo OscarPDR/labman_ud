@@ -4972,6 +4972,141 @@
         }
     }, 
     {
+        "pk": 165, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 15, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 166, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 12, 
+            "role": 1
+        }
+    }, 
+    {
+        "pk": 167, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 2, 
+            "role": 3
+        }
+    }, 
+    {
+        "pk": 168, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 4, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 169, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 5, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 170, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 2, 
+            "person": 37, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 171, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 27, 
+            "person": 38, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 172, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 12, 
+            "person": 15, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 173, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 12, 
+            "person": 26, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 174, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 32, 
+            "person": 12, 
+            "role": 1
+        }
+    }, 
+    {
+        "pk": 175, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 32, 
+            "person": 2, 
+            "role": 3
+        }
+    }, 
+    {
+        "pk": 176, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 32, 
+            "person": 2, 
+            "role": 3
+        }
+    }, 
+    {
+        "pk": 177, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 32, 
+            "person": 15, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 178, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 32, 
+            "person": 40, 
+            "role": 2
+        }
+    }, 
+    {
+        "pk": 179, 
+        "model": "projects.assignedperson", 
+        "fields": {
+            "project": 55, 
+            "person": 15, 
+            "role": 2
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "projects.consortiummember", 
         "fields": {
@@ -6809,6 +6944,14 @@
         "fields": {
             "project": 69, 
             "organization": 1
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "projects.relatedpublication", 
+        "fields": {
+            "project": 3, 
+            "publication": 1
         }
     }
 ]

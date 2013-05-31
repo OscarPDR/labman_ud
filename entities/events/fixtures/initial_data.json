@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "pk": 1, 
+        "model": "events.eventtype", 
+        "fields": {
+            "description": "", 
+            "name": "Academic event", 
+            "slug": "academic-event"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "events.event", 
+        "fields": {
+            "end_date": "2013-03-15", 
+            "description": "", 
+            "short_name": "EDUCON", 
+            "start_date": "2013-03-13", 
+            "observations": "", 
+            "location": "Berlin, Germany", 
+            "full_name": "IEEE Conference on Education", 
+            "year": 2013, 
+            "homepage": "", 
+            "slug": "educon-2013", 
+            "event_type": 1
+        }
+    }
+]
