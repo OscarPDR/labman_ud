@@ -263,8 +263,6 @@ def number_of_publications(request):
         pub_year = publication.published.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
-    print publications
-
     return render_to_response("charts/number_of_publications.html", {
             'publications': publications,
             'publication_types': publication_types,

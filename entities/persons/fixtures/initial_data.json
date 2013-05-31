@@ -538,5 +538,50 @@
             "organization": null, 
             "slug": "sacha-vanhecke"
         }
+    }, 
+    {
+        "pk": 37, 
+        "model": "persons.person", 
+        "fields": {
+            "first_surname": "Urkijo", 
+            "first_name": "Fernando", 
+            "foaf_link": "", 
+            "profile_picture": "", 
+            "external": false, 
+            "full_name": "Fernando Urkijo", 
+            "second_surname": "", 
+            "organization": null, 
+            "slug": "fernando-urkijo"
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "persons.person", 
+        "fields": {
+            "first_surname": "Aus\u00edn", 
+            "first_name": "David", 
+            "foaf_link": "", 
+            "profile_picture": "", 
+            "external": false, 
+            "full_name": "David Aus\u00edn", 
+            "second_surname": "", 
+            "organization": null, 
+            "slug": "david-ausin"
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "persons.person", 
+        "fields": {
+            "first_surname": "Larrakoetxea", 
+            "first_name": "Xabier", 
+            "foaf_link": "", 
+            "profile_picture": "", 
+            "external": false, 
+            "full_name": "Xabier Larrakoetxea", 
+            "second_surname": "", 
+            "organization": null, 
+            "slug": "xabier-larrakoetxea"
+        }
     }
 ]

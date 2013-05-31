@@ -3,6 +3,7 @@
 import os
 
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
 
 from entities.events.models import Event
@@ -14,21 +15,22 @@ from entities.utils.models import Tag, Language
 
 # Create your models here.
 
+MIN_YEAR_LIMIT = 2000
+MAX_YEAR_LIMIT = 2030
+
 
 def publication_path(self, filename):
     # if the publication is presented at any event (conference, workshop, etc.), it will be stored like:
     #   publications/2012/ucami/title-of-the-paper.pdf
     if self.presented_at:
-        year = self.presented_at.year
         sub_folder = self.presented_at.slug
 
     # otherwise, it will be stored like:
     #   publications/2012/book-chapter/title-of-the-paper.pdf
     else:
-        year = self.published.year
         sub_folder = self.publication_type.slug
 
-    return "%s/%s/%s/%s%s" % ("publications", year, sub_folder, self.slug, os.path.splitext(filename)[-1])
+    return "%s/%s/%s/%s%s" % ("publications", self.year, sub_folder, self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -133,6 +135,10 @@ class Publication(models.Model):
     published = models.DateField(
         blank=True,
         null=True,
+    )
+
+    year = models.PositiveIntegerField(
+        validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
     number = models.PositiveIntegerField(

@@ -115,5 +115,44 @@
             "name": "Principal Researcher", 
             "slug": "principal-researcher"
         }
+    }, 
+    {
+        "pk": 1, 
+        "model": "utils.tag", 
+        "fields": {
+            "tag": "Semantic web", 
+            "slug": "semantic-web"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "utils.tag", 
+        "fields": {
+            "tag": "Linked data", 
+            "slug": "linked-data"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "utils.tag", 
+        "fields": {
+            "tag": "Open", 
+            "slug": "open"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "utils.tag", 
+        "fields": {
+            "tag": "Educational programs", 
+            "slug": "educational-programs"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "utils.language", 
+        "fields": {
+            "name": "English"
+        }
     }
 ]
