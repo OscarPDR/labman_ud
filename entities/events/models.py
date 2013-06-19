@@ -33,6 +33,9 @@ class EventType(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -96,6 +99,9 @@ class Event(models.Model):
         max_length=1500,
         blank=True,
     )
+
+    class Meta:
+        ordering = ['slug']
 
     def __unicode__(self):
         return u'%s %s' % (self.short_name, self.year)

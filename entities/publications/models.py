@@ -53,6 +53,9 @@ class PublicationType(models.Model):
         null=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -186,6 +189,9 @@ class Publication(models.Model):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        ordering = ['slug']
 
     def __unicode__(self):
         return u'%s' % (self.title)
