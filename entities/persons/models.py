@@ -68,6 +68,9 @@ class Person(models.Model):
         null=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.full_name)
 
@@ -102,6 +105,9 @@ class Role(models.Model):
     description = models.TextField(
         max_length=1500,
     )
+
+    class Meta:
+        ordering = ['slug']
 
     def __unicode__(self):
         return u'Role: %s' % (self.name)

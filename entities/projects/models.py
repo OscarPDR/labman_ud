@@ -67,6 +67,9 @@ class ProjectType(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -141,6 +144,9 @@ class Project(models.Model):
         max_length=1000,
         blank=True,
     )
+
+    class Meta:
+        ordering = ['slug']
 
     def __unicode__(self):
         return u'%s' % (self.full_name)

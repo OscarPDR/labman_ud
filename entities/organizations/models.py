@@ -34,6 +34,9 @@ class OrganizationType(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -76,6 +79,9 @@ class Organization(models.Model):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        ordering = ['slug']
 
     def __unicode__(self):
         if self.short_name == self.full_name:

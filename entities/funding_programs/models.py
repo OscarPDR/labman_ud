@@ -47,6 +47,9 @@ class FundingProgram(models.Model):
         null=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s, %s' % (self.full_name, self.organization.full_name)
 

@@ -26,6 +26,9 @@ class Country(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.full_name)
 
@@ -56,6 +59,9 @@ class GeographicalScope(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -83,6 +89,9 @@ class Role(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
@@ -105,6 +114,9 @@ class Tag(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['slug']
+
     def __unicode__(self):
         return u'%s' % (self.tag)
 
@@ -121,3 +133,6 @@ class Language(models.Model):
     name = models.CharField(
         max_length=50,
     )
+
+    class Meta:
+        ordering = ['name']
