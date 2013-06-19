@@ -28,7 +28,7 @@ PAGINATION_NUMBER = settings.FUNDING_PROGRAMS_PAGINATION
 #########################
 
 def funding_program_index(request):
-    funding_programs = FundingProgram.objects.all().order_by('full_name')
+    funding_programs = FundingProgram.objects.all().order_by('short_name')
 
     if request.method == 'POST':
         form = FundingProgramSearchForm(request.POST)

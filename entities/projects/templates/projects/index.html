@@ -4,6 +4,27 @@
 
 {% block content %}
 
+    {% if tag %}
+        <div class="centered">
+            <h2>{{ projects|length }} project{{ projects|pluralize }} with tag <em>'{{ tag.tag }}'</em></h2>
+        </div>
+        <br>
+    {% endif %}
+
+    {% if project_type %}
+        <div class="centered">
+            <h2>{{ projects|length }} {{ project_type.name|lower }}{{ projects|pluralize }}</h2>
+        </div>
+        <br>
+    {% endif %}
+
+    {% if not tag and not project_type %}
+        <div class="centered">
+            <h2>{{ projects_length }} project{{ projects_length|pluralize }}</h2>
+            <br>
+        </div>
+    {% endif %}
+
     <form class="form-search" action="" method="post">
         {% csrf_token %}
         <div class="input-append">

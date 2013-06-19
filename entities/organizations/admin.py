@@ -20,8 +20,8 @@ class OrganizationLogoInline(admin.StackedInline):
 class OrganizationAdmin(admin.ModelAdmin):
     model = Organization
     search_fields = ['full_name', 'short_name']
-    list_display = ['full_name', 'short_name', 'homepage']
-    list_filter = ['country__full_name']
+    list_display = ['full_name', 'short_name', 'organization_type']
+    list_filter = ['country__full_name', 'organization_type__name']
     exclude = ['slug']
     inlines = [
         OrganizationLogoInline,
@@ -35,6 +35,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 class OrganizationTypeAdmin(admin.ModelAdmin):
     model = OrganizationType
     list_display = ['name', 'description']
+    exclude = ['slug']
 
 
 ##################################################

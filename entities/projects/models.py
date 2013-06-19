@@ -11,7 +11,7 @@ from entities.funding_programs.models import FundingProgram
 from entities.organizations.models import Organization
 from entities.publications.models import Publication
 
-from entities.utils.models import Role
+from entities.utils.models import Role, Tag
 
 
 # Create your models here.
@@ -252,6 +252,18 @@ class ConsortiumMember(models.Model):
 
     def __unicode__(self):
         return u'%s is taking part in %s' % (self.organization.short_name, self.project.short_name)
+
+
+#########################
+# Model: ProjectTag
+#########################
+
+class ProjectTag(models.Model):
+    tag = models.ForeignKey(Tag)
+    project = models.ForeignKey(Project)
+
+    def __unicode__(self):
+        return u'%s tagged as: %s' % (self.project.full_name, self.tag.tag)
 
 
 #########################

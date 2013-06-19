@@ -31,6 +31,8 @@ PAGINATION_NUMBER = settings.PUBLICATIONS_PAGINATION
 def publication_index(request):
     publications = Publication.objects.all().order_by('title')
 
+    publications_length = len(publications)
+
     if request.method == 'POST':
         form = PublicationSearchForm(request.POST)
         if form.is_valid():
@@ -66,6 +68,7 @@ def publication_index(request):
     return render_to_response('publications/index.html', {
             'publications': publications,
             'form': form,
+            'publications_length': publications_length,
         },
         context_instance=RequestContext(request))
 
@@ -97,7 +100,7 @@ def publication_info(request, slug):
     related_publications_ids = RelatedPublication.objects.filter(project_id__in=related_projects_ids).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).exclude(id=publication.id)
 
-    tag_ids = PublicationTag.objects.filter(publication=publication.id).values('id')
+    tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
     tags = Tag.objects.filter(id__in=tag_ids)
     tags = tags.extra(select={'length': 'Length(tag)'}).order_by('length')
 
@@ -116,11 +119,11 @@ def publication_info(request, slug):
 # View: view_tag
 #########################
 
-def view_tag(request, tag_slug):
+def view_publication_tag(request, tag_slug):
     tag = Tag.objects.get(slug=tag_slug)
 
     publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
-    publications = Publication.objects.filter(id__in=publication_ids)
+    publications = Publication.objects.filter(id__in=publication_ids).order_by('title')
 
     paginator = Paginator(publications, PAGINATION_NUMBER)
 

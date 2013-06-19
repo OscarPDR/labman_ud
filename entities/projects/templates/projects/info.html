@@ -14,6 +14,15 @@
         {{ project.full_name }}
     </h2>
 
+    <blockquote id="project-type">
+        <p>
+            <a target="_blank" href="{% url view_project_type project.project_type.slug %}">
+                {{ project.project_type.name }}
+            </a>
+        </p>
+    </blockquote>
+
+    <br>
     <br>
 
     <div class="tabbable tabs-left">
@@ -30,6 +39,19 @@
                     </a>
                 </li>
             {% endif %}
+
+            <br>
+
+            <div class="centered">
+                <h6>Tags</h6>
+                {% for tag in tags %}
+                    <li class="tag">
+                        <a target="_blank" href="{% url view_project_tag tag.slug %}">
+                            <span class="label label-info">{{ tag.tag }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </div>
 
             {% if user.is_authenticated %}
                 <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>

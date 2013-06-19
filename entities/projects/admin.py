@@ -3,7 +3,7 @@
 from django.contrib import admin
 from nested_inlines.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication
+from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication, ProjectTag
 
 
 #########################
@@ -14,6 +14,14 @@ class FundingAmountInline(NestedStackedInline):
     model = FundingAmount
     extra = 1
 
+
+#########################
+# Class: ProjectTagInline
+#########################
+
+class ProjectTagInline(NestedStackedInline):
+    model = ProjectTag
+    extra = 1
 
 #########################
 # Class: FundingInline
@@ -81,6 +89,7 @@ class ProjectAdmin(NestedModelAdmin):
         AssignedPersonInline,
         ProjectLogoInline,
         RelatedPublicationInline,
+        ProjectTagInline,
     ]
 
 
@@ -115,6 +124,14 @@ class FundingAmountAdmin(admin.ModelAdmin):
     search_fields = ['funding__project__short_name']
     list_display = ['funding', 'consortium_amount', 'own_amount', 'year']
     list_filter = ['year']
+
+
+#########################
+# Class: ProjectTagAdmin
+#########################
+
+class ProjectTagAdmin(admin.ModelAdmin):
+    model = ProjectTag
 
 
 #########################
@@ -159,3 +176,4 @@ admin.site.register(FundingAmount, FundingAmountAdmin)
 admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)
 admin.site.register(AssignedPerson, AssignedPersonAdmin)
 admin.site.register(RelatedPublication, RelatedPublicationAdmin)
+admin.site.register(ProjectTag, ProjectTagAdmin)
