@@ -17,7 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
 from .forms import ProjectSearchForm
 
 from entities.persons.models import Person
@@ -28,7 +28,7 @@ from entities.funding_programs.models import FundingProgram
 
 from entities.publications.models import Publication
 
-from entities.utils.models import Role
+from entities.utils.models import Role, Tag
 
 # Create your views here.
 
@@ -41,6 +41,8 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
 def project_index(request):
     projects = Project.objects.all().order_by('full_name')
+
+    projects_length = len(projects)
 
     if request.method == 'POST':
         form = ProjectSearchForm(request.POST)
@@ -78,8 +80,9 @@ def project_index(request):
     return render_to_response("projects/index.html", {
             "projects": projects,
             'form': form,
+            'projects_length': projects_length,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 #########################
@@ -126,6 +129,10 @@ def project_info(request, slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids)
+    tags = tags.extra(select={'length': 'Length(tag)'}).order_by('length')
+
     return render_to_response("projects/info.html", {
             'project': project,
             'persons': persons,
@@ -135,6 +142,108 @@ def project_info(request, slug):
             'consortium_members': consortium_members,
             'from_page': from_page,
             'related_publications': related_publications,
+            'tags': tags,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: view_project_tag
+#########################
+
+def view_project_tag(request, tag_slug):
+    tag = Tag.objects.get(slug=tag_slug)
+
+    project_ids = ProjectTag.objects.filter(tag=tag).values('project_id')
+    projects = Project.objects.filter(id__in=project_ids).order_by('full_name')
+
+    if request.method == 'POST':
+        form = ProjectSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            projs = []
+
+            for project in projects:
+
+                if query in slugify(project.full_name):
+                    projs.append(project)
+
+            projects = projs
+
+    else:
+        form = ProjectSearchForm()
+
+    paginator = Paginator(projects, PAGINATION_NUMBER)
+
+    page = request.GET.get('page')
+
+    try:
+        projects = paginator.page(page)
+
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        projects = paginator.page(1)
+
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        projects = paginator.page(paginator.num_pages)
+
+    return render_to_response("projects/index.html", {
+            "projects": projects,
+            'form': form,
+            'tag': tag,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: view_project_type
+#########################
+
+def view_project_type(request, project_type_slug):
+    project_type = ProjectType.objects.get(slug=project_type_slug)
+
+    projects = Project.objects.filter(project_type=project_type.id).order_by('full_name')
+
+    if request.method == 'POST':
+        form = ProjectSearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['text']
+            query = slugify(query)
+
+            projs = []
+
+            for project in projects:
+
+                if query in slugify(project.full_name):
+                    projs.append(project)
+
+            projects = projs
+
+    else:
+        form = ProjectSearchForm()
+
+    paginator = Paginator(projects, PAGINATION_NUMBER)
+
+    page = request.GET.get('page')
+
+    try:
+        projects = paginator.page(page)
+
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        projects = paginator.page(1)
+
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        projects = paginator.page(paginator.num_pages)
+
+    return render_to_response("projects/index.html", {
+            "projects": projects,
+            'form': form,
+            'project_type': project_type,
         },
         context_instance=RequestContext(request))
 

@@ -65,7 +65,6 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
 
 class PublicationTagAdmin(admin.ModelAdmin):
     model = PublicationTag
-    extra = 1
 
 
 ##################################################
