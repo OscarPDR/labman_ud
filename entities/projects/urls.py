@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 
     url(r'^tag/(?P<tag_slug>\S+)/$', 'entities.projects.views.view_project_tag', name='view_project_tag'),
     url(r'^publication_type/(?P<project_type_slug>\S+)/$', 'entities.projects.views.view_project_type', name='view_project_type'),
+
+    url(r'^tag_cloud/$', 'entities.projects.views.project_tag_cloud', name='project_tag_cloud'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
