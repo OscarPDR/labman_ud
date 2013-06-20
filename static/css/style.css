@@ -44,6 +44,11 @@ textarea {
     text-decoration: none;
 }
 
+div.jqcloud {
+  margin: auto;
+}
+
+
 h3 {
     text-align: center;
 }
