@@ -322,3 +322,29 @@ def email_project(request, slug):
     msg.send()
 
     return HttpResponseRedirect(reverse('project_index'))
+
+
+#########################
+# View: project_tag_cloud
+#########################
+
+def project_tag_cloud(request):
+
+    tag_dict = {}
+
+    tags = ProjectTag.objects.all()
+
+    for tag in tags:
+        t = tag.tag.tag
+        print t
+        if t in tag_dict.keys():
+            tag_dict[t] = tag_dict[t] + 1
+        else:
+            tag_dict[t] = 1
+
+    print tag_dict
+
+    return render_to_response('projects/tag_cloud.html', {
+            'tag_dict': tag_dict,
+        },
+        context_instance=RequestContext(request))
