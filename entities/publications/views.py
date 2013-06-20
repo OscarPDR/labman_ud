@@ -212,3 +212,29 @@ def view_publication_type(request, publication_type_slug):
             'publication_type': publication_type,
         },
         context_instance=RequestContext(request))
+
+
+#########################
+# View: publication_tag_cloud
+#########################
+
+def publication_tag_cloud(request):
+
+    tag_dict = {}
+
+    tags = PublicationTag.objects.all()
+
+    for tag in tags:
+        t = tag.tag.tag
+        print t
+        if t in tag_dict.keys():
+            tag_dict[t] = tag_dict[t] + 1
+        else:
+            tag_dict[t] = 1
+
+    print tag_dict
+
+    return render_to_response('publications/tag_cloud.html', {
+            'tag_dict': tag_dict,
+        },
+        context_instance=RequestContext(request))
