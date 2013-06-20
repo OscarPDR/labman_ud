@@ -1,0 +1,42 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block header_css %}
+
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/jqcloud.css"/>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div class="centered">
+        <!-- Dimensions of the tag cloud container element must be explicitly specified -->
+        <div id="project_tag_cloud" style="width: 600px; height: 350px;"></div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jqcloud-1.0.4.min.js"></script>
+
+    <script>
+        var word_array = [
+            {% for key, value in tag_dict.items %}
+             {text: "{{ key }}", weight: "{{ value }}", link:"{% url view_project_tag key|slugify %}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+            $("#project_tag_cloud").jQCloud(word_array);
+        });
+    </script>
+
+{% endblock %}
+
