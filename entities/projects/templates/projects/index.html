@@ -69,7 +69,7 @@
                         <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/project/{{ project.slug }}">
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
-                        <a href="info/{{ project.slug }}">
+                        <a href="{% url project_info project.slug %}">
                             {{ project.short_name }}
                         </a>
                     </td>
