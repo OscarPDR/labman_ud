@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from django.contrib import admin
-from nested_inlines.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication, ProjectTag
 
@@ -10,7 +9,7 @@ from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, A
 # Class: FundingAmountInline
 #########################
 
-class FundingAmountInline(NestedStackedInline):
+class FundingAmountInline(admin.TabularInline):
     model = FundingAmount
     extra = 1
 
@@ -19,15 +18,16 @@ class FundingAmountInline(NestedStackedInline):
 # Class: ProjectTagInline
 #########################
 
-class ProjectTagInline(NestedStackedInline):
+class ProjectTagInline(admin.TabularInline):
     model = ProjectTag
     extra = 1
+
 
 #########################
 # Class: FundingInline
 #########################
 
-class FundingInline(NestedStackedInline):
+class FundingInline(admin.TabularInline):
     model = Funding
     extra = 1
     inlines = [
@@ -39,7 +39,7 @@ class FundingInline(NestedStackedInline):
 # Class: ProjectLogoInline
 #########################
 
-class ProjectLogoInline(NestedStackedInline):
+class ProjectLogoInline(admin.TabularInline):
     model = ProjectLogo
     extra = 1
 
@@ -48,7 +48,7 @@ class ProjectLogoInline(NestedStackedInline):
 # Class: ConsortiumMemberInline
 #########################
 
-class ConsortiumMemberInline(NestedTabularInline):
+class ConsortiumMemberInline(admin.TabularInline):
     model = ConsortiumMember
     extra = 1
 
@@ -57,7 +57,7 @@ class ConsortiumMemberInline(NestedTabularInline):
 # Class: AssignedPersonInline
 #########################
 
-class AssignedPersonInline(NestedTabularInline):
+class AssignedPersonInline(admin.TabularInline):
     model = AssignedPerson
     extra = 1
 
@@ -66,7 +66,7 @@ class AssignedPersonInline(NestedTabularInline):
 # Class: RelatedPublicationInline
 #########################
 
-class RelatedPublicationInline(NestedTabularInline):
+class RelatedPublicationInline(admin.TabularInline):
     model = RelatedPublication
     extra = 1
 
@@ -75,7 +75,7 @@ class RelatedPublicationInline(NestedTabularInline):
 # Class: ProjectAdmin
 #########################
 
-class ProjectAdmin(NestedModelAdmin):
+class ProjectAdmin(admin.ModelAdmin):
     model = Project
     search_fields = ['full_name', 'short_name']
     list_display = ['full_name', 'short_name', 'start_year', 'end_year', 'status']
