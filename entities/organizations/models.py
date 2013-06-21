@@ -90,12 +90,11 @@ class Organization(models.Model):
             return u'%s (%s)' % (self.short_name, self.full_name)
 
     def save(self, *args, **kwargs):
-        self.full_name = self.full_name.encode('utf-8')
         if not self.short_name:
             self.short_name = self.full_name
         else:
-            self.short_name = self.short_name.encode('utf-8')
-        self.slug = slugify(self.short_name)
+            self.short_name = self.short_name
+        self.slug = slugify(self.short_name.encode('utf-8'))
         super(Organization, self).save(*args, **kwargs)
 
 
