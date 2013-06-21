@@ -336,13 +336,10 @@ def project_tag_cloud(request):
 
     for tag in tags:
         t = tag.tag.tag
-        print t
         if t in tag_dict.keys():
             tag_dict[t] = tag_dict[t] + 1
         else:
             tag_dict[t] = 1
-
-    print tag_dict
 
     return render_to_response('projects/tag_cloud.html', {
             'tag_dict': tag_dict,
