@@ -52,11 +52,6 @@
                     </li>
                 {% endfor %}
             </div>
-
-            {% if user.is_authenticated %}
-                <a id="generate-email-from-info" class="btn btn-small btn-inverse tab-left-btn" href="../email/{{ project.slug }}"><i class="icon-envelope icon-white"></i> Generate email</a>
-                <br>
-            {% endif %}
         </ul>
 
         <div class="tab-content project-template">
@@ -185,7 +180,6 @@
                                                                 <tr>
                                                                     <th>Year</th>
                                                                     <th>DeustoTech</th>
-                                                                    <th>Consortium</th>
                                                                 </tr>
                                                             </thead>
 
@@ -196,7 +190,6 @@
                                                                         <tr>
                                                                             <td>{{ funding_amount.year }}</td>
                                                                             <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
-                                                                            <td>{{ funding_amount.consortium_amount|intcomma|intword }} €</td>
                                                                         </tr>
 
                                                                     {% endif %}
