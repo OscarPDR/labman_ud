@@ -12,6 +12,8 @@ from entities.persons.models import Person
 
 from entities.utils.models import Tag, Language
 
+from entities.organizations.models import Organization
+
 
 # Create your models here.
 
@@ -69,7 +71,6 @@ class PublicationType(models.Model):
 #########################
 
 class Publication(models.Model):
-    # conferencePaper
     presented_at = models.ForeignKey(
         Event,
         blank=True,
@@ -84,14 +85,12 @@ class Publication(models.Model):
         max_length=250,
     )
 
-    # conferencePaper
     proceedings_title = models.CharField(
         max_length=250,
         blank=True,
         null=True,
     )
 
-    # conferencePaper, journalArticle, bookSection, thesis
     short_title = models.CharField(
         max_length=150,
         blank=True,
@@ -109,7 +108,6 @@ class Publication(models.Model):
         max_length=5000,
     )
 
-    # conferencePaper, journalArticle
     doi = models.CharField(
         max_length=100,
         verbose_name=u'DOI',
@@ -118,6 +116,7 @@ class Publication(models.Model):
     )
 
     pdf = models.FileField(
+        max_length=1000,
         upload_to=publication_path,
         blank=True,
         null=True,
@@ -128,7 +127,6 @@ class Publication(models.Model):
         null=True,
     )
 
-    # journalArticle
     journal_abbreviation = models.CharField(
         max_length=250,
         blank=True,
@@ -144,24 +142,17 @@ class Publication(models.Model):
         validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
-    number = models.PositiveIntegerField(
-        blank=True,
-        null=True,
-    )
-
     volume = models.PositiveIntegerField(
         blank=True,
         null=True,
     )
 
-    # conferencePaper, journalArticle, thesis, bookSection
     pages = models.CharField(
         max_length=25,
         blank=True,
         null=True,
     )
 
-    # journalArticle
     issn = models.CharField(
         max_length=100,
         verbose_name=u'ISSN',
@@ -169,7 +160,6 @@ class Publication(models.Model):
         null=True,
     )
 
-    # conferencePaper, bookSection
     isbn = models.CharField(
         max_length=100,
         verbose_name=u'ISBN',
@@ -186,6 +176,48 @@ class Publication(models.Model):
 
     observations = models.TextField(
         max_length=3000,
+        blank=True,
+        null=True,
+    )
+
+    series_number = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    series = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    edition = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    book_title = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    publisher = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    university = models.ForeignKey(Organization, blank=True, null=True)
+
+    issue = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    series_text = models.TextField(
+        max_length=500,
         blank=True,
         null=True,
     )
