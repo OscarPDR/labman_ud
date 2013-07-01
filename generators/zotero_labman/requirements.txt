@@ -1,0 +1,2 @@
+Pyzotero==0.10.1
+python-dateutil==2.1
