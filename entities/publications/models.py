@@ -185,7 +185,8 @@ class Publication(models.Model):
         null=True,
     )
 
-    series = models.PositiveIntegerField(
+    series = models.CharField(
+        max_length=300,
         blank=True,
         null=True,
     )
