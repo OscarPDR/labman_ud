@@ -9,8 +9,9 @@ class ZoteroLog(models.Model):
         blank=False,
         null=False,
     )
+    updated = models.DateTimeField()
     attachment = models.BooleanField(default=False)
     publication = models.ForeignKey(Publication)
 
     def __unicode__(self):
-        return u'%s | %s | %s' % (self.created, self.zotero_key, self.publication.id)
+        return u'%s | %s | %s' % (self.updated, self.zotero_key, self.publication.id)
