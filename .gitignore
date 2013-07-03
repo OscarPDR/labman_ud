@@ -16,3 +16,5 @@ labman_ud.sublime-workspace
 *.db
 
 *.json
+
+migrations/
