@@ -110,6 +110,9 @@ class Event(models.Model):
         return u'%s %s' % (self.short_name, self.year)
 
     def save(self, *args, **kwargs):
+        if not self.short_name:
+            self.short_name = self.full_name
+
         if (not self.year) and (self.start_date):
             self.year = self.start_date.year
 
