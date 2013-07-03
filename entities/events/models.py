@@ -72,21 +72,24 @@ class Event(models.Model):
     )
 
     location = models.CharField(
-        max_length=150,
+        max_length=300,
         verbose_name=u'Location',
         blank=True,
     )
 
     start_date = models.DateField(
         blank=True,
+        null=True,
     )
 
     end_date = models.DateField(
         blank=True,
+        null=True,
     )
 
     year = models.PositiveIntegerField(
         blank=True,
+        null=True,
     )
 
     homepage = models.URLField(
