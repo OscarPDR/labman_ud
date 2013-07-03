@@ -9,6 +9,11 @@ class ZoteroLog(models.Model):
         blank=False,
         null=False,
     )
+    observations = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
     updated = models.DateTimeField()
     attachment = models.BooleanField(default=False)
     publication = models.ForeignKey(Publication)
