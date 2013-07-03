@@ -1,14 +1,22 @@
 #encoding: utf-8 
 
-from pyzotero import zotero
-from dateutil import parser
-import requests
-import json
-import os
-
 from django.core.management.base import NoArgsCommand
 
 from labman_ud import settings
+from generators.zotero_labman.models import ZoteroLog
+from entities.events.models import Event, EventType
+from entities.publications.models import Publication, PublicationType
+from entities.organizations.models import Organization, OrganizationType
+from entities.utils.models import Language
+
+from pyzotero import zotero
+from dateutil import parser
+from datetime import datetime
+
+import requests
+import json
+import os
+import re
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -19,7 +27,7 @@ class Command(NoArgsCommand):
         self.__api_key = getattr(settings, 'ZOTERO_API_KEY', None)
         self.__library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
         self.__library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
-        self.__pdf_path = getattr(settings, 'MEDIA_ROOT', None)
+        self.__media_path = getattr(settings, 'MEDIA_ROOT', None)
         self.__api_limit = 5
         
         # TODO: Check variables
@@ -29,13 +37,14 @@ class Command(NoArgsCommand):
     def __parse_last_items(self):
         zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
 
-        # Get last updated item from the json file
-        lastkey, lastdt = self.__get_last_updated()
+        # Get last updated item from the DB log
+        try:
+            lastdt = ZoteroLog.objects.all().order_by('-updated')[0].updated
+        except:
+            lastdt = None
 
         gen = zot.makeiter(zot.top(limit=self.__api_limit, order='dateModified', sort='desc'))
 
-        new_lastkey = ''
-        new_lastdt = None
         lastitems = []
 
         moreitems = True
@@ -52,13 +61,26 @@ class Command(NoArgsCommand):
                             moreitems = False
                             break
                         else:
-                            if new_lastdt is None:
-                                new_lastkey = item['key']
-                                new_lastdt = item['updated']
+                            try:
+                                pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
+                                # Delete publication if exists
+                                print 'Item already exists! Deleting ', item['title'], '...'
+                                pub.delete()
+                                print 'OK'
+                            except:
+                                pass
+                            
+                            # Create new publication
+                            print 'Creating new publication...', item['title']
+                            pub = None
+                            pub, observations = self.__save_publication(item)
+                            if not observations:
+                                print 'OK'
+                            else:
+                                print 'OK but...', observations
 
-                            print item
-                            #print item['itemType']
-                            print item['title'].encode('utf-8')
+                            # Create new log entry
+                            zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), observations=observations)
 
                             # A second connection to Zotero API is needed for the retrieval of children, otherwise the iterator stops
                             zot_children = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
@@ -66,21 +88,100 @@ class Command(NoArgsCommand):
                             
                             for child in children:
                                 if child['itemType'] == 'attachment' and child['contentType'] == 'application/pdf':
-                                    print "Getting " + child['filename'] + '...'
+                                    print 'Getting attachment: ' + child['filename'] + '...'
+
                                     r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items/'+ child['key'] + '/file?key=' + self.__api_key)
-                                    with open(self.__pdf_path + '/' + item['key'] + '_' + child['filename'], "wb") as pdffile:
+
+                                    pdf_path = self.__media_path + '/' + item['key'] + '_' + child['filename']
+                                    with open(pdf_path, 'wb') as pdffile:
                                         pdffile.write(r.content)
+
+                                    pub.pdf = pdf_path
+                                    zotlog.attachment = True
+
+                            # Save Log and Publication into DB
+                            print 'Saving into DB...'
+                            pub.save()
+                            zotlog.publication = pub
+                            zotlog.save()
+                            print 'OK!'
+
                             print '-'*30
                 lastitems = items
 
-        if new_lastdt is not None:
-            with open(self.__pdf_path + '/' + '.lastupdate.json', 'w') as jsonfile:
-                json.dump({'key': new_lastkey, 'date': new_lastdt}, jsonfile)
+    def __save_publication(self, item):
+        pub = Publication()
 
-    def __get_last_updated(self):
+        observations = ''
+
+        pub.title = item['title']
+        pub.abstract = item['abstractNote']
+        pub.publication_type = self.__get_publication_type(item['itemType'])
+        pub.language, created = Language.objects.get_or_create(name=item['language']) if 'language' in item and item['language'] else (None, False)
         try:
-            with open(self.__pdf_path + '/' + '.lastupdate.json', 'r') as jsonfile:
-                lastupdate = json.load(jsonfile)
-                return lastupdate['key'], parser.parse(lastupdate['date'])
-        except IOError:
-            return None, None
+            pub.published = parser.parse(item['date'])
+            pub.year = pub.published.year
+        except:
+            year = re.findall(r'\d{4}', item['date'])
+            if year:
+                pub.published = datetime(int(year[0]),1,1)
+                pub.year = year[0]
+            else:
+                pub.published = None
+                pub.year = '2030'
+                observations = 'Error getting year from ', item['date']
+
+        if item['itemType'] == 'conferencePaper':
+            if item['conferenceName']:
+                conf_name = item['conferenceName']
+            else:
+                conf_name = item['proceedingsTitle']
+                conf_name = conf_name.replace('proc. of the ', '')
+                conf_name = conf_name.replace('Proc. of the ', '')
+                conf_name = conf_name.replace('proceedings of the ', '')
+                conf_name = conf_name.replace('Proceedings of the ', '')
+            pub.presented_at, created = Event.objects.get_or_create(full_name=conf_name, 
+                defaults={'year': pub.published.year, 'location': item['place'], 
+                'event_type': EventType.objects.get(name='Academic event')})
+            pub.proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else ''
+
+        pub.short_title = item['shortTitle'] if 'shortTitle' in item and item['shortTitle'] else None
+        pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None
+        pub.journal_abbreviation = item['journalAbbrevation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else None
+        pub.volume = item['volume'] if 'volume' in item and item['volume'] else None
+        pub.pages = item['pages'] if 'pages' in item and item['pages'] else None
+        pub.issn = item['ISSN'] if 'ISSN' in item and item['ISSN'] else None
+        pub.isbn = item['ISBN'] if 'ISBN' in item and item['ISBN'] else None
+        pub.series_number = item['seriesNumber'] if 'seriesNumber' in item and item['seriesNumber'] else None
+        pub.series = item['series'] if 'series' in item and item['series'] else None
+        pub.edition = item['edition'] if 'edition' in item and item['edition'] else None
+        pub.book_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else None
+        pub.series_number = item['seriesNumber'] if 'seriesNumber' in item and item['seriesNumber'] else None
+        pub.issue = item['issue'] if 'issue' in item and item['issue'] else None
+        pub.series_text = item['seriesText'] if 'seriesText' in item and item['seriesText'] else None
+        pub.publisher = item['publisher'] if 'publisher' in item and item['publisher'] else None
+        
+        if 'university' in item and item['university']:
+            pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
+                defaults={'organization_type': OrganizationType.objects.get(name='University')})
+
+        return pub, observations
+
+    def __get_publication_type(self, item_type):
+        try:
+            if item_type == 'bookSection':
+                return PublicationType.objects.get(name='Book section')
+            elif item_type == 'book':
+                return PublicationType.objects.get(name='Book')
+            elif item_type in ['journalArticle', 'magazineArticle', 'newspaperArticle']:
+                return PublicationType.objects.get(name='Journal article')
+            elif item_type == 'thesis':
+                return PublicationType.objects.get(name='PhD thesis')
+            elif item_type == 'report':
+                return PublicationType.objects.get(name='Technical Report')
+            elif item_type in ['patent', 'presentation','document']:
+                return PublicationType.objects.get(name='Misc')
+            elif item_type == 'conferencePaper':
+                return PublicationType.objects.get(name='Conference paper')
+        except PublicationType.DoesNotExist:
+            return None
