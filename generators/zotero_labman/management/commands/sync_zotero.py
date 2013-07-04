@@ -1,6 +1,7 @@
 #encoding: utf-8 
 
 from django.core.management.base import NoArgsCommand
+from django.template.defaultfilters import slugify
 
 from labman_ud import settings
 from generators.zotero_labman.models import ZoteroLog
@@ -27,21 +28,21 @@ class Command(NoArgsCommand):
         self.__api_key = getattr(settings, 'ZOTERO_API_KEY', None)
         self.__library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
         self.__library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
-        self.__media_path = getattr(settings, 'MEDIA_ROOT', None)
+        self.__media_root = getattr(settings, 'MEDIA_ROOT', None)
         self.__api_limit = 5
         
         # TODO: Check variables
-
-        self.__parse_last_items()
-
-    def __parse_last_items(self):
-        zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
 
         # Get last updated item from the DB log
         try:
             lastdt = ZoteroLog.objects.all().order_by('-updated')[0].updated
         except:
             lastdt = None
+
+        self.__parse_last_items(lastdt)
+
+    def __parse_last_items(self, lastdt):
+        zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
 
         gen = zot.makeiter(zot.top(limit=self.__api_limit, order='dateModified', sort='desc'))
 
@@ -92,8 +93,14 @@ class Command(NoArgsCommand):
 
                                     r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items/'+ child['key'] + '/file?key=' + self.__api_key)
 
-                                    pdf_path = self.__media_path + '/' + item['key'] + '_' + child['filename']
-                                    with open(pdf_path, 'wb') as pdffile:
+                                    pdf_path = self.__get_publication_path(pub)
+
+                                    # If the directory doesn't exist, create it
+                                    pdf_dir = self.__media_root + '/' + os.path.dirname(pdf_path)
+                                    if not os.path.exists(pdf_dir):
+                                        os.makedirs(pdf_dir)
+
+                                    with open(self.__media_root + '/' + pdf_path, 'wb') as pdffile:
                                         pdffile.write(r.content)
 
                                     pub.pdf = pdf_path
@@ -108,6 +115,19 @@ class Command(NoArgsCommand):
 
                             print '-'*30
                 lastitems = items
+
+    def __get_publication_path(self, pub):
+        # if the publication is presented at any event (conference, workshop, etc.), it will be stored like:
+        #   publications/2012/ucami/title-of-the-paper.pdf
+        if pub.presented_at:
+            sub_folder = pub.presented_at.slug
+
+        # otherwise, it will be stored like:
+        #   publications/2012/book-chapter/title-of-the-paper.pdf
+        else:
+            sub_folder = pub.publication_type.slug
+
+        return "%s/%s/%s/%s" % ("publications", pub.year, sub_folder, slugify(str(pub.title.encode('utf-8'))) + '.pdf')
 
     def __save_publication(self, item):
         pub = Publication()
