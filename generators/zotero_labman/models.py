@@ -11,6 +11,7 @@ class ZoteroLog(models.Model):
     )
     updated = models.DateTimeField()
     attachment = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
     version = models.PositiveIntegerField(
         blank=False,
         null=False,
@@ -20,7 +21,7 @@ class ZoteroLog(models.Model):
         blank=True,
         null=True,
     )
-    publication = models.ForeignKey(Publication)
+    publication = models.ForeignKey(Publication, default=None, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s | %s | %s' % (self.version, self.zotero_key, self.publication.id)
