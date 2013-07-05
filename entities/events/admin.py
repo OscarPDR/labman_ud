@@ -1,17 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Event, EventType, EventLogo
-
-
-#########################
-# Class: EventLogoInline
-#########################
-
-class EventLogoInline(admin.TabularInline):
-    model = EventLogo
-    extra = 1
-
+from .models import Event, EventType
 
 #########################
 # Class: EventTypeAdmin
@@ -22,7 +12,6 @@ class EventTypeAdmin(admin.ModelAdmin):
     exclude = [
         'slug',
     ]
-
 
 #########################
 # Class: EventAdmin
@@ -36,10 +25,6 @@ class EventAdmin(admin.ModelAdmin):
     exclude = [
         'slug',
     ]
-    inlines = [
-        EventLogoInline,
-    ]
-
 
 ##################################################
 # Register classes
