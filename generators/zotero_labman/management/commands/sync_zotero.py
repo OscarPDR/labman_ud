@@ -19,6 +19,21 @@ import os
 import re
 import operator
 
+# Dict with supported Zotero's itemTypes, translated to LabMan's PublicationTypes
+SUPPORTED_ITEM_TYPES = {
+    'bookSection': 'Book section', 
+    'book': 'Book',
+    'journalArticle': 'Journal article',
+    'magazineArticle': 'Journal article',
+    'newspaperArticle': 'Journal article',
+    'thesis': 'PhD thesis',
+    'report': 'Technical Report',
+    'patent': 'Misc',
+    'presentation': 'Misc',
+    'document': 'Misc',
+    'conferencePaper': 'Conference paper',
+}
+
 class Command(NoArgsCommand):
     can_import_settings = True
 
@@ -73,7 +88,7 @@ class Command(NoArgsCommand):
 
                 if items and items != lastitems:
                     for item in items:
-                        if item['itemType'] in ['bookSection', 'book', 'journalArticle', 'magazineArticle', 'newspaperArticle', 'thesis', 'report', 'patent', 'presentation', 'conferencePaper', 'document']:
+                        if item['itemType'] in SUPPORTED_ITEM_TYPES:
                             try:
                                 pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
                                 # Delete publication if exists
@@ -145,7 +160,13 @@ class Command(NoArgsCommand):
 
         pub.title = item['title']
         pub.abstract = item['abstractNote']
-        pub.publication_type = self.__get_publication_type(item['itemType'])
+
+        # Get publication type
+        try:
+            pub.publication_type = PublicationType.objects.get(name=SUPPORTED_ITEM_TYPES[item['itemType']])
+        except PublicationType.DoesNotExist:
+            pub.publication_type = None
+
         pub.language, created = Language.objects.get_or_create(name=item['language']) if 'language' in item and item['language'] else (None, False)
         try:
             pub.published = parser.parse(item['date'])
@@ -195,22 +216,3 @@ class Command(NoArgsCommand):
                 defaults={'organization_type': OrganizationType.objects.get(name='University')})
 
         return pub, observations
-
-    def __get_publication_type(self, item_type):
-        try:
-            if item_type == 'bookSection':
-                return PublicationType.objects.get(name='Book section')
-            elif item_type == 'book':
-                return PublicationType.objects.get(name='Book')
-            elif item_type in ['journalArticle', 'magazineArticle', 'newspaperArticle']:
-                return PublicationType.objects.get(name='Journal article')
-            elif item_type == 'thesis':
-                return PublicationType.objects.get(name='PhD thesis')
-            elif item_type == 'report':
-                return PublicationType.objects.get(name='Technical Report')
-            elif item_type in ['patent', 'presentation','document']:
-                return PublicationType.objects.get(name='Misc')
-            elif item_type == 'conferencePaper':
-                return PublicationType.objects.get(name='Conference paper')
-        except PublicationType.DoesNotExist:
-            return None
