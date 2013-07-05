@@ -75,6 +75,7 @@ class Publication(models.Model):
         Event,
         blank=True,
         null=True,
+        related_name='publications'
     )
 
     # REQUIRED
@@ -185,7 +186,8 @@ class Publication(models.Model):
         null=True,
     )
 
-    series = models.PositiveIntegerField(
+    series = models.CharField(
+        max_length=300,
         blank=True,
         null=True,
     )
@@ -221,6 +223,9 @@ class Publication(models.Model):
         blank=True,
         null=True,
     )
+
+    authors = models.ManyToManyField(Person, through='PublicationAuthor', related_name='publications')
+    tags = models.ManyToManyField(Tag, through='PublicationTag', related_name='publications')
 
     class Meta:
         ordering = ['slug']

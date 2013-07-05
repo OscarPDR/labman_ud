@@ -102,6 +102,13 @@ class Event(models.Model):
         max_length=1500,
         blank=True,
     )
+    
+    logo = models.ImageField(
+        upload_to=event_logo_path,
+        verbose_name='Logo',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ['slug']
@@ -117,21 +124,3 @@ class Event(models.Model):
         self.slug = slugify(event_name)
 
         super(Event, self).save(*args, **kwargs)
-
-
-#########################
-# Model: EventLogo
-#########################
-
-class EventLogo(models.Model):
-    event = models.ForeignKey(Event)
-
-    logo = models.ImageField(
-        upload_to=event_logo_path,
-        verbose_name='Logo',
-        blank=True,
-        null=True,
-    )
-
-    def __unicode__(self):
-        return u'Logo for event: %s' % (self.event.short_name)
