@@ -103,7 +103,7 @@ class Organization(models.Model):
 #########################
 
 class OrganizationLogo(models.Model):
-    organization = models.ForeignKey(Organization)
+    organization = models.ForeignKey(Organization, related_name='organization_logos')
 
     logo = models.ImageField(
         upload_to=organization_logo_path,
