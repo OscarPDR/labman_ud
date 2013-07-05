@@ -15,9 +15,9 @@ from dateutil import parser
 from datetime import datetime
 
 import requests
-import json
 import os
 import re
+import operator
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -29,45 +29,56 @@ class Command(NoArgsCommand):
         self.__library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
         self.__library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
         self.__media_root = getattr(settings, 'MEDIA_ROOT', None)
-        self.__api_limit = 5
+        self.__api_limit = 10
         
         # TODO: Check variables
 
-        # Get last updated item from the DB log
+        # Get last version synced from the DB log
         try:
-            lastdt = ZoteroLog.objects.all().order_by('-updated')[0].updated
+            last_version_db = ZoteroLog.objects.all().order_by('-version')[0].version
         except:
-            lastdt = None
+            last_version_db = 0
 
-        self.__parse_last_items(lastdt)
+        self.__parse_last_items(last_version_db)
 
-    def __parse_last_items(self, lastdt):
+    def __parse_last_items(self, version=0):
         zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
 
-        gen = zot.makeiter(zot.top(limit=self.__api_limit, order='dateModified', sort='desc'))
+        # Get last version number in zotero to insert in DB log as last version synced
+        r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items?format=versions&key=' + self.__api_key)
+        last_version = max(r.json().items(), key=operator.itemgetter(1))[1]
 
-        lastitems = []
+        if version == last_version:
+            print "Labman is already updated to last version in Zotero (%i)! :-)" % (last_version)
+        else:
+            if version > last_version:
+                # This should not happend anytime, but in this case, we solve the error by syncing the penultimate version in Zotero
+                print "Labman version number (%i) is higher than Zotero's one (%i)... :-/ Solving the error..." % (version, last_version)
+                version = last_version - 1
 
-        moreitems = True
-        while moreitems:
-            try:
-                items = gen.next()
-            except StopIteration:
-                moreitems = False
+            print "Getting items since version", version
+            print "Last version in Zotero is", last_version
+            print '-'*30
 
-            if items != lastitems:
-                for item in items:
-                    if item['itemType'] in ['bookSection', 'book', 'journalArticle', 'magazineArticle', 'newspaperArticle', 'thesis', 'report', 'patent', 'presentation', 'conferencePaper', 'document']:
-                        if lastdt is not None and parser.parse(item['updated']) <= lastdt:
-                            moreitems = False
-                            break
-                        else:
+            gen = zot.makeiter(zot.items(limit=self.__api_limit, order='dateModified', sort='desc', newer=version))
+
+            lastitems = []
+
+            moreitems = True
+            while moreitems:
+                try:
+                    items = gen.next()
+                except StopIteration:
+                    moreitems = False
+
+                if items and items != lastitems:
+                    for item in items:
+                        if item['itemType'] in ['bookSection', 'book', 'journalArticle', 'magazineArticle', 'newspaperArticle', 'thesis', 'report', 'patent', 'presentation', 'conferencePaper', 'document']:
                             try:
                                 pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
                                 # Delete publication if exists
                                 print 'Item already exists! Deleting ', item['title'], '...'
                                 pub.delete()
-                                print 'OK'
                             except:
                                 pass
                             
@@ -75,13 +86,11 @@ class Command(NoArgsCommand):
                             print 'Creating new publication...', item['title']
                             pub = None
                             pub, observations = self.__save_publication(item)
-                            if not observations:
-                                print 'OK'
-                            else:
-                                print 'OK but...', observations
+                            if observations:
+                                print 'Saved but...', observations
 
                             # Create new log entry
-                            zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), observations=observations)
+                            zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
 
                             # A second connection to Zotero API is needed for the retrieval of children, otherwise the iterator stops
                             zot_children = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
@@ -114,7 +123,7 @@ class Command(NoArgsCommand):
                             print 'OK!'
 
                             print '-'*30
-                lastitems = items
+                    lastitems = items
 
     def __get_publication_path(self, pub):
         # if the publication is presented at any event (conference, workshop, etc.), it will be stored like:
