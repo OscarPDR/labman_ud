@@ -6,9 +6,10 @@ from django.template.defaultfilters import slugify
 from labman_ud import settings
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationType
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
-from entities.utils.models import Language
+from entities.utils.models import Language, Tag
+from entities.persons.models import Person
 
 from pyzotero import zotero
 from dateutil import parser
@@ -50,7 +51,7 @@ class Command(NoArgsCommand):
 
         # Get last version synced from the DB log
         try:
-            last_version_db = ZoteroLog.objects.all().order_by('-version')[0].version
+            last_version_db = ZoteroLog.objects.all().order_by('-created')[0].version
         except:
             last_version_db = 0
 
@@ -111,7 +112,7 @@ class Command(NoArgsCommand):
                             # Create new publication
                             print prefix, 'Creating new publication...', item['title']
                             pub = None
-                            pub, observations = self.__save_publication(item)
+                            pub, authors, tags, observations = self.__save_publication(item)
                             if observations:
                                 print prefix, 'Saved but...', observations
 
@@ -141,9 +142,28 @@ class Command(NoArgsCommand):
                                     pub.pdf = pdf_path
                                     zotlog.attachment = True
 
-                            # Save Log and Publication into DB
                             print prefix, 'Saving into DB...'
+                            # Save publication
                             pub.save()
+
+                            # Saving authors and tags (many-to-many fields)
+                            order = 1
+                            for author in authors:
+                                pubauth = PublicationAuthor(
+                                    author=author,
+                                    publication=pub,
+                                    position=order
+                                )
+                                pubauth.save()
+                                order += 1
+                            for tag in tags:
+                                pubtag = PublicationTag(
+                                    publication=pub,
+                                    tag=tag
+                                )
+                                pubtag.save()
+
+                            # Save log
                             zotlog.publication = pub
                             zotlog.save()
                             print prefix, 'OK!'
@@ -275,4 +295,24 @@ class Command(NoArgsCommand):
             pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
                 defaults={'organization_type': OrganizationType.objects.get(name='University')})
 
-        return pub, observations
+        # We save them later (when we save pub in DB) (many-to-many fields)
+        authors = []
+        for creator in item['creators']:
+            # TODO: Author searching with Aitor Almeida's awesome IF
+            author_slug = slugify(str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8')))
+            try:
+                a = Person.objects.get(slug__icontains=author_slug)
+            except:
+                a = Person(
+                    first_name=creator['firstName'],
+                    first_surname=creator['lastName']
+                    )
+                a.save()
+            authors.append(a)
+
+        tags = []
+        for tag in item['tags']:
+            t, created = Tag.objects.get_or_create(tag=tag['tag'])
+            tags.append(t)
+
+        return pub, authors, tags, observations
