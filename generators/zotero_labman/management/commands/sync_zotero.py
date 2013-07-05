@@ -55,25 +55,31 @@ class Command(NoArgsCommand):
             last_version_db = 0
 
         self.__parse_last_items(last_version_db)
+        if last_version_db != 0:
+            self.__sync_deleted_items(last_version_db)
 
-    def __parse_last_items(self, version=0):
+    def __get_last_library_version_zotero(self):
+        r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items?format=versions&key=' + self.__api_key)
+        return max(r.json().items(), key=operator.itemgetter(1))[1]
+
+
+    def __parse_last_items(self, version=0, prefix='[NEW_ITEMS_SYNC]'):
         zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
 
         # Get last version number in zotero to insert in DB log as last version synced
-        r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items?format=versions&key=' + self.__api_key)
-        last_version = max(r.json().items(), key=operator.itemgetter(1))[1]
+        last_version = self.__get_last_library_version_zotero()
 
         if version == last_version:
-            print "Labman is already updated to last version in Zotero (%i)! :-)" % (last_version)
+            print prefix, 'Labman is already updated to last version in Zotero (%i)! :-)' % (last_version)
         else:
             if version > last_version:
                 # This should not happend anytime, but in this case, we solve the error by syncing the penultimate version in Zotero
-                print "Labman version number (%i) is higher than Zotero's one (%i)... :-/ Solving the error..." % (version, last_version)
+                print prefix, 'Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version)
                 version = last_version - 1
 
-            print "Getting items since version", version
-            print "Last version in Zotero is", last_version
-            print '-'*30
+            print prefix, 'Getting items since version', version
+            print prefix, 'Last version in Zotero is', last_version
+            print '\n'
 
             gen = zot.makeiter(zot.items(limit=self.__api_limit, order='dateModified', sort='desc', newer=version))
 
@@ -92,17 +98,22 @@ class Command(NoArgsCommand):
                             try:
                                 pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
                                 # Delete publication if exists
-                                print 'Item already exists! Deleting ', item['title'], '...'
+                                print prefix, 'Item already exists! Deleting...'
+
+                                # Delete file if has attachment:
+                                if str(pub.pdf):
+                                    os.remove(self.__media_root + '/' + str(pub.pdf))
+                                # Delete object in DB
                                 pub.delete()
                             except:
                                 pass
                             
                             # Create new publication
-                            print 'Creating new publication...', item['title']
+                            print prefix, 'Creating new publication...', item['title']
                             pub = None
                             pub, observations = self.__save_publication(item)
                             if observations:
-                                print 'Saved but...', observations
+                                print prefix, 'Saved but...', observations
 
                             # Create new log entry
                             zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
@@ -113,7 +124,7 @@ class Command(NoArgsCommand):
                             
                             for child in children:
                                 if child['itemType'] == 'attachment' and child['contentType'] == 'application/pdf':
-                                    print 'Getting attachment: ' + child['filename'] + '...'
+                                    print prefix, 'Getting attachment: ' + child['filename'] + '...'
 
                                     r = requests.get('https://api.zotero.org/'+  self.__library_type + 's/'+ self.__library_id + '/items/'+ child['key'] + '/file?key=' + self.__api_key)
 
@@ -131,13 +142,62 @@ class Command(NoArgsCommand):
                                     zotlog.attachment = True
 
                             # Save Log and Publication into DB
-                            print 'Saving into DB...'
+                            print prefix, 'Saving into DB...'
                             pub.save()
                             zotlog.publication = pub
                             zotlog.save()
-                            print 'OK!'
+                            print prefix, 'OK!'
 
                             print '-'*30
+                    lastitems = items
+
+    def __sync_deleted_items(self, version, prefix='[DELETE_SYNC]'):
+        zot = zotero.Zotero(self.__library_id, self.__library_type, self.__api_key)
+
+        # Get last version number in zotero to insert in DB log as last version synced
+        last_version = self.__get_last_library_version_zotero()
+
+        if version == last_version:
+            print prefix, 'Labman is already updated to last version in Zotero (%i)! :-)' % (last_version)
+        else:
+            if version > last_version:
+                # This should not happend anytime, but in this case, we solve the error by syncing the penultimate version in Zotero
+                print prefix, 'Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version)
+                version = last_version - 1
+
+            print prefix, 'Getting removed items since version', version
+            print prefix, 'Last version in Zotero is', last_version
+            print '\n'
+
+            gen = zot.makeiter(zot.trash(limit=self.__api_limit, order='dateModified', sort='desc', newer=version))
+
+            lastitems = []
+
+            moreitems = True
+            while moreitems:
+                try:
+                    items = gen.next()
+                except StopIteration:
+                    moreitems = False
+
+                if items and items != lastitems:
+                    for item in items:
+                        if item['itemType'] in SUPPORTED_ITEM_TYPES:
+                            try:
+                                pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
+                                print prefix, 'Deleting ', item['title'], '...'
+
+                                # Delete file if has attachment:
+                                if str(pub.pdf):
+                                    os.remove(self.__media_root + '/' + str(pub.pdf))
+                                # Delete object in DB
+                                pub.delete()
+
+                                zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, delete=True, publication=None)
+                                zotlog.save()
+                                print '-'*30
+                            except:
+                                pass
                     lastitems = items
 
     def __get_publication_path(self, pub):
@@ -151,7 +211,7 @@ class Command(NoArgsCommand):
         else:
             sub_folder = pub.publication_type.slug
 
-        return "%s/%s/%s/%s" % ("publications", pub.year, sub_folder, slugify(str(pub.title.encode('utf-8'))) + '.pdf')
+        return '%s/%s/%s/%s' % ('publications', pub.year, sub_folder, slugify(str(pub.title.encode('utf-8'))) + '.pdf')
 
     def __save_publication(self, item):
         pub = Publication()
