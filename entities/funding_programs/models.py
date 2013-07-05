@@ -67,7 +67,7 @@ class FundingProgram(models.Model):
 #########################
 
 class FundingProgramLogo(models.Model):
-    funding_program = models.ForeignKey(FundingProgram)
+    funding_program = models.ForeignKey(FundingProgram, related_name='funding_program_logos')
 
     logo = models.ImageField(
         upload_to=funding_program_logo_path,

@@ -145,6 +145,12 @@ class Project(models.Model):
         blank=True,
     )
 
+    funding_programs = models.ManyToManyField(FundingProgram, through='Funding', related_name='projects')
+    persons = models.ManyToManyField(Person, through='AssignedPerson', related_name='projects')
+    organizations = models.ManyToManyField(Organization, through='ConsortiumMember', related_name='projects')
+    tags = models.ManyToManyField(Tag, through='ProjectTag', related_name='projects')
+    publications = models.ManyToManyField(Publication, through='RelatedPublication', related_name='projects')
+
     class Meta:
         ordering = ['slug']
 
@@ -164,7 +170,7 @@ class Project(models.Model):
 #########################
 
 class ProjectLogo(models.Model):
-    project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, related_name='project_logos')
 
     logo = models.ImageField(
         upload_to=project_logo_path,
@@ -207,7 +213,7 @@ class Funding(models.Model):
 #########################
 
 class FundingAmount(models.Model):
-    funding = models.ForeignKey(Funding)
+    funding = models.ForeignKey(Funding, related_name='funding_amounts')
 
     consortium_amount = models.DecimalField(
         max_digits=10,
