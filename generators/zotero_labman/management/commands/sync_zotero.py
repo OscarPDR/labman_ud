@@ -38,7 +38,7 @@ SUPPORTED_ITEM_TYPES = {
 class Command(NoArgsCommand):
     can_import_settings = True
 
-    help = 'Synchronizes your Zotero library with Labman.'
+    help = 'Synchronizes Labman\'s publications DB with data from your Zotero library.'
 
     def handle_noargs(self, **options):
         self.__api_key = getattr(settings, 'ZOTERO_API_KEY', None)
