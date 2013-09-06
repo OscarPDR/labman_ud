@@ -6,7 +6,6 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.template.defaultfilters import slugify
 
-
 # Create your models here.
 
 MIN_YEAR_LIMIT = 2000
@@ -25,7 +24,6 @@ def publication_path(self, filename):
         sub_folder = self.publication_type.slug
 
     return "%s/%s/%s/%s%s" % ("publications", self.year, sub_folder, self.slug, os.path.splitext(filename)[-1])
-
 
 def thesis_path(self, filename):
     return "%s/%s/%s%s" % ("publications", "theses", self.slug, os.path.splitext(filename)[-1])
@@ -67,11 +65,11 @@ class PublicationType(models.Model):
 #########################
 
 class Publication(models.Model):
-    # conferencePaper
     presented_at = models.ForeignKey(
         'events.Event',
         blank=True,
         null=True,
+        related_name='publications'
     )
 
     # REQUIRED
@@ -82,14 +80,12 @@ class Publication(models.Model):
         max_length=250,
     )
 
-    # conferencePaper
     proceedings_title = models.CharField(
         max_length=250,
         blank=True,
         null=True,
     )
 
-    # conferencePaper, journalArticle, bookSection, thesis
     short_title = models.CharField(
         max_length=150,
         blank=True,
@@ -107,7 +103,6 @@ class Publication(models.Model):
         max_length=5000,
     )
 
-    # conferencePaper, journalArticle
     doi = models.CharField(
         max_length=100,
         verbose_name=u'DOI',
@@ -116,6 +111,7 @@ class Publication(models.Model):
     )
 
     pdf = models.FileField(
+        max_length=1000,
         upload_to=publication_path,
         blank=True,
         null=True,
@@ -126,7 +122,6 @@ class Publication(models.Model):
         null=True,
     )
 
-    # journalArticle
     journal_abbreviation = models.CharField(
         max_length=250,
         blank=True,
@@ -142,24 +137,17 @@ class Publication(models.Model):
         validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
-    number = models.PositiveIntegerField(
-        blank=True,
-        null=True,
-    )
-
     volume = models.PositiveIntegerField(
         blank=True,
         null=True,
     )
 
-    # conferencePaper, journalArticle, thesis, bookSection
     pages = models.CharField(
         max_length=25,
         blank=True,
         null=True,
     )
 
-    # journalArticle
     issn = models.CharField(
         max_length=100,
         verbose_name=u'ISSN',
@@ -167,7 +155,6 @@ class Publication(models.Model):
         null=True,
     )
 
-    # conferencePaper, bookSection
     isbn = models.CharField(
         max_length=100,
         verbose_name=u'ISBN',
@@ -187,6 +174,54 @@ class Publication(models.Model):
         blank=True,
         null=True,
     )
+
+    series_number = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    series = models.CharField(
+        max_length=300,
+        blank=True,
+        null=True,
+    )
+
+    edition = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    book_title = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    publisher = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    university = models.ForeignKey('organizations.Organization', blank=True, null=True)
+
+    part_of = models.ForeignKey('self', blank=True, null=True, related_name='has_part')
+
+    issue = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    series_text = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='publications')
+    tags = models.ManyToManyField('utils.Tag', through='PublicationTag', related_name='publications')
 
     class Meta:
         ordering = ['slug']
@@ -227,7 +262,6 @@ class PublicationAuthor(models.Model):
     def __unicode__(self):
         return u'%s has written: %s' % (self.author.full_name, self.publication.title)
 
-
 #########################
 # Model: Thesis
 #########################
@@ -237,14 +271,16 @@ class Thesis(models.Model):
         max_length=1000,
     )
 
+    author = models.ForeignKey('persons.Person', related_name='has_thesis')
+
     slug = models.SlugField(
         max_length=1000,
         blank=True,
         unique=True,
     )
 
-    advisor = models.ForeignKey('persons.Person')
-    co_advisors = models.ManyToManyField('persons.Person', through='CoAdvisor', related_name='advised_theses')
+    advisor = models.ForeignKey('persons.Person', related_name='advised_thesis')
+    co_advisors = models.ManyToManyField('persons.Person', through='CoAdvisor', related_name='coadvised_thesis')
 
     registration_date = models.DateField(
         blank=True,
@@ -299,15 +335,3 @@ class CoAdvisor(models.Model):
 
     def __unicode__(self):
         return u'%s has co-advised the thesis: %s' % (self.co_advisor.full_name, self.thesis.title)
-
-
-#########################
-# Model: ThesisAuthor
-#########################
-
-class ThesisAuthor(models.Model):
-    author = models.ForeignKey('persons.Person')
-    thesis = models.ForeignKey('Thesis')
-
-    def __unicode__(self):
-        return u'%s has thesis: %s' % (self.author.full_name, self.thesis.title)
