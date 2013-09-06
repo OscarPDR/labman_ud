@@ -1,0 +1,36 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="row">
+        {% for member in members %}
+
+            {% if forloop.counter0|divisibleby:4 %}{% endif %}
+
+                <div class="col-md-3 member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
+                    <div class="centered">
+                        <a href="{% url member_info member.slug %}">
+                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
+                        </a>
+                        <br>
+                        <span class="member-name">{% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}</span>
+                        <br>
+                        <span class="member-position">{{ member.position }}</span>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#members-nav').addClass('active');
+    </script>
+
+{% endblock %}
