@@ -67,43 +67,49 @@ class Event(models.Model):
     )
 
     short_name = models.CharField(
-        max_length=150,
+        max_length=250,
         blank=True,
     )
 
     slug = models.SlugField(
-        max_length=150,
+        max_length=250,
         blank=True,
         unique=True,
     )
 
-    description = models.TextField(
-        max_length=1500,
+    location = models.CharField(
+        max_length=250,
         blank=True,
     )
 
-    location = models.CharField(
+    host_city = models.CharField(
         max_length=150,
-        verbose_name=u'Location',
         blank=True,
     )
+
+    host_country = models.ForeignKey('utils.Country')
 
     start_date = models.DateField(
         blank=True,
+        null=True,
     )
 
     end_date = models.DateField(
         blank=True,
+        null=True,
     )
 
-    year = models.PositiveIntegerField(
-        blank=True,
-    )
+    year = models.PositiveIntegerField()
 
     homepage = models.URLField(
         verbose_name='Homepage',
         blank=True,
         null=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
     )
 
     observations = models.TextField(
@@ -118,13 +124,99 @@ class Event(models.Model):
         return u'%s %s' % (self.short_name, self.year)
 
     def save(self, *args, **kwargs):
-        if (not self.year) and (self.start_date):
-            self.year = self.start_date.year
+        if not self.short_name:
+            self.short_name = self.full_name
 
-        event_name = u'%s %s' % (self.short_name, self.year)
-        self.slug = slugify(event_name)
+        self.slug = slugify(self.short_name)
+        super(Event, self).save(*args, **kwargs)
+
+
+#########################
+# Model: EventEdition
+#########################
+
+class EventEdition(models.Model):
+    event = models.ForeignKey('Event')
+
+    sub_event_of = models.ForeignKey('Event')
+
+    edition = models.PositiveIntegerField()
+
+    slug = models.SlugField(
+        max_length=550,
+        blank=True,
+        unique=True,
+    )
+
+    location = models.CharField(
+        max_length=250,
+        blank=True,
+    )
+
+    host_city = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    host_country = models.ForeignKey('utils.Country')
+
+    start_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
+    end_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
+    year = models.PositiveIntegerField()
+
+    homepage = models.URLField(
+        verbose_name='Homepage',
+        blank=True,
+        null=True,
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    observations = models.TextField(
+        max_length=1500,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ['slug']
+
+    def __unicode__(self):
+        return u'%s %s (%s)' % (self.event.short_name, self.edition, self.year)
+
+    def save(self, *args, **kwargs):
+        event_edition_name = u'%s %s (%s)' % (self.event.short_name, self.edition, self.year)
+        self.slug = slugify(event_edition_name)
 
         super(Event, self).save(*args, **kwargs)
+
+
+#########################
+# Model: EventRelatedPublication
+#########################
+
+class EventRelatedPublication(models.Model):
+    event = models.ForeignKey('Event')
+    publication = models.ForeignKey('publications.Publication')
+
+
+#########################
+# Model: EventEditionRelatedPublication
+#########################
+
+class EventEditionRelatedPublication(models.Model):
+    event_edition = models.ForeignKey('EventEdition')
+    publication = models.ForeignKey('publications.Publication')
 
 
 #########################
@@ -143,6 +235,24 @@ class EventLogo(models.Model):
 
     def __unicode__(self):
         return u'Logo for event: %s' % (self.event.short_name)
+
+
+#########################
+# Model: EventEditionLogo
+#########################
+
+class EventEditionLogo(models.Model):
+    event = models.ForeignKey('Event')
+
+    logo = models.ImageField(
+        upload_to=event_logo_path,
+        verbose_name='Logo',
+        blank=True,
+        null=True,
+    )
+
+    def __unicode__(self):
+        return u'Logo for event edition: %s' % (self.event.slug)
 
 
 #########################
