@@ -1,0 +1,118 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div id="member-name">
+        <h1>
+            {% if member.title %}
+                {{ member.title }}
+            {% endif %}
+            {{ member.full_name }}
+        </h1>
+
+        <p>
+            {{ position }}
+        </p>
+    </div> <!-- end #member-name -->
+
+    <br>
+
+    <div class="row tabbable">
+
+        <div class="col-md-3">
+            <img id="profile-picture" src="{{ MEDIA_PREFIX }}{{ member.profile_picture }}"/>
+
+            <div id="contact-member">
+                {% if member.email %}
+                    &emsp;<i class="icon-envelope-alt icon-large" style="color: #999;"></i>&emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                    <br>
+                {% endif %}
+
+                {% if member.phone_number %}
+                    <br>
+                    &emsp;<i class="icon-phone icon-large" style="color: #999;"></i>&emsp;{{ member.phone_number }} - <strong>ext: </strong> {{ member.phone_extension }}
+                    <br>
+                {% endif %}
+
+                {% if member.personal_website %}
+                    <br>
+                    &emsp;<i class="icon-globe icon-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
+                    <br>
+                {% endif %}
+
+                <div class="soften"></div>
+            </div> <!-- end #contact-member -->
+
+            <ul id="member-tabs" class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#member-biography-tab-pane" data-toggle="tab">
+                        &emsp;<i class="icon-user icon-large"></i>&emsp;Biography
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#members-projects-tab-pane" data-toggle="tab">
+                        &emsp;<i class="icon-gears icon-large"></i>&emsp;Projects
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#members-publications-tab-pane" data-toggle="tab">
+                        &emsp;<i class="icon-file-text-alt icon-large"></i>&emsp;Publications
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#members-profiles-tab-pane" data-toggle="tab">
+                        &emsp;<i class="icon-cloud icon-large"></i>&emsp;Profiles
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#members-graphs-tab-pane" data-toggle="tab">
+                        &emsp;<i class="icon-bar-chart icon-large"></i>&emsp;Graphs
+                    </a>
+                </li>
+            </ul> <!-- end #member-tabs -->
+        </div> <!-- end .col-md-3 member section sidebar -->
+
+        <div class="col-md-9">
+            <div id="member-tab-content" class="tab-content">
+
+                <div id="member-biography-tab-pane" class="tab-pane active">
+                        {{ member.biography|safe }}
+                </div> <!-- end #member-biography-tab-pane .tab-pane -->
+
+                <div id="member-projects-tab-pane" class="tab-pane">
+                    {% include 'members/projects.html' %}
+                </div> <!-- end #member-projects-tab-pane .tab-pane -->
+
+                <div id="member-publications-tab-pane" class="tab-pane">
+                    {% include 'members/publications.html' %}
+                </div> <!-- end #member-publications-tab-pane .tab-pane -->
+
+                <div id="member-profiles-tab-pane" class="tab-pane">
+                    {% include 'members/profiles.html' %}
+                </div> <!-- end #member-profiles-tab-pane .tab-pane -->
+
+                <div id="member-graphs-tab-pane" class="tab-pane">
+                    {% include 'members/graphs.html' %}
+                </div> <!-- end #member-graphs-tab-pane .tab-pane -->
+
+            </div> <!-- end #about-tab-content -->
+        </div>
+    </div> <!-- end .row .tabbable -->
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#about-nav').addClass('active');
+    </script>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <h1>{{ news.title|safe }}</h1>
+
+    <h6>Published on {{ news.created|date:"l, d F Y - H:i" }}</h6>
+
+    {{ news.content|safe }}
+
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag.name }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

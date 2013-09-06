@@ -1,0 +1,182 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+{% get_media_prefix as MEDIA_PREFIX %}
+
+<!doctype html>
+    <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <head>
+        <title>MORElab information management</title>
+        <link rel="shortcut icon" href="{{ STATIC_PREFIX }}img/favicon.ico">
+
+        <meta charset="utf-8">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/justified-nav.css"/>
+
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/style.css"/>
+
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/nv.d3.css"/>
+
+        <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/font-awesome.min.css"/>
+
+        <!--[if IE 7]>
+            <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/font-awesome-ie7.min.css">
+        <![endif]-->
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+        {% block header_css %}{% endblock %}
+    </head>
+
+    <body>
+
+        <div id="wrap">
+            <div class="container">
+
+                <div class="masthead">
+
+                    <div>
+                        <a href="{% url home %}">
+                            <h1 id="principal-h1">
+                                <img src="{{ STATIC_PREFIX }}img/morelab.png" width="100"/>
+                                DeustoTech INTERNET + TELECOM units
+                            </h1>
+                        </a>
+                    </div>
+
+                    <ul class="nav nav-justified">
+                        <li>
+                            <a href="{% url project_index %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
+                                Projects
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url publication_index %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/publication_micro.png"/>
+                                Publications
+                            </a>
+                        </li>
+
+                        <li id="about-nav">
+                            <a href="{% url about %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/info_micro.png"/>
+                                About
+                            </a>
+                        </li>
+
+                        <li id="members-nav">
+                            <a href="{% url members %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/person_micro.png"/>
+                                Members
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <img src="{{ STATIC_PREFIX }}img/index/chart_micro.png"/>
+                                Charts
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url semantic_search %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/search_micro.png"/>
+                                Semantic search
+                            </a>
+                        </li>
+                    </ul> <!-- end .nav .nav-justified -->
+
+                </div> <!-- end .masthead -->
+
+                <div id="main-container" class="container">
+                    {% block content %}{% endblock %}
+                </div> <!-- end main-container -->
+
+            </div> <!-- first container -->
+
+            <div id="push"></div>
+        </div> <!-- end wrap -->
+
+        <footer>
+            <div class="soften"></div>
+
+            <div class="row">
+                <div class="col-md-4 footer-object">
+                    <div class="col-md-4 hidden-xs footer-icon">
+                        <img src="{{ STATIC_PREFIX }}img/footer/placemarker-mini.png"/>
+                    </div>
+
+                    <div class="col-md-8 footer-description">
+                        <h4>
+                            Visit
+                            <a target="_blank" href="http://goo.gl/maps/qNEIz">(view on map)</a>
+                        </h4>
+
+                        <address>
+                            Engineering faculty - 4<sup>th</sup> floor
+                            Avda. Universidades, 24<br>
+                            Bilbao (Bizkaia)<br>
+                            48007 - Spain
+                        </address>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-object">
+                    <div class="col-md-4 hidden-xs footer-icon">
+                        <img src="{{ STATIC_PREFIX }}img/footer/phone-mini.png"/>
+                    </div>
+
+                    <div class="col-md-8 footer-description">
+                        <h4>Call</h4>
+
+                        <p>
+                            944 13 90 03 <strong>ext:</strong> 2548
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-description footer-object">
+                    <h4>Social</h4>
+
+                    <div class="footer-social">
+                        <a target="_blank" href="https://github.com/morelab">
+                            <img src="{{ STATIC_PREFIX }}img/footer/github-mini.png" width="75"/>
+                        </a>
+
+                        <a target="_blank" href="http://twitter.com/morelab_ud">
+                            <img src="{{ STATIC_PREFIX }}img/footer/twitter-mini.png" width="75"/>
+                        </a>
+
+                        <a target="_blank" href="http://www.slideshare.net/tag/morelab">
+                            <img src="{{ STATIC_PREFIX }}img/footer/slideshare-mini.png" width="75"/>
+                        </a>
+
+                        <a target="_blank" href="http://www.youtube.com/user/deustomorelab">
+                            <img src="{{ STATIC_PREFIX }}img/footer/youtube-mini.png" width="75"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+
+    <script src="{{ STATIC_PREFIX }}js/jquery-1.8.2.min.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/bootstrap.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</html>
