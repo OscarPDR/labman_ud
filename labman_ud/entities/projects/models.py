@@ -265,7 +265,7 @@ class ProjectTag(models.Model):
 class RelatedPublication(models.Model):
     project = models.ForeignKey('Project')
 
-    publication = models.ForeignKey('publications.Publication')
+    publication = models.ForeignKey('publications.Publication', related_name='projects')
 
     def __unicode__(self):
         return u'Project: %s - Publication: %s' % (self.project.short_name, self.publication.title)
