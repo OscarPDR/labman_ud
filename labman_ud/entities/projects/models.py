@@ -202,13 +202,6 @@ class Funding(models.Model):
 class FundingAmount(models.Model):
     funding = models.ForeignKey('Funding')
 
-    consortium_amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-    )
-
     own_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -222,7 +215,7 @@ class FundingAmount(models.Model):
     )
 
     def __unicode__(self):
-        return u'Year %s - (%s € Deusto / %s € Consortium)' % (self.year, self.own_amount, self.consortium_amount)
+        return u'Year %s - %s € Deusto' % (self.year, self.own_amount)
 
 
 #########################
