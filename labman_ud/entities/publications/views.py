@@ -104,6 +104,12 @@ def publication_info(request, slug):
     tags = Tag.objects.filter(id__in=tag_ids)
     tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
+    try:
+        publication.pdf.size()
+        pdf = publication.pdf
+    except:
+        pdf = None
+
     return render_to_response('publications/info.html', {
             'from_page': from_page,
             'publication': publication,
@@ -111,6 +117,7 @@ def publication_info(request, slug):
             'related_projects': related_projects,
             'related_publications': related_publications,
             'tags': tags,
+            'pdf': pdf,
         },
         context_instance=RequestContext(request))
 

@@ -122,7 +122,7 @@ class FundingAdmin(admin.ModelAdmin):
 class FundingAmountAdmin(admin.ModelAdmin):
     model = FundingAmount
     search_fields = ['funding__project__short_name']
-    list_display = ['funding', 'consortium_amount', 'own_amount', 'year']
+    list_display = ['funding', 'own_amount', 'year']
     list_filter = ['year']
 
 
