@@ -3,7 +3,7 @@
 from django.core.management.base import NoArgsCommand
 from django.template.defaultfilters import slugify
 
-from labman_ud import settings
+from django.conf import settings
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
@@ -311,8 +311,10 @@ class Command(NoArgsCommand):
             authors.append(a)
 
         tags = []
-        for tag in item['tags']:
-            t, created = Tag.objects.get_or_create(tag=tag['tag'])
-            tags.append(t)
+        # TODO: Tags!!!!
+
+        #for tag in item['tags']:
+        #    t, created = Tag.objects.get_or_create(name=tag['tag'])
+        #    tags.append(t)
 
         return pub, authors, tags, observations
