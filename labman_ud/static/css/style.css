@@ -1,0 +1,478 @@
+
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+html, body {
+    height: 100%;
+}
+
+h5, h6 {
+    font-weight: bold;
+}
+
+.navbar .nav {
+    display: table;
+}
+
+.navbar .nav li {
+    display: table-cell;
+    width: 1%;
+    float: none;
+}
+
+.navbar .nav li a {
+    margin: 0;
+}
+
+.nav-justified {
+    margin-bottom: 2.5em;
+}
+
+.nav-justified > li > a {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #999;
+}
+
+#principal-h1 {
+    font-family: 'Open Sans', cursive;
+    color: #999;
+}
+
+#principal-h1 > img {
+    margin: 0.5em;
+}
+
+/*#main-index {
+    background: url('../img/morelab.png') no-repeat fixed center;
+    background-size: 20%;
+}*/
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -3em;
+}
+
+textarea {
+    width: 90%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.main-page > .span3 > a {
+    text-align: center;
+    display: block;
+}
+
+.accordion-toggle {
+    text-decoration: none;
+}
+
+.accordion-toggle:hover {
+    text-decoration: none;
+}
+
+div.jqcloud {
+  margin: auto;
+}
+
+h4 {
+    padding-top: 1em;
+}
+
+.tag {
+    margin-top: 0.5em;
+    list-style-type: none;
+}
+
+#document_download {
+    margin: 0.5em;
+}
+
+#document_download > img {
+    margin-bottom: 1em;
+}
+
+#publication-type {
+    float: right
+}
+
+#project-type {
+    float: right
+}
+
+.vertical-alignment > td {
+    vertical-align: middle;
+}
+
+#number_of_publications {
+    height: 500px;
+}
+
+#funding_program_full_name {
+    padding-top: 0em;
+    padding-left: 7.5em;
+    font-weight: normal;
+}
+
+.organization-logo {
+    float: right;
+    max-height: 75px;
+}
+
+.funding-program-logo {
+    float: right;
+    max-height: 75px;
+}
+
+#main-container {
+    display: block;
+    min-height: 500px;
+    padding-top: 1em;
+}
+
+#main-container2 {
+    display: block;
+    min-height: 500px;
+    padding-top: 1em;
+}
+
+.edit-organization-logo {
+    margin: 1em;
+    width: 25%;
+}
+
+.center {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#logo-left {
+    float: left;
+    margin-left: 15em;
+}
+
+#logo-right {
+    float: right;
+    margin-right: 15em;
+}
+
+.tab-content {
+    min-height: 500px;
+}
+
+ul.nav.nav-tabs {
+    min-height: 500px;
+}
+
+#member-tabs {
+    min-height: 0;
+}
+
+.tab-divider {
+    border-top: #ddd 1px solid;
+    padding-bottom: 3px;
+    margin-left: 2em;
+}
+
+#about-tab-content > .tab-pane {
+    border: 1px solid #999;
+    border-radius: 0.5em;
+    padding: 1.5em;
+}
+
+#about-tab-content > .tab-pane > p {
+    text-align: justify;
+}
+
+#project-header {
+    display: block;
+}
+
+.project-logo {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.project-logo > img {
+    width: 40%;
+}
+
+.project-template {
+    margin-top: 1.5em;
+    padding-left: 1.5em;
+}
+
+.project-template p {
+    margin-left: 1.5em;
+}
+
+#project-tab-content > .tab-pane {
+    border: 1px solid #999;
+    border-radius: 0.5em;
+    padding: 1.5em;
+}
+
+#project-tab-content > .tab-pane > p {
+    text-align: justify;
+}
+
+#pr_funding_details ul {
+    padding-left: 2.5em;
+}
+
+.tab-left-btn {
+    margin-top: 2em;
+    margin-left: 40px;
+}
+
+#edit-from-info {
+   margin-left: 70px;
+}
+
+#employees-form th {
+    width: 85px;
+    font-weight: normal;
+}
+
+#assigned_employee_formset {
+    width: 100%;
+}
+
+#consortium-members-form th {
+    width: 125px;
+    font-weight: normal;
+}
+
+.dynamic-form {
+    margin-bottom: 20px;
+    display: block;
+}
+
+.dynamic-form th {
+    width: 100px;
+    padding-top: 5px;
+    padding-right: 10px;
+    text-align: right;
+    font-weight: normal;
+}
+
+.dynamic-form td {
+    margin-left: 180px;
+}
+
+.delete-formset-row {
+    margin-left: 1em;
+}
+
+.form-actions > button > a {
+    margin: 0 1em;
+}
+
+.left {
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+
+.left a {
+    margin-top: 6em;
+}
+
+.right {
+    float: right;
+    width: 50%;
+    text-align: center;
+}
+
+.pagination {
+    float: right;
+}
+
+.center {
+    text-align: center;
+}
+
+/*.form-actions button, a {
+    margin: 0 1em;
+}*/
+
+#funding-call-info > a {
+    margin: 0;
+}
+
+.rdf-icon {
+    margin-left: 3px;
+    margin-top: -3px;
+}
+
+.semantic-searcher-results li a {
+    line-height: 24px;
+}
+
+#chart_div {
+    margin: 0 auto;
+}
+
+#query-form .control-label {
+    width: 100px;
+}
+
+#query-form .controls {
+    margin-left: 115px;
+}
+
+#sparql-query > pre {
+    font-size: 10px;
+}
+
+#push {
+    height: 3em;
+}
+
+footer {
+    text-align: center;
+    width: 100%;
+    line-height: 2.5em;
+    min-height: 2.5em;
+    margin: 0 auto;
+    padding-bottom: 2em;
+}
+
+footer > a {
+    color: #999;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.footer-description > h4 {
+    padding-top: 0;
+    text-align: left;
+}
+
+.footer-description > h4 > a {
+    font-size: 12px;
+}
+
+.footer-description > address, p {
+    text-align: left;
+}
+
+.footer-icon > img {
+    width: 50%;
+}
+
+.footer-social {
+    text-align: left;
+}
+
+.footer-social > a {
+    margin: 0;
+}
+
+.form-search {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.footer-object {
+    padding: 0 1.5em;
+}
+
+.circular {
+    width: 150px;
+    height: 150px;
+    border-radius: 75px;
+    border: 2px solid #999;
+    padding: 3px;
+    margin-bottom: 1em;
+}
+
+.circular:hover {
+    border: 2px solid #222;
+}
+
+#team-image {
+    box-shadow: 2px 2px 3px black;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
+}
+
+.member {
+    padding-bottom: 2.5em;
+}
+
+.member-name {
+    font-weight: bold;
+}
+
+.member-position {
+    font-style: italic;
+    color: #999;
+}
+
+#member-name > h1 {
+    text-align: center;
+}
+
+#member-name > p {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+}
+
+#profile-picture {
+    width: 85%;
+    box-shadow: 2px 2px 3px black;
+    margin: 0.5em;
+    margin-bottom: 2em;
+    -webkit-border-top-left-radius: 50px;
+    -webkit-border-bottom-right-radius: 50px;
+    border-top-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border: 0.5em solid #eee;
+}
+
+#member-tab-content > .tab-pane {
+    border: 1px solid #999;
+    border-radius: 0.5em;
+    padding: 1.5em;
+}
+
+#member-tab-content > .tab-pane > p {
+    text-align: justify;
+}
+
+#contact-member {
+    margin-bottom: 1em;
+}
+
+#contact-member > img {
+    margin: 0 1.5em;
+}
+
+#contact-member > a {
+    margin: 0;
+}
+
+.soften {
+    height: 5px;
+    margin: 3em 0 1.5em 0;
+    background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    border: 0;
+}

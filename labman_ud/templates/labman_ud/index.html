@@ -1,0 +1,41 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <img id="team-image" class="img-responsive" src="{{ STATIC_PREFIX }}img/team2012.jpg" alt="morelab-team">
+        </div>
+    </div>
+
+    <div class="row">
+
+        {% for news in last_news %}
+            <div class="col-md-4">
+                <h2>
+                    <img src="{{ STATIC_PREFIX }}img/index/news_mini.png">
+                    {{ news.title|safe }}
+                </h2>
+
+                <h6>Published on {{ news.created|date:"l, d F Y - H:i" }}</h6>
+
+                <br>
+
+                <div class="centered">
+                    <a class="btn btn-primary" href="{% url view_news news.slug %}">
+                        Read more
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

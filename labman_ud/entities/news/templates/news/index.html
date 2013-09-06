@@ -1,0 +1,22 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <ul>
+        {% for new in news %}
+            <li>
+                <a href="{% url view_news new.slug %}">
+                    {{ new.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

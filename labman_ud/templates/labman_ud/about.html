@@ -1,0 +1,86 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="row tabbable">
+
+        <div class="col-md-3">
+            <ul id="about-tabs" class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#about-tab-pane" data-toggle="tab">
+                        <i class="icon-info icon-large"></i>&emsp;MORElab
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#contributions-tab-pane" data-toggle="tab">
+                        <i class="icon-beaker icon-large"></i>&emsp;Contributions
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#collaborations-tab-pane" data-toggle="tab">
+                        <i class="icon-comments-alt icon-large"></i>&emsp;Collaborations
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#working-at-morelab-tab-pane" data-toggle="tab">
+                        <i class="icon-laptop icon-large"></i>&emsp;Working at MORElab
+                    </a>
+                </li>
+            </ul> <!-- end #about-tabs -->
+        </div> <!-- end .col-md-3 about section sidebar -->
+
+        <div class="col-md-9">
+            <div id="about-tab-content" class="tab-content">
+
+                <div class="tab-pane active" id="about-tab-pane">
+                    <h2>User-centered Intelligent Services for Anything, Anywhere at Anytime</h2>
+
+                    <p>
+                        Broadly, <em>DeustoTech-Internet</em> undertakes basic and applied research on the topics of Human-Environment (mobile-mediated) Interaction, Middleware supported by Semantic Web technologies for Wireless Embedded Devices, Applied Artificial Intelligence for User Behaviour Learning and Environment Reaction, Physical World Object Instrumentation and Internet Computing: Web 3.0 and beyond, Ubiquitous Web, Linked Data.
+                    </p>
+
+                    <p>
+                        Our main research areas are:
+                    </p>
+
+                    <ul>
+                        <li>Context-aware Mobile Computing for Enhanced User-Environment Interaction</li>
+                        <li>Semantic Middleware for Embedded Wirelessly-connected Devices</li>
+                        <li>Smart Environments of Augmented Internet-connected Objects</li>
+                        <li>Ambient Assisted Living (AAL): adaptive accessible interfaces and social robotics</li>
+                        <li>Future Internet: Internet of Services, Internet of Things and Semantic Web</li>
+                    </ul>
+                </div> <!-- end #about-tab-pane -->
+
+                <div class="tab-pane" id="contributions-tab-pane">
+                    {% include 'labman_ud/about/contributions.html' %}
+                </div> <!-- end #contributions-tab-pane -->
+
+                <div class="tab-pane" id="collaborations-tab-pane">
+                    {% include 'labman_ud/about/collaborations.html' %}
+                </div> <!-- end #collaborations-tab-pane -->
+
+                <div class="tab-pane" id="working-at-morelab-tab-pane">
+                    {% include 'labman_ud/about/working_at_morelab.html' %}
+                </div> <!-- end #working-at-morelab-tab-pane -->
+
+            </div> <!-- end #about-tab-content -->
+        </div>
+    </div> <!-- end .row .tabbable -->
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#about-nav').addClass('active');
+    </script>
+
+{% endblock %}
