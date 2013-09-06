@@ -87,7 +87,7 @@ class Event(models.Model):
         blank=True,
     )
 
-    host_country = models.ForeignKey('utils.Country')
+    host_country = models.ForeignKey('utils.Country', blank=True, null=True)
 
     start_date = models.DateField(
         blank=True,
@@ -138,7 +138,7 @@ class Event(models.Model):
 class EventEdition(models.Model):
     event = models.ForeignKey('Event')
 
-    sub_event_of = models.ForeignKey('Event')
+    sub_event_of = models.ForeignKey('Event', related_name='has_sub_event')
 
     edition = models.PositiveIntegerField()
 
@@ -158,7 +158,7 @@ class EventEdition(models.Model):
         blank=True,
     )
 
-    host_country = models.ForeignKey('utils.Country')
+    host_country = models.ForeignKey('utils.Country', blank=True, null=True)
 
     start_date = models.DateField(
         blank=True,

@@ -53,7 +53,7 @@ class Person(models.Model):
         blank=True,
     )
 
-    biography = RichTextField()
+    biography = RichTextField(blank=True, null=True)
 
     title = models.CharField(
         max_length=15,

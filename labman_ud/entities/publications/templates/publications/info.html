@@ -76,14 +76,14 @@
                         </ol>
                     </div>
 
-                    {% if publication.pdf %}
+                    {% if pdf %}
                         <div class="span4 well centered">
-                            <a id="document_download" target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
+                            <a id="document_download" target="_blank" href="{{ MEDIA_PREFIX }}{{ pdf }}">
                                 <img src="{{ STATIC_PREFIX }}img/document_download.png"/>
                                 <br>
                                 View document
                                 <br>
-                                (&asymp; {{ publication.pdf.size|filesizeformat }})
+                                (&asymp; {{ pdf.size|filesizeformat }})
                             </a>
                         </div>
                     {% endif %}

@@ -136,7 +136,11 @@ def project_info(request, slug):
     #CHANGE!!!
     tags = None
 
-    project_logo = ProjectLogo.objects.get(project=project.id)
+    try:
+        project_logo = ProjectLogo.objects.get(project=project.id)
+        logo = project_logo.logo
+    except:
+        logo = None
 
     return render_to_response("projects/info.html", {
             'project': project,
@@ -148,7 +152,7 @@ def project_info(request, slug):
             'from_page': from_page,
             'related_publications': related_publications,
             'tags': tags,
-            'logo': project_logo.logo,
+            'logo': logo,
         },
         context_instance=RequestContext(request))
 
