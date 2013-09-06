@@ -171,6 +171,9 @@ INSTALLED_APPS = (
     'charts',
     'semantic_search',
 
+    # Zotero integration
+    'generators.zotero_labman',
+
     # South: database migrations
     'south',
 
@@ -290,3 +293,7 @@ TWEETPONY_CONSUMER_KEY = 'ZPho5qdO1oiFb8WjexAcbw'
 TWEETPONY_CONSUMER_SECRET = 'LJeWUaMDBuGJ9weTBlOZpf4OCGOXLyJikcU1Ss5NAw'
 TWEETPONY_ACCESS_TOKEN = '92762817-FQMmhNXo1oeSzcMGNMfS6lPJGmcsd1Y5sm5UnZ2Ye'
 TWEETPONY_ACCESS_TOKEN_SECRET = 'hU5yYU7LX51cxhOzbeag1gNsJdrgy792d0IWaVIx5tY'
+
+ZOTERO_API_KEY = ''
+ZOTERO_LIBRARY_ID = ''
+ZOTERO_LIBRARY_TYPE = ''
