@@ -1,0 +1,160 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+
+{% block content %}
+
+    <h2>
+        <a href="{% url publication_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ publication.title }}
+    </h2>
+
+    <blockquote id="publication-type">
+        <p>
+            <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
+                {{ publication.publication_type.name }}
+            </a>
+        </p>
+    </blockquote>
+
+    <br>
+    <br>
+
+    <div class="tabbable tabs-left .hidden-phone">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#overview_tab" data-toggle="tab">
+                    <i class="icon-info-sign"></i> Overview
+                </a>
+            </li>
+
+            <li>
+                <a href="#extended_info_tab" data-toggle="tab">
+                    <i class="icon-list"></i> Extended info
+                </a>
+            </li>
+
+            {% if related_projects %}
+                <li>
+                    <a href="#related_tab" data-toggle="tab">
+                        <i class="icon-resize-horizontal"></i> Related
+                    </a>
+                </li>
+            {% endif %}
+
+            <br>
+
+            <div class="centered">
+                <h6>Tags</h6>
+                {% for tag in tags %}
+                    <li class="tag">
+                        <a target="_blank" href="{% url view_publication_tag tag.slug %}">
+                            <span class="label label-info">{{ tag.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </div>
+        </ul>
+
+        <div class="tab-content project-template">
+
+            <div class="tab-pane active" id="overview_tab">
+
+                <div class="row-fluid">
+                    <div class="span8">
+                        <h5>Authors:</h5>
+
+                        <ol>
+                            {% for author in authors %}
+                                <li>
+                                    <a target="_blank" href="{% url person_info author.slug %}">
+                                        {{ author.full_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+
+                    {% if publication.pdf %}
+                        <div class="span4 well centered">
+                            <a id="document_download" target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
+                                <img src="{{ STATIC_PREFIX }}img/document_download.png"/>
+                                <br>
+                                View document
+                                <br>
+                                (&asymp; {{ publication.pdf.size|filesizeformat }})
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h5>Abstract:</h5>
+
+                <p>{{ publication.abstract }}</p>
+
+            </div> <!-- end tab-pane #overview_tab -->
+
+            <div class="tab-pane" id="extended_info_tab">
+
+                {% if publication.publication_type.name == 'Conference paper' %}
+                    {% include 'publications/templates/conference_paper.html' %}
+                {% endif %}
+
+            </div> <!-- end tab-pane #extended_info_tab -->
+
+            <div class="tab-pane" id="related_tab">
+
+                <h5>{{ related_projects|length }} related project{{ related_projets|pluralize }}:</h5>
+
+                <br>
+                <table class="table table-striped">
+                    <tbody>
+                        {% for project in related_projects %}
+                            <tr>
+                                <td>
+                                    <a target="_blank" href="{% url project_info project.slug %}">
+                                        <i class="icon-chevron-right"></i> {{ project.full_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if related_publications %}
+
+                    <br>
+
+                    <h5>{{ related_publications|length }} related publication{{ related_publications|pluralize }}</h5>
+
+                    <br>
+                    <table class="table table-striped">
+                        <tbody>
+                            {% for publication in related_publications %}
+                                <tr>
+                                    <td>
+                                        <a target="_blank" href="{% url publication_info publication.slug %}">
+                                            <i class="icon-chevron-right"></i> {{ publication.title }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+            </div> <!-- end tab-pane #related_tab -->
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}
+
