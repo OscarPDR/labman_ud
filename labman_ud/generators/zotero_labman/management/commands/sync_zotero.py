@@ -311,10 +311,9 @@ class Command(NoArgsCommand):
             authors.append(a)
 
         tags = []
-        # TODO: Tags!!!!
 
-        #for tag in item['tags']:
-        #    t, created = Tag.objects.get_or_create(name=tag['tag'])
-        #    tags.append(t)
+        for tag in item['tags']:
+            t, created = Tag.objects.get_or_create(name=tag['tag'])
+            tags.append(t)
 
         return pub, authors, tags, observations

@@ -6,9 +6,9 @@
 
 labman_ud/settings.py
 
-/media/*
+labman_ud/media/*
 
-/static_prod/*
+labman_ud/static_prod/*
 
 labman_ud.sublime-project
 labman_ud.sublime-workspace
