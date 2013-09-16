@@ -23,3 +23,6 @@ labman_ud/labman_ud/settings/dev.py
 labman_ud/labman_ud/settings/prod.py
 
 labman_ud/collected_static/
+
+.htaccess
+.htpasswd
