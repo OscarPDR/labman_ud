@@ -133,9 +133,6 @@ def project_info(request, slug):
     tags = Tag.objects.filter(id__in=tag_ids)
     tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
-    #CHANGE!!!
-    tags = None
-
     try:
         project_logo = ProjectLogo.objects.get(project=project.id)
         logo = project_logo.logo
