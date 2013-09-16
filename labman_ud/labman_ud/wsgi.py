@@ -15,11 +15,17 @@ framework.
 """
 import os, sys
 
-sys.path.append('/home/morelab/labman_ud')
-sys.path.append('/home/morelab/labman_ud/labman_ud')
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+# Activate virtualenv
+activate_this = os.path.expanduser('/home/morelab/.virtualenvs/labman/bin/activate_this.py')
+execfile(activate_this, dict(__file__=activate_this))
+
+sys.path.append('/home/morelab/.virtualenvs/labman/labman_ud/labman_ud')
+sys.path.append('/home/morelab/.virtualenvs/labman/labman_ud/labman_ud/labman_ud')
 
 #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "labman_ud.settings")
-os.environ["DJANGO_SETTINGS_MODULE"] = "labman_ud.settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "labman_ud.settings.prod"
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
