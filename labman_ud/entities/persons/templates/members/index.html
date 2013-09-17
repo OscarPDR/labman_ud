@@ -15,7 +15,11 @@
                             {% if member.profile_picture_url %}
                                 <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
                             {% else %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/default_user.png"/>
+                                {% if member.gender == 'Female' %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                {% else %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                {% endif %}
                             {% endif %}
                         </a>
                         <br>
@@ -49,6 +53,14 @@
                     konami_source = konami_source.replace(".jpg", ".gif");
                     konami_source = konami_source.replace(".png", ".gif");
                     images[i].src = konami_source;
+                }
+
+                if (image_source.indexOf("/img/female.png") >= 0) {
+                    images[i].src = "/static/img/lovelace.png";
+                }
+
+                if (image_source.indexOf("/img/male.png") >= 0) {
+                    images[i].src = "/static/img/einstein.png";
                 }
             });
         }
