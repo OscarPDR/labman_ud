@@ -133,9 +133,6 @@ def project_info(request, slug):
     tags = Tag.objects.filter(id__in=tag_ids)
     tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
-    #CHANGE!!!
-    tags = None
-
     try:
         project_logo = ProjectLogo.objects.get(project=project.id)
         logo = project_logo.logo
@@ -189,6 +186,8 @@ def view_project_tag(request, tag_slug):
 
     page = request.GET.get('page')
 
+    projects_length = len(projects)
+
     try:
         projects = paginator.page(page)
 
@@ -204,6 +203,7 @@ def view_project_tag(request, tag_slug):
             "projects": projects,
             'form': form,
             'tag': tag,
+            'projects_length': projects_length,
         },
         context_instance=RequestContext(request))
 
@@ -239,6 +239,8 @@ def view_project_type(request, project_type_slug):
 
     page = request.GET.get('page')
 
+    projects_length = len(projects)
+
     try:
         projects = paginator.page(page)
 
@@ -254,6 +256,7 @@ def view_project_type(request, project_type_slug):
             "projects": projects,
             'form': form,
             'project_type': project_type,
+            'projects_length': projects_length,
         },
         context_instance=RequestContext(request))
 

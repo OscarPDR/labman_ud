@@ -6,14 +6,14 @@
 
     {% if tag %}
         <div class="centered">
-            <h2>{{ projects|length }} project{{ projects|pluralize }} with tag <em>'{{ tag.tag }}'</em></h2>
+            <h2>{{ projects_length }} project{{ projects|pluralize }} with tag <em>'{{ tag.name }}'</em></h2>
         </div>
         <br>
     {% endif %}
 
     {% if project_type %}
         <div class="centered">
-            <h2>{{ projects|length }} {{ project_type.name|lower }}{{ projects|pluralize }}</h2>
+            <h2>{{ projects_length }} {{ project_type.name|lower }}{{ projects|pluralize }}</h2>
         </div>
         <br>
     {% endif %}
@@ -102,4 +102,9 @@
 
 
 {% block scripts %}
+
+    <script>
+        $('#projects-nav').addClass('active');
+    </script>
+
 {% endblock %}
