@@ -12,14 +12,16 @@
             {{ member.full_name }}
         </h1>
 
-        <p>
-            {{ position }}
-        </p>
+        {% if position %}
+            <p>
+                {{ position }}
+            </p>
+        {% endif %}
     </div> <!-- end #member-name -->
 
     <br>
 
-    <div class="row tabbable">
+    <div class="tabbable">
 
         <div class="col-md-3">
             <img id="profile-picture" src="{{ MEDIA_PREFIX }}{{ member.profile_picture }}"/>
@@ -48,31 +50,31 @@
             <ul id="member-tabs" class="nav nav-pills nav-stacked">
                 <li class="active">
                     <a href="#member-biography-tab-pane" data-toggle="tab">
-                        &emsp;<i class="icon-user icon-large"></i>&emsp;Biography
+                        <i class="icon-user icon-large"></i>&emsp;Biography
                     </a>
                 </li>
 
                 <li>
-                    <a href="#members-projects-tab-pane" data-toggle="tab">
-                        &emsp;<i class="icon-gears icon-large"></i>&emsp;Projects
+                    <a href="#member-projects-tab-pane" data-toggle="tab">
+                        <i class="icon-gears icon-large"></i>&emsp;Projects
                     </a>
                 </li>
 
                 <li>
-                    <a href="#members-publications-tab-pane" data-toggle="tab">
-                        &emsp;<i class="icon-file-text-alt icon-large"></i>&emsp;Publications
+                    <a href="#member-publications-tab-pane" data-toggle="tab">
+                        <i class="icon-file-text-alt icon-large"></i>&emsp;Publications
                     </a>
                 </li>
 
                 <li>
-                    <a href="#members-profiles-tab-pane" data-toggle="tab">
-                        &emsp;<i class="icon-cloud icon-large"></i>&emsp;Profiles
+                    <a href="#member-profiles-tab-pane" data-toggle="tab">
+                        <i class="icon-cloud icon-large"></i>&emsp;Profiles
                     </a>
                 </li>
 
                 <li>
-                    <a href="#members-graphs-tab-pane" data-toggle="tab">
-                        &emsp;<i class="icon-bar-chart icon-large"></i>&emsp;Graphs
+                    <a href="#member-graphs-tab-pane" data-toggle="tab">
+                        <i class="icon-bar-chart icon-large"></i>&emsp;Graphs
                     </a>
                 </li>
             </ul> <!-- end #member-tabs -->
@@ -81,11 +83,11 @@
         <div class="col-md-9">
             <div id="member-tab-content" class="tab-content">
 
-                <div id="member-biography-tab-pane" class="tab-pane active">
-                        {{ member.biography|safe }}
+                <div class="tab-pane active" id="member-biography-tab-pane">
+                    {{ member.biography|safe }}
                 </div> <!-- end #member-biography-tab-pane .tab-pane -->
 
-                <div id="member-projects-tab-pane" class="tab-pane">
+                <div class="tab-pane" id="member-projects-tab-pane">
                     {% include 'members/projects.html' %}
                 </div> <!-- end #member-projects-tab-pane .tab-pane -->
 
@@ -104,7 +106,7 @@
             </div> <!-- end #about-tab-content -->
         </div>
     </div> <!-- end .row .tabbable -->
-
+    
 {% endblock %}
 
 
