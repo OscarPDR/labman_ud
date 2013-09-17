@@ -11,7 +11,7 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Organization
+from .models import Organization, OrganizationLogo
 from .forms import OrganizationForm, OrganizationSearchForm
 
 from entities.projects.models import Project, ConsortiumMember
@@ -82,6 +82,12 @@ def organization_info(request, slug):
 
     organization = get_object_or_404(Organization, slug=slug)
 
+    try:
+        organization_logo = OrganizationLogo.objects.get(organization=organization.id)
+        logo = organization_logo.logo
+    except:
+        logo = None
+
     projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('full_name')
 
     consortium_ids = ConsortiumMember.objects.filter(organization_id=organization.id).values('project_id')
@@ -92,5 +98,6 @@ def organization_info(request, slug):
             'projects_leaded': projects_leaded,
             'projects': projects,
             'from_page': from_page,
+            'logo': logo,
         },
         context_instance = RequestContext(request))

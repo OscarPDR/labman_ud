@@ -25,16 +25,27 @@
         </div>
     {% endif %}
 
-    <form class="form-search" action="" method="post">
-        {% csrf_token %}
-        <div class="input-append">
-            {{ form.text }}
-            <a class="close" href="{% url project_index %}">&times;</a>
-            <button type="submit" class="btn">Search</button>
-        </div>
-    <form>
 
-    <a href="{% url project_tag_cloud %}">View tag cloud</a>
+    <div class="row">
+        <form class="form-search" action="" method="post">
+            {% csrf_token %}
+            <div class="col-md-2">
+                {{ form.text }}&emsp;
+                <a class="close" href="{% url project_index %}">&times;</a>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        <form>
+        
+        <div class="col-md-2 pull-right">
+            <a href="{% url project_tag_cloud %}" class="btn btn-info">
+                <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
+            </a>
+        </div>
+    </div>
+
 
     <div class="pagination">
         <span class="step-links">
@@ -52,7 +63,7 @@
         </span>
     </div>
 
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
                 <th class="span6">Title</th>
