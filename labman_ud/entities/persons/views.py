@@ -102,8 +102,13 @@ def members(request):
 def member_info(request, member_slug):
 
     member = Person.objects.get(slug=member_slug)
-    # job = Job.objects.get(person_id=member.id, end_date=None)
-    # position = job.position
+    
+    try:
+        job = Job.objects.get(person_id=member.id, end_date=None)
+        position = job.position
+    except:
+        job = None
+        position = None
 
     projects = {}
 
@@ -118,7 +123,7 @@ def member_info(request, member_slug):
 
     return render_to_response("members/info.html", {
             'member': member,
-            # 'position': position,
+            'position': position,
             'projects': projects,
         },
         context_instance=RequestContext(request))
