@@ -4,65 +4,79 @@
 
 {% block content %}
 
-    <h2>
-        <a href="{% url organization_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
-        {{ organization.full_name}}
+    <div class="row">
+        <div class="col-md-9">
+            <h2>{{ organization.full_name}}</h2>
+        </div>
 
-        {% if organization.logo %}
-            <img class="organization-logo" src="{{ MEDIA_URL }}{{ organization.logo }}" />
-        {% endif %}
-    </h2>
+        <div class="col-md-3">
 
-    {% if organization.homepage %}
-        <br>
+            {% if logo %}
+                <div class="centered">
+                    <img class="organization-logo" src="{{ MEDIA_URL }}{{ logo }}" />
+                </div>
+            {% endif %}
 
-        <a class="btn btn-small btn-inverse" target="_blank" href="{{ organization.homepage }}">
-            <i class="icon-globe icon-white"></i> Visit homepage
-        </a>
-    {% endif %}
+            <div class="centered">
+                <a class="btn btn-primary" target="_blank" href="{{ organization.homepage }}">
+                    <i class="icon-globe icon-large"></i>&emsp;Visit homepage
+                </a>
+            </div>
+        </div>
+    </div>
 
     <br>
     <br>
 
-    <div class="row-fluid">
+    <div class="row">
 
         {% if projects_leaded %}
 
-        <div class="span6">
-            <h6>Project leader in {{ projects_leaded|length }} project{{ projects_leaded|pluralize }}</h6>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Project leader in {{ projects_leaded|length }} project{{ projects_leaded|pluralize }}
+                </div>
 
-            <table class="table table-striped">
-                <tbody>
-                    {% for project in projects_leaded %}
-                        <tr>
-                            <td>
-                                <a href="{% url project_info project.slug %}"><i class="icon-chevron-right"></i> {{ project.full_name }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% for project in projects_leaded %}
+                            <tr>
+                                <td>
+                                    <a href="{% url project_info project.slug %}">
+                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ project.full_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
 
         {% endif %}
 
         {% if projects %}
 
-        <div class="span6">
-            <h6>Consortium member in {{ projects|length }} project{{ projects|pluralize }}</h6>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Consortium member in {{ projects|length }} project{{ projects|pluralize }}
+                </div>
 
-            <table class="table table-striped">
-                <tbody>
-                    {% for project in projects %}
-                        <tr>
-                            <td>
-                                <a href="{% url project_info project.slug %}"><i class="icon-chevron-right"></i> {{ project.full_name }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% for project in projects %}
+                            <tr>
+                                <td>
+                                    <a href="{% url project_info project.slug %}">
+                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ project.full_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
         {% endif %}
 
