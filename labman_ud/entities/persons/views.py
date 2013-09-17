@@ -86,7 +86,8 @@ def members(request):
             "full_name": member.full_name,
             # "position": job.position,
             "profile_picture_url": member.profile_picture,
-             "slug": member.slug
+            "slug": member.slug,
+            "gender": member.gender,
         })
 
     return render_to_response("members/index.html", {
