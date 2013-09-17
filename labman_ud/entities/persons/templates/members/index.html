@@ -12,7 +12,11 @@
                 <div class="col-md-3 member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
                     <div class="centered">
                         <a href="{% url member_info member.slug %}">
-                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
+                            {% if member.profile_picture_url %}
+                                <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
+                            {% else %}
+                                <img class="circular" src="{{ STATIC_PREFIX }}img/default_user.png"/>
+                            {% endif %}
                         </a>
                         <br>
                         <span class="member-name">{% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}</span>
@@ -32,5 +36,27 @@
     <script>
         $('#members-nav').addClass('active');
     </script>
+
+    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+
+    <script type="text/javascript">
+        var success = function() {
+            var images = $("img.circular").map(function () { return this; });
+            $.each(images, function(i) {
+                var image_source = images[i].src;
+                if (image_source.indexOf("/media/persons/") >= 0) {
+                    var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
+                    konami_source = konami_source.replace(".jpg", ".gif");
+                    konami_source = konami_source.replace(".png", ".gif");
+                    images[i].src = konami_source;
+                }
+            });
+        }
+    
+        var konami = new Konami(success);
+    
+    </script>
+
+    
 
 {% endblock %}

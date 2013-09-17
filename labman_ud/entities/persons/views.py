@@ -102,7 +102,7 @@ def members(request):
 def member_info(request, member_slug):
 
     member = Person.objects.get(slug=member_slug)
-    
+
     try:
         job = Job.objects.get(person_id=member.id, end_date=None)
         position = job.position
@@ -117,7 +117,7 @@ def member_info(request, member_slug):
     for role in roles:
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
+        project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year').order_by('-end_year')
         for project in project_objects:
             projects[role.name].append(project)
 
