@@ -289,8 +289,9 @@ class Command(NoArgsCommand):
         pub.publisher = item['publisher'] if 'publisher' in item and item['publisher'] else None
         
         if 'university' in item and item['university']:
+            organization_type, created = OrganizationType.objects.get_or_create(name='University')
             pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
-                defaults={'organization_type': OrganizationType.objects.get(name='University')})
+                defaults={'organization_type': organization_type})
 
         # We save them later (when we save pub in DB) (many-to-many fields)
         authors = []
