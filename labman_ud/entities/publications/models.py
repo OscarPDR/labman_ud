@@ -80,12 +80,6 @@ class Publication(models.Model):
         max_length=250,
     )
 
-    proceedings_title = models.CharField(
-        max_length=250,
-        blank=True,
-        null=True,
-    )
-
     short_title = models.CharField(
         max_length=150,
         blank=True,
