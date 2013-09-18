@@ -267,13 +267,33 @@ class Command(NoArgsCommand):
                 conf_name = conf_name.replace('Proc. of the ', '')
                 conf_name = conf_name.replace('proceedings of the ', '')
                 conf_name = conf_name.replace('Proceedings of the ', '')
-            pub.presented_at, created = Event.objects.get_or_create(full_name=conf_name, 
-                defaults={'year': pub.published.year, 'location': item['place'], 
-                'event_type': EventType.objects.get(name='Academic event')})
-            pub.proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else ''
+
+            proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else 'Proceedings of ' + conf_name
+
+            pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
+            proceedings, created = Publication.objects.get_or_create(
+                publication_type = pub_type_proceedings,
+                title = proceedings_title,
+                defaults={'abstract': proceedings_title, 'year': pub.published.year}
+            )
+
+            event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
+            pub.presented_at, created = Event.objects.get_or_create(
+                full_name=conf_name, 
+                defaults={
+                    'event_type': event_type_academic,
+                    'year': pub.published.year, 
+                    'location': item['place'], 
+                    'proceedings': proceedings
+                }
+            )
+
+            pub.part_of = proceedings
 
         pub.short_title = item['shortTitle'] if 'shortTitle' in item and item['shortTitle'] else None
         pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None
+        
+        # TODO: Now journals are independent publications
         pub.journal_abbreviation = item['journalAbbrevation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else None
         pub.volume = item['volume'] if 'volume' in item and item['volume'] else None
         pub.pages = item['pages'] if 'pages' in item and item['pages'] else None
