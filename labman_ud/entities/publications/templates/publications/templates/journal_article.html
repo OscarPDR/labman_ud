@@ -1,0 +1,79 @@
+
+<div class="row">
+    {% if publication.doi %}
+        <div class="col-md-6">
+            <h5>DOI:</h5>
+
+            <p>
+                {{ publication.doi }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+
+    {% if publication.issn %}
+        <div class="col-md-6">
+            <h5>ISSN:</h5>
+
+            <p>
+                {{ publication.issn }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+<!--
+    journal_abbreviation
+    impact_factor?
+    series
+    series_text
+    publisher
+-->
+
+
+<div class="row">
+    {% if publication.volume %}
+        <div class="col-md-4">
+            <h5>Volume:</h5>
+
+            <p>
+                {{ publication.volume }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+
+    {% if publication.issue %}
+        <div class="col-md-4">
+            <h5>Issue:</h5>
+
+            <p>
+                {{ publication.issue }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+    
+    {% if publication.pages %}
+        <div class="col-md-4">
+            <h5>Pages:</h5>
+
+            <p>
+                {{ publication.pages }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+
+

@@ -132,6 +132,10 @@
                         {% include 'publications/templates/conference_paper.html' %}
                     {% endif %}
 
+                    {% if publication.publication_type.name == 'Journal article' %}
+                        {% include 'publications/templates/journal_article.html' %}
+                    {% endif %}
+
                 </div> <!-- end tab-pane #extended_info_tab -->
 
                 <div class="tab-pane" id="related_tab">
