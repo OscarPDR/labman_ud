@@ -229,6 +229,21 @@ class AssignedPerson(models.Model):
 
     role = models.ForeignKey('utils.Role')
 
+    start_date = models.DateField(
+        blank=True, 
+        null=True
+    )
+
+    end_date = models.DateField(
+        blank=True, 
+        null=True
+    )
+
+    description = models.TextField(
+        max_length=1500,
+        blank=True
+    )
+
     def __unicode__(self):
         return u'%s is working at %s as a %s' % (self.person.full_name, self.project.short_name, self.role.name)
 
