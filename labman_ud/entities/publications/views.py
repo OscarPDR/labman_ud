@@ -29,7 +29,7 @@ PAGINATION_NUMBER = settings.PUBLICATIONS_PAGINATION
 #########################
 
 def publication_index(request):
-    publications = Publication.objects.all().order_by('title')
+    publications = Publication.objects.all().order_by('-year', 'title')
 
     publications_length = len(publications)
 
@@ -105,7 +105,6 @@ def publication_info(request, slug):
     tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     try:
-        publication.pdf.size()
         pdf = publication.pdf
     except:
         pdf = None
@@ -153,6 +152,8 @@ def view_publication_tag(request, tag_slug):
     else:
         form = PublicationSearchForm()
 
+    publications_length = len(publications)
+
     try:
         publications = paginator.page(page)
 
@@ -168,6 +169,7 @@ def view_publication_tag(request, tag_slug):
             'publications': publications,
             'form': form,
             'tag': tag,
+            'publications_length': publications_length,
         },
         context_instance=RequestContext(request))
 
@@ -202,6 +204,8 @@ def view_publication_type(request, publication_type_slug):
     else:
         form = PublicationSearchForm()
 
+    publications_length = len(publications)
+
     try:
         publications = paginator.page(page)
 
@@ -217,6 +221,7 @@ def view_publication_type(request, publication_type_slug):
             'publications': publications,
             'form': form,
             'publication_type': publication_type,
+            'publications_length': publications_length,
         },
         context_instance=RequestContext(request))
 
