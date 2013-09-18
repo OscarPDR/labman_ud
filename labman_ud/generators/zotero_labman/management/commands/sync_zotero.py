@@ -295,20 +295,20 @@ class Command(NoArgsCommand):
         # We save them later (when we save pub in DB) (many-to-many fields)
         authors = []
         for creator in item['creators']:
-            # TODO: Author searching with Aitor Almeida's awesome IF
-            author_slug = slugify(str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8')))
-            try:
-                a = Person.objects.get(slug__icontains=author_slug)
-            except:
-                a = Person(
-                    first_name=creator['firstName'],
-                    first_surname=creator['lastName']
-                    )
-                a.save()
-            authors.append(a)
-
+            if creator['creatorType'] == 'author':
+                # TODO: Author searching with Aitor Almeida's awesome IF
+                author_slug = slugify(str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8')))
+                try:
+                    a = Person.objects.get(slug__icontains=author_slug)
+                except:
+                    a = Person(
+                        first_name=creator['firstName'],
+                        first_surname=creator['lastName']
+                        )
+                    a.save()
+                authors.append(a)
+        
         tags = []
-
         for tag in item['tags']:
             t, created = Tag.objects.get_or_create(name=tag['tag'])
             tags.append(t)
