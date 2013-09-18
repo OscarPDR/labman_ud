@@ -138,7 +138,7 @@ class Event(models.Model):
 class EventEdition(models.Model):
     event = models.ForeignKey('Event')
 
-    sub_event_of = models.ForeignKey('Event', related_name='has_sub_event')
+    sub_event_of = models.ForeignKey('Event', related_name='has_edition')
 
     edition = models.PositiveIntegerField()
 
@@ -199,24 +199,6 @@ class EventEdition(models.Model):
         self.slug = slugify(event_edition_name)
 
         super(Event, self).save(*args, **kwargs)
-
-
-#########################
-# Model: EventRelatedPublication
-#########################
-
-class EventRelatedPublication(models.Model):
-    event = models.ForeignKey('Event')
-    publication = models.ForeignKey('publications.Publication')
-
-
-#########################
-# Model: EventEditionRelatedPublication
-#########################
-
-class EventEditionRelatedPublication(models.Model):
-    event_edition = models.ForeignKey('EventEdition')
-    publication = models.ForeignKey('publications.Publication')
 
 
 #########################
