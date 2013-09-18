@@ -66,13 +66,6 @@ class PublicationType(models.Model):
 
 class Publication(models.Model):
     presented_at = models.ForeignKey(
-        'events.EventEdition',
-        blank=True,
-        null=True,
-        related_name='publications'
-    )
-
-    related_event = models.ForeignKey(
         'events.Event',
         blank=True,
         null=True,

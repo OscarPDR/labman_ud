@@ -117,6 +117,8 @@ class Event(models.Model):
         blank=True,
     )
 
+    proceedings = models.ForeignKey('publications.Publication', blank=True, null=True, related_name='conference')
+
     class Meta:
         ordering = ['slug']
 
@@ -128,74 +130,6 @@ class Event(models.Model):
             self.short_name = self.full_name
 
         self.slug = slugify(self.short_name)
-        super(Event, self).save(*args, **kwargs)
-
-
-#########################
-# Model: EventEdition
-#########################
-
-class EventEdition(models.Model):
-    sub_event_of = models.ForeignKey('Event', related_name='has_edition')
-
-    edition = models.PositiveIntegerField()
-
-    slug = models.SlugField(
-        max_length=550,
-        blank=True,
-        unique=True,
-    )
-
-    location = models.CharField(
-        max_length=250,
-        blank=True,
-    )
-
-    host_city = models.CharField(
-        max_length=150,
-        blank=True,
-    )
-
-    host_country = models.ForeignKey('utils.Country', blank=True, null=True)
-
-    start_date = models.DateField(
-        blank=True,
-        null=True,
-    )
-
-    end_date = models.DateField(
-        blank=True,
-        null=True,
-    )
-
-    year = models.PositiveIntegerField()
-
-    homepage = models.URLField(
-        verbose_name='Homepage',
-        blank=True,
-        null=True,
-    )
-
-    description = models.TextField(
-        max_length=1500,
-        blank=True,
-    )
-
-    observations = models.TextField(
-        max_length=1500,
-        blank=True,
-    )
-
-    class Meta:
-        ordering = ['slug']
-
-    def __unicode__(self):
-        return u'%s %s (%s)' % (self.event.short_name, self.edition, self.year)
-
-    def save(self, *args, **kwargs):
-        event_edition_name = u'%s %s (%s)' % (self.event.short_name, self.edition, self.year)
-        self.slug = slugify(event_edition_name)
-
         super(Event, self).save(*args, **kwargs)
 
 
@@ -215,24 +149,6 @@ class EventLogo(models.Model):
 
     def __unicode__(self):
         return u'Logo for event: %s' % (self.event.short_name)
-
-
-#########################
-# Model: EventEditionLogo
-#########################
-
-class EventEditionLogo(models.Model):
-    event = models.ForeignKey('Event')
-
-    logo = models.ImageField(
-        upload_to=event_logo_path,
-        verbose_name='Logo',
-        blank=True,
-        null=True,
-    )
-
-    def __unicode__(self):
-        return u'Logo for event edition: %s' % (self.event.slug)
 
 
 #########################
