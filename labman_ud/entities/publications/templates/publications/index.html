@@ -6,14 +6,14 @@
 
     {% if tag %}
         <div class="centered">
-            <h2>{{ publications|length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.tag }}'</em></h2>
+            <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.tag }}'</em></h2>
         </div>
         <br>
     {% endif %}
 
     {% if publication_type %}
         <div class="centered">
-            <h2>{{ publications|length }} {{ publication_type.name|lower }}{{ publications|pluralize }}</h2>
+            <h2>{{ publications_length }} {{ publication_type.name|lower }}{{ publications|pluralize }}</h2>
         </div>
         <br>
     {% endif %}
@@ -77,6 +77,9 @@
                 {% for publication in publications %}
                     <tr>
                         <td class="span9">
+                            <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/publication/{{ publication.slug }}">
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                            </a>
                             <a href="{% url publication_info publication.slug %}">
                                 {{ publication.title }}
                             </a>

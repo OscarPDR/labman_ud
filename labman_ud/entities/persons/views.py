@@ -16,6 +16,8 @@ from .forms import PersonSearchForm
 
 from entities.projects.models import Project, AssignedPerson
 
+from entities.publications.models import Publication, PublicationType, PublicationAuthor
+
 from entities.utils.models import Role
 
 # Create your views here.
@@ -118,14 +120,29 @@ def member_info(request, member_slug):
     for role in roles:
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year').order_by('-end_year')
+        project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
         for project in project_objects:
             projects[role.name].append(project)
+
+    publications = {}
+
+    publication_types = PublicationType.objects.all()
+
+    for publication_type in publication_types:
+        publications[publication_type.name] = []
+
+    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
+
+    for publication in _publications:
+        publications[publication.publication_type.name].append(publication)
+
 
     return render_to_response("members/info.html", {
             'member': member,
             'position': position,
             'projects': projects,
+            'publications': publications,
         },
         context_instance=RequestContext(request))
 

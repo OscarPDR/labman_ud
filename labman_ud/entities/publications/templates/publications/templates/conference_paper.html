@@ -3,56 +3,78 @@
     <h5>Presented at:</h5>
 
     <p>
-        {{ publication.presented_at.short_name }} {{ publication.presented_at.year }} //TODO: link
+        {{ publication.presented_at.short_name }} ({{ publication.presented_at.year }})
     </p>
 
     <br>
 {% endif %}
 
 
+<div class="row">
+    {% if publication.doi %}
+        <div class="col-md-6">
+            <h5>DOI:</h5>
 
-{% if publication.doi %}
-    <h5>DOI:</h5>
+            <p>
+                {{ publication.doi }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+
+    {% if publication.isbn %}
+        <div class="col-md-6">
+            <h5>ISBN:</h5>
+
+            <p>
+                {{ publication.isbn }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+{% if publication.proceedings_title %}
+    <h5>Published in:</h5>
 
     <p>
-        {{ publication.doi }}
+        {{ publication.proceedings_title }}
     </p>
 
     <br>
 {% endif %}
 
 
+<div class="row">
+    {% if publication.volume %}
+        <div class="col-md-6">
+            <h5>Volume:</h5>
 
-{% if publication.isbn %}
-    <h5>ISBN:</h5>
+            <p>
+                {{ publication.volume }}
+            </p>
 
-    <p>
-        {{ publication.isbn }}
-    </p>
+            <br>
+        </div>
+    {% endif %}
+    
+    {% if publication.pages %}
+        <div class="col-md-6">
+            <h5>Pages:</h5>
 
-    <br>
-{% endif %}
+            <p>
+                {{ publication.pages }}
+            </p>
 
-
-
-{% if publication.volume %}
-    <h5>Volume:</h5>
-
-    <p>
-        {{ publication.volume }}
-    </p>
-
-    <br>
-{% endif %}
-
+            <br>
+        </div>
+    {% endif %}
+</div>
 
 
-{% if publication.pages %}
-    <h5>Pages:</h5>
 
-    <p>
-        {{ publication.pages }}
-    </p>
 
-    <br>
-{% endif %}
+
+
