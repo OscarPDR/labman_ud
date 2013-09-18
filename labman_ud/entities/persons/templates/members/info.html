@@ -24,7 +24,15 @@
     <div class="tabbable">
 
         <div class="col-md-3">
-            <img id="profile-picture" src="{{ MEDIA_PREFIX }}{{ member.profile_picture }}"/>
+            {% if member.profile_picture %}
+                <img id="profile-picture" src="{{ MEDIA_PREFIX }}{{ member.profile_picture }}"/>
+            {% else %}
+                {% if member.gender == 'Female' %}
+                    <img id="profile-picture" src="{{ STATIC_PREFIX }}img/female.png"/>
+                {% else %}
+                    <img id="profile-picture" src="{{ STATIC_PREFIX }}img/male.png"/>
+                {% endif %}
+            {% endif %}
 
             <div id="contact-member">
                 {% if member.email %}
@@ -115,6 +123,33 @@
 
     <script>
         $('#members-nav').addClass('active');
+    </script>
+
+    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+
+    <script type="text/javascript">
+        var success = function() {
+            var image = document.getElementById("profile-picture");
+            var image_source = image.src;
+            
+            if (image_source.indexOf("/media/persons/") >= 0) {
+                var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
+                konami_source = konami_source.replace(".jpg", ".gif");
+                konami_source = konami_source.replace(".png", ".gif");
+                image.src = konami_source;
+            }
+
+            if (image_source.indexOf("/img/female.png") >= 0) {
+                image.src = "/static/img/lovelace.png";
+            }
+
+            if (image_source.indexOf("/img/male.png") >= 0) {
+                image.src = "/static/img/einstein.png";
+            }
+        };
+    
+        var konami = new Konami(success);
+    
     </script>
 
 {% endblock %}
