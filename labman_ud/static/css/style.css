@@ -107,6 +107,15 @@ h4 {
     float: right
 }
 
+#document-download-button {
+    margin-top: 0.7em;
+    margin-bottom: 0.5em;
+}
+
+#publication-abstract {
+    text-align: justify;
+}
+
 #project-type {
     float: right
 }
@@ -193,6 +202,24 @@ ul.nav.nav-tabs {
 }
 
 #about-tab-content > .tab-pane > p {
+    text-align: justify;
+}
+
+.publication-template {
+    padding-left: 1.5em;
+}
+
+.publication-template p {
+    margin-left: 1.5em;
+}
+
+#publication-tab-content > .tab-pane {
+    border: 1px solid #999;
+    border-radius: 0.5em;
+    padding: 1.5em;
+}
+
+#publication-tab-content > .tab-pane > p {
     text-align: justify;
 }
 
