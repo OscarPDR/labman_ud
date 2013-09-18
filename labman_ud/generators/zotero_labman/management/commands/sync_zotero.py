@@ -242,10 +242,7 @@ class Command(NoArgsCommand):
         pub.abstract = item['abstractNote']
 
         # Get publication type
-        try:
-            pub.publication_type = PublicationType.objects.get(name=SUPPORTED_ITEM_TYPES[item['itemType']])
-        except PublicationType.DoesNotExist:
-            pub.publication_type = None
+        pub.publication_type, created = PublicationType.objects.get_or_create(name=SUPPORTED_ITEM_TYPES[item['itemType']])
 
         pub.language, created = Language.objects.get_or_create(name=item['language']) if 'language' in item and item['language'] else (None, False)
         try:
