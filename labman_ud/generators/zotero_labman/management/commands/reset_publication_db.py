@@ -54,10 +54,13 @@ class Command(NoArgsCommand):
         print "\n\n[RESET_PUBS] Re-saving relations between publications and projects..."
         if publ_proj:
             for zot_key, projects in publ_proj.items():
-                pub = ZoteroLog.objects.filter(zotero_key=zot_key).order_by('-created')[0].publication
-                for proj in projects:
-                    relpub = RelatedPublication(publication=pub, project=proj)
-                    relpub.save()
-                    print "\n[RESET_PUBS] PUB ", str(pub), " WITH PROJ: " + str(proj)
+                try:
+                    pub = ZoteroLog.objects.filter(zotero_key=zot_key).order_by('-created')[0].publication
+                    for proj in projects:
+                        relpub = RelatedPublication(publication=pub, project=proj)
+                        relpub.save()
+                        print "\n[RESET_PUBS] PUB ", str(pub), " WITH PROJ: " + str(proj)
+                except IndexError:
+                    pass
         else:
             print "\n[RESET_PUBS] No relations to sync."
