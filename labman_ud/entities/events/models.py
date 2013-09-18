@@ -136,8 +136,6 @@ class Event(models.Model):
 #########################
 
 class EventEdition(models.Model):
-    event = models.ForeignKey('Event')
-
     sub_event_of = models.ForeignKey('Event', related_name='has_edition')
 
     edition = models.PositiveIntegerField()
