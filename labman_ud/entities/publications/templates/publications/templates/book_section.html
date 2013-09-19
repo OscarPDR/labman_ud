@@ -1,0 +1,113 @@
+
+<div class="row">
+    {% if publication.book_title %}
+        <div class="col-md-9">
+            <h5>Published in:</h5>
+
+            <p>
+                {{ publication.book_title }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+
+    {% if publication.edition %}
+        <div class="col-md-3">
+            <h5>Edition:</h5>
+
+            <p>
+                {{ publication.edition }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+
+<div class="row">
+    {% if publication.publisher %}
+        <div class="col-md-6">
+            <h5>Publisher:</h5>
+
+            <p>
+                {{ publication.publisher }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+
+    {% if publication.isbn %}
+        <div class="col-md-6">
+            <h5>ISBN:</h5>
+
+            <p>
+                {{ publication.isbn }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+
+<div class="row">
+    {% if publication.series %}
+        <div class="col-md-9">
+            <h5>Series:</h5>
+
+            <p>
+                {{ publication.series }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+    
+    {% if publication.series_number %}
+        <div class="col-md-3">
+            <h5>Series number:</h5>
+
+            <p>
+                {{ publication.series_number }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+
+<div class="row">
+    {% if publication.volume %}
+        <div class="col-md-4">
+            <h5>Volume:</h5>
+
+            <p>
+                {{ publication.volume }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+    
+    {% if publication.pages %}
+        <div class="col-md-4">
+            <h5>Pages:</h5>
+
+            <p>
+                {{ publication.pages }}
+            </p>
+
+            <br>
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
