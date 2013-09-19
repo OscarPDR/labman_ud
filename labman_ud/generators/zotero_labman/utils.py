@@ -1,6 +1,7 @@
 from django.template.defaultfilters import slugify
 
 from django.conf import settings
+from django.utils.timezone import utc
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
@@ -141,6 +142,9 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
 
                         print '-'*30
                 lastitems = items
+        # Generate a log specifying that the sync has finished for X version (due to avoid synchronization errors)
+        zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, observations='')
+        zotlog.save()
 
 def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):    
     api_key, library_id, library_type, api_limit = get_zotero_variables()
@@ -189,6 +193,9 @@ def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
                         except:
                             pass
                 lastitems = items
+        # Generate a log specifying that the sync has finished for X version (due to avoid synchronization errors)
+        zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, delete=True, observations='')
+        zotlog.save()
 
 def get_publication_details(item):
     pub = Publication()
@@ -199,7 +206,13 @@ def get_publication_details(item):
     pub.publication_type, created = PublicationType.objects.get_or_create(name=SUPPORTED_ITEM_TYPES[item['itemType']])
 
     # Publication language
-    pub.language, created = Language.objects.get_or_create(name=item['language']) if 'language' in item and item['language'] else (None, False)
+    if 'language' in item and item['language']:
+        pub.language, created = Language.objects.get_or_create(
+            slug=slugify(str(item['language'].encode('utf-8'))),
+            defaults={'name': item['language']}
+        )
+    else:
+        pub.language = None
     
     # Publication date / year
     try:
@@ -218,8 +231,10 @@ def get_publication_details(item):
     # University
     if 'university' in item and item['university']:
         organization_type, created = OrganizationType.objects.get_or_create(name='University')
-        pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
-            defaults={'organization_type': organization_type})
+        pub.university, created = Organization.objects.get_or_create(
+            slug=slugify(str(item['university'].encode('utf-8'))),
+            defaults={'organization_type': organization_type, 'full_name': item['university']}
+        )
 
     # Common attributes for all publications
     pub.title = item['title']
@@ -261,16 +276,19 @@ def get_publication_details(item):
         pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
 
         pub_subpub_attributes['abstract'] = proceedings_title
+        pub_subpub_attributes['title'] = proceedings_title
+                
         proceedings, created = Publication.objects.get_or_create(
             publication_type = pub_type_proceedings,
-            title = proceedings_title,
+            slug = slugify(str(proceedings_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
 
         event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
         pub.presented_at, created = Event.objects.get_or_create(
-            full_name=conf_name, 
+            slug=slugify(str(conf_name.encode('utf-8'))), 
             defaults={
+                'full_name': conf_name,
                 'event_type': event_type_academic,
                 'year': pub.published.year, 
                 'location': item['place'], 
@@ -297,9 +315,10 @@ def get_publication_details(item):
             parentpub_title = item['publication'] if 'publication' in item and item['publication'] else 'Newspaper ?'
 
         pub_subpub_attributes['abstract'] = ' '
+        pub_subpub_attributes['title'] = parentpub_title
         parentpub, created = Publication.objects.get_or_create(
             publication_type = parentpub_type,
-            title = parentpub_title,
+            slug = slugify(str(parentpub_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
 
