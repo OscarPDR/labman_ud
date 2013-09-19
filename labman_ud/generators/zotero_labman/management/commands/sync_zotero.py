@@ -373,7 +373,10 @@ class Command(NoArgsCommand):
         # Tags
         tags = []
         for tag in item['tags']:
-            t, created = Tag.objects.get_or_create(name=tag['tag'])
+            t, created = Tag.objects.get_or_create(
+                slug=slugify(str(tag['tag'].encode('utf-8'))),
+                defaults={'name': tag['tag']}
+            )
             tags.append(t)
 
         return pub, authors, tags, observations
