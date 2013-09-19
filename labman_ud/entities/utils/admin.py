@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Country, GeographicalScope, Role, Tag, Language, Network
+from .models import Country, GeographicalScope, Role, Tag, Language, Network, PhDProgram
 
 
 #########################
@@ -52,6 +52,14 @@ class NetworkAdmin(admin.ModelAdmin):
     model = Network
 
 
+#########################
+# Class: PhDProgramAdmin
+#########################
+
+class PhDProgramAdmin(admin.ModelAdmin):
+    model = PhDProgram
+
+
 ##################################################
 # Register classes
 ##################################################
@@ -62,3 +70,4 @@ admin.site.register(Role, RoleAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Network, NetworkAdmin)
+admin.site.register(PhDProgram, PhDProgramAdmin)
