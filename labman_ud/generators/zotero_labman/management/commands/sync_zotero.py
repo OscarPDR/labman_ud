@@ -10,6 +10,7 @@ from entities.publications.models import Publication, PublicationType, Publicati
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person
+from entities.projects.models import Project, RelatedPublication
 
 from pyzotero import zotero
 from dateutil import parser
@@ -46,6 +47,10 @@ class Command(NoArgsCommand):
         self.__library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
         self.__media_root = getattr(settings, 'MEDIA_ROOT', None)
         self.__api_limit = 10
+
+        # Get slugs of the projects for tag comparision
+        project_slugs = Project.objects.all().order_by('slug').values('slug')
+        self.__project_slugs = [slug['slug'] for slug in project_slugs] 
         
         # TODO: Check variables
 
@@ -162,6 +167,12 @@ class Command(NoArgsCommand):
                                     tag=tag
                                 )
                                 pubtag.save()
+
+                                # Find publication - project relations through tags
+                                if tag.name in self.__project_slugs:
+                                    print prefix, 'Saving found publication-project relationship:', tag.name
+                                    pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag))
+                                    pubproj.save()
 
                             # Save log
                             zotlog.publication = pub
@@ -372,6 +383,7 @@ class Command(NoArgsCommand):
         
         # Tags
         tags = []
+
         for tag in item['tags']:
             t, created = Tag.objects.get_or_create(
                 slug=slugify(str(tag['tag'].encode('utf-8'))),
