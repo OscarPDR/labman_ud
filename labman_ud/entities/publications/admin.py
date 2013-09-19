@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from .models import Publication, Thesis, PublicationType, PublicationAuthor, PublicationTag, ThesisAbstract, CoAdvisor
 
 
 #########################
@@ -23,6 +23,23 @@ class PublicationAuthorInline(admin.TabularInline):
 
 
 #########################
+# Class: ThesisAbstractInline
+#########################
+
+class ThesisAbstractInline(admin.TabularInline):
+    model = ThesisAbstract
+    extra = 1
+
+#########################
+# Class: CoAdvisorInline
+#########################
+
+class CoAdvisorInline(admin.TabularInline):
+    model = CoAdvisor
+    extra = 1
+
+
+#########################
 # Class: PublicationAdmin
 #########################
 
@@ -39,6 +56,22 @@ class PublicationAdmin(admin.ModelAdmin):
     inlines = [
         PublicationAuthorInline,
         PublicationTagInline,
+    ]
+
+
+#########################
+# Class: ThesisAdmin
+#########################
+
+class ThesisAdmin(admin.ModelAdmin):
+    model = Thesis
+
+    search_fields = ['title', 'author__full_name']
+    list_display = ['title', 'author', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        ThesisAbstractInline,
     ]
 
 
@@ -67,6 +100,22 @@ class PublicationTagAdmin(admin.ModelAdmin):
     model = PublicationTag
 
 
+#########################
+# Class: ThesisAbstractAdmin
+#########################
+
+class ThesisAbstractAdmin(admin.ModelAdmin):
+    model = ThesisAbstract
+
+
+#########################
+# Class: CoAdvisorAdmin
+#########################
+
+class CoAdvisorAdmin(admin.ModelAdmin):
+    model = CoAdvisor
+
+
 ##################################################
 # Register classes
 ##################################################
@@ -75,3 +124,6 @@ admin.site.register(Publication, PublicationAdmin)
 admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationTag, PublicationTagAdmin)
+admin.site.register(Thesis, ThesisAdmin)
+admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
+admin.site.register(CoAdvisor, CoAdvisorAdmin)

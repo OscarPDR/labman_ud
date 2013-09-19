@@ -12,19 +12,31 @@
 
     <div class="row">
 
-        {% for news in last_news %}
-            <div class="col-md-4">
-                <h2>
-                    <img src="{{ STATIC_PREFIX }}img/index/news_mini.png">
-                    {{ news.title|safe }}
-                </h2>
+        <div class="page-header">
+            <h2>
+                <img src="{{ STATIC_PREFIX }}img/index/news_mini.png" height="42" width="42">
+                Check our latest news
+            </h2>
+        </div>
 
-                <h6>Published on {{ news.created|date:"l, d F Y - H:i" }}</h6>
+        {% for news in last_news %}
+            <div class="col-md-3 well latest-news">
+                <h3>
+                    <i class="icon icon-chevron-right"></i>&emsp;{{ news.title|safe }}
+                </h3>
+
+                <div class="soften"></div>
+
+                <p>
+                    <strong>Published on:</strong>
+                    <br>
+                    {{ news.created|date:"l, d F Y - H:i" }}
+                </p>
 
                 <br>
 
                 <div class="centered">
-                    <a class="btn btn-primary" href="{% url view_news news.slug %}">
+                    <a class="btn btn-primary pull-right" href="{% url view_news news.slug %}">
                         Read more
                     </a>
                 </div>

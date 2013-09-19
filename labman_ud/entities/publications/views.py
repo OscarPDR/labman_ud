@@ -29,7 +29,8 @@ PAGINATION_NUMBER = settings.PUBLICATIONS_PAGINATION
 #########################
 
 def publication_index(request):
-    publications = Publication.objects.all().order_by('-year', 'title')
+    proceedings_id = PublicationType.objects.get(name='Proceedings')
+    publications = Publication.objects.all().order_by('-year', 'title').exclude(publication_type=proceedings_id.id)
 
     publications_length = len(publications)
 
