@@ -4,6 +4,18 @@
 
 {% block content %}
 
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url funding_charts_index %}">Funding</a>
+        </li>
+
+        <li>
+            <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+        </li>
+
+        <li class="active">{{ project.short_name }}</li>
+    </ul>
+
     <div id="chart-div" class="centered">
         <h4>Income breakdown for: <a target="_blank" href="{% url project_info project.slug %}">{{ project.short_name }}</a></h4>
         <br>
@@ -48,6 +60,10 @@
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
     </script>
 
 {% endblock %}
