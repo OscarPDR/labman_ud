@@ -23,6 +23,8 @@ class Command(NoArgsCommand):
 
         print "[RESET_PUBS] Deleting every publication in DB..."
         for pub in Publication.objects.all():
+
+
             # Delete PDF files
             if pub.pdf:
                 try:
@@ -44,7 +46,7 @@ class Command(NoArgsCommand):
             pub.delete()
 
         # Generate a log specifying a Zotero library version equal to 0, with the aim of re-syncing all publications
-        zotlog = ZoteroLog(zotero_key='RESYNC', updated=datetime.utcnow().replace(tzinfo=utc), version=0, observations='')
+        zotlog = ZoteroLog(zotero_key='-RESYNC-', updated=datetime.utcnow().replace(tzinfo=utc), version=0, observations='')
         zotlog.save()
 
         # Sync again the library with data from Zotero (calling the sync_zotero command)

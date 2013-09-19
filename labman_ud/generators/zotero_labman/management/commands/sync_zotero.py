@@ -2,6 +2,7 @@
 
 from django.core.management.base import NoArgsCommand
 from generators.zotero_labman.models import ZoteroLog
+from django.db.models import Q
 
 from generators.zotero_labman.utils import get_zotero_variables, parse_last_items, sync_deleted_items
 
@@ -15,7 +16,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         try:
-            last_version_db = ZoteroLog.objects.all().order_by('-created')[0].version
+            last_version_db = ZoteroLog.objects.filter(Q(zotero_key='-SYNCFINISHED-') | Q(zotero_key='-RESYNC-')).order_by('-created')[0].version
         except:
             last_version_db = 0
 
