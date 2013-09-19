@@ -153,6 +153,9 @@ class Language(models.Model):
     class Meta:
         ordering = ['name']
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 
 #########################
 # Model: Network

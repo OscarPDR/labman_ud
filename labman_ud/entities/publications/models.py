@@ -243,7 +243,7 @@ class PublicationTag(models.Model):
     publication = models.ForeignKey('Publication')
 
     def __unicode__(self):
-        return u'%s tagged as: %s' % (self.publication.title, self.tag.tag)
+        return u'%s tagged as: %s' % (self.publication.title, self.tag.name)
 
 
 #########################
@@ -291,16 +291,6 @@ class Thesis(models.Model):
 
     main_language = models.ForeignKey('utils.Language')
 
-    abstract_en = models.TextField(
-        max_length=2500,
-        blank=True,
-    )
-
-    abstract_es = models.TextField(
-        max_length=2500,
-        blank=True,
-    )
-
     # topics
 
     pdf = models.FileField(
@@ -323,6 +313,23 @@ class Thesis(models.Model):
         self.year = self.registration_date.year
         self.slug = slugify(str(self.title.encode('utf-8')))
         super(Thesis, self).save(*args, **kwargs)
+
+
+#########################
+# Model: ThesisAbstract
+#########################
+
+class ThesisAbstract(models.Model):
+    thesis = models.ForeignKey('Thesis')
+    language = models.ForeignKey('utils.Language')
+
+    abstract = models.TextField(
+        max_length=5000,
+        blank=True,
+    )
+
+    def __unicode__(self):
+        return u'Abstract in %s for: %s' % (self.language.name, self.thesis.title)
 
 
 #########################
