@@ -238,13 +238,13 @@ class Command(NoArgsCommand):
 
         observations = ''
 
-        pub.title = item['title']
-        pub.abstract = item['abstractNote']
-
-        # Get publication type
+        # Publicaton type
         pub.publication_type, created = PublicationType.objects.get_or_create(name=SUPPORTED_ITEM_TYPES[item['itemType']])
 
+        # Publication language
         pub.language, created = Language.objects.get_or_create(name=item['language']) if 'language' in item and item['language'] else (None, False)
+        
+        # Publication date / year
         try:
             pub.published = parser.parse(item['date'])
             pub.year = pub.published.year
@@ -258,6 +258,36 @@ class Command(NoArgsCommand):
                 pub.year = '2030'
                 observations = 'Error getting year from ', item['date']
 
+        # University
+        if 'university' in item and item['university']:
+            organization_type, created = OrganizationType.objects.get_or_create(name='University')
+            pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
+                defaults={'organization_type': organization_type})
+
+        # Common attributes for all publications
+        pub.title = item['title']
+        pub.abstract = item['abstractNote']
+        pub.short_title = item['shortTitle'] if 'shortTitle' in item and item['shortTitle'] else None
+        pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None       
+        pub.pages = item['pages'] if 'pages' in item and item['pages'] else None
+        pub.issue = item['issue'] if 'issue' in item and item['issue'] else None
+        pub.book_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else None
+
+        # Attributes that can be both from publications and "parent" publications
+        pub_subpub_attributes = {
+            'journal_abbreviation': item['journalAbbrevation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else None,
+            'series': item['series'] if 'series' in item and item['series'] else None,
+            'series_number': item['seriesNumber'] if 'seriesNumber' in item and item['seriesNumber'] else None,
+            'volume': item['volume'] if 'volume' in item and item['volume'] else None,
+            'publisher': item['publisher'] if 'publisher' in item and item['publisher'] else None,
+            'edition': item['edition'] if 'edition' in item and item['edition'] else None,
+            'series_text': item['seriesText'] if 'seriesText' in item and item['seriesText'] else None,
+            'isbn': item['ISBN'] if 'ISBN' in item and item['ISBN'] else None,
+            'issn': item['ISSN'] if 'ISSN' in item and item['ISSN'] else None,
+            'year': pub.year,
+        }
+
+        # If conference paper, create Conference event and Proceeding parent publication
         if item['itemType'] == 'conferencePaper':
             if item['conferenceName']:
                 conf_name = item['conferenceName']
@@ -268,13 +298,16 @@ class Command(NoArgsCommand):
                 conf_name = conf_name.replace('proceedings of the ', '')
                 conf_name = conf_name.replace('Proceedings of the ', '')
 
-            proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else 'Proceedings of ' + conf_name
+            proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else item['bookTitle']
+            proceedings_title = 'Proceedings of ' + conf_name if not proceedings_title else proceedings_title
 
             pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
+
+            pub_subpub_attributes['abstract'] = proceedings_title
             proceedings, created = Publication.objects.get_or_create(
                 publication_type = pub_type_proceedings,
                 title = proceedings_title,
-                defaults={'abstract': proceedings_title, 'year': pub.published.year}
+                defaults=pub_subpub_attributes
             )
 
             event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
@@ -288,31 +321,39 @@ class Command(NoArgsCommand):
                 }
             )
 
+            # Relation between the publication and its parent
             pub.part_of = proceedings
 
-        pub.short_title = item['shortTitle'] if 'shortTitle' in item and item['shortTitle'] else None
-        pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None
-        
-        # TODO: Now journals are independent publications
-        pub.journal_abbreviation = item['journalAbbrevation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else None
-        pub.volume = item['volume'] if 'volume' in item and item['volume'] else None
-        pub.pages = item['pages'] if 'pages' in item and item['pages'] else None
-        pub.issn = item['ISSN'] if 'ISSN' in item and item['ISSN'] else None
-        pub.isbn = item['ISBN'] if 'ISBN' in item and item['ISBN'] else None
-        pub.series_number = item['seriesNumber'] if 'seriesNumber' in item and item['seriesNumber'] else None
-        pub.series = item['series'] if 'series' in item and item['series'] else None
-        pub.edition = item['edition'] if 'edition' in item and item['edition'] else None
-        pub.book_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else None
-        pub.series_number = item['seriesNumber'] if 'seriesNumber' in item and item['seriesNumber'] else None
-        pub.issue = item['issue'] if 'issue' in item and item['issue'] else None
-        pub.series_text = item['seriesText'] if 'seriesText' in item and item['seriesText'] else None
-        pub.publisher = item['publisher'] if 'publisher' in item and item['publisher'] else None
-        
-        if 'university' in item and item['university']:
-            organization_type, created = OrganizationType.objects.get_or_create(name='University')
-            pub.university, created = Organization.objects.get_or_create(full_name=item['university'], 
-                defaults={'organization_type': organization_type})
+        # If journal, magazine or newspaper article or book section, create parent publication
+        elif item['itemType'] in ['bookSection', 'journalArticle', 'magazineArticle', 'newspaperArticle']:
+            if item['itemType'] == 'bookSection':
+                parentpub_type, created = PublicationType.objects.get_or_create(name='Book')
+                parentpub_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else 'Book ?'
+            elif item['itemType'] == 'journalArticle':
+                parentpub_type, created = PublicationType.objects.get_or_create(name='Journal')
+                parentpub_title = item['journal_abbreviation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else 'Journal ?'
+            elif item['itemType'] == 'magazineArticle':
+                parentpub_type, created = PublicationType.objects.get_or_create(name='Magazine')
+                parentpub_title = item['publication'] if 'publication' in item and item['publication'] else 'Magazine ?'
+            elif item['itemType'] == 'newspaperArticle':
+                parentpub_type, created = PublicationType.objects.get_or_create(name='Newspaper')
+                parentpub_title = item['publication'] if 'publication' in item and item['publication'] else 'Newspaper ?'
 
+            pub_subpub_attributes['abstract'] = ' '
+            parentpub, created = Publication.objects.get_or_create(
+                publication_type = parentpub_type,
+                title = parentpub_title,
+                defaults=pub_subpub_attributes
+            )
+
+            # Relation between the publication and its parent
+            pub.part_of = parentpub
+
+        # If it has no parent publication, all those attributes go to publication itself
+        else:
+            pub.__dict__.update(pub_subpub_attributes)    
+
+        # Authors
         # We save them later (when we save pub in DB) (many-to-many fields)
         authors = []
         for creator in item['creators']:
@@ -329,6 +370,7 @@ class Command(NoArgsCommand):
                     a.save()
                 authors.append(a)
         
+        # Tags
         tags = []
         for tag in item['tags']:
             t, created = Tag.objects.get_or_create(name=tag['tag'])
