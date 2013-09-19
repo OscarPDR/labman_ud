@@ -1,4 +1,4 @@
-{% extends base_template %}
+{% extends "labman_ud/base.html" %}
 {% load humanize %}
 
 
@@ -6,14 +6,18 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url total_incomes %}">Total incomes</a><span class="divider">/</span></li>
-        <li class="active">{{ year }}</li>
+        <li>
+            <a href="{% url funding_charts_index %}">Funding</a>
+        </li>
+
+        <li class="active">Total incomes</li>
     </ul>
 
-    <div id="chart-div" class="centered">
-        <h4>DeustoTech INTERNET incomes in {{ year }}</h4>
 
-        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET total incomes</h4>
+
+        <div id="chart_div" style="width: 1000px; height: 500px;"></div>
     </div>
 
     <br>
@@ -34,16 +38,17 @@
             data.addColumn('string', 'Year');
             data.addColumn('number', 'Income');
             data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn({type: 'boolean', role: 'certainty'});
             data.addRows([
-                {% for key, value in incomes.items %}
-                    ['{{ key }}', {{ value }}, '{{ value|intcomma }} €'],
+                {% for income in incomes %}
+                    ['{{ income.key }}', {{ income.value }}, '{{ income.value|intcomma }} € in {{ income.key }}', {{ income.certainty|lower }}],
                 {% endfor %}
             ]);
 
             var options = {
                 legend: {position: 'none'},
                 hAxis: {
-                    title: 'Geographical scope',
+                    title: 'Year',
                     titleTextStyle: {color: 'black'},
                     slantedTextAngle: 45,
                     slantedText: true,
@@ -52,10 +57,12 @@
                     title: 'Incomes in €',
                     titleTextStyle: {color: 'black'},
                 },
+                areaOpacity: 0.5,
                 colors: ['#132da3'],
+                connectSteps: false,
             };
 
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
             chart.draw(data, options);
 
             // Add selection handler.
@@ -65,12 +72,16 @@
                 var selection = chart.getSelection();
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
-                    var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace('{{ path }}' + scope);
+                    var year = data.getValue(item.row, item.column-1);
+                    window.location.replace('{{ path }}' + year);
                 }
             }
         }
 
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
     </script>
 
 {% endblock %}
