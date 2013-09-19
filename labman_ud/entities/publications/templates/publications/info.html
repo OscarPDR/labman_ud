@@ -136,6 +136,10 @@
                         {% include 'publications/templates/journal_article.html' %}
                     {% endif %}
 
+                    {% if publication.publication_type.name == 'Book section' %}
+                        {% include 'publications/templates/book_section.html' %}
+                    {% endif %}
+
                 </div> <!-- end tab-pane #extended_info_tab -->
 
                 <div class="tab-pane" id="related_tab">
