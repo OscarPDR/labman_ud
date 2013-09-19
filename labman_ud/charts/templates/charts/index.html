@@ -1,0 +1,19 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <a href="{% url funding_charts_index %}">Funding</a>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}
