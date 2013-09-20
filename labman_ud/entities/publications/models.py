@@ -131,7 +131,8 @@ class Publication(models.Model):
         validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
     )
 
-    volume = models.PositiveIntegerField(
+    volume = models.CharField(
+        max_length=300,
         blank=True,
         null=True,
     )
