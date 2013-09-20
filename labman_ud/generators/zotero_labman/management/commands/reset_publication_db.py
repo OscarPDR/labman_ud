@@ -8,9 +8,7 @@ from entities.publications.models import Publication
 from datetime import datetime
 from django.utils.timezone import utc
 
-from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items
-
-import os
+from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items, logger
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -18,7 +16,7 @@ class Command(NoArgsCommand):
     help = 'Removes every publication in labman (saving only relations between publications and projects) and restarts it with data from Zotero.'
 
     def handle_noargs(self, **options):
-        print "[RESET_PUBS] Deleting every publication in DB..."
+        logger.info('Deleting every publication in DB...')
 
         backup_dataset = []
 
@@ -32,6 +30,6 @@ class Command(NoArgsCommand):
         zotlog.save()
 
         # Sync again the library with data from Zotero
-        print "\n[RESET_PUBS] Re-syncing with Zotero..."
+        logger.info('Re-syncing with Zotero...')
         last_version_zotero = get_last_zotero_version()
         parse_last_items(last_version_zotero, 0)
