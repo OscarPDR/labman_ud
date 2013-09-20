@@ -29,8 +29,12 @@ PAGINATION_NUMBER = settings.PUBLICATIONS_PAGINATION
 #########################
 
 def publication_index(request):
-    proceedings_id = PublicationType.objects.get(name='Proceedings')
-    publications = Publication.objects.all().order_by('-year', 'title').exclude(publication_type=proceedings_id.id)
+    # discarded_types = ['Book', 'Journal', 'Proceedings']
+
+    # proceedings_ids = PublicationType.objects.filter(name__in=discarded_types).values('id')
+    # publications = Publication.objects.all().order_by('-year', 'title').exclude(publication_type_id__in=proceedings_ids)
+
+    publications = Publication.objects.all().order_by('-year', 'title').exclude(authors=None)
 
     publications_length = len(publications)
 
@@ -110,6 +114,11 @@ def publication_info(request, slug):
     except:
         pdf = None
 
+    if publication.publication_type.name in ['Book section', 'Conference paper', 'Journal article']:
+        parent_publication = Publication.objects.get(id=publication.part_of.id)
+    else:
+        parent_publication = None
+
     return render_to_response('publications/info.html', {
             'from_page': from_page,
             'publication': publication,
@@ -118,6 +127,7 @@ def publication_info(request, slug):
             'related_publications': related_publications,
             'tags': tags,
             'pdf': pdf,
+            'parent_publication': parent_publication,
         },
         context_instance=RequestContext(request))
 
