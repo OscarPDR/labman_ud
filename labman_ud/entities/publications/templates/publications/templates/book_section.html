@@ -1,23 +1,23 @@
 
 <div class="row">
-    {% if publication.book_title %}
+    {% if parent_publication.title %}
         <div class="col-md-9">
             <h5>Published in:</h5>
 
             <p>
-                {{ publication.book_title }}
+                {{ parent_publication.title }}
             </p>
 
             <br>
         </div>
     {% endif %}
 
-    {% if publication.edition %}
+    {% if parent_publication.edition %}
         <div class="col-md-3">
             <h5>Edition:</h5>
 
             <p>
-                {{ publication.edition }}
+                {{ parent_publication.edition }}
             </p>
 
             <br>
@@ -27,24 +27,24 @@
 
 
 <div class="row">
-    {% if publication.publisher %}
+    {% if parent_publication.publisher %}
         <div class="col-md-6">
             <h5>Publisher:</h5>
 
             <p>
-                {{ publication.publisher }}
+                {{ parent_publication.publisher }}
             </p>
 
             <br>
         </div>
     {% endif %}
 
-    {% if publication.isbn %}
+    {% if parent_publication.isbn %}
         <div class="col-md-6">
             <h5>ISBN:</h5>
 
             <p>
-                {{ publication.isbn }}
+                {{ parent_publication.isbn }}
             </p>
 
             <br>
@@ -54,24 +54,24 @@
 
 
 <div class="row">
-    {% if publication.series %}
+    {% if parent_publication.series %}
         <div class="col-md-9">
             <h5>Series:</h5>
 
             <p>
-                {{ publication.series }}
+                {{ parent_publication.series }}
             </p>
 
             <br>
         </div>
     {% endif %}
     
-    {% if publication.series_number %}
+    {% if parent_publication.series_number %}
         <div class="col-md-3">
             <h5>Series number:</h5>
 
             <p>
-                {{ publication.series_number }}
+                {{ parent_publication.series_number }}
             </p>
 
             <br>
@@ -81,12 +81,12 @@
 
 
 <div class="row">
-    {% if publication.volume %}
+    {% if parent_publication.volume %}
         <div class="col-md-4">
             <h5>Volume:</h5>
 
             <p>
-                {{ publication.volume }}
+                {{ parent_publication.volume }}
             </p>
 
             <br>
