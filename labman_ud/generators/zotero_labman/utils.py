@@ -81,18 +81,11 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                 for item in items:
                     if item['itemType'] in SUPPORTED_ITEM_TYPES:
                         try:
-                            pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
-
-                            # TODO: externalize the deletion
-
                             # Delete publication if exists
+                            pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
+                            
                             print prefix, 'Item already exists! Deleting...'
-
-                            # Delete file if has attachment:
-                            if str(pub.pdf):
-                                os.remove(getattr(settings, 'MEDIA_ROOT', None) + '/' + str(pub.pdf))
-                            # Delete object in DB
-                            pub.delete()
+                            delete_publication(pub)
                         except:
                             pass
                         
@@ -181,11 +174,7 @@ def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
                             pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
                             print prefix, 'Deleting ', item['title'], '...'
 
-                            # Delete file if has attachment:
-                            if str(pub.pdf):
-                                os.remove(getattr(settings, 'MEDIA_ROOT', None) + '/' + str(pub.pdf))
-                            # Delete object in DB
-                            pub.delete()
+                            delete_publication(pub)
 
                             zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, delete=True, publication=None)
                             zotlog.save()
@@ -306,13 +295,15 @@ def get_publication_details(item):
             parentpub_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else 'Book ?'
         elif item['itemType'] == 'journalArticle':
             parentpub_type, created = PublicationType.objects.get_or_create(name='Journal')
-            parentpub_title = item['journal_abbreviation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else 'Journal ?'
+            parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else None
+            if not parentpub_title:
+                parentpub_title = item['journal_abbreviation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else 'Journal ?'
         elif item['itemType'] == 'magazineArticle':
             parentpub_type, created = PublicationType.objects.get_or_create(name='Magazine')
-            parentpub_title = item['publication'] if 'publication' in item and item['publication'] else 'Magazine ?'
+            parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else 'Magazine ?'
         elif item['itemType'] == 'newspaperArticle':
             parentpub_type, created = PublicationType.objects.get_or_create(name='Newspaper')
-            parentpub_title = item['publication'] if 'publication' in item and item['publication'] else 'Newspaper ?'
+            parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else 'Newspaper ?'
 
         pub_subpub_attributes['abstract'] = ' '
         pub_subpub_attributes['title'] = parentpub_title
@@ -399,3 +390,40 @@ def get_attached_pdf(item_key, path):
             return True
 
     return False
+
+def delete_publication(pub):
+    try:
+        zot_key = ZoteroLog.objects.filter(publication=pub).order_by('-created')[0].zotero_key
+    except IndexError:
+        zot_key = None
+
+    # Return restored data dictionary
+    publ_proj = []
+    if pub.projects.all():
+        for proj in pub.projects.all():
+            publ_proj.append(proj)
+
+    ret_dict = None
+
+    if zot_key:
+        ret_dict = {
+            'zot_key': zot_key,
+            'publ_event': pub.presented_at, 
+            'publ_lang': pub.language,
+            'publ_observations': pub.observations,
+            'publ_uni': pub.university,
+            'publ_parentpub': pub.part_of,
+            'publ_proj': publ_proj,
+        }
+
+    # Delete PDF file
+    if pub.pdf:
+        try:
+            os.remove(getattr(settings, 'MEDIA_ROOT', None) + '/' + str(pub.pdf))
+        except:
+            pass
+
+    # Delete publication object
+    pub.delete()
+
+    return ret_dict
