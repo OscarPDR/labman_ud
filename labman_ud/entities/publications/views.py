@@ -79,12 +79,6 @@ def publication_index(request):
 #########################
 
 def publication_info(request, slug):
-    from_page = ''
-
-    http_referer = request.META['HTTP_REFERER']
-
-    if '?page=' in http_referer:
-        from_page = http_referer[http_referer.rfind('/')+1:]
 
     publication = get_object_or_404(Publication, slug=slug)
 
@@ -111,7 +105,6 @@ def publication_info(request, slug):
         pdf = None
 
     return render_to_response('publications/info.html', {
-            'from_page': from_page,
             'publication': publication,
             'authors': authors,
             'related_projects': related_projects,
