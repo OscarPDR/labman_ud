@@ -15,3 +15,5 @@ six==1.4.1
 Pyzotero==0.10.1
 python-dateutil==2.1
 -e git+https://github.com/kennethreitz/requests.git@2.0#egg=requests_2
+django-celery==3.0.23
+pytz

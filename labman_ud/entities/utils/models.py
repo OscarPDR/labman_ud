@@ -150,11 +150,20 @@ class Language(models.Model):
         max_length=50,
     )
 
+    slug = models.SlugField(
+        max_length=50,
+        blank=True,
+    )
+
     class Meta:
-        ordering = ['name']
+        ordering = ['slug']
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name.encode('utf-8')))
+        super(Language, self).save(*args, **kwargs)
 
 
 #########################

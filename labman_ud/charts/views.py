@@ -28,11 +28,26 @@ CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
 
 
 #########################
-# View: total_incomes
+# View: chart_index
 #########################
 
-def total_incomes(request):
-    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+def chart_index(request):
+    return render_to_response('charts/index.html')
+
+
+#########################
+# View: funding_charts_index
+#########################
+
+def funding_charts_index(request):
+    return render_to_response('charts/funding/index.html')
+
+
+#########################
+# View: funding_total_incomes
+#########################
+
+def funding_total_incomes(request):
     path = str(request.path).replace('total_', '')
 
     min_year = FundingAmount.objects.aggregate(Min('year'))
@@ -52,20 +67,18 @@ def total_incomes(request):
         certainty = False if (year > current_year) else True
         incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
-    return render_to_response("charts/total_incomes.html", {
+    return render_to_response("charts/funding/total_incomes.html", {
             'incomes': incomes,
-            'base_template': base_template,
             'path': path,
         },
         context_instance=RequestContext(request))
 
 
 #########################
-# View: incomes_by_year
+# View: funding_incomes_by_year
 #########################
 
-def incomes_by_year(request, year):
-    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+def funding_incomes_by_year(request, year):
     path = str(request.path).replace('total_', '') + '/'
 
     incomes = {}
@@ -83,21 +96,19 @@ def incomes_by_year(request, year):
         scope = funding_program.geographical_scope.name
         incomes[scope] = incomes[scope] + int(year_income.own_amount)
 
-    return render_to_response("charts/incomes_by_year.html", {
+    return render_to_response("charts/funding/incomes_by_year.html", {
             'incomes': incomes,
             'year': year,
-            'base_template': base_template,
             'path': path,
         },
         context_instance=RequestContext(request))
 
 
 #########################
-# View: incomes_by_year_and_scope
+# View: funding_incomes_by_year_and_scope
 #########################
 
-def incomes_by_year_and_scope(request, year, scope):
-    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
+def funding_incomes_by_year_and_scope(request, year, scope):
     path = '/charts/incomes_by_project/'
 
     project_incomes = []
@@ -127,41 +138,40 @@ def incomes_by_year_and_scope(request, year, scope):
     #             project_incomes.append(p)
     #         el = el + 1
 
-    return render_to_response("charts/incomes_by_year_and_scope.html", {
+    return render_to_response("charts/funding/incomes_by_year_and_scope.html", {
             'project_incomes': project_incomes,
             'year': year,
             'scope': scope,
-            'base_template': base_template,
             'path': path,
         },
         context_instance=RequestContext(request))
 
 
 #########################
-# View: incomes_by_project_index
+# View: funding_incomes_by_project_index
 #########################
 
-def incomes_by_project_index(request):
+def funding_incomes_by_project_index(request):
     projects = Project.objects.all().order_by('slug')
 
-    return render_to_response("charts/incomes_by_project_index.html", {
+    return render_to_response("charts/funding/incomes_by_project_index.html", {
             'projects': projects,
         },
         context_instance=RequestContext(request))
 
 
 #########################
-# View: incomes_by_project
+# View: funding_incomes_by_project
 #########################
 
-def incomes_by_project(request, project_slug):
+def funding_incomes_by_project(request, project_slug):
     project = Project.objects.get(slug=project_slug)
 
     funding_ids = Funding.objects.filter(project_id=project.id).values('id')
 
     project_incomes = FundingAmount.objects.filter(funding_id__in=funding_ids).values('year').annotate(total=Sum('own_amount'))
 
-    return render_to_response("charts/incomes_by_project.html", {
+    return render_to_response("charts/funding/incomes_by_project.html", {
             'project': project,
             'project_incomes': project_incomes,
         },
@@ -169,12 +179,10 @@ def incomes_by_project(request, project_slug):
 
 
 #########################
-# View: total_incomes_by_scope
+# View: funding_total_incomes_by_scope
 #########################
 
-def total_incomes_by_scope(request):
-    base_template = CLEAN_BASE_TEMPLATE if request.META['HTTP_HOST'] == settings.HOST_URL else BASE_TEMPLATE
-
+def funding_total_incomes_by_scope(request):
     incomes = {}
 
     geographical_scopes = GeographicalScope.objects.all()
@@ -222,11 +230,10 @@ def total_incomes_by_scope(request):
             'certainty': certainty,
         })
 
-    return render_to_response("charts/total_incomes_by_scope.html", {
+    return render_to_response("charts/funding/total_incomes_by_scope.html", {
             'incomes': incomes,
             'total_incomes': total_incomes,
             'year': year,
-            'base_template': base_template,
         },
         context_instance=RequestContext(request))
 
@@ -256,11 +263,12 @@ def number_of_publications(request):
         for year in range(min_year, max_year + 1):
             publications[pub_type][year] = 0
 
-    all_publications = Publication.objects.all()
+    # all_publications = Publication.objects.all()
+    all_publications = Publication.objects.all().exclude(authors=None)
 
     for publication in all_publications:
         pub_type = publication.publication_type.name.encode('utf-8')
-        pub_year = publication.published.year
+        pub_year = publication.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
     return render_to_response("charts/number_of_publications.html", {
