@@ -44,6 +44,8 @@
             jsonObj.push(tempjson);
         {% endfor %}
 
+        console.log(jsonObj);
+
         nv.addGraph(function() {
             // var chart = nv.models.multiBarChart();
 
@@ -85,6 +87,10 @@
 
         function publicationsData() {
         }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
     </script>
 
 {% endblock %}
