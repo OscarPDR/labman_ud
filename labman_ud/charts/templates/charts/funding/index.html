@@ -1,0 +1,23 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <a href="{% url funding_total_incomes %}">Total incomes</a>
+    <br>
+    <a href="{% url funding_total_incomes_by_scope %}">Total incomes by scope</a>
+    <br>
+    <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

@@ -528,3 +528,11 @@ footer > a {
 .latest-news > p {
     font-size: 0.8em;
 }
+
+.medals-layout img {
+    margin-right: 1em;
+}
+
+.funding-amount {
+    text-align: right;
+}

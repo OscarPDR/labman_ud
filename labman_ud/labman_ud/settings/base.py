@@ -4,7 +4,8 @@
 
 from unipath import Path
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-
+import djcelery
+from celery.task.schedules import crontab
 
 PROJECT_DIR = Path(__file__).ancestor(3)
 
@@ -178,6 +179,9 @@ INSTALLED_APPS = (
     'south',
 
     'django_cleanup',
+
+    # Celery: background task queueing system
+    'djcelery',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -297,3 +301,9 @@ TWEETPONY_ACCESS_TOKEN_SECRET = ''
 ZOTERO_API_KEY = ''
 ZOTERO_LIBRARY_ID = ''
 ZOTERO_LIBRARY_TYPE = ''
+ZOTERO_CRONTAB = crontab(hour='*/2')
+
+# Celery config
+djcelery.setup_loader()
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERYBEAT_SCHEDULER='djcelery.schedulers.DatabaseScheduler'

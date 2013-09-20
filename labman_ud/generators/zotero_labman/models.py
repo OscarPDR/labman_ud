@@ -10,7 +10,6 @@ class ZoteroLog(models.Model):
         null=False,
     )
     updated = models.DateTimeField()
-    attachment = models.BooleanField(default=False)
     delete = models.BooleanField(default=False)
     version = models.PositiveIntegerField(
         blank=False,
