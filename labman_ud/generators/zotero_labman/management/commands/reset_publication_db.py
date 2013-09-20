@@ -1,17 +1,14 @@
 #encoding: utf-8 
 
 from django.core.management.base import NoArgsCommand
-from django.core.management import call_command
 
-from labman_ud import settings
 from generators.zotero_labman.models import ZoteroLog
 from entities.publications.models import Publication
-from entities.projects.models import RelatedPublication
 
 from datetime import datetime
 from django.utils.timezone import utc
 
-from generators.zotero_labman.utils import delete_publication
+from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items
 
 import os
 
@@ -34,6 +31,7 @@ class Command(NoArgsCommand):
         zotlog = ZoteroLog(zotero_key='-RESYNC-', updated=datetime.utcnow().replace(tzinfo=utc), version=0, observations='')
         zotlog.save()
 
-        # Sync again the library with data from Zotero (calling the sync_zotero command)
+        # Sync again the library with data from Zotero
         print "\n[RESET_PUBS] Re-syncing with Zotero..."
-        call_command('sync_zotero')
+        last_version_zotero = get_last_zotero_version()
+        parse_last_items(last_version_zotero, 0)
