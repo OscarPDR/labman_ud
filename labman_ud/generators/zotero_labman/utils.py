@@ -337,6 +337,9 @@ def get_publication_details(item):
     if has_attachment:
         pub.pdf = pdf_path
 
+    # Get bibtex
+    pub.bibtex = get_bibtex(item['key'])
+
     # Authors
     # We save them later (when we save pub in DB) (many-to-many fields)
     authors = []
@@ -390,6 +393,13 @@ def get_attached_pdf(item_key, path):
             return True
 
     return False
+
+def get_bibtex(item_key):
+    api_key, library_id, library_type, api_limit = get_zotero_variables()
+
+    zot = zotero.Zotero(library_id, library_type, api_key)
+    bibtex = zot.item(item_key, content='bibtex')
+    return ''.join(bibtex)
 
 def delete_publication(pub):
     try:
