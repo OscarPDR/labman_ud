@@ -50,7 +50,7 @@ class PublicationAdmin(admin.ModelAdmin):
     model = Publication
 
     search_fields = ['title', 'presented_at__short_name']
-    list_display = ['title', 'publication_type', 'presented_at']
+    list_display = ['title', 'publication_type', 'presented_at', 'part_of']
     list_filter = ['publication_type__name']
     exclude = ['slug']
     inlines = [

@@ -263,11 +263,12 @@ def number_of_publications(request):
         for year in range(min_year, max_year + 1):
             publications[pub_type][year] = 0
 
-    all_publications = Publication.objects.all()
+    # all_publications = Publication.objects.all()
+    all_publications = Publication.objects.all().exclude(authors=None)
 
     for publication in all_publications:
         pub_type = publication.publication_type.name.encode('utf-8')
-        pub_year = publication.published.year
+        pub_year = publication.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
     return render_to_response("charts/number_of_publications.html", {

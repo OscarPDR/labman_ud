@@ -7,6 +7,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
+from django.db.models import Sum, Min, Max
+
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
@@ -125,17 +127,38 @@ def member_info(request, member_slug):
             projects[role.name].append(project)
 
     publications = {}
+    number_of_publications = {}
+
+    min_year = Publication.objects.aggregate(Min('year'))
+    max_year = Publication.objects.aggregate(Max('year'))
+
+    min_year = min_year.get('year__min')
+    max_year = max_year.get('year__max')
+
+    years = []
+
+    for year in range(min_year, max_year + 1):
+        years.append(year)
 
     publication_types = PublicationType.objects.all()
 
+
     for publication_type in publication_types:
-        publications[publication_type.name] = []
+        pub_type = publication_type.name.encode('utf-8')
+        publications[pub_type] = []
+        number_of_publications[pub_type] = {}
+
+        for year in years:
+            number_of_publications[pub_type][year] = 0    
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
     for publication in _publications:
-        publications[publication.publication_type.name].append(publication)
+        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_year = publication.year
+        publications[pub_type].append(publication)
+        number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
 
     return render_to_response("members/info.html", {
@@ -143,6 +166,7 @@ def member_info(request, member_slug):
             'position': position,
             'projects': projects,
             'publications': publications,
+            'number_of_publications': number_of_publications,
         },
         context_instance=RequestContext(request))
 
