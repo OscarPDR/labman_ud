@@ -301,7 +301,7 @@ TWEETPONY_ACCESS_TOKEN_SECRET = ''
 ZOTERO_API_KEY = ''
 ZOTERO_LIBRARY_ID = ''
 ZOTERO_LIBRARY_TYPE = ''
-ZOTERO_CRONTAB = crontab(hour='*/5')
+ZOTERO_CRONTAB = crontab(hour='*/2')
 
 # Celery config
 djcelery.setup_loader()

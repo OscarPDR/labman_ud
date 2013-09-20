@@ -19,6 +19,14 @@ import requests
 import os
 import re
 import operator
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler('zotero_labman.log', maxBytes=20000, backupCount=5)
+logger.addHandler(handler)
 
 # Dict with supported Zotero's itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
@@ -60,16 +68,15 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
     project_slugs = [slug['slug'] for slug in Project.objects.all().order_by('slug').values('slug')]
 
     if version == last_version:
-        print prefix, 'Labman is already updated to last version in Zotero (%i)! :-)' % (last_version)
+        logger.info('Labman is already updated to last version in Zotero (%i)! :-)' % (last_version))
     else:
         if version > last_version:
             # This should not happend anytime, but in this case, we solve the error by syncing the penultimate version in Zotero
-            print prefix, 'Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version)
+            logger.info('Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version))
             version = last_version - 1
 
-        print prefix, 'Getting items since version', version
-        print prefix, 'Last version in Zotero is', last_version
-        print '\n'
+        logger.info('Getting items since version %i' % (version))
+        logger.info('Last version in Zotero is %i' % (last_version))
 
         gen = zot.makeiter(zot.items(limit=api_limit, order='dateModified', sort='desc', newer=version))
 
@@ -89,27 +96,27 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                             # Delete publication if exists
                             pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
                             
-                            print prefix, 'Item already exists! Deleting...'
+                            logger.info('Item already exists! Deleting...')
                             delete_publication(pub)
                         except:
                             pass
                         
                         # Create new publication
-                        print prefix, 'Creating new publication...', item['title']
+                        logger.info('Creating new publication: %s' % (item['title']))
                         pub = None
                         pub, authors, tags, observations = get_publication_details(item)
                         if observations:
-                            print prefix, 'Saved but...', observations
+                            logger.info('Saved but... %s' % (observations))
 
                         # Create new log entry
                         zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
 
-                        print prefix, 'Saving publication...'
+                        logger.info('Saving publication...')
                         # Save publication
                         pub.save()
 
                         # Saving authors and tags (many-to-many fields)
-                        print prefix, 'Saving authors and tags...'
+                        logger.info('Saving authors and tags...')
 
                         order = 1
                         for author in authors:
@@ -129,16 +136,16 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
 
                             # Find publication - project relations through tags
                             if tag.name in project_slugs:
-                                print prefix, 'Saving found publication-project relationship:', tag.name
+                                logger.info('Saving found publication-project relationship: %s' % (tag.name))
                                 pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag))
                                 pubproj.save()
 
                         # Save log
                         zotlog.publication = pub
                         zotlog.save()
-                        print prefix, 'OK!'
+                        logger.info('OK!')
 
-                        print '-'*30
+                        logger.info('-'*30)
                 lastitems = items
         # Generate a log specifying that the sync has finished for X version (due to avoid synchronization errors)
         zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, observations='')
@@ -150,16 +157,16 @@ def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
     zot = zotero.Zotero(library_id, library_type, api_key)
 
     if version == last_version:
-        print prefix, 'Labman is already updated to last version in Zotero (%i)! :-)' % (last_version)
+        logger.info('Labman is already updated to last version in Zotero (%i)! :-)' % (last_version))
     else:
         if version > last_version:
             # This should not happend anytime, but in this case, we solve the error by syncing the penultimate version in Zotero
-            print prefix, 'Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version)
+            logger.info('Labman version number (%i) is higher than Zotero\'s one (%i)... :-/ Solving the error...' % (version, last_version))
             version = last_version - 1
 
-        print prefix, 'Getting removed items since version', version
-        print prefix, 'Last version in Zotero is', last_version
-        print '\n'
+        logger.info('Getting removed items since version %i' % (version))
+        logger.info('Last version in Zotero is %i' % (last_version))
+        logger.info('\n')
 
         gen = zot.makeiter(zot.trash(limit=api_limit, order='dateModified', sort='desc', newer=version))
 
@@ -177,13 +184,13 @@ def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
                     if item['itemType'] in SUPPORTED_ITEM_TYPES:
                         try:
                             pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
-                            print prefix, 'Deleting ', item['title'], '...'
+                            logger.info('Deleting %s...' % (item['title']))
 
                             delete_publication(pub)
 
                             zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, delete=True, publication=None)
                             zotlog.save()
-                            print '-'*30
+                            logger.info('-'*30)
                         except:
                             pass
                 lastitems = items
@@ -220,7 +227,9 @@ def get_publication_details(item):
         else:
             pub.published = None
             pub.year = '2030'
-            observations = 'Error getting year from ', item['date']
+            error_msg = 'Error getting year from %s.' % (str(item['date']))
+            logger.error(error_msg)
+            observations = error_msg
 
     # University
     if 'university' in item and item['university']:
@@ -383,7 +392,7 @@ def get_attached_pdf(item_key, path):
     for child in children:
         # Finde if there is any attached PDF
         if child['itemType'] == 'attachment' and child['contentType'] == 'application/pdf':
-            print 'Getting attachment: ' + child['filename'] + '...'
+            logger.info('Getting attachment: ' + child['filename'] + '...')
 
             r = requests.get('https://api.zotero.org/'+  library_type + 's/'+ library_id + '/items/'+ child['key'] + '/file?key=' + api_key)
 
