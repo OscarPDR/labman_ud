@@ -87,7 +87,7 @@ class NewsTag(models.Model):
     news = models.ForeignKey('News')
 
     def __unicode__(self):
-        return u'%s tagged as: %s' % (self.news.title, self.tag.tag)
+        return u'%s tagged as: %s' % (self.news.title, self.tag.name)
 
 
 #########################
