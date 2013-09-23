@@ -8,7 +8,10 @@ from generators.zotero_labman.utils import logger
 
 import traceback
 
-@periodic_task(run_every=getattr(settings, 'ZOTERO_CRONTAB', crontab(hour='*/1')))
+
+@periodic_task(
+    run_every=getattr(settings, 'ZOTERO_CRONTAB', crontab(hour='*/1'))
+)
 def sync_zotero():
     try:
         call_command('sync_zotero')

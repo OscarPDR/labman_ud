@@ -235,12 +235,12 @@ class AssignedPerson(models.Model):
     role = models.ForeignKey('utils.Role')
 
     start_date = models.DateField(
-        blank=True, 
+        blank=True,
         null=True
     )
 
     end_date = models.DateField(
-        blank=True, 
+        blank=True,
         null=True
     )
 
@@ -275,7 +275,7 @@ class ProjectTag(models.Model):
     project = models.ForeignKey('Project')
 
     def __unicode__(self):
-        return u'%s tagged as: %s' % (self.project.full_name, self.tag.tag)
+        return u'%s tagged as: %s' % (self.project.full_name, self.tag.name)
 
 
 #########################
