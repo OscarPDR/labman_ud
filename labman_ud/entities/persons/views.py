@@ -177,12 +177,6 @@ def member_info(request, member_slug):
 #########################
 
 def person_info(request, slug):
-    from_page = ''
-
-    http_referer = request.META['HTTP_REFERER']
-
-    if '?page=' in http_referer:
-        from_page = http_referer[http_referer.rfind('/')+1:]
 
     person = get_object_or_404(Person, slug=slug)
 
@@ -200,7 +194,6 @@ def person_info(request, slug):
     return render_to_response("persons/info.html", {
             'person': person,
             'projects': projects,
-            'from_page': from_page,
         },
         context_instance=RequestContext(request))
 
