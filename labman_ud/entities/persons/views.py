@@ -18,7 +18,7 @@ from .forms import PersonSearchForm
 
 from entities.projects.models import Project, AssignedPerson
 
-from entities.publications.models import Publication, PublicationType, PublicationAuthor
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 
 from entities.utils.models import Role
 
@@ -160,6 +160,8 @@ def member_info(request, member_slug):
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
+    __clean_publication_tags(member.id)
+
 
     return render_to_response("members/info.html", {
             'member': member,
@@ -201,3 +203,23 @@ def person_info(request, slug):
             'from_page': from_page,
         },
         context_instance=RequestContext(request))
+
+
+####################################################################################################
+# __clean_publication_tags
+####################################################################################################
+
+def __clean_publication_tags(member_id):
+    print member_id
+    print 'HELLO.............................................'
+    project_tags = Project.objects.all().values('id')
+
+    publication_ids = PublicationAuthor.objects.filter(author_id=member_id)
+
+    print publication_ids
+
+    publications = Publication.objects.filter(id__in=publication_ids)
+
+    publication_tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
+
+    print publication_tags
