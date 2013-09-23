@@ -27,8 +27,8 @@ logger = logging.getLogger(__name__)
 
 # Add the log message handler to the logger
 handler = logging.handlers.RotatingFileHandler(
-    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'), 
-    maxBytes=20000, 
+    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
+    maxBytes=20000,
     backupCount=5
 )
 logger.addHandler(handler)
@@ -282,8 +282,7 @@ def get_publication_details(item):
             conf_name = conf_name.replace('proceedings of the ', '')
             conf_name = conf_name.replace('Proceedings of the ', '')
 
-        proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else item['bookTitle']
-        proceedings_title = 'Proceedings of ' + conf_name if not proceedings_title else proceedings_title
+        proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else 'Proceedings of ' + conf_name
 
         pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
 
