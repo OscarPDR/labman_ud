@@ -140,7 +140,7 @@ class Project(models.Model):
 
     assigned_people = models.ManyToManyField('persons.Person', through='AssignedPerson', related_name='projects')
     consortium_members = models.ManyToManyField('organizations.Organization', through='ConsortiumMember', related_name='consortium_member_of')
-    tags = models.ManyToManyField('utils.Tag', through='ProjectTag')
+    tags = models.ManyToManyField('utils.Tag', through='ProjectTag', related_name='projects')
     related_publications = models.ManyToManyField('publications.Publication', through='RelatedPublication', related_name='related_projects')
 
     class Meta:
