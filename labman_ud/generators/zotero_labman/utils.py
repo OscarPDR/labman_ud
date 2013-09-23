@@ -288,12 +288,16 @@ def get_publication_details(item):
 
         pub_subpub_attributes['abstract'] = proceedings_title
         pub_subpub_attributes['title'] = proceedings_title
+        pub_subpub_attributes['publication_type'] = pub_type_proceedings
 
         proceedings, created = Publication.objects.get_or_create(
-            publication_type = pub_type_proceedings,
             slug = slugify(str(proceedings_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
+
+        if proceedings.publication_type != pub_type_proceedings:
+            proceedings.update(publication_type=pub_type_proceedings)
+            proceedings.save()
 
         event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
         pub.presented_at, created = Event.objects.get_or_create(
@@ -329,11 +333,16 @@ def get_publication_details(item):
 
         pub_subpub_attributes['abstract'] = ' '
         pub_subpub_attributes['title'] = parentpub_title
+        pub_subpub_attributes['publication_type'] = parentpub_type
+
         parentpub, created = Publication.objects.get_or_create(
-            publication_type = parentpub_type,
             slug = slugify(str(parentpub_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
+
+        if parentpub.publication_type != parentpub_type:
+            parentpub.update(publication_type=parentpub_type)
+            parentpub.save()
 
         # Relation between the publication and its parent
         pub.part_of = parentpub
