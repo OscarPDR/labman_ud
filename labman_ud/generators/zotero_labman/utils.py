@@ -296,7 +296,7 @@ def get_publication_details(item):
         )
 
         if proceedings.publication_type != pub_type_proceedings:
-            proceedings.update(publication_type=pub_type_proceedings)
+            proceedings.publication_type = pub_type_proceedings
             proceedings.save()
 
         event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
@@ -341,7 +341,7 @@ def get_publication_details(item):
         )
 
         if parentpub.publication_type != parentpub_type:
-            parentpub.update(publication_type=parentpub_type)
+            parentpub.publication_type = parentpub_type
             parentpub.save()
 
         # Relation between the publication and its parent
