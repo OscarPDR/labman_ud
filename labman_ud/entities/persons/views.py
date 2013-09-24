@@ -20,7 +20,7 @@ from entities.projects.models import Project, AssignedPerson
 
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 
-from entities.utils.models import Role
+from entities.utils.models import Role, Tag
 
 # Create your views here.
 
@@ -160,7 +160,7 @@ def member_info(request, member_slug):
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
-    __clean_publication_tags(member.id)
+    # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
 
     return render_to_response("members/info.html", {
@@ -169,6 +169,7 @@ def member_info(request, member_slug):
             'projects': projects,
             'publications': publications,
             'number_of_publications': number_of_publications,
+            # 'publication_tags_per_year': publication_tags_per_year,
         },
         context_instance=RequestContext(request))
 
@@ -202,17 +203,37 @@ def person_info(request, slug):
 # __clean_publication_tags
 ####################################################################################################
 
-def __clean_publication_tags(member_id):
-    print member_id
-    print 'HELLO.............................................'
+def __clean_publication_tags(member_id, min_year, max_year):
     project_tags = Project.objects.all().values('id')
 
-    publication_ids = PublicationAuthor.objects.filter(author_id=member_id)
-
-    print publication_ids
+    publication_ids = PublicationAuthor.objects.filter(author_id=member_id).values('publication_id')
 
     publications = Publication.objects.filter(id__in=publication_ids)
 
-    publication_tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
+    pub_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id')
+    all_pub_tags = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id__name', 'publication_id__year')
+    pub_tags = Tag.objects.filter(id__in=pub_tag_ids).values_list('name', flat=True).distinct()
 
-    print publication_tags
+    removable_items = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
+
+    tags = [x for x in pub_tags if x not in removable_items]
+
+    publication_tags_per_year = {}
+
+    for t in tags:
+        tag = t.encode('utf-8')
+        publication_tags_per_year[tag] = {}
+
+        for year in range(min_year, max_year + 1):
+            publication_tags_per_year[tag][year] = 0
+
+    for pub_tag in all_pub_tags:
+        try:
+            tag_name = pub_tag.get('tag_id__name').encode('utf-8')
+            year = pub_tag.get('publication_id__year')
+
+            publication_tags_per_year[tag_name][year] = publication_tags_per_year[tag_name][year] + 1
+        except:
+            pass
+
+    return publication_tags_per_year

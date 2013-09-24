@@ -123,8 +123,8 @@ def project_info(request, slug):
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
     tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids)
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     try:
         project_logo = ProjectLogo.objects.get(project=project.id)
