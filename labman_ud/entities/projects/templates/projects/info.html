@@ -79,14 +79,13 @@
 
             <br>
 
-            <div class="centered">
+            <div>
                 <h6>Tags</h6>
+                
                 {% for tag in tags %}
-                    <li class="tag">
-                        <a target="_blank" href="{% url view_project_tag tag.slug %}">
-                            <span class="label label-info">{{ tag.name }}</span>
-                        </a>
-                    </li>
+                    <a target="_blank" href="{% url view_project_tag tag.slug %}">
+                        <span class="label label-info">{{ tag.name }}</span>
+                    </a>
                 {% endfor %}
             </div>
         </div> <!-- end .col-md-3 project's info sidebar -->
