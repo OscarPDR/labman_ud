@@ -120,7 +120,7 @@ def former_members(request):
 
     former_member_ids = Job.objects.filter(organization=organization.id).values('person_id')
 
-    formber_member_list = Person.objects.filter(id__in=former_member_ids).order_by('slug')
+    formber_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
 
     for former_member in formber_member_list:
         job = Job.objects.filter(person_id=former_member.id, organization=organization.id).order_by('-end_date')[0]
