@@ -439,7 +439,8 @@ footer > a {
 }
 
 .member {
-    padding-bottom: 2.5em;
+    padding-bottom: 3.5em;
+    max-height: 300px;
 }
 
 .member-name {
