@@ -4,11 +4,19 @@
 
 {% block content %}
 
-    <a href="{% url funding_total_incomes %}">Total incomes</a>
-    <br>
-    <a href="{% url funding_total_incomes_by_scope %}">Total incomes by scope</a>
-    <br>
-    <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+    <div class="row">
+        <div class="col-md-4 well">
+            <a href="{% url funding_total_incomes %}">Total incomes</a>
+        </div>
+
+        <div class="col-md-4 well">
+            <a href="{% url funding_total_incomes_by_scope %}">Total incomes by scope</a>
+        </div>
+
+        <div class="col-md-4 well">
+            <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+        </div>
+    </div>
 
 {% endblock %}
 
