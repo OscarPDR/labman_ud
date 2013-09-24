@@ -29,3 +29,6 @@ labman_ud/collected_static/
 
 .htaccess
 .htpasswd
+
+*.sublime-project
+*.sublime-workspace
