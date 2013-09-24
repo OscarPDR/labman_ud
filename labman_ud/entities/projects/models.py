@@ -140,7 +140,7 @@ class Project(models.Model):
 
     assigned_people = models.ManyToManyField('persons.Person', through='AssignedPerson', related_name='projects')
     consortium_members = models.ManyToManyField('organizations.Organization', through='ConsortiumMember', related_name='consortium_member_of')
-    tags = models.ManyToManyField('utils.Tag', through='ProjectTag')
+    tags = models.ManyToManyField('utils.Tag', through='ProjectTag', related_name='projects')
     related_publications = models.ManyToManyField('publications.Publication', through='RelatedPublication', related_name='related_projects')
 
     class Meta:
@@ -235,12 +235,12 @@ class AssignedPerson(models.Model):
     role = models.ForeignKey('utils.Role')
 
     start_date = models.DateField(
-        blank=True, 
+        blank=True,
         null=True
     )
 
     end_date = models.DateField(
-        blank=True, 
+        blank=True,
         null=True
     )
 
@@ -275,7 +275,7 @@ class ProjectTag(models.Model):
     project = models.ForeignKey('Project')
 
     def __unicode__(self):
-        return u'%s tagged as: %s' % (self.project.full_name, self.tag.tag)
+        return u'%s tagged as: %s' % (self.project.full_name, self.tag.name)
 
 
 #########################

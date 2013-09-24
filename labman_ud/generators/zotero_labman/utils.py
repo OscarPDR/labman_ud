@@ -5,7 +5,8 @@ from django.utils.timezone import utc
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationType
+from entities.publications.models import PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person
@@ -25,12 +26,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler('zotero_labman.log', maxBytes=20000, backupCount=5)
+handler = logging.handlers.RotatingFileHandler(
+    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
+    maxBytes=20000,
+    backupCount=5
+)
 logger.addHandler(handler)
 
-# Dict with supported Zotero's itemTypes, translated to LabMan's PublicationTypes
+# Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
-    'bookSection': 'Book section', 
+    'bookSection': 'Book section',
     'book': 'Book',
     'journalArticle': 'Journal article',
     'magazineArticle': 'Journal article',
@@ -49,15 +54,17 @@ def get_zotero_variables():
     api_key = getattr(settings, 'ZOTERO_API_KEY', None)
     library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
     library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
-    api_limit = 10    
+    api_limit = 10
 
     return api_key, library_id, library_type, api_limit
+
 
 def get_last_zotero_version():
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/'+ library_id + '/items?format=versions&key=' + api_key)
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
     return max(r.json().items(), key=operator.itemgetter(1))[1]
+
 
 def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
     api_key, library_id, library_type, api_limit = get_zotero_variables()
@@ -95,12 +102,12 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                         try:
                             # Delete publication if exists
                             pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
-                            
+
                             logger.info('Item already exists! Deleting...')
                             delete_publication(pub)
                         except:
                             pass
-                        
+
                         # Create new publication
                         logger.info('Creating new publication: %s' % (item['title']))
                         pub = None
@@ -151,7 +158,8 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
         zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, observations='')
         zotlog.save()
 
-def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):    
+
+def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
     zot = zotero.Zotero(library_id, library_type, api_key)
@@ -198,6 +206,7 @@ def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
         zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, delete=True, observations='')
         zotlog.save()
 
+
 def get_publication_details(item):
     pub = Publication()
 
@@ -214,7 +223,7 @@ def get_publication_details(item):
         )
     else:
         pub.language = None
-    
+
     # Publication date / year
     try:
         pub.published = parser.parse(item['date'])
@@ -243,7 +252,7 @@ def get_publication_details(item):
     pub.title = item['title']
     pub.abstract = item['abstractNote']
     pub.short_title = item['shortTitle'] if 'shortTitle' in item and item['shortTitle'] else None
-    pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None       
+    pub.doi = item['DOI'] if 'DOI' in item and item['DOI'] else None
     pub.pages = item['pages'] if 'pages' in item and item['pages'] else None
     pub.issue = item['issue'] if 'issue' in item and item['issue'] else None
     pub.book_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else None
@@ -273,28 +282,31 @@ def get_publication_details(item):
             conf_name = conf_name.replace('proceedings of the ', '')
             conf_name = conf_name.replace('Proceedings of the ', '')
 
-        proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else item['bookTitle']
-        proceedings_title = 'Proceedings of ' + conf_name if not proceedings_title else proceedings_title
+        proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else 'Proceedings of ' + conf_name
 
         pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
 
         pub_subpub_attributes['abstract'] = proceedings_title
         pub_subpub_attributes['title'] = proceedings_title
-                
+        pub_subpub_attributes['publication_type'] = pub_type_proceedings
+
         proceedings, created = Publication.objects.get_or_create(
-            publication_type = pub_type_proceedings,
             slug = slugify(str(proceedings_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
 
+        if proceedings.publication_type != pub_type_proceedings:
+            proceedings.publication_type = pub_type_proceedings
+            proceedings.save()
+
         event_type_academic, created = EventType.objects.get_or_create(name='Academic event')
         pub.presented_at, created = Event.objects.get_or_create(
-            slug=slugify(str(conf_name.encode('utf-8'))), 
+            slug=slugify(str(conf_name.encode('utf-8'))),
             defaults={
                 'full_name': conf_name,
                 'event_type': event_type_academic,
-                'year': pub.published.year, 
-                'location': item['place'], 
+                'year': pub.published.year,
+                'location': item['place'],
                 'proceedings': proceedings
             }
         )
@@ -321,18 +333,23 @@ def get_publication_details(item):
 
         pub_subpub_attributes['abstract'] = ' '
         pub_subpub_attributes['title'] = parentpub_title
+        pub_subpub_attributes['publication_type'] = parentpub_type
+
         parentpub, created = Publication.objects.get_or_create(
-            publication_type = parentpub_type,
             slug = slugify(str(parentpub_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
+
+        if parentpub.publication_type != parentpub_type:
+            parentpub.publication_type = parentpub_type
+            parentpub.save()
 
         # Relation between the publication and its parent
         pub.part_of = parentpub
 
     # If it has no parent publication, all those attributes go to publication itself
     else:
-        pub.__dict__.update(pub_subpub_attributes)    
+        pub.__dict__.update(pub_subpub_attributes)
 
     # Get PDF attachments
 
@@ -370,7 +387,7 @@ def get_publication_details(item):
                     )
                 a.save()
             authors.append(a)
-    
+
     # Tags
     tags = []
 
@@ -383,12 +400,13 @@ def get_publication_details(item):
 
     return pub, authors, tags, observations
 
+
 def get_attached_pdf(item_key, path):
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
     zot = zotero.Zotero(library_id, library_type, api_key)
     children = zot.children(item_key)
-    
+
     for child in children:
         # Finde if there is any attached PDF
         if child['itemType'] == 'attachment' and child['contentType'] == 'application/pdf':
@@ -403,10 +421,11 @@ def get_attached_pdf(item_key, path):
 
             with open(getattr(settings, 'MEDIA_ROOT', None) + '/' + path, 'wb') as pdffile:
                 pdffile.write(r.content)
-            
+
             return True
 
     return False
+
 
 def get_bibtex(item_key):
     api_key, library_id, library_type, api_limit = get_zotero_variables()
@@ -414,6 +433,7 @@ def get_bibtex(item_key):
     zot = zotero.Zotero(library_id, library_type, api_key)
     bibtex = zot.item(item_key, content='bibtex')
     return ''.join(bibtex)
+
 
 def delete_publication(pub):
     try:
@@ -432,7 +452,7 @@ def delete_publication(pub):
     if zot_key:
         ret_dict = {
             'zot_key': zot_key,
-            'publ_event': pub.presented_at, 
+            'publ_event': pub.presented_at,
             'publ_lang': pub.language,
             'publ_observations': pub.observations,
             'publ_uni': pub.university,
