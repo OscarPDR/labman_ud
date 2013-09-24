@@ -4,6 +4,12 @@
 
 {% block content %}
 
+    <div class="centered">
+        <h2>{{ members|length }} member{{ members|pluralize }}</h2>
+    </div>
+
+    <br>
+
     <div class="row">
         {% for member in members %}
 
@@ -24,11 +30,17 @@
                         </a>
                         <br>
                         <span class="member-name">{% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}</span>
+                        {% if member.position %}
                         <br>
                         <span class="member-position">{{ member.position }}</span>
+                        {% endif %}
                     </div>
                 </div>
         {% endfor %}
+    </div>
+
+    <div>
+        <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">Former members</a>
     </div>
 
 {% endblock %}

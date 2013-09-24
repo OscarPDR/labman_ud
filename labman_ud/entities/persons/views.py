@@ -22,6 +22,8 @@ from entities.publications.models import Publication, PublicationType, Publicati
 
 from entities.utils.models import Role, Tag
 
+from entities.organizations.models import Organization
+
 # Create your views here.
 
 PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
@@ -84,11 +86,16 @@ def members(request):
     member_list = Person.objects.filter(is_active=True)
 
     for member in member_list:
-        # job = Job.objects.get(person_id=member.id, end_date=None)
+        try:
+            job = Job.objects.filter(person_id=member.id).order_by('-end_date')[0]
+            position = job.position
+        except:
+            position = None
+
         members.append({
             "title": member.title,
             "full_name": member.full_name,
-            # "position": job.position,
+            "position": position,
             "profile_picture_url": member.profile_picture,
             "slug": member.slug,
             "gender": member.gender,
@@ -96,6 +103,38 @@ def members(request):
 
     return render_to_response("members/index.html", {
             'members': members,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: former_members
+#########################
+
+def former_members(request):
+
+    former_members = []
+
+    # Change to own organization
+    organization = Organization.objects.get(slug='deustotech-internet')
+
+    former_member_ids = Job.objects.filter(organization=organization.id).values('person_id')
+
+    formber_member_list = Person.objects.filter(id__in=former_member_ids).order_by('slug')
+
+    for former_member in formber_member_list:
+        job = Job.objects.filter(person_id=former_member.id, organization=organization.id).order_by('-end_date')[0]
+        former_members.append({
+            "title": former_member.title,
+            "full_name": former_member.full_name,
+            "position": job.position,
+            "profile_picture_url": former_member.profile_picture,
+            "slug": former_member.slug,
+            "gender": former_member.gender,
+        })
+
+    return render_to_response("members/former_members_index.html", {
+            'former_members': former_members,
         },
         context_instance=RequestContext(request))
 
