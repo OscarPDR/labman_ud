@@ -100,8 +100,8 @@ def publication_info(request, slug):
     related_publications = Publication.objects.filter(id__in=related_publications_ids).exclude(id=publication.id)
 
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids)
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     try:
         pdf = publication.pdf
