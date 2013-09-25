@@ -1,5 +1,8 @@
 # coding: utf-8
 
+import datetime
+from datetime import date
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -107,24 +110,58 @@ def project_info(request, slug):
     funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
-    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-published')
+    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
-    persons = {}
+    principal_researchers = []
+    project_managers = []
+    researchers = []
 
-    roles = Role.objects.all()
+    assigned_persons = AssignedPerson.objects.filter(project_id=project.id)
 
-    for role in roles:
-        persons[role.name] = []
-        person_ids = AssignedPerson.objects.filter(project_id=project.id, role=role.id).values('person_id')
-        person_objects = Person.objects.filter(id__in=person_ids).order_by('slug')
-        for person in person_objects:
-            persons[role.name].append(person)
+    for assigned_person in assigned_persons:
+        role = Role.objects.get(id=assigned_person.role.id)
+        person = Person.objects.get(id=assigned_person.person_id)
+
+        try:
+            start_month = assigned_person.start_date.strftime('%B')
+            start_year = assigned_person.start_date.year
+            start_date = u'%s %s' % (start_month, start_year)
+        except:
+            start_date = None
+
+        try:
+            end_month = assigned_person.end_date.strftime('%B')
+            end_year = assigned_person.end_date.year
+            end_date = u'%s %s' % (end_month, end_year)
+        except:
+            end_date = None
+
+        working_period = None
+        if start_date and end_date:
+            working_period = u'(from %s to %s)' % (start_date, end_date)
+        if start_date and not end_date:
+            working_period = u'(since %s)' % (start_date)
+
+        person_item = {
+                'full_name': person.full_name,
+                'is_active': person.is_active,
+                'slug': person.slug,
+                'working_period': working_period,
+                'description': assigned_person.description,
+            }
+
+        if role.slug == 'principal-researcher':
+            principal_researchers.append(person_item)
+        if role.slug == 'project-manager':
+            project_managers.append(person_item)
+        if role.slug == 'researcher':
+            researchers.append(person_item)
 
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
     tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids)
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     try:
         project_logo = ProjectLogo.objects.get(project=project.id)
@@ -134,7 +171,9 @@ def project_info(request, slug):
 
     return render_to_response("projects/info.html", {
             'project': project,
-            'persons': persons,
+            'project_managers': project_managers,
+            'principal_researchers': principal_researchers,
+            'researchers': researchers,
             'fundings': fundings,
             'funding_programs': funding_programs,
             'funding_amounts': funding_amounts,

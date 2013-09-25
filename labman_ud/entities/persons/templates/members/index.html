@@ -4,6 +4,12 @@
 
 {% block content %}
 
+    <div class="centered">
+        <h2>{{ members|length }} member{{ members|pluralize }}</h2>
+    </div>
+
+    <br>
+
     <div class="row">
         {% for member in members %}
 
@@ -29,6 +35,10 @@
                     </div>
                 </div>
         {% endfor %}
+    </div>
+
+    <div>
+        <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">Former members</a>
     </div>
 
 {% endblock %}

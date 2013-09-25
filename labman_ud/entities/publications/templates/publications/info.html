@@ -75,17 +75,13 @@
                 {% if tags %}
                     <br>
 
-                    <div class="centered">
-                        <h6>Tags</h6>
+                    <h6>Tags</h6>
 
-                        {% for tag in tags %}
-                            <li class="tag">
-                                <a target="_blank" href="{% url view_publication_tag tag.slug %}">
-                                    <span class="label label-info">{{ tag.name }}</span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </div>
+                    {% for tag in tags %}
+                        <a target="_blank" href="{% url view_publication_tag tag.slug %}">
+                            <span class="label label-info">{{ tag.name }}</span>
+                        </a>
+                    {% endfor %}
                 {% endif %}                
             </ul>
 

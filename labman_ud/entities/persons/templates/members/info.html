@@ -127,7 +127,7 @@
 
     <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
 
-    <script type="text/javascript">
+    <script>
         var success = function() {
             var image = document.getElementById("profile-picture");
             var image_source = image.src;
@@ -149,7 +149,6 @@
         };
     
         var konami = new Konami(success);
-    
     </script>
 
 {% endblock %}
