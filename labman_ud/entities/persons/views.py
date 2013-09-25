@@ -18,9 +18,11 @@ from .forms import PersonSearchForm
 
 from entities.projects.models import Project, AssignedPerson
 
-from entities.publications.models import Publication, PublicationType, PublicationAuthor
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 
-from entities.utils.models import Role
+from entities.utils.models import Role, Tag
+
+from entities.organizations.models import Organization
 
 # Create your views here.
 
@@ -84,11 +86,16 @@ def members(request):
     member_list = Person.objects.filter(is_active=True)
 
     for member in member_list:
-        # job = Job.objects.get(person_id=member.id, end_date=None)
+        try:
+            job = Job.objects.filter(person_id=member.id).order_by('-end_date')[0]
+            position = job.position
+        except:
+            position = None
+
         members.append({
             "title": member.title,
             "full_name": member.full_name,
-            # "position": job.position,
+            "position": position,
             "profile_picture_url": member.profile_picture,
             "slug": member.slug,
             "gender": member.gender,
@@ -96,6 +103,38 @@ def members(request):
 
     return render_to_response("members/index.html", {
             'members': members,
+        },
+        context_instance=RequestContext(request))
+
+
+#########################
+# View: former_members
+#########################
+
+def former_members(request):
+
+    former_members = []
+
+    # Change to own organization
+    organization = Organization.objects.get(slug='deustotech-internet')
+
+    former_member_ids = Job.objects.filter(organization=organization.id).values('person_id')
+
+    formber_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
+
+    for former_member in formber_member_list:
+        job = Job.objects.filter(person_id=former_member.id, organization=organization.id).order_by('-end_date')[0]
+        former_members.append({
+            "title": former_member.title,
+            "full_name": former_member.full_name,
+            "position": job.position,
+            "profile_picture_url": former_member.profile_picture,
+            "slug": former_member.slug,
+            "gender": former_member.gender,
+        })
+
+    return render_to_response("members/former_members_index.html", {
+            'former_members': former_members,
         },
         context_instance=RequestContext(request))
 
@@ -160,6 +199,8 @@ def member_info(request, member_slug):
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
+    # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
+
 
     return render_to_response("members/info.html", {
             'member': member,
@@ -167,6 +208,7 @@ def member_info(request, member_slug):
             'projects': projects,
             'publications': publications,
             'number_of_publications': number_of_publications,
+            # 'publication_tags_per_year': publication_tags_per_year,
         },
         context_instance=RequestContext(request))
 
@@ -194,3 +236,43 @@ def person_info(request, slug):
             'projects': projects,
         },
         context_instance=RequestContext(request))
+
+
+####################################################################################################
+# __clean_publication_tags
+####################################################################################################
+
+def __clean_publication_tags(member_id, min_year, max_year):
+    project_tags = Project.objects.all().values('id')
+
+    publication_ids = PublicationAuthor.objects.filter(author_id=member_id).values('publication_id')
+
+    publications = Publication.objects.filter(id__in=publication_ids)
+
+    pub_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id')
+    all_pub_tags = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id__name', 'publication_id__year')
+    pub_tags = Tag.objects.filter(id__in=pub_tag_ids).values_list('name', flat=True).distinct()
+
+    removable_items = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
+
+    tags = [x for x in pub_tags if x not in removable_items]
+
+    publication_tags_per_year = {}
+
+    for t in tags:
+        tag = t.encode('utf-8')
+        publication_tags_per_year[tag] = {}
+
+        for year in range(min_year, max_year + 1):
+            publication_tags_per_year[tag][year] = 0
+
+    for pub_tag in all_pub_tags:
+        try:
+            tag_name = pub_tag.get('tag_id__name').encode('utf-8')
+            year = pub_tag.get('publication_id__year')
+
+            publication_tags_per_year[tag_name][year] = publication_tags_per_year[tag_name][year] + 1
+        except:
+            pass
+
+    return publication_tags_per_year
