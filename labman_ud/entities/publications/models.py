@@ -275,7 +275,7 @@ class Thesis(models.Model):
     author = models.ForeignKey('persons.Person', related_name='has_thesis')
 
     slug = models.SlugField(
-        max_length=1000,
+        max_length=255,
         blank=True,
         unique=True,
     )
