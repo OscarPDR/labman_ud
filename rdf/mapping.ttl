@@ -7,6 +7,19 @@
 @prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
 @prefix jdbc: <http://d2rq.org/terms/jdbc/> .
 
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix swrc: <http://swrc.ontoware.org/ontology#> .
+
+@prefix d2r: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#> .
+@prefix meta: <http://www4.wiwiss.fu-berlin.de/bizer/d2r-server/metadata#> .
+
+
+<> a d2r:Server;
+    d2r:limitPerClassMap false;
+    .
+
 map:database a d2rq:Database;
     d2rq:jdbcDriver "org.postgresql.Driver";
     d2rq:jdbcDSN "jdbc:postgresql://localhost/labman";
@@ -240,7 +253,7 @@ map:events_viva_panel_id__ref a d2rq:PropertyBridge;
 map:events_viva_held_at_university_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_viva;
     d2rq:property vocab:events_viva_held_at_university_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_viva.held_at_university_id => organizations_organization.id";
     .
 
@@ -268,61 +281,61 @@ map:events_vivapanel_id a d2rq:PropertyBridge;
 map:events_vivapanel_chair_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_chair_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "events_vivapanel.chair_id => persons_person.id";
     .
 map:events_vivapanel_first_co_chair_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_first_co_chair_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "events_vivapanel.first_co_chair_id => persons_person.id";
     .
 map:events_vivapanel_secretarys_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_secretarys_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_vivapanel.secretarys_organization_id => organizations_organization.id";
     .
 map:events_vivapanel_chairs_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_chairs_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_vivapanel.chairs_organization_id => organizations_organization.id";
     .
 map:events_vivapanel_first_co_chairs_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_first_co_chairs_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_vivapanel.first_co_chairs_organization_id => organizations_organization.id";
     .
 map:events_vivapanel_second_co_chair_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_second_co_chair_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "events_vivapanel.second_co_chair_id => persons_person.id";
     .
 map:events_vivapanel_second_co_chairs_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_second_co_chairs_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_vivapanel.second_co_chairs_organization_id => organizations_organization.id";
     .
 map:events_vivapanel_third_co_chairs_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_third_co_chairs_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "events_vivapanel.third_co_chairs_organization_id => organizations_organization.id";
     .
 map:events_vivapanel_secretary_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_secretary_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "events_vivapanel.secretary_id => persons_person.id";
     .
 map:events_vivapanel_third_co_chair_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:events_vivapanel;
     d2rq:property vocab:events_vivapanel_third_co_chair_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "events_vivapanel.third_co_chair_id => persons_person.id";
     .
 
@@ -380,7 +393,7 @@ map:funding_programs_fundingprogram_geographical_scope_id__ref a d2rq:PropertyBr
 map:funding_programs_fundingprogram_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:funding_programs_fundingprogram;
     d2rq:property vocab:funding_programs_fundingprogram_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "funding_programs_fundingprogram.organization_id => organizations_organization.id";
     .
 
@@ -489,7 +502,7 @@ map:news_newstag_id a d2rq:PropertyBridge;
 map:news_newstag_tag_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:news_newstag;
     d2rq:property vocab:news_newstag_tag_id;
-    d2rq:refersToClassMap map:utils_tag;
+    d2rq:refersToClassMap map:Tag;
     d2rq:join "news_newstag.tag_id => utils_tag.id";
     .
 map:news_newstag_news_id__ref a d2rq:PropertyBridge;
@@ -523,7 +536,7 @@ map:news_personrelatedtonews_id a d2rq:PropertyBridge;
 map:news_personrelatedtonews_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:news_personrelatedtonews;
     d2rq:property vocab:news_personrelatedtonews_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "news_personrelatedtonews.person_id => persons_person.id";
     .
 map:news_personrelatedtonews_news_id__ref a d2rq:PropertyBridge;
@@ -563,7 +576,7 @@ map:news_projectrelatedtonews_news_id__ref a d2rq:PropertyBridge;
 map:news_projectrelatedtonews_project_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:news_projectrelatedtonews;
     d2rq:property vocab:news_projectrelatedtonews_project_id;
-    d2rq:refersToClassMap map:projects_project;
+    d2rq:refersToClassMap map:Project;
     d2rq:join "news_projectrelatedtonews.project_id => projects_project.id";
     .
 
@@ -604,130 +617,93 @@ map:news_publicationrelatedtonews_publication_id__ref a d2rq:PropertyBridge;
 ###########################################################################
 
 # Table organizations_organization
-map:organizations_organization a d2rq:ClassMap;
+map:Organization a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "organizations_organization/@@organizations_organization.id@@";
+    d2rq:uriPattern "organizations/@@organizations_organization.slug@@";
     d2rq:class vocab:organizations_organization;
     d2rq:classDefinitionLabel "organizations_organization";
     .
-map:organizations_organization__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
+map:Organization__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
     d2rq:property rdfs:label;
-    d2rq:pattern "organizations_organization #@@organizations_organization.id@@";
-    .
-map:organizations_organization_full_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_full_name;
-    d2rq:propertyDefinitionLabel "organizations_organization full_name";
     d2rq:column "organizations_organization.full_name";
     .
-map:organizations_organization_short_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_short_name;
-    d2rq:propertyDefinitionLabel "organizations_organization short_name";
+map:Organization_short_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property dcterms:identifier;
     d2rq:column "organizations_organization.short_name";
     .
-map:organizations_organization_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_slug;
-    d2rq:propertyDefinitionLabel "organizations_organization slug";
-    d2rq:column "organizations_organization.slug";
+map:Organization_full_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property dc:title;
+    d2rq:column "organizations_organization.full_name";
     .
-map:organizations_organization_homepage a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_homepage;
-    d2rq:propertyDefinitionLabel "organizations_organization homepage";
-    d2rq:column "organizations_organization.homepage";
+map:Organization_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property foaf:homepage;
+    d2rq:uriColumn "organizations_organization.homepage";
     .
-map:organizations_organization_organization_type_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
+map:Organization_organization_type_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
     d2rq:property vocab:organizations_organization_organization_type_id;
-    d2rq:refersToClassMap map:organizations_organizationtype;
+    d2rq:refersToClassMap map:Organizationtype;
     d2rq:join "organizations_organization.organization_type_id => organizations_organizationtype.id";
     .
-map:organizations_organization_sub_organization_of_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_sub_organization_of_id;
-    d2rq:refersToClassMap map:organizations_organization;
+map:Organization_sub_organization_of_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property dcterms:isPartOf;
+    d2rq:refersToClassMap map:Organization;
     d2rq:alias "organizations_organization AS organizations_organization__alias";
     d2rq:join "organizations_organization.sub_organization_of_id => organizations_organization__alias.id";
     .
-map:organizations_organization_country_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organization;
-    d2rq:property vocab:organizations_organization_country_id;
+map:Organization_country_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property foaf:based_near;
     d2rq:refersToClassMap map:utils_country;
     d2rq:join "organizations_organization.country_id => utils_country.id";
     .
-
-###########################################################################
-
-# Table organizations_organizationlogo
-map:organizations_organizationlogo a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "organizations_organizationlogo/@@organizations_organizationlogo.id@@";
-    d2rq:class vocab:organizations_organizationlogo;
-    d2rq:classDefinitionLabel "organizations_organizationlogo";
-    .
-map:organizations_organizationlogo__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationlogo;
-    d2rq:property rdfs:label;
-    d2rq:pattern "organizations_organizationlogo #@@organizations_organizationlogo.id@@";
-    .
-map:organizations_organizationlogo_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationlogo;
-    d2rq:property vocab:organizations_organizationlogo_id;
-    d2rq:propertyDefinitionLabel "organizations_organizationlogo id";
-    d2rq:column "organizations_organizationlogo.id";
-    d2rq:datatype xsd:integer;
-    .
-map:organizations_organizationlogo_logo a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationlogo;
-    d2rq:property vocab:organizations_organizationlogo_logo;
-    d2rq:propertyDefinitionLabel "organizations_organizationlogo logo";
-    d2rq:column "organizations_organizationlogo.logo";
-    .
-map:organizations_organizationlogo_organization_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationlogo;
-    d2rq:property vocab:organizations_organizationlogo_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
-    d2rq:join "organizations_organizationlogo.organization_id => organizations_organization.id";
+map:Organization_logo__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property foaf:depiction;
+    d2rq:join "organizations_organization.id => organizations_organizationlogo.organization_id";
+    d2rq:uriPattern "http://localhost:8000/media/@@organizations_organizationlogo.logo@@"
     .
 
 ###########################################################################
 
 # Table organizations_organizationtype
-map:organizations_organizationtype a d2rq:ClassMap;
+map:Organizationtype a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "organizations_organizationtype/@@organizations_organizationtype.id@@";
     d2rq:class vocab:organizations_organizationtype;
     d2rq:classDefinitionLabel "organizations_organizationtype";
     .
-map:organizations_organizationtype__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationtype;
+map:Organizationtype__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organizationtype;
     d2rq:property rdfs:label;
     d2rq:pattern "organizations_organizationtype #@@organizations_organizationtype.id@@";
     .
-map:organizations_organizationtype_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationtype;
+map:Organizationtype_id a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organizationtype;
     d2rq:property vocab:organizations_organizationtype_id;
     d2rq:propertyDefinitionLabel "organizations_organizationtype id";
     d2rq:column "organizations_organizationtype.id";
     d2rq:datatype xsd:integer;
     .
-map:organizations_organizationtype_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationtype;
+map:Organizationtype_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organizationtype;
     d2rq:property vocab:organizations_organizationtype_name;
     d2rq:propertyDefinitionLabel "organizations_organizationtype name";
     d2rq:column "organizations_organizationtype.name";
     .
-map:organizations_organizationtype_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationtype;
+map:Organizationtype_slug a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organizationtype;
     d2rq:property vocab:organizations_organizationtype_slug;
     d2rq:propertyDefinitionLabel "organizations_organizationtype slug";
     d2rq:column "organizations_organizationtype.slug";
     .
-map:organizations_organizationtype_description a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:organizations_organizationtype;
+map:Organizationtype_description a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organizationtype;
     d2rq:property vocab:organizations_organizationtype_description;
     d2rq:propertyDefinitionLabel "organizations_organizationtype description";
     d2rq:column "organizations_organizationtype.description";
@@ -769,7 +745,7 @@ map:persons_accountprofile_network_id__ref a d2rq:PropertyBridge;
 map:persons_accountprofile_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_accountprofile;
     d2rq:property vocab:persons_accountprofile_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "persons_accountprofile.person_id => persons_person.id";
     .
 
@@ -823,13 +799,13 @@ map:persons_job_end_date a d2rq:PropertyBridge;
 map:persons_job_organization_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_job;
     d2rq:property vocab:persons_job_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "persons_job.organization_id => organizations_organization.id";
     .
 map:persons_job_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_job;
     d2rq:property vocab:persons_job_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "persons_job.person_id => persons_person.id";
     .
 
@@ -863,121 +839,85 @@ map:persons_nickname_nickname a d2rq:PropertyBridge;
 map:persons_nickname_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_nickname;
     d2rq:property vocab:persons_nickname_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "persons_nickname.person_id => persons_person.id";
     .
 
 ###########################################################################
 
-# Table persons_person
-map:persons_person a d2rq:ClassMap;
+# Table Person
+map:Person a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "persons_person/@@persons_person.id@@";
-    d2rq:class vocab:persons_person;
+    d2rq:uriPattern "persons/@@persons_person.slug@@";
+    d2rq:class foaf:Person;
     d2rq:classDefinitionLabel "persons_person";
     .
-map:persons_person__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
+map:Person__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
     d2rq:property rdfs:label;
-    d2rq:pattern "persons_person #@@persons_person.id@@";
-    .
-map:persons_person_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_id;
-    d2rq:propertyDefinitionLabel "persons_person id";
-    d2rq:column "persons_person.id";
-    d2rq:datatype xsd:integer;
-    .
-map:persons_person_first_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_first_name;
-    d2rq:propertyDefinitionLabel "persons_person first_name";
-    d2rq:column "persons_person.first_name";
-    .
-map:persons_person_first_surname a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_first_surname;
-    d2rq:propertyDefinitionLabel "persons_person first_surname";
-    d2rq:column "persons_person.first_surname";
-    .
-map:persons_person_second_surname a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_second_surname;
-    d2rq:propertyDefinitionLabel "persons_person second_surname";
-    d2rq:column "persons_person.second_surname";
-    .
-map:persons_person_full_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_full_name;
-    d2rq:propertyDefinitionLabel "persons_person full_name";
     d2rq:column "persons_person.full_name";
     .
-map:persons_person_biography a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_biography;
-    d2rq:propertyDefinitionLabel "persons_person biography";
+map:Person_first_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:firstName;
+    d2rq:column "persons_person.first_name";
+    .
+map:Person_family_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:familyName;
+    d2rq:pattern "@@persons_person.first_surname@@ @@persons_person.second_surname@@";
+    .
+map:Person_full_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:name;
+    d2rq:column "persons_person.full_name";
+    .
+map:Person_biography a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property dc:description;
     d2rq:column "persons_person.biography";
     .
-map:persons_person_title a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_title;
-    d2rq:propertyDefinitionLabel "persons_person title";
+map:Person_title a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:title;
     d2rq:column "persons_person.title";
     .
-map:persons_person_gender a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_gender;
-    d2rq:propertyDefinitionLabel "persons_person gender";
+map:Person_gender a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:gender;
     d2rq:column "persons_person.gender";
     .
-map:persons_person_personal_website a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_personal_website;
-    d2rq:propertyDefinitionLabel "persons_person personal_website";
-    d2rq:column "persons_person.personal_website";
+map:Person_personal_website a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:homepage;
+    d2rq:uriColumn "persons_person.personal_website";
     .
-map:persons_person_email a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_email;
-    d2rq:propertyDefinitionLabel "persons_person email";
+map:Person_email a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:mbox;
     d2rq:column "persons_person.email";
     .
-map:persons_person_phone_number a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_phone_number;
+map:Person_phone_number a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:phone;
     d2rq:propertyDefinitionLabel "persons_person phone_number";
-    d2rq:column "persons_person.phone_number";
+    d2rq:pattern "@@persons_person.phone_number@@ - ext: @@persons_person.phone_extension@@";
     .
-map:persons_person_phone_extension a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_phone_extension;
-    d2rq:propertyDefinitionLabel "persons_person phone_extension";
-    d2rq:column "persons_person.phone_extension";
-    .
-map:persons_person_is_active a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_is_active;
-    d2rq:propertyDefinitionLabel "persons_person is_active";
+map:Person_is_active a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property vocab:member;
     d2rq:column "persons_person.is_active";
     d2rq:valueRegex "^[01]*$";
     .
-map:persons_person_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_slug;
-    d2rq:propertyDefinitionLabel "persons_person slug";
-    d2rq:column "persons_person.slug";
+map:Person_profile_picture a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property foaf:depiction;
+    d2rq:uriPattern "http://localhost:8000/media/@@persons_person.profile_picture@@";
     .
-map:persons_person_profile_picture a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_profile_picture;
-    d2rq:propertyDefinitionLabel "persons_person profile_picture";
-    d2rq:column "persons_person.profile_picture";
-    .
-map:persons_person_profile_konami_code_picture a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:persons_person;
-    d2rq:property vocab:persons_person_profile_konami_code_picture;
-    d2rq:propertyDefinitionLabel "persons_person profile_konami_code_picture";
-    d2rq:column "persons_person.profile_konami_code_picture";
+map:Person_profile_konami_code_picture a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Person;
+    d2rq:property vocab:konamiPicture;
+    d2rq:uriPattern "http://localhost:8000/media/@@persons_person.profile_konami_code_picture@@";
     .
 
 ###########################################################################
@@ -1004,7 +944,7 @@ map:persons_phdprogramfollowedbyperson_id a d2rq:PropertyBridge;
 map:persons_phdprogramfollowedbyperson_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_phdprogramfollowedbyperson;
     d2rq:property vocab:persons_phdprogramfollowedbyperson_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "persons_phdprogramfollowedbyperson.person_id => persons_person.id";
     .
 map:persons_phdprogramfollowedbyperson_phd_program_id__ref a d2rq:PropertyBridge;
@@ -1044,7 +984,7 @@ map:persons_thesisregisteredbyperson_thesis_id__ref a d2rq:PropertyBridge;
 map:persons_thesisregisteredbyperson_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:persons_thesisregisteredbyperson;
     d2rq:property vocab:persons_thesisregisteredbyperson_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "persons_thesisregisteredbyperson.person_id => persons_person.id";
     .
 
@@ -1092,7 +1032,7 @@ map:projects_assignedperson_description a d2rq:PropertyBridge;
 map:projects_assignedperson_person_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:projects_assignedperson;
     d2rq:property vocab:projects_assignedperson_person_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "projects_assignedperson.person_id => persons_person.id";
     .
 map:projects_assignedperson_role_id__ref a d2rq:PropertyBridge;
@@ -1104,42 +1044,8 @@ map:projects_assignedperson_role_id__ref a d2rq:PropertyBridge;
 map:projects_assignedperson_project_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:projects_assignedperson;
     d2rq:property vocab:projects_assignedperson_project_id;
-    d2rq:refersToClassMap map:projects_project;
+    d2rq:refersToClassMap map:Project;
     d2rq:join "projects_assignedperson.project_id => projects_project.id";
-    .
-
-###########################################################################
-
-# Table projects_consortiummember
-map:projects_consortiummember a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "projects_consortiummember/@@projects_consortiummember.id@@";
-    d2rq:class vocab:projects_consortiummember;
-    d2rq:classDefinitionLabel "projects_consortiummember";
-    .
-map:projects_consortiummember__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_consortiummember;
-    d2rq:property rdfs:label;
-    d2rq:pattern "projects_consortiummember #@@projects_consortiummember.id@@";
-    .
-map:projects_consortiummember_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_consortiummember;
-    d2rq:property vocab:projects_consortiummember_id;
-    d2rq:propertyDefinitionLabel "projects_consortiummember id";
-    d2rq:column "projects_consortiummember.id";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_consortiummember_organization_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_consortiummember;
-    d2rq:property vocab:projects_consortiummember_organization_id;
-    d2rq:refersToClassMap map:organizations_organization;
-    d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
-    .
-map:projects_consortiummember_project_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_consortiummember;
-    d2rq:property vocab:projects_consortiummember_project_id;
-    d2rq:refersToClassMap map:projects_project;
-    d2rq:join "projects_consortiummember.project_id => projects_project.id";
     .
 
 ###########################################################################
@@ -1185,7 +1091,7 @@ map:projects_funding_funding_program_id__ref a d2rq:PropertyBridge;
 map:projects_funding_project_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:projects_funding;
     d2rq:property vocab:projects_funding_project_id;
-    d2rq:refersToClassMap map:projects_project;
+    d2rq:refersToClassMap map:Project;
     d2rq:join "projects_funding.project_id => projects_project.id";
     .
 
@@ -1234,211 +1140,85 @@ map:projects_fundingamount_funding_id__ref a d2rq:PropertyBridge;
 ###########################################################################
 
 # Table projects_project
-map:projects_project a d2rq:ClassMap;
+map:Project a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "projects_project/@@projects_project.id@@";
-    d2rq:class vocab:projects_project;
+    d2rq:uriPattern "projects/@@projects_project.slug@@";
+    d2rq:class swrc:Project;
     d2rq:classDefinitionLabel "projects_project";
     .
-map:projects_project__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
+map:Project__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
     d2rq:property rdfs:label;
-    d2rq:pattern "projects_project #@@projects_project.id@@";
+    d2rq:pattern "@@projects_project.full_name@@";
     .
-map:projects_project_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_id;
-    d2rq:propertyDefinitionLabel "projects_project id";
-    d2rq:column "projects_project.id";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_project_full_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_full_name;
-    d2rq:propertyDefinitionLabel "projects_project full_name";
-    d2rq:column "projects_project.full_name";
-    .
-map:projects_project_short_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_short_name;
-    d2rq:propertyDefinitionLabel "projects_project short_name";
+map:Project_short_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dcterms:identifier;
     d2rq:column "projects_project.short_name";
     .
-map:projects_project_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_slug;
-    d2rq:propertyDefinitionLabel "projects_project slug";
-    d2rq:column "projects_project.slug";
+map:Project_full_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dc:title;
+    d2rq:column "projects_project.full_name";
     .
-map:projects_project_description a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_description;
-    d2rq:propertyDefinitionLabel "projects_project description";
+map:Project_description a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dc:description;
     d2rq:column "projects_project.description";
     .
-map:projects_project_homepage a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_homepage;
-    d2rq:propertyDefinitionLabel "projects_project homepage";
-    d2rq:column "projects_project.homepage";
+map:Project_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property foaf:homepage;
+    d2rq:uriColumn "projects_project.homepage";
     .
-map:projects_project_start_month a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_start_month;
-    d2rq:propertyDefinitionLabel "projects_project start_month";
-    d2rq:column "projects_project.start_month";
+map:Project_start_date a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrc:startDate;
+    d2rq:pattern "@@projects_project.start_year@@-@@projects_project.start_month@@";
+    d2rq:datatype xsd:gYearMonth;
     .
-map:projects_project_start_year a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_start_year;
-    d2rq:propertyDefinitionLabel "projects_project start_year";
-    d2rq:column "projects_project.start_year";
-    d2rq:datatype xsd:integer;
+map:Project_end_date a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrc:endDate;
+    d2rq:pattern "@@projects_project.end_year@@-@@projects_project.end_month@@";
+    d2rq:datatype xsd:gYearMonth;
     .
-map:projects_project_end_month a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_end_month;
-    d2rq:propertyDefinitionLabel "projects_project end_month";
-    d2rq:column "projects_project.end_month";
-    .
-map:projects_project_end_year a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_end_year;
-    d2rq:propertyDefinitionLabel "projects_project end_year";
-    d2rq:column "projects_project.end_year";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_project_status a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_status;
-    d2rq:propertyDefinitionLabel "projects_project status";
+map:Project_status a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrc:status;
     d2rq:column "projects_project.status";
     .
-map:projects_project_observations a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_observations;
-    d2rq:propertyDefinitionLabel "projects_project observations";
-    d2rq:column "projects_project.observations";
-    .
-map:projects_project_project_type_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_project_type_id;
-    d2rq:refersToClassMap map:projects_projecttype;
-    d2rq:join "projects_project.project_type_id => projects_projecttype.id";
-    .
-map:projects_project_project_leader_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_project;
-    d2rq:property vocab:projects_project_project_leader_id;
-    d2rq:refersToClassMap map:organizations_organization;
+map:Project_project_leader_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property vocab:projectLeader;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "projects_project.project_leader_id => organizations_organization.id";
     .
-
-###########################################################################
-
-# Table projects_projectlogo
-map:projects_projectlogo a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "projects_projectlogo/@@projects_projectlogo.id@@";
-    d2rq:class vocab:projects_projectlogo;
-    d2rq:classDefinitionLabel "projects_projectlogo";
+map:Project_consortium_member__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrc:carriedOutBy;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "projects_project.id => projects_consortiummember.project_id";
+    d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
     .
-map:projects_projectlogo__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projectlogo;
-    d2rq:property rdfs:label;
-    d2rq:pattern "projects_projectlogo #@@projects_projectlogo.id@@";
+map:Project_logo__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property foaf:depiction;
+    d2rq:join "projects_project.id => projects_projectlogo.project_id";
+    d2rq:uriPattern "http://localhost:8000/media/@@projects_projectlogo.logo@@"
     .
-map:projects_projectlogo_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projectlogo;
-    d2rq:property vocab:projects_projectlogo_id;
-    d2rq:propertyDefinitionLabel "projects_projectlogo id";
-    d2rq:column "projects_projectlogo.id";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_projectlogo_logo a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projectlogo;
-    d2rq:property vocab:projects_projectlogo_logo;
-    d2rq:propertyDefinitionLabel "projects_projectlogo logo";
-    d2rq:column "projects_projectlogo.logo";
-    .
-map:projects_projectlogo_project_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projectlogo;
-    d2rq:property vocab:projects_projectlogo_project_id;
-    d2rq:refersToClassMap map:projects_project;
-    d2rq:join "projects_projectlogo.project_id => projects_project.id";
-    .
-
-###########################################################################
-
-# Table projects_projecttag
-map:projects_projecttag a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "projects_projecttag/@@projects_projecttag.id@@";
-    d2rq:class vocab:projects_projecttag;
-    d2rq:classDefinitionLabel "projects_projecttag";
-    .
-map:projects_projecttag__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttag;
-    d2rq:property rdfs:label;
-    d2rq:pattern "projects_projecttag #@@projects_projecttag.id@@";
-    .
-map:projects_projecttag_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttag;
-    d2rq:property vocab:projects_projecttag_id;
-    d2rq:propertyDefinitionLabel "projects_projecttag id";
-    d2rq:column "projects_projecttag.id";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_projecttag_project_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttag;
-    d2rq:property vocab:projects_projecttag_project_id;
-    d2rq:refersToClassMap map:projects_project;
+map:Project_tag__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dc:subject;
     d2rq:join "projects_projecttag.project_id => projects_project.id";
-    .
-map:projects_projecttag_tag_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttag;
-    d2rq:property vocab:projects_projecttag_tag_id;
-    d2rq:refersToClassMap map:utils_tag;
     d2rq:join "projects_projecttag.tag_id => utils_tag.id";
+    d2rq:column "utils_tag.name";
     .
-
-###########################################################################
-
-# Table projects_projecttype
-map:projects_projecttype a d2rq:ClassMap;
-    d2rq:dataStorage map:database;
-    d2rq:uriPattern "projects_projecttype/@@projects_projecttype.id@@";
-    d2rq:class vocab:projects_projecttype;
-    d2rq:classDefinitionLabel "projects_projecttype";
-    .
-map:projects_projecttype__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttype;
-    d2rq:property rdfs:label;
-    d2rq:pattern "projects_projecttype #@@projects_projecttype.id@@";
-    .
-map:projects_projecttype_id a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttype;
-    d2rq:property vocab:projects_projecttype_id;
-    d2rq:propertyDefinitionLabel "projects_projecttype id";
-    d2rq:column "projects_projecttype.id";
-    d2rq:datatype xsd:integer;
-    .
-map:projects_projecttype_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttype;
-    d2rq:property vocab:projects_projecttype_name;
-    d2rq:propertyDefinitionLabel "projects_projecttype name";
+map:Project_project_type__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property vocab:projectType;
+    d2rq:join "projects_project.project_type_id => projects_projecttype.id";
     d2rq:column "projects_projecttype.name";
-    .
-map:projects_projecttype_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttype;
-    d2rq:property vocab:projects_projecttype_slug;
-    d2rq:propertyDefinitionLabel "projects_projecttype slug";
-    d2rq:column "projects_projecttype.slug";
-    .
-map:projects_projecttype_description a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:projects_projecttype;
-    d2rq:property vocab:projects_projecttype_description;
-    d2rq:propertyDefinitionLabel "projects_projecttype description";
-    d2rq:column "projects_projecttype.description";
     .
 
 ###########################################################################
@@ -1465,7 +1245,7 @@ map:projects_relatedpublication_id a d2rq:PropertyBridge;
 map:projects_relatedpublication_project_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:projects_relatedpublication;
     d2rq:property vocab:projects_relatedpublication_project_id;
-    d2rq:refersToClassMap map:projects_project;
+    d2rq:refersToClassMap map:Project;
     d2rq:join "projects_relatedpublication.project_id => projects_project.id";
     .
 map:projects_relatedpublication_publication_id__ref a d2rq:PropertyBridge;
@@ -1499,7 +1279,7 @@ map:publications_coadvisor_id a d2rq:PropertyBridge;
 map:publications_coadvisor_co_advisor_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_coadvisor;
     d2rq:property vocab:publications_coadvisor_co_advisor_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "publications_coadvisor.co_advisor_id => persons_person.id";
     .
 map:publications_coadvisor_thesis_id__ref a d2rq:PropertyBridge;
@@ -1687,7 +1467,7 @@ map:publications_publication_presented_at_id__ref a d2rq:PropertyBridge;
 map:publications_publication_university_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_publication;
     d2rq:property vocab:publications_publication_university_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "publications_publication.university_id => organizations_organization.id";
     .
 map:publications_publication_part_of_id__ref a d2rq:PropertyBridge;
@@ -1729,7 +1509,7 @@ map:publications_publicationauthor_position a d2rq:PropertyBridge;
 map:publications_publicationauthor_author_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_publicationauthor;
     d2rq:property vocab:publications_publicationauthor_author_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "publications_publicationauthor.author_id => persons_person.id";
     .
 map:publications_publicationauthor_publication_id__ref a d2rq:PropertyBridge;
@@ -1763,7 +1543,7 @@ map:publications_publicationtag_id a d2rq:PropertyBridge;
 map:publications_publicationtag_tag_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_publicationtag;
     d2rq:property vocab:publications_publicationtag_tag_id;
-    d2rq:refersToClassMap map:utils_tag;
+    d2rq:refersToClassMap map:Tag;
     d2rq:join "publications_publicationtag.tag_id => utils_tag.id";
     .
 map:publications_publicationtag_publication_id__ref a d2rq:PropertyBridge;
@@ -1881,7 +1661,7 @@ map:publications_thesis_main_language_id__ref a d2rq:PropertyBridge;
 map:publications_thesis_advisor_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_thesis;
     d2rq:property vocab:publications_thesis_advisor_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "publications_thesis.advisor_id => persons_person.id";
     .
 map:publications_thesis_phd_program_id__ref a d2rq:PropertyBridge;
@@ -1893,7 +1673,7 @@ map:publications_thesis_phd_program_id__ref a d2rq:PropertyBridge;
 map:publications_thesis_author_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:publications_thesis;
     d2rq:property vocab:publications_thesis_author_id;
-    d2rq:refersToClassMap map:persons_person;
+    d2rq:refersToClassMap map:Person;
     d2rq:join "publications_thesis.author_id => persons_person.id";
     .
 
@@ -2182,13 +1962,13 @@ map:utils_phdprogram_end_date a d2rq:PropertyBridge;
 map:utils_phdprogram_faculty_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:utils_phdprogram;
     d2rq:property vocab:utils_phdprogram_faculty_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "utils_phdprogram.faculty_id => organizations_organization.id";
     .
 map:utils_phdprogram_university_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:utils_phdprogram;
     d2rq:property vocab:utils_phdprogram_university_id;
-    d2rq:refersToClassMap map:organizations_organization;
+    d2rq:refersToClassMap map:Organization;
     d2rq:join "utils_phdprogram.university_id => organizations_organization.id";
     .
 
@@ -2235,33 +2015,27 @@ map:utils_role_description a d2rq:PropertyBridge;
 ###########################################################################
 
 # Table utils_tag
-map:utils_tag a d2rq:ClassMap;
+map:Tag a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "utils_tag/@@utils_tag.id@@";
+    d2rq:uriPattern "tags/@@utils_tag.slug@@";
     d2rq:class vocab:utils_tag;
     d2rq:classDefinitionLabel "utils_tag";
     .
-map:utils_tag__label a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:utils_tag;
+map:Tag__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Tag;
     d2rq:property rdfs:label;
-    d2rq:pattern "utils_tag #@@utils_tag.id@@";
+    d2rq:pattern "@@utils_tag.name@@";
     .
-map:utils_tag_name a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:utils_tag;
+map:Tag_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Tag;
     d2rq:property vocab:utils_tag_name;
     d2rq:propertyDefinitionLabel "utils_tag name";
     d2rq:column "utils_tag.name";
     .
-map:utils_tag_slug a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:utils_tag;
-    d2rq:property vocab:utils_tag_slug;
-    d2rq:propertyDefinitionLabel "utils_tag slug";
-    d2rq:column "utils_tag.slug";
-    .
-map:utils_tag_sub_tag_of_id__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:utils_tag;
+map:Tag_sub_tag_of_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Tag;
     d2rq:property vocab:utils_tag_sub_tag_of_id;
-    d2rq:refersToClassMap map:utils_tag;
+    d2rq:refersToClassMap map:Tag;
     d2rq:alias "utils_tag AS utils_tag__alias";
     d2rq:join "utils_tag.sub_tag_of_id => utils_tag__alias.id";
     .
