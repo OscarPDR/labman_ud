@@ -32,6 +32,11 @@ class Country(models.Model):
         blank=True,
     )
 
+    identifier_code = models.CharField(
+        max_length=10,
+        blank=True,
+    )
+
     class Meta:
         ordering = ['slug']
 
@@ -152,6 +157,11 @@ class Language(models.Model):
 
     slug = models.SlugField(
         max_length=50,
+        blank=True,
+    )
+
+    identifier_code = models.CharField(
+        max_length=10,
         blank=True,
     )
 

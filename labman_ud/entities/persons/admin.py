@@ -48,6 +48,7 @@ class PersonAdmin(admin.ModelAdmin):
     exclude = [
         'full_name',
         'slug',
+        'safe_biography',
     ]
 
 
