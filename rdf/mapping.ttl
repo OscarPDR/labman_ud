@@ -446,7 +446,7 @@ map:Person_full_name a d2rq:PropertyBridge;
 map:Person_biography a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Person;
     d2rq:property dc:description;
-    d2rq:column "persons_person.biography";
+    d2rq:column "persons_person.safe_biography";
     .
 map:Person_title a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Person;

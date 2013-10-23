@@ -483,6 +483,10 @@ footer > a {
     padding: 1.5em;
 }
 
+#member-biography-tab-pane {
+    text-align: justify;
+}
+
 #member-tab-content > .tab-pane > p {
     text-align: justify;
 }

@@ -119,6 +119,7 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                         zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
 
                         logger.info('Saving publication...')
+
                         # Save publication
                         pub.save()
 
