@@ -138,7 +138,12 @@ class Person(models.Model):
 
         self.slug = slugify(self.full_name)
 
-        self.safe_biography = strip_tags(self.biography)
+        safe_biography = strip_tags(self.biography)
+        safe_biography = safe_biography.replace("&lsquo;", "'")
+        safe_biography = safe_biography.replace("&rsquo;", "'")
+        safe_biography = safe_biography.replace("&ldquo;", "\"")
+        safe_biography = safe_biography.replace("&rdquo;", "\"")
+        self.safe_biography = safe_biography
 
         super(Person, self).save(*args, **kwargs)
 

@@ -117,7 +117,11 @@
                     <h5>Abstract:</h5>
 
                     <p id="publication-abstract">
-                        {{ publication.abstract }}
+                        {% if publication.abstract %}
+                            {{ publication.abstract }}
+                        {% else %}
+                            No abstract available.
+                        {% endif %}
                     </p>
 
                 </div> <!-- end tab-pane #overview_tab -->

@@ -11,18 +11,6 @@
             <br>
         </div>
     {% endif %}
-
-    {% if publication.issn %}
-        <div class="col-md-6">
-            <h5>ISSN:</h5>
-
-            <p>
-                {{ publication.issn }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
 </div>
 
 <!--
@@ -72,8 +60,50 @@
     {% endif %}
 </div>
 
+<br>
 
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Published in:</strong>&emsp;{{ parent_publication.title }}
+    </div>
 
+    <div class="panel-body">
+        <div class="row">
+            {% if parent_publication.issn %}
+                <div class="col-md-4">
+                    <h5>ISSN:</h5>
 
+                    <p>
+                        {{ parent_publication.issn }}
+                    </p>
 
+                    <br>
+                </div>
+            {% endif %}
 
+            {% if parent_publication.year %}
+                <div class="col-md-4">
+                    <h5>Year:</h5>
+
+                    <p>
+                        {{ parent_publication.year }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if parent_publication.volume %}
+                <div class="col-md-4">
+                    <h5>Volume:</h5>
+
+                    <p>
+                        {{ parent_publication.volume }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
