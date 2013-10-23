@@ -111,7 +111,7 @@
                     <h5>Duration:</h5>
                     <p>
                         {{ project.start_year }} - {{ project.end_year }}
-                        <br>
+                        &emsp;
                         {% ifequal project.status 'Not started' %}
                             <span class="label">{{ project.status }}</span>
                         {% endifequal %}
@@ -125,12 +125,15 @@
 
                     <br>
 
-                    <h5>Description:</h5>
-                    <p>
-                        {{ project.description }}
-                    </p>
+                    {% if project.description != "-" %}
 
-                    <br>
+                        <h5>Description:</h5>
+                        <p>
+                            {{ project.description }}
+                        </p>
+
+                        <br>
+                    {% endif %}
 
                 </div>
 
@@ -154,6 +157,8 @@
                                                 {{ funding_program.full_name }}
                                             </a>
                                         </div>
+
+                                        <br>
 
                                         <div id="funding_{{ forloop.counter }}" class="accordion-body collapse {% if funding_loop == 1 %}in{% endif %}">
                                             <div class="accordion-inner row">
@@ -258,31 +263,6 @@
 
                 <div class="tab-pane" id="pr_assigned_employees">
 
-                    {% for key, value in persons.items %}
-                        {% if value %}
-                            <h5>{{ key }}</h5>
-
-                            <ul>
-                                {% for item in value %}
-                                    <li>
-                                        {% if item.is_active %}
-                                            <a target="_blank" href="{% url member_info item.slug %}">
-                                                {{ item.full_name }}
-                                            </a>
-                                        {% else %}
-                                            <a target="_blank" href="{% url person_info item.slug %}">
-                                                {{ item.full_name }}
-                                            </a>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-
-                        {% endif %}
-
-                        <br>
-                    {% endfor %}
-
                     <h5>Project manager{{ project_managers|pluralize }}</h5>
 
                     <ul>
@@ -293,20 +273,11 @@
                                 {% else %}
                                     <a target="_blank" href="{% url person_info item.slug %}">
                                 {% endif %}
-                                        {{ item.full_name }}&emsp;
-
-                                        {% if item.start %}
-                                            (
-                                                {{ item.start }} - 
-
-                                                {% if item.end %}
-                                                    {{ item.end }}
-                                                {% else %}
-                                                    actual
-                                                {% endif %}
-                                            )
-                                        {% endif %}
+                                        {{ item.full_name }}
                                     </a>
+                                {% if item.working_period %}
+                                    &emsp;{{ item.working_period }}
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
@@ -323,20 +294,11 @@
                                 {% else %}
                                     <a target="_blank" href="{% url person_info item.slug %}">
                                 {% endif %}
-                                        {{ item.full_name }}&emsp;
-
-                                        {% if item.start %}
-                                            (
-                                                {{ item.start }} - 
-
-                                                {% if item.end %}
-                                                    {{ item.end }}
-                                                {% else %}
-                                                    actual
-                                                {% endif %}
-                                            )
-                                        {% endif %}
+                                        {{ item.full_name }}
                                     </a>
+                                {% if item.working_period %}
+                                    &emsp;{{ item.working_period }}
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

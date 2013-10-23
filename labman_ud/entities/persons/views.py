@@ -13,14 +13,14 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Person, Job
+from .models import Person, Job, AccountProfile
 from .forms import PersonSearchForm
 
 from entities.projects.models import Project, AssignedPerson
 
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 
-from entities.utils.models import Role, Tag
+from entities.utils.models import Role, Tag, Network
 
 from entities.organizations.models import Organization
 
@@ -201,6 +201,19 @@ def member_info(request, member_slug):
 
     # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
+    accounts = []
+    account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
+
+    for account_profile in account_profiles:
+        network = Network.objects.get(id=account_profile.network_id)
+        account_item = {
+            'profile_id': account_profile.profile_id,
+            'network_name': network.name,
+            'base_url': network.base_url,
+            'icon_url': network.icon,
+        }
+        accounts.append(account_item)
+
 
     return render_to_response("members/info.html", {
             'member': member,
@@ -209,6 +222,7 @@ def member_info(request, member_slug):
             'publications': publications,
             'number_of_publications': number_of_publications,
             # 'publication_tags_per_year': publication_tags_per_year,
+            'accounts': accounts,
         },
         context_instance=RequestContext(request))
 

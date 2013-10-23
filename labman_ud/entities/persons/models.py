@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils.html import strip_tags
 
 from ckeditor.fields import RichTextField
 
@@ -54,6 +55,11 @@ class Person(models.Model):
     )
 
     biography = RichTextField(blank=True, null=True)
+
+    safe_biography = models.TextField(
+        max_length=2500,
+        blank=True,
+    )
 
     title = models.CharField(
         max_length=15,
@@ -111,6 +117,11 @@ class Person(models.Model):
         null=True,
     )
 
+    konami_code_position = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
     class Meta:
         ordering = ['slug']
 
@@ -126,6 +137,8 @@ class Person(models.Model):
         self.full_name = full_name
 
         self.slug = slugify(self.full_name)
+
+        self.safe_biography = strip_tags(self.biography)
 
         super(Person, self).save(*args, **kwargs)
 
