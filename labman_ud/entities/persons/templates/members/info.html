@@ -155,19 +155,23 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script>
 
-        var graph = {
-            "nodes":[
-                    {"name": "{{member.full_name}}", "group": 0},
-                {% for item in egonetwork %}
-                    {"name": "{{item.name}}", "group": {{item.id}} },
-                {% endfor %}
-            ],
-            "links":[
-                {% for item in egonetwork %}
-                    {"source": 0, "target": {{item.id}}, "value": {{item.value}} },
-                {% endfor %}
-            ]
-        };
+        // var graph = {
+        //     "nodes":[
+        //             {"name": "{{member.full_name}}", "group": 0},
+        //         {% for item in egonetwork %}
+        //             {"name": "{{item.name}}", "group": {{item.id}} },
+        //         {% endfor %}
+        //     ],
+        //     "links":[
+        //         {% for item in egonetwork %}
+        //             {"source": 0, "target": {{item.id}}, "value": {{item.value}} },
+        //         {% endfor %}
+        //     ]
+        // };
+
+
+
+        var graph = {{ data|safe }};
 
         var width = 600;
         var height = 315;
@@ -176,7 +180,7 @@
 
         var force = d3.layout.force()
             .friction(0.5)
-            .charge(-1000)
+            .charge(-2500)
             .linkDistance(150)
             .size([width, height]);
 
@@ -195,8 +199,8 @@
                 .enter()
                 .append("line")
                 .attr("class", "link")
-                // .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-                .style("stroke-width", function(d) { return d.value; });
+                .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
+                // .style("stroke-width", function(d) { return d.weight; });
 
             var gnodes = svg.selectAll('g.gnode')
                 .data(graph.nodes)
@@ -206,15 +210,15 @@
         
             var node = gnodes.append("circle")
                 .attr("class", "node")
-                .attr("r", 15)
-                .style("fill", function(d) { return color(d.group); })
+                .attr("r", function(d) { return d.degree*2; })
+                .style("fill", function(d) { return color(d['k-clique']); })
                 .call(force.drag);
 
             var labels = gnodes.append("text")
                 .text(function(d) { return d.name; });
 
             var papers = link.append("title")
-                .text(function(d) { return d.value; });
+                .text(function(d) { return d.weight; });
         
             force.on("tick", function() {
                 link

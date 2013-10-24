@@ -24,6 +24,10 @@ from entities.utils.models import Role, Tag, Network
 
 from entities.organizations.models import Organization
 
+import networkx as nx
+from networkx.readwrite import json_graph
+import json
+
 # Create your views here.
 
 PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
@@ -201,29 +205,63 @@ def member_info(request, member_slug):
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
-    d = {}
+    # d = {}
 
-    for item in publication_ids:
-        _id = item['publication_id']
-        author_ids = PublicationAuthor.objects.filter(publication_id=_id).exclude(author_id=member.id).values('author_id')
-        for author_id in author_ids:
-            _author_id = author_id['author_id']
+    # for item in publication_ids:
+    #     _id = item['publication_id']
+    #     author_ids = PublicationAuthor.objects.filter(publication_id=_id).exclude(author_id=member.id).values('author_id')
+    #     for author_id in author_ids:
+    #         _author_id = author_id['author_id']
 
-            if _author_id in d:
-                d[_author_id] = d[_author_id] + 1
-            else:
-                d[_author_id] = 1
+    #         if _author_id in d:
+    #             d[_author_id] = d[_author_id] + 1
+    #         else:
+    #             d[_author_id] = 1
 
-    vvv = 1
-    for key, value in d.items():
-        author = Person.objects.get(id=key)
-        egonetwork_item = {
-            'id': vvv,
-            'name': author.full_name,
-            'value': value,
-        }
-        egonetwork.append(egonetwork_item)
-        vvv = vvv + 1
+    # vvv = 1
+    # for key, value in d.items():
+    #     author = Person.objects.get(id=key)
+    #     egonetwork_item = {
+    #         'id': vvv,
+    #         'name': author.full_name,
+    #         'value': value,
+    #     }
+    #     egonetwork.append(egonetwork_item)
+    #     vvv = vvv + 1
+
+
+
+
+
+
+    #################################################
+    
+    G = nx.Graph()
+
+    pubs = Publication.objects.all()
+    for pub in pubs:
+        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if author_ids:
+            _list = [author_id['author_id'] for author_id in author_ids]
+            for pos, author_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    author = Person.objects.get(id=author_id)
+                    author2 = Person.objects.get(id=_list[i])
+                    G.add_edge(author.id,author2.id)
+                    try:
+                        G[author.id][author2.id]['weight'] += 1
+                    except:
+                        G[author.id][author2.id]['weight'] = 1
+                    G.node[author.id]['name'] = author.full_name
+                    G.node[author2.id]['name'] = author2.full_name
+
+    G = analyze_graph(G)
+
+
+
+    data = json_graph.node_link_data(G)
+
+    #################################################
 
 
     # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
@@ -250,7 +288,8 @@ def member_info(request, member_slug):
             'number_of_publications': number_of_publications,
             # 'publication_tags_per_year': publication_tags_per_year,
             'accounts': accounts,
-            'egonetwork': egonetwork,
+            # 'egonetwork': egonetwork,
+            'data': json.dumps(data),
         },
         context_instance=RequestContext(request))
 
@@ -318,3 +357,78 @@ def __clean_publication_tags(member_id, min_year, max_year):
             pass
 
     return publication_tags_per_year
+
+
+
+
+
+
+
+
+
+
+
+def analyze_graph(G):    
+    components = []    
+
+    components = nx.connected_component_subgraphs(G)
+    
+    
+    i = 0
+    
+    for cc in components:            
+        #Set the connected component for each group
+        for node in cc:
+            G.node[node]['component'] = i
+      
+        #Calculate the in component betweeness, closeness and eigenvector centralities        
+        cent_betweenness = nx.betweenness_centrality(cc)              
+        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
+        cent_closeness = nx.closeness_centrality(cc)
+        
+        for name in cc.nodes():
+            G.node[name]['cc-betweenness'] = cent_betweenness[name]
+            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
+            G.node[name]['cc-closeness'] = cent_closeness[name]
+        
+        i +=1
+               
+    
+    # Calculate cliques
+    cliques = list(nx.find_cliques(G))
+    j = 0
+    processed_members = []
+    for clique in cliques:
+        for member in clique:
+            if not member in processed_members:
+                G.node[member]['cliques'] = []
+                processed_members.append(member)
+            G.node[member]['cliques'].append(j)
+        j +=1
+    
+    #calculate degree    
+    degrees = G.degree()
+    for name in degrees:
+        G.node[name]['degree'] = degrees[name]
+       
+    
+        
+    betweenness = nx.betweenness_centrality(G)
+    eigenvector = nx.eigenvector_centrality_numpy(G)
+    closeness = nx.closeness_centrality(G)
+    pagerank = nx.pagerank(G)
+    k_cliques = nx.k_clique_communities(G, 3)
+    
+    for name in G.nodes():
+        G.node[name]['betweenness'] = betweenness[name]
+        G.node[name]['eigenvector'] = eigenvector[name]
+        G.node[name]['closeness'] = closeness[name]
+        G.node[name]['pagerank'] = pagerank[name]
+    
+    for pos, k_clique in enumerate(k_cliques):
+        for member in k_clique:
+            G.node[member]['k-clique'] = pos
+            
+
+        
+    return G
