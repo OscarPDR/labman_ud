@@ -113,6 +113,8 @@ def publication_info(request, slug):
     else:
         parent_publication = None
 
+    bibtex = publication.bibtex.replace(",", ",\n")
+
     return render_to_response('publications/info.html', {
             'publication': publication,
             'authors': authors,
@@ -121,6 +123,7 @@ def publication_info(request, slug):
             'tags': tags,
             'pdf': pdf,
             'parent_publication': parent_publication,
+            'bibtex': bibtex,
         },
         context_instance=RequestContext(request))
 

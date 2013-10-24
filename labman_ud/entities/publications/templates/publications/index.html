@@ -67,16 +67,17 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="span9">Title</th>
+                    <th class="span8">Title</th>
                     <th class="span1">Year</th>
                     <th class="span2">Type</th>
+                    <th class="span1">BibTeX</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for publication in publications %}
                     <tr>
-                        <td class="span9">
+                        <td class="span8">
                             <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/publication/{{ publication.slug }}">
                                 <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                             </a>
@@ -93,6 +94,35 @@
                             <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
                                 {{ publication.publication_type.name }}
                             </a>
+                        </td>
+
+                        <td class="span1 centered">
+                            {% if publication.bibtex %}
+                                <a data-toggle="modal" href="#myModal">
+                                    <i class="icon-file-text icon-2x"></i>
+                                </a>
+
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"><img src="{{ STATIC_PREFIX }}img/bibtex.png" width="150" /></h4>
+                                        </div>
+
+                                        <div class="modal-body">
+                                        <pre>                                            
+                                            {{ bibtex }}
+                                        </pre>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
