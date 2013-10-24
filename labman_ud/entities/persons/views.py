@@ -193,11 +193,38 @@ def member_info(request, member_slug):
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
+    egonetwork = []
+
     for publication in _publications:
         pub_type = publication.publication_type.name.encode('utf-8')
         pub_year = publication.year
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
+
+    d = {}
+
+    for item in publication_ids:
+        _id = item['publication_id']
+        author_ids = PublicationAuthor.objects.filter(publication_id=_id).exclude(author_id=member.id).values('author_id')
+        for author_id in author_ids:
+            _author_id = author_id['author_id']
+
+            if _author_id in d:
+                d[_author_id] = d[_author_id] + 1
+            else:
+                d[_author_id] = 1
+
+    vvv = 1
+    for key, value in d.items():
+        author = Person.objects.get(id=key)
+        egonetwork_item = {
+            'id': vvv,
+            'name': author.full_name,
+            'value': value,
+        }
+        egonetwork.append(egonetwork_item)
+        vvv = vvv + 1
+
 
     # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
@@ -223,6 +250,7 @@ def member_info(request, member_slug):
             'number_of_publications': number_of_publications,
             # 'publication_tags_per_year': publication_tags_per_year,
             'accounts': accounts,
+            'egonetwork': egonetwork,
         },
         context_instance=RequestContext(request))
 

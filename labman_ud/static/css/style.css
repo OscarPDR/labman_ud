@@ -544,3 +544,23 @@ footer > a {
 .funding-amount {
     text-align: right;
 }
+
+
+
+
+
+
+
+
+
+
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
