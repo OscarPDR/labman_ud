@@ -13,11 +13,19 @@ from django.db.models import Sum, Min, Max
 
 from entities.funding_programs.models import FundingProgram
 
-from entities.projects.models import Project, FundingAmount, Funding
+from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
 
-from entities.publications.models import Publication, PublicationType
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 
-from entities.utils.models import GeographicalScope
+from entities.persons.models import Person
+
+from entities.utils.models import GeographicalScope, Role
+
+import networkx as nx
+from networkx.readwrite import json_graph
+import json
+
+import community
 
 
 BASE_TEMPLATE = 'labman_ud/base.html'
@@ -41,6 +49,22 @@ def chart_index(request):
 
 def funding_charts_index(request):
     return render_to_response('charts/funding/index.html')
+
+
+#########################
+# View: publications_charts_index
+#########################
+
+def publications_charts_index(request):
+    return render_to_response('charts/publications/index.html')
+
+
+#########################
+# View: projects_charts_index
+#########################
+
+def projects_charts_index(request):
+    return render_to_response('charts/projects/index.html')
 
 
 #########################
@@ -239,10 +263,10 @@ def funding_total_incomes_by_scope(request):
 
 
 #########################
-# View: number_of_publications
+# View: publications_number_of_publications
 #########################
 
-def number_of_publications(request):
+def publications_number_of_publications(request):
     publications = {}
 
     publication_types = PublicationType.objects.all()
@@ -271,9 +295,193 @@ def number_of_publications(request):
         pub_year = publication.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
-    return render_to_response("charts/number_of_publications.html", {
+    return render_to_response("charts/publications/number_of_publications.html", {
             'publications': publications,
             'publication_types': publication_types,
             'years': years,
         },
         context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: publications_coauthorship
+###########################################################################
+
+def publications_coauthorship(request):
+    G = nx.Graph()
+
+    pubs = Publication.objects.all()
+    for pub in pubs:
+        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if author_ids:
+            _list = [author_id['author_id'] for author_id in author_ids]
+            for pos, author_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    author = Person.objects.get(id=author_id)
+                    author2 = Person.objects.get(id=_list[i])
+                    G.add_edge(author.id,author2.id)
+                    try:
+                        G[author.id][author2.id]['weight'] += 1
+                    except:
+                        G[author.id][author2.id]['weight'] = 1
+                    G.node[author.id]['name'] = author.full_name
+                    G.node[author2.id]['name'] = author2.full_name
+
+    G = analyze_graph(G)
+
+
+
+    data = json_graph.node_link_data(G)
+
+    return render_to_response("charts/publications/co_authorship.html", {
+            'data': json.dumps(data),
+        },
+        context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: publications_morelab_coauthorship
+###########################################################################
+
+def publications_morelab_coauthorship(request):
+    G = nx.Graph()
+
+    pubs = Publication.objects.all()
+    for pub in pubs:
+        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if author_ids:
+            _list = [author_id['author_id'] for author_id in author_ids]
+            for pos, author_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    author = Person.objects.get(id=author_id)
+                    author2 = Person.objects.get(id=_list[i])
+                    if author.is_active and author2.is_active:
+                        G.add_edge(author.id,author2.id)
+                        try:
+                            G[author.id][author2.id]['weight'] += 1
+                        except:
+                            G[author.id][author2.id]['weight'] = 1
+                        G.node[author.id]['name'] = author.full_name
+                        G.node[author2.id]['name'] = author2.full_name
+
+    G = analyze_graph(G)
+
+
+
+    data = json_graph.node_link_data(G)
+
+    return render_to_response("charts/publications/co_authorship.html", {
+            'data': json.dumps(data),
+        },
+        context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: projects_coauthorship
+###########################################################################
+
+def projects_coauthorship(request):
+    G = nx.Graph()
+
+    projects = Project.objects.all()
+    pr_role = Role.objects.get(slug='principal-researcher')
+    for project in projects:
+        person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
+        if person_ids:
+            _list = [person_id['person_id'] for person_id in person_ids]
+            for pos, person_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    person1 = Person.objects.get(id=person_id)
+                    person2 = Person.objects.get(id=_list[i])
+                    # if person1.is_active and person2.is_active:
+                    G.add_edge(person1.id,person2.id)
+                    try:
+                        G[person1.id][person2.id]['weight'] += 1
+                    except:
+                        G[person1.id][person2.id]['weight'] = 1
+                    G.node[person1.id]['name'] = person1.full_name
+                    G.node[person2.id]['name'] = person2.full_name
+
+    G = analyze_graph(G)
+
+    data = json_graph.node_link_data(G)
+
+    return render_to_response("charts/projects/co_authorship.html", {
+            'data': json.dumps(data),
+        },
+        context_instance=RequestContext(request))
+
+
+###########################################################################
+###########################################################################
+### analyze_graph
+###########################################################################
+###########################################################################
+
+def analyze_graph(G):    
+    components = []    
+
+    components = nx.connected_component_subgraphs(G)
+    
+    i = 0
+    
+    for cc in components:            
+        #Set the connected component for each group
+        for node in cc:
+            G.node[node]['component'] = i
+      
+        #Calculate the in component betweeness, closeness and eigenvector centralities        
+        cent_betweenness = nx.betweenness_centrality(cc)              
+        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
+        cent_closeness = nx.closeness_centrality(cc)
+        
+        for name in cc.nodes():
+            G.node[name]['cc-betweenness'] = cent_betweenness[name]
+            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
+            G.node[name]['cc-closeness'] = cent_closeness[name]
+        
+        i +=1     
+    
+    # Calculate cliques
+    cliques = list(nx.find_cliques(G))
+    j = 0
+    processed_members = []
+    for clique in cliques:
+        for member in clique:
+            if not member in processed_members:
+                G.node[member]['cliques'] = []
+                processed_members.append(member)
+            G.node[member]['cliques'].append(j)
+        j +=1
+    
+    #calculate degree    
+    degrees = G.degree()
+    for name in degrees:
+        G.node[name]['degree'] = degrees[name]
+          
+    betweenness = nx.betweenness_centrality(G)
+    eigenvector = nx.eigenvector_centrality_numpy(G)
+    closeness = nx.closeness_centrality(G)
+    pagerank = nx.pagerank(G)
+    k_cliques = nx.k_clique_communities(G, 3)
+    
+    for name in G.nodes():
+        G.node[name]['betweenness'] = betweenness[name]
+        G.node[name]['eigenvector'] = eigenvector[name]
+        G.node[name]['closeness'] = closeness[name]
+        G.node[name]['pagerank'] = pagerank[name]
+    
+    for pos, k_clique in enumerate(k_cliques):
+        for member in k_clique:
+            G.node[member]['k-clique'] = pos
+
+    partitions = community.best_partition(G)
+
+    print len(G.nodes())
+    print partitions
+    print len(partitions.keys())
+
+    for key in partitions.keys():
+        G.node[key]['modularity'] = partitions[key]
+        
+    return G

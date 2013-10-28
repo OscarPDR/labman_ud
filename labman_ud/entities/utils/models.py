@@ -123,6 +123,7 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=50,
         blank=True,
+        unique=True,
     )
 
     sub_tag_of = models.ForeignKey(

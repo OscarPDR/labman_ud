@@ -94,7 +94,7 @@
                 <div class="tab-pane active" id="member-biography-tab-pane">
                     {{ member.biography|safe }}
 
-                    <div id="graph-test"></div>
+                    <div id="egonetwork-graph"></div>
                 </div> <!-- end #member-biography-tab-pane .tab-pane -->
 
                 <div class="tab-pane" id="member-projects-tab-pane">
@@ -153,8 +153,8 @@
     </script>
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script>
 
+    <script>
         // var graph = {
         //     "nodes":[
         //             {"name": "{{member.full_name}}", "group": 0},
@@ -169,22 +169,21 @@
         //     ]
         // };
 
-
-
         var graph = {{ data|safe }};
 
-        var width = 600;
-        var height = 315;
+        var width = 700;
+        var height = 500;
 
         var color = d3.scale.category20();
 
         var force = d3.layout.force()
+            .linkStrength(function(d) { return Math.sqrt(d.weight); })
             .friction(0.5)
-            .charge(-2500)
-            .linkDistance(150)
+            .charge(-10000)
+            .linkDistance(125)
             .size([width, height]);
 
-        var svg = d3.select("#graph-test").append("svg")
+        var svg = d3.select("#egonetwork-graph").append("svg")
             .attr("width", width)
             .attr("height", height);
 
@@ -199,8 +198,8 @@
                 .enter()
                 .append("line")
                 .attr("class", "link")
-                .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
-                // .style("stroke-width", function(d) { return d.weight; });
+                // .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+                .style("stroke-width", function(d) { return d.weight; });
 
             var gnodes = svg.selectAll('g.gnode')
                 .data(graph.nodes)
@@ -210,8 +209,14 @@
         
             var node = gnodes.append("circle")
                 .attr("class", "node")
-                .attr("r", function(d) { return d.degree*2; })
-                .style("fill", function(d) { return color(d['k-clique']); })
+                // .attr("r", 10)
+                .attr("r", function(d) { 
+                    if (d.name == "{{ member.full_name }}")
+                        return 30;
+                    else 
+                        return 10; 
+                })
+                .style("fill", function(d) { return color(d.modularity); })
                 .call(force.drag);
 
             var labels = gnodes.append("text")
@@ -234,7 +239,6 @@
                 labels.attr("transform", function(d) { 
                     return 'translate(' + [16, 3] + ')'; 
                 });
-          
             });
         };
 

@@ -10,6 +10,11 @@ from .models import Country, GeographicalScope, Role, Tag, Language, Network, Ph
 
 class CountryAdmin(admin.ModelAdmin):
     model = Country
+    search_fields = ['full_name', 'short_name']
+    list_display = ['full_name', 'identifier_code']
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
@@ -18,6 +23,11 @@ class CountryAdmin(admin.ModelAdmin):
 
 class GeographicalScopeAdmin(admin.ModelAdmin):
     model = GeographicalScope
+    search_fields = ['name',]
+    list_display = ['name',]
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
@@ -26,6 +36,11 @@ class GeographicalScopeAdmin(admin.ModelAdmin):
 
 class RoleAdmin(admin.ModelAdmin):
     model = Role
+    search_fields = ['name',]
+    list_display = ['name',]
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
@@ -34,6 +49,11 @@ class RoleAdmin(admin.ModelAdmin):
 
 class TagAdmin(admin.ModelAdmin):
     model = Tag
+    search_fields = ['name',]
+    list_display = ['name', 'sub_tag_of', ]
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
@@ -42,6 +62,11 @@ class TagAdmin(admin.ModelAdmin):
 
 class LanguageAdmin(admin.ModelAdmin):
     model = Language
+    search_fields = ['name',]
+    list_display = ['name', 'identifier_code', ]
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
@@ -50,6 +75,11 @@ class LanguageAdmin(admin.ModelAdmin):
 
 class NetworkAdmin(admin.ModelAdmin):
     model = Network
+    search_fields = ['name',]
+    list_display = ['name', 'base_url', ]
+    exclude = [
+        'slug',
+    ]
 
 
 #########################
