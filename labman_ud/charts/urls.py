@@ -16,7 +16,17 @@ urlpatterns = patterns('',
     url(r'^funding/incomes_by_project/(?P<project_slug>\S+)$', 'charts.views.funding_incomes_by_project', name='funding_incomes_by_project'),
 
     # /publications
-    url(r'^number_of_publications/$', 'charts.views.number_of_publications', name='number_of_publications'),
+    url(r'^publications/$', 'charts.views.publications_charts_index', name='publications_charts_index'),
+    
+    url(r'^publications/coauthorship/$', 'charts.views.publications_coauthorship', name='publications_coauthorship'),
+    url(r'^publications/morelab_coauthorship/$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship'),
+    url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
+
+    # /projects
+    url(r'^projects/$', 'charts.views.projects_charts_index', name='projects_charts_index'),
+    
+    url(r'^projects/coauthorship/$', 'charts.views.projects_coauthorship', name='projects_coauthorship'),
+    
 )
 
 urlpatterns += staticfiles_urlpatterns()

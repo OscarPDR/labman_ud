@@ -6,24 +6,17 @@
 
     <div class="row">
         <div class="col-md-4 well">
-            <a href="{% url funding_charts_index %}">
-                Funding
-            </a>
+            <a href="{% url publications_number_of_publications %}">Number of publications</a>
         </div>
 
         <div class="col-md-4 well">
-            <a href="{% url publications_charts_index %}">
-                Publications
-            </a>
+            <a href="{% url publications_coauthorship %}">Co-authorship</a>
         </div>
 
         <div class="col-md-4 well">
-            <a href="{% url projects_charts_index %}">
-                Projects
-            </a>
+            <a href="{% url publications_morelab_coauthorship %}">Co-authorship within MORElab</a>
         </div>
     </div>
-    
 
 {% endblock %}
 

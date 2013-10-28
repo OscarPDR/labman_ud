@@ -28,6 +28,9 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import json
 
+import community
+
+
 # Create your views here.
 
 PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
@@ -197,7 +200,7 @@ def member_info(request, member_slug):
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
-    egonetwork = []
+    # egonetwork = []
 
     for publication in _publications:
         pub_type = publication.publication_type.name.encode('utf-8')
@@ -229,13 +232,6 @@ def member_info(request, member_slug):
     #     egonetwork.append(egonetwork_item)
     #     vvv = vvv + 1
 
-
-
-
-
-
-    #################################################
-    
     G = nx.Graph()
 
     pubs = Publication.objects.all()
@@ -257,12 +253,9 @@ def member_info(request, member_slug):
 
     G = analyze_graph(G)
 
+    ego_g = nx.ego_graph(G, member.id)
 
-
-    data = json_graph.node_link_data(G)
-
-    #################################################
-
+    data = json_graph.node_link_data(ego_g)
 
     # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
@@ -359,20 +352,16 @@ def __clean_publication_tags(member_id, min_year, max_year):
     return publication_tags_per_year
 
 
-
-
-
-
-
-
-
-
+###########################################################################
+###########################################################################
+### analyze_graph
+###########################################################################
+###########################################################################
 
 def analyze_graph(G):    
     components = []    
 
     components = nx.connected_component_subgraphs(G)
-    
     
     i = 0
     
@@ -391,8 +380,7 @@ def analyze_graph(G):
             G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
             G.node[name]['cc-closeness'] = cent_closeness[name]
         
-        i +=1
-               
+        i +=1     
     
     # Calculate cliques
     cliques = list(nx.find_cliques(G))
@@ -410,9 +398,7 @@ def analyze_graph(G):
     degrees = G.degree()
     for name in degrees:
         G.node[name]['degree'] = degrees[name]
-       
-    
-        
+          
     betweenness = nx.betweenness_centrality(G)
     eigenvector = nx.eigenvector_centrality_numpy(G)
     closeness = nx.closeness_centrality(G)
@@ -428,7 +414,16 @@ def analyze_graph(G):
     for pos, k_clique in enumerate(k_cliques):
         for member in k_clique:
             G.node[member]['k-clique'] = pos
-            
 
+    partitions = community.best_partition(G)
+
+    print len(G.nodes())
+    print partitions
+    print len(partitions.keys())
+
+    for key in partitions.keys():
+        G.node[key]['modularity'] = partitions[key]
+        # G.nodes()[key]['modularity'] = partitions[key]
+        # G.node[element]['modularity'] = key
         
     return G
