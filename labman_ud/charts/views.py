@@ -393,7 +393,6 @@ def projects_coauthorship(request):
                 for i in range(pos+1, len(_list)):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=_list[i])
-                    # if person1.is_active and person2.is_active:
                     G.add_edge(person1.id,person2.id)
                     try:
                         G[person1.id][person2.id]['weight'] += 1
@@ -407,6 +406,42 @@ def projects_coauthorship(request):
     data = json_graph.node_link_data(G)
 
     return render_to_response("charts/projects/co_authorship.html", {
+            'data': json.dumps(data),
+        },
+        context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: projects_morelab_coauthorship
+###########################################################################
+
+def projects_morelab_coauthorship(request):
+    G = nx.Graph()
+
+    projects = Project.objects.all()
+    pr_role = Role.objects.get(slug='principal-researcher')
+    for project in projects:
+        person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
+        if person_ids:
+            _list = [person_id['person_id'] for person_id in person_ids]
+            for pos, person_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    person1 = Person.objects.get(id=person_id)
+                    person2 = Person.objects.get(id=_list[i])
+                    if person1.is_active and person2.is_active:
+                        G.add_edge(person1.id,person2.id)
+                        try:
+                            G[person1.id][person2.id]['weight'] += 1
+                        except:
+                            G[person1.id][person2.id]['weight'] = 1
+                        G.node[person1.id]['name'] = person1.full_name
+                        G.node[person2.id]['name'] = person2.full_name
+
+    G = analyze_graph(G)
+
+    data = json_graph.node_link_data(G)
+
+    return render_to_response("charts/projects/co_authorship_morelab.html", {
             'data': json.dumps(data),
         },
         context_instance=RequestContext(request))
