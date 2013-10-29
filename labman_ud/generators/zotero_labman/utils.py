@@ -9,7 +9,7 @@ from entities.publications.models import Publication, PublicationType
 from entities.publications.models import PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
-from entities.persons.models import Person
+from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
 
 from pyzotero import zotero
@@ -377,16 +377,21 @@ def get_publication_details(item):
     authors = []
     for creator in item['creators']:
         if creator['creatorType'] == 'author':
-            # TODO: Author searching with Aitor Almeida's awesome IF
-            author_slug = slugify(str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8')))
+            author_name = str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8'))
+            
+            author_slug = slugify(author_name)
             try:
                 a = Person.objects.get(slug__icontains=author_slug)
             except:
-                a = Person(
-                    first_name=creator['firstName'],
-                    first_surname=creator['lastName']
-                    )
-                a.save()
+                try:
+                    nick = Nickname.objects.get(nickname=author_name)
+                    a = nick.person
+                except:
+                    a = Person(
+                       first_name=creator['firstName'],
+                       first_surname=creator['lastName']
+                       )
+                    a.save()
             authors.append(a)
 
     # Tags

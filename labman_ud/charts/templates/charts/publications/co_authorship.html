@@ -70,15 +70,41 @@
                 // .on("mouseover", fade(0.1))
                 // .on("mouseout", fade(1));
         
+            function neighboring(a, b) {
+                return graph.links.some(function(l) {
+                    if (a == b)
+                        return true;
+                    else
+                        return (l.source === a && l.target === b) || (l.source === b && l.target === a);
+                });
+            };
+
             var node = gnodes.append("circle")
                 .attr("class", "node")
                 // .attr("r", function(d) { return d.degree*2; })
                 .attr("r", function(d) { return d.eigenvector*35+5; })
+                // .attr("r", function(d) { return d.betweenness*35+5; })
                 // .attr("r", function(d) { return (1-d.closeness)*25; })
                 // .attr("r", function(d) { return d.pagerank*300; })
                 // .attr("r", 10)
                 // .style("fill", function(d) { return color(d['k-clique']); })
                 .style("fill", function(d) { return color(d['modularity']); })
+                .on("mouseover", function (d) {
+                    link.style("opacity", function(o) {
+                        return o.source === d || o.target === d ? 1 : 0.1;
+                    });
+                    node.style("opacity", function(o) {
+                        return neighboring(d, o) ? 1 : 0.1;
+                    });
+                    labels.style("opacity", function(o) {
+                        return neighboring(d, o) ? 1 : 0.1;
+                    });
+                })
+                .on("mouseout", function (d) {
+                    link.style("opacity", 1);
+                    node.style("opacity", 1);
+                    labels.style("opacity", 1);
+                })
                 .call(force.drag);
 
             var labels = gnodes.append("text")

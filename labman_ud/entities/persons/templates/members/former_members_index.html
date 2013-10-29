@@ -17,15 +17,17 @@
 
                 <div class="col-md-3 former_member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
                     <div class="centered">
-                        {% if former_member.profile_picture_url %}
-                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ former_member.profile_picture_url }}"/>
-                        {% else %}
-                            {% if former_member.gender == 'Female' %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                        <a href="{% url member_info former_member.slug %}">
+                            {% if former_member.profile_picture_url %}
+                                <img class="circular" src="{{ MEDIA_PREFIX }}{{ former_member.profile_picture_url }}"/>
                             {% else %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                {% if former_member.gender == 'Female' %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                {% else %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
+                        </a>
                         <br>
                         <span class="member-name">{% if former_member.title %}{{former_member.title}} {% endif %}{{ former_member.full_name }}</span>
                         <br>

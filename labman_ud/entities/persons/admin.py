@@ -38,7 +38,7 @@ class JobInline(admin.StackedInline):
 class PersonAdmin(admin.ModelAdmin):
     model = Person
     search_fields = ['full_name',]
-    list_display = ['full_name', 'email', ]
+    list_display = ['full_name', 'email', 'is_active' ]
     list_filter = ['is_active']
     inlines = [
         AccountProfileInline,
