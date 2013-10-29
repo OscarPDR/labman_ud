@@ -378,30 +378,48 @@ def get_publication_details(item):
     for creator in item['creators']:
         if creator['creatorType'] == 'author':
             author_name = str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8'))
-            
+
             author_slug = slugify(author_name)
             try:
-                a = Person.objects.get(slug__icontains=author_slug)
+                # Check if author is in DB (comparing by slug)
+                a = Person.objects.get(slug=author_slug)
             except:
+                # If it isn't
                 try:
+                    # Check if author name correspond with any of the posible nicknames of the authors in DB
                     nick = Nickname.objects.get(nickname=author_name)
                     a = nick.person
                 except:
+                    # If there is no reference to that person in the DB, create a new one
                     a = Person(
                        first_name=creator['firstName'],
                        first_surname=creator['lastName']
                        )
                     a.save()
+                    # TODO: Send email to admins notifying the creation of new person
             authors.append(a)
 
     # Tags
     tags = []
 
     for tag in item['tags']:
-        t, created = Tag.objects.get_or_create(
-            slug=slugify(str(tag['tag'].encode('utf-8'))),
-            defaults={'name': tag['tag']}
-        )
+        tag_str = str(tag['tag'].encode('utf-8'))
+
+        # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
+        jcr_pattern = r'jcr(\d\.\d+)'
+        jcr_match = re.match(jcr_pattern, tag_str)
+        if jcr_match:
+            if parentpub:
+                parentpub.impact_factor = float(jcr_match.groups()[0])
+                parentpub.save()
+            else:
+                pub.impact_factor = float(jcr_match.groups()[0])
+        else:
+            # If it doesn't, create the tag as normal
+            t, created = Tag.objects.get_or_create(
+                slug=slugify(tag_str),
+                defaults={'name': tag['tag']}
+            )
         tags.append(t)
 
     return pub, authors, tags, observations
