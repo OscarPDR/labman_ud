@@ -377,10 +377,10 @@ def publications_morelab_coauthorship(request):
 
 
 ###########################################################################
-# View: projects_coauthorship
+# View: projects_collaborations
 ###########################################################################
 
-def projects_coauthorship(request):
+def projects_collaborations(request):
     G = nx.Graph()
 
     projects = Project.objects.all()
@@ -405,17 +405,17 @@ def projects_coauthorship(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/co_authorship.html", {
+    return render_to_response("charts/projects/collaboration.html", {
             'data': json.dumps(data),
         },
         context_instance=RequestContext(request))
 
 
 ###########################################################################
-# View: projects_morelab_coauthorship
+# View: projects_morelab_collaborations
 ###########################################################################
 
-def projects_morelab_coauthorship(request):
+def projects_morelab_collaborations(request):
     G = nx.Graph()
 
     projects = Project.objects.all()
@@ -441,7 +441,7 @@ def projects_morelab_coauthorship(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/co_authorship_morelab.html", {
+    return render_to_response("charts/projects/collaboration_morelab.html", {
             'data': json.dumps(data),
         },
         context_instance=RequestContext(request))

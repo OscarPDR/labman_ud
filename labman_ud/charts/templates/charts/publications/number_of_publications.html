@@ -4,12 +4,17 @@
 
 {% block content %}
 
-    <div class="centered">
-        <h4>Number of publications</h4>
-        <br>
-        <div class="chartdiv" id="number_of_publications">
-          <svg></svg>
-        </div>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url publications_charts_index %}">Publications</a>
+        </li>
+
+        <li class="active">Number of publications</li>
+    </ul>
+
+    <br>
+    <div class="chartdiv" id="number_of_publications">
+      <svg></svg>
     </div>
 
     <br>

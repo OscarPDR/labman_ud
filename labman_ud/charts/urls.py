@@ -25,8 +25,8 @@ urlpatterns = patterns('',
     # /projects
     url(r'^projects/$', 'charts.views.projects_charts_index', name='projects_charts_index'),
     
-    url(r'^projects/coauthorship/$', 'charts.views.projects_coauthorship', name='projects_coauthorship'),
-    url(r'^projects/morelab_coauthorship/$', 'charts.views.projects_morelab_coauthorship', name='projects_morelab_coauthorship'),
+    url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
+    url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
     
 )
 
