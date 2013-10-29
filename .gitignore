@@ -32,3 +32,5 @@ labman_ud/collected_static/
 
 *.sublime-project
 *.sublime-workspace
+
+labman_ud/zotero_labman.log.*
