@@ -107,10 +107,11 @@
                 .call(force.drag);
 
             var labels = gnodes.append("text")
+                .attr("class", "graph-label")
                 .text(function(d) { return d.name; });
 
-            var papers = link.append("title")
-                .text(function(d) { return d.weight; });
+            var publications = link.append("title")
+                .text(function(d) { return 'Share ' + d.weight + ' publications.'; });
         
             force.on("tick", function() {
                 link
