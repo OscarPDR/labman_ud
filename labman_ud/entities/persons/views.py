@@ -188,7 +188,6 @@ def member_info(request, member_slug):
 
     publication_types = PublicationType.objects.all()
 
-
     for publication_type in publication_types:
         pub_type = publication_type.name.encode('utf-8')
         publications[pub_type] = []
@@ -200,37 +199,13 @@ def member_info(request, member_slug):
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
-    # egonetwork = []
+    has_publications = True if _publications else False
 
     for publication in _publications:
         pub_type = publication.publication_type.name.encode('utf-8')
         pub_year = publication.year
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
-
-    # d = {}
-
-    # for item in publication_ids:
-    #     _id = item['publication_id']
-    #     author_ids = PublicationAuthor.objects.filter(publication_id=_id).exclude(author_id=member.id).values('author_id')
-    #     for author_id in author_ids:
-    #         _author_id = author_id['author_id']
-
-    #         if _author_id in d:
-    #             d[_author_id] = d[_author_id] + 1
-    #         else:
-    #             d[_author_id] = 1
-
-    # vvv = 1
-    # for key, value in d.items():
-    #     author = Person.objects.get(id=key)
-    #     egonetwork_item = {
-    #         'id': vvv,
-    #         'name': author.full_name,
-    #         'value': value,
-    #     }
-    #     egonetwork.append(egonetwork_item)
-    #     vvv = vvv + 1
 
     G = nx.Graph()
 
@@ -251,11 +226,12 @@ def member_info(request, member_slug):
                     G.node[author.id]['name'] = author.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
-    G = analyze_graph(G)
-
-    ego_g = nx.ego_graph(G, member.id)
-
-    data = json_graph.node_link_data(ego_g)
+    try:
+        G = analyze_graph(G)
+        ego_g = nx.ego_graph(G, member.id)
+        data = json_graph.node_link_data(ego_g)
+    except:
+        data = {}
 
     # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
@@ -278,10 +254,10 @@ def member_info(request, member_slug):
             'position': position,
             'projects': projects,
             'publications': publications,
+            'has_publications': has_publications,
             'number_of_publications': number_of_publications,
             # 'publication_tags_per_year': publication_tags_per_year,
             'accounts': accounts,
-            # 'egonetwork': egonetwork,
             'data': json.dumps(data),
         },
         context_instance=RequestContext(request))
