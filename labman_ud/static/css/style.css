@@ -564,3 +564,8 @@ footer > a {
   stroke: #999;
   stroke-opacity: .6;
 }
+
+.graph-label {
+    text-shadow: 1px 1px white, -1px -1px white;
+    text-shadow: 0 0 0.3em #ddd, 0 0 0.3em #ddd, 0 0 0.3em #ddd;
+}

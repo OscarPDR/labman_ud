@@ -85,7 +85,6 @@
                 // .attr("r", 10)
                 // .style("fill", function(d) { return color(d['k-clique']); })
                 .style("fill", function(d) { return color(d['modularity']); })
-                .call(force.drag)
                 .on("mouseover", function (d) {
                     link.style("opacity", function(o) {
                         return o.source === d || o.target === d ? 1 : 0.1;
@@ -101,9 +100,11 @@
                     link.style("opacity", 1);
                     node.style("opacity", 1);
                     labels.style("opacity", 1);
-                });
+                })
+                .call(force.drag);
 
             var labels = gnodes.append("text")
+                .attr("class", "graph-label")
                 .text(function(d) { return d.name; });
 
             var papers = link.append("title")

@@ -170,7 +170,7 @@ class AccountProfile(models.Model):
 #########################
 
 class Nickname(models.Model):
-    person = models.ForeignKey('Person')
+    person = models.ForeignKey('Person', related_name='nicknames')
 
     nickname = models.CharField(
         max_length=150,
