@@ -6,7 +6,7 @@
 
     {% if tag %}
         <div class="centered">
-            <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.tag }}'</em></h2>
+            <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em></h2>
         </div>
         <br>
     {% endif %}
@@ -67,17 +67,18 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="span8">Title</th>
+                    <th class="span7">Title</th>
                     <th class="span1">Year</th>
                     <th class="span2">Type</th>
                     <th class="span1">BibTeX</th>
+                    <th class="span1">PDF</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for publication in publications %}
                     <tr>
-                        <td class="span8">
+                        <td class="span7">
                             <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/publication/{{ publication.slug }}">
                                 <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                             </a>
@@ -99,7 +100,7 @@
                         <td class="span1 centered">
                             {% if publication.bibtex %}
                                 <a data-toggle="modal" href="#myModal">
-                                    <i class="icon-file-text icon-2x"></i>
+                                    <i class="icon-eye-open icon-2x"></i>
                                 </a>
 
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -122,6 +123,14 @@
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
                                 </div><!-- /.modal -->
+                            {% endif %}
+                        </td>
+
+                        <td class="span1 centered">
+                            {% if publication.pdf %}
+                                <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
+                                    <i class="icon-file-text icon-2x"></i>
+                                </a>
                             {% endif %}
                         </td>
                     </tr>

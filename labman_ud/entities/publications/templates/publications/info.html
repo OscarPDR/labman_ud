@@ -72,6 +72,35 @@
                     </li>
                 {% endif %}
 
+                {% if publication.bibtex %}
+                    <div class="centered">
+                        <a data-toggle="modal" href="#myModal" class="btn btn-default bibtex-button">
+                            <img src="{{ STATIC_PREFIX }}img/bibtex.png" width="75" />
+                        </a>
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title"><img src="{{ STATIC_PREFIX }}img/bibtex.png" width="150" /></h4>
+                                </div>
+
+                                <div class="modal-body">
+                                <pre style="text-align: left;">                                            
+{{ publication.bibtex }}
+                                </pre>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </div>
+                {% endif %}
+
                 {% if tags %}
                     <br>
 

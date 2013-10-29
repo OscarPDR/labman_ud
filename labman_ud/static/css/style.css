@@ -545,8 +545,13 @@ footer > a {
     text-align: right;
 }
 
+.bibtex-button {
+    margin-top: 1.5em;
+}
 
-
+.bibtex-button > img {
+    margin: 0.5em 1.5em;
+}
 
 
 
