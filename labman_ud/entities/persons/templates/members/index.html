@@ -32,6 +32,14 @@
                         <span class="member-name">{% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}</span>
                         <br>
                         <span class="member-position">{{ member.position }}</span>
+                        <br>
+                        {% if member.company == 'DeustoTech - Internet' %}
+                            <span class="label label-primary">{{ member.company }}</span>
+                        {% endif %}
+
+                        {% if member.company == 'DeustoTech - Telecom' %}
+                            <span class="label label-info">{{ member.company }}</span>
+                        {% endif %}
                     </div>
                 </div>
         {% endfor %}
@@ -73,7 +81,19 @@
                     images[i].src = "/static/img/einstein.png";
                 }
             });
-        }
+
+            var positions = $(".member-position").map(function () { return this; });
+
+            {% for konami_position in member_konami_positions %}
+                $.each(positions, function(i) {
+                    if (i == {{ forloop.counter0 }}) {
+                        if ("{{ konami_position|safe }}" != "") {
+                            positions[i].innerHTML = "{{ konami_position|safe }}";
+                        }
+                    };
+                });
+            {% endfor %}
+        };
     
         var konami = new Konami(success);
     
