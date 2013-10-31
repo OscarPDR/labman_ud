@@ -117,11 +117,11 @@ class Role(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=50,
+        max_length=75,
     )
 
     slug = models.SlugField(
-        max_length=50,
+        max_length=75,
         blank=True,
         unique=True,
     )
