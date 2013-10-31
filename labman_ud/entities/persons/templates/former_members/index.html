@@ -1,0 +1,93 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="centered">
+        <h2>{{ former_members|length }} former member{{ former_members|pluralize }}</h2>
+    </div>
+
+    <br>
+
+    <div class="row">
+        {% for former_member in former_members %}
+
+            {% if forloop.counter0|divisibleby:4 %}{% endif %}
+
+                <div class="col-md-3 member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
+                    <div class="centered">
+                        <a href="{% url former_member_info former_member.slug %}">
+                            {% if former_member.profile_picture_url %}
+                                <img class="circular" src="{{ MEDIA_PREFIX }}{{ former_member.profile_picture_url }}"/>
+                            {% else %}
+                                {% if former_member.gender == 'Female' %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                {% else %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                {% endif %}
+                            {% endif %}
+                        </a>
+                        <br>
+                        <span class="member-name">{% if former_member.title %}{{former_member.title}} {% endif %}{{ former_member.full_name }}</span>
+                        <br>
+                        <span class="member-position">{{ former_member.position }}</span>
+                        <br>
+                        {% if former_member.company == 'DeustoTech - Internet' %}
+                            <span class="label label-primary">{{ former_member.company }}</span>
+                        {% endif %}
+
+                        {% if former_member.company == 'DeustoTech - Telecom' %}
+                            <span class="label label-info">{{ former_member.company }}</span>
+                        {% endif %}
+
+                        {% if former_member.company == 'MORElab' %}
+                            <span class="label label-default">{{ former_member.company }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <a class="btn btn-large btn-primary pull-right" href="{% url members %}">Active members</a>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#members-nav').addClass('active');
+    </script>
+
+    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+
+    <script type="text/javascript">
+        var success = function() {
+            var images = $("img.circular").map(function () { return this; });
+            $.each(images, function(i) {
+                var image_source = images[i].src;
+                if (image_source.indexOf("/media/persons/") >= 0) {
+                    var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
+                    konami_source = konami_source.replace(".jpg", ".gif");
+                    konami_source = konami_source.replace(".png", ".gif");
+                    images[i].src = konami_source;
+                }
+
+                if (image_source.indexOf("/img/female.png") >= 0) {
+                    images[i].src = "/static/img/lovelace.png";
+                }
+
+                if (image_source.indexOf("/img/male.png") >= 0) {
+                    images[i].src = "/static/img/einstein.png";
+                }
+            });
+        }
+    
+        var konami = new Konami(success);  
+    </script>
+
+{% endblock %}
