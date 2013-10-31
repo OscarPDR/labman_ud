@@ -24,7 +24,7 @@
 
 {% block scripts %}
 
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/d3.v3.min.js"></script>
     
     <script>
         var graph = {{ data|safe }};

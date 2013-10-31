@@ -512,10 +512,6 @@ def analyze_graph(G):
 
     partitions = community.best_partition(G)
 
-    print len(G.nodes())
-    print partitions
-    print len(partitions.keys())
-
     for key in partitions.keys():
         G.node[key]['modularity'] = partitions[key]
         

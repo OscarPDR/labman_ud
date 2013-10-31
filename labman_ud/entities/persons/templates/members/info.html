@@ -5,7 +5,7 @@
 {% block content %}
 
     <div id="member-name">
-        <h1>
+        <h1 id="member-name">
             {% if member.title %}
                 {{ member.title }}
             {% endif %}
@@ -14,7 +14,7 @@
         </h1>
 
         {% if position %}
-            <p>
+            <p id="member-position">
                 {{ position }}
             </p>
         {% endif %}
@@ -155,6 +155,12 @@
             if (image_source.indexOf("/img/male.png") >= 0) {
                 image.src = "/static/img/einstein.png";
             }
+
+            var name = document.getElementById("member-name");
+            name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+
+            var position = document.getElementById("member-position");
+            position.innerHTML = "{{ member.konami_code_position|safe }}";
         };
     
         var konami = new Konami(success);
