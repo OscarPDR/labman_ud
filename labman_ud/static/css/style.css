@@ -147,13 +147,6 @@ h4 {
 #main-container {
     display: block;
     min-height: 500px;
-    padding-top: 1em;
-}
-
-#main-container2 {
-    display: block;
-    min-height: 500px;
-    padding-top: 1em;
 }
 
 .edit-organization-logo {
@@ -441,6 +434,13 @@ footer > a {
     margin-bottom: 2.5em;
 }
 
+#team-desc {
+    text-align: justify;
+    font-weight: 200;
+    line-height: 1.4em;
+    font-size: 16px; 
+}
+
 .member {
     margin-bottom: 3em;
     padding-bottom: 3em;
@@ -535,17 +535,14 @@ footer > a {
     margin: 1.5em;
 }
 
-.latest-news > h3 {
-    font-size: 1.25em;
-    font-weight: bold;
-}
-
 .latest-news > .soften {
     margin-top: 1.5em;
 }
 
 .latest-news > p {
     font-size: 0.8em;
+    text-align: right;
+    margin-top: 1.5em;
 }
 
 .medals-layout img {
