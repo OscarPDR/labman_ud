@@ -406,14 +406,17 @@ def get_publication_details(item):
         tag_str = str(tag['tag'].encode('utf-8'))
 
         # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
-        jcr_pattern = r'jcr(\d\.\d+)'
+        jcr_pattern = r'(jcr|if)(\d(\.|\,)\d+)'
         jcr_match = re.match(jcr_pattern, tag_str)
         if jcr_match:
+            impact_factor = jcr_match.groups()[1]
+            if jcr_match.groups()[2] == ',':
+                impact_factor = impact_factor.replace(',', '.')
             if parentpub:
-                parentpub.impact_factor = float(jcr_match.groups()[0])
+                parentpub.impact_factor = float(impact_factor)
                 parentpub.save()
             else:
-                pub.impact_factor = float(jcr_match.groups()[0])
+                pub.impact_factor = float(impact_factor)
         else:
             # If it doesn't, create the tag as normal
             t, created = Tag.objects.get_or_create(
