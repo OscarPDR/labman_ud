@@ -43,7 +43,7 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 #########################
 
 def project_index(request):
-    projects = Project.objects.all().order_by('full_name')
+    projects = Project.objects.all().order_by('-start_year', '-end_year', 'full_name')
 
     projects_length = len(projects)
 
