@@ -42,16 +42,39 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 # View: project_index
 #########################
 
-def project_index(request):
-    projects = Project.objects.all().order_by('-start_year', '-end_year', 'full_name')
+def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None):
+    tag = None
+    status = None
+    project_type = None
 
-    projects_length = len(projects)
+    query_string = None
+
+    clean_index = False
+
+    if tag_slug:
+        tag = Tag.objects.get(slug=tag_slug)
+        project_ids = ProjectTag.objects.filter(tag=tag).values('project_id')
+        projects = Project.objects.filter(id__in=project_ids)
+
+    if status_slug:
+        status = status_slug.replace('-', ' ').capitalize()
+        projects = Project.objects.filter(status=status)
+
+    if project_type_slug:
+        project_type = ProjectType.objects.get(slug=project_type_slug)
+        projects = Project.objects.filter(project_type=project_type.id)
+
+    if not tag_slug and not status_slug and not project_type_slug:
+        clean_index = True
+        projects = Project.objects.all()
+
+    projects = projects.order_by('-start_year', '-end_year', 'full_name')
 
     if request.method == 'POST':
         form = ProjectSearchForm(request.POST)
         if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
+            query_string = form.cleaned_data['text']
+            query = slugify(query_string)
 
             projs = []
 
@@ -61,9 +84,12 @@ def project_index(request):
                     projs.append(project)
 
             projects = projs
+            clean_index = False
 
     else:
         form = ProjectSearchForm()
+
+    projects_length = len(projects)
 
     paginator = Paginator(projects, PAGINATION_NUMBER)
 
@@ -84,6 +110,11 @@ def project_index(request):
             "projects": projects,
             'form': form,
             'projects_length': projects_length,
+            'tag': tag,
+            'status': status,
+            'project_type': project_type,
+            'query_string': query_string,
+            'clean_index': clean_index,
         },
         context_instance=RequestContext(request))
 
@@ -181,113 +212,6 @@ def project_info(request, slug):
             'related_publications': related_publications,
             'tags': tags,
             'logo': logo,
-        },
-        context_instance=RequestContext(request))
-
-
-#########################
-# View: view_project_tag
-#########################
-
-def view_project_tag(request, tag_slug):
-    tag = Tag.objects.get(slug=tag_slug)
-
-    project_ids = ProjectTag.objects.filter(tag=tag).values('project_id')
-    projects = Project.objects.filter(id__in=project_ids).order_by('full_name')
-
-    if request.method == 'POST':
-        form = ProjectSearchForm(request.POST)
-        if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
-
-            projs = []
-
-            for project in projects:
-
-                if query in slugify(project.full_name):
-                    projs.append(project)
-
-            projects = projs
-
-    else:
-        form = ProjectSearchForm()
-
-    paginator = Paginator(projects, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    projects_length = len(projects)
-
-    try:
-        projects = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        projects = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        projects = paginator.page(paginator.num_pages)
-
-    return render_to_response("projects/index.html", {
-            "projects": projects,
-            'form': form,
-            'tag': tag,
-            'projects_length': projects_length,
-        },
-        context_instance=RequestContext(request))
-
-
-#########################
-# View: view_project_type
-#########################
-
-def view_project_type(request, project_type_slug):
-    project_type = ProjectType.objects.get(slug=project_type_slug)
-
-    projects = Project.objects.filter(project_type=project_type.id).order_by('full_name')
-
-    if request.method == 'POST':
-        form = ProjectSearchForm(request.POST)
-        if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
-
-            projs = []
-
-            for project in projects:
-
-                if query in slugify(project.full_name):
-                    projs.append(project)
-
-            projects = projs
-
-    else:
-        form = ProjectSearchForm()
-
-    paginator = Paginator(projects, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    projects_length = len(projects)
-
-    try:
-        projects = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        projects = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        projects = paginator.page(paginator.num_pages)
-
-    return render_to_response("projects/index.html", {
-            "projects": projects,
-            'form': form,
-            'project_type': project_type,
-            'projects_length': projects_length,
         },
         context_instance=RequestContext(request))
 

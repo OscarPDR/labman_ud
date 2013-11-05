@@ -584,3 +584,11 @@ footer > a {
     text-shadow: 1px 1px white, -1px -1px white;
     text-shadow: 0 0 0.3em #ddd, 0 0 0.3em #ddd, 0 0 0.3em #ddd;
 }
+
+#clean-filters {
+    color: #999;
+}
+
+#clean-filters:hover {
+    color: #666;
+}
