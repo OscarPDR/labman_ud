@@ -5,22 +5,70 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-4 well">
-            <a href="{% url funding_charts_index %}">
-                Funding
-            </a>
+        <div class="col-md-4">
+            <div class="well chart-section">
+                <h4><i class="icon-money icon-2"></i>&emsp;Funding</h4>
+
+                <div class="soften-limited"></div>
+                
+                <ul>
+                    <li>
+                        <a href="{% url funding_total_incomes %}">Total incomes</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url funding_total_incomes_by_scope %}">Total incomes by scope</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <div class="col-md-4 well">
-            <a href="{% url publications_charts_index %}">
-                Publications
-            </a>
+        <div class="col-md-4">
+            <div class="well chart-section">
+                <h4><i class="icon-gears icon-2"></i>&emsp;Projects</h4>
+
+                <div class="soften-limited"></div>
+                
+                <ul>
+                    <li>
+                        <a href="{% url projects_collaborations %}">Collaborations</a>
+                    </li>
+
+                    <ul>
+                        <li>
+                            <a href="{% url projects_morelab_collaborations %}">Collaborations within MORElab</a>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
         </div>
 
-        <div class="col-md-4 well">
-            <a href="{% url projects_charts_index %}">
-                Projects
-            </a>
+        <div class="col-md-4">
+            <div class="well chart-section">
+                <h4><i class="icon-file-text-alt  icon-2"></i>&emsp;Publications</h4>
+
+                <div class="soften-limited"></div>
+                
+                <ul>
+                    <li>
+                        <a href="{% url publications_number_of_publications %}">Number of publications</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url publications_coauthorship %}">Co-authorship</a>
+                    </li>
+
+                    <ul>
+                        <li>
+                            <a href="{% url publications_morelab_coauthorship %}">Co-authorship within MORElab</a>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
         </div>
     </div>
     

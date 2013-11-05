@@ -521,6 +521,16 @@ footer > a {
     border: 0;
 }
 
+.soften-limited {
+    height: 5px;
+    margin: 1em 0;
+    background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
+    border: 0;
+}
+
 .latest-news {
     margin: 1.5em;
 }
@@ -554,12 +564,14 @@ footer > a {
     margin: 0.5em 1.5em;
 }
 
+.chart-section {
+    margin: 1em;
+    min-height: 200px;
+}
 
-
-
-
-
-
+.chart-section > h4 {
+    padding-top: 0;
+}
 
 .node {
   stroke: #fff;
