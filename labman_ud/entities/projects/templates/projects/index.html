@@ -6,7 +6,7 @@
 
     <div class="centered">
         {% if clean_index %}
-            <h2>{{ projects_length }} project{{ projects_length|pluralize }}</h2>
+            <h2>{{ projects_length }} project{{ projects|pluralize }}</h2>
         {% else %}
             {% if tag %}
                 <h2>{{ projects_length }} project{{ projects|pluralize }} with tag <em>'{{ tag.name }}'</em>
@@ -34,14 +34,13 @@
                 <button type="submit" class="btn btn-primary">Search projects</button>
             </div>
         <form>
-        
+
         <div class="col-md-2 pull-right">
             <a href="{% url project_tag_cloud %}" class="btn btn-info">
                 <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
             </a>
         </div>
     </div>
-
 
     <div class="pagination">
         <span class="step-links">

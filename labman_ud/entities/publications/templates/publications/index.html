@@ -4,48 +4,41 @@
 
 {% block content %}
 
-    {% if tag %}
-        <div class="centered">
-            <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em></h2>
-        </div>
-        <br>
-    {% endif %}
+    <div class="centered">
+        {% if clean_index %}
+            <h2>{{ publications_length }} publication{{ publications|pluralize }}</h2>
+        {% else %}
+            {% if tag %}
+                <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em>
+            {% elif project_type %}
+                <h2>{{ publications_length }} publication{{ publications|pluralize }} with type <em>'{{ publication_type.name }}'</em>
+            {% elif query_string %}
+                <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
+            {% endif %}
+            &emsp;<small><a id="clean-filters" href="{% url publication_index %}">Clean filters</a></small></h2>
+        {% endif %}
+    </div>
 
-    {% if publication_type %}
-        <div class="centered">
-            <h2>{{ publications_length }} {{ publication_type.name|lower }}{{ publications|pluralize }}</h2>
-        </div>
-        <br>
-    {% endif %}
-
-    {% if not tag and not publication_type %}
-        <div class="centered">
-            <h2>{{ publications_length }} publication{{ publications_length|pluralize }}</h2>
-            <br>
-        </div>
-    {% endif %}
-
+    <br>
 
     <div class="row">
         <form class="form-search" action="" method="post">
             {% csrf_token %}
-            <div class="col-md-2">
-                {{ form.text }}&emsp;
-                <a class="close" href="{% url publication_index %}">&times;</a>
+            <div class="col-md-4">
+                {{ form.text }}
             </div>
 
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-primary">Search publications</button>
             </div>
         <form>
-        
+
         <div class="col-md-2 pull-right">
             <a href="{% url publication_tag_cloud %}" class="btn btn-info">
                 <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
             </a>
         </div>
     </div>
-
 
     <div class="pagination">
         <span class="step-links">
@@ -67,18 +60,18 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="span7">Title</th>
-                    <th class="span1">Year</th>
-                    <th class="span2">Type</th>
-                    <th class="span1">BibTeX</th>
-                    <th class="span1">PDF</th>
+                    <th class="col-md-7">Title</th>
+                    <th class="col-md-1">Year</th>
+                    <th class="col-md-2">Type</th>
+                    <th class="col-md-1">BibTeX</th>
+                    <th class="col-md-1">PDF</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for publication in publications %}
                     <tr>
-                        <td class="span7">
+                        <td class="col-md-7">
                             <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/publication/{{ publication.slug }}">
                                 <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                             </a>
@@ -87,17 +80,17 @@
                             </a>
                         </td>
 
-                        <td class="span1">
+                        <td class="col-md-1 centered">
                             {{ publication.year }}
                         </td>
 
-                        <td class="span2">
+                        <td class="col-md-2">
                             <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
                                 {{ publication.publication_type.name }}
                             </a>
                         </td>
 
-                        <td class="span1 centered">
+                        <td class="col-md-1 centered">
                             {% if publication.bibtex %}
                                 <a data-toggle="modal" href="#myModal">
                                     <i class="icon-paperclip icon-2x"></i>
@@ -112,7 +105,7 @@
                                         </div>
 
                                         <div class="modal-body">
-                                        <pre style="text-align: left;">                                            
+                                        <pre style="text-align: left;">
 {{ publication.bibtex }}
                                         </pre>
                                         </div>
@@ -126,7 +119,7 @@
                             {% endif %}
                         </td>
 
-                        <td class="span1 centered">
+                        <td class="col-md-1 centered">
                             {% if publication.pdf %}
                                 <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
                                     <i class="icon-file-text icon-2x"></i>
