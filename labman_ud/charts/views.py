@@ -44,30 +44,6 @@ def chart_index(request):
 
 
 #########################
-# View: funding_charts_index
-#########################
-
-def funding_charts_index(request):
-    return render_to_response('charts/funding/index.html')
-
-
-#########################
-# View: publications_charts_index
-#########################
-
-def publications_charts_index(request):
-    return render_to_response('charts/publications/index.html')
-
-
-#########################
-# View: projects_charts_index
-#########################
-
-def projects_charts_index(request):
-    return render_to_response('charts/projects/index.html')
-
-
-#########################
 # View: funding_total_incomes
 #########################
 
@@ -329,8 +305,6 @@ def publications_coauthorship(request):
 
     G = analyze_graph(G)
 
-
-
     data = json_graph.node_link_data(G)
 
     return render_to_response("charts/publications/co_authorship.html", {
@@ -365,8 +339,6 @@ def publications_morelab_coauthorship(request):
                         G.node[author2.id]['name'] = author2.full_name
 
     G = analyze_graph(G)
-
-
 
     data = json_graph.node_link_data(G)
 
@@ -453,30 +425,30 @@ def projects_morelab_collaborations(request):
 ###########################################################################
 ###########################################################################
 
-def analyze_graph(G):    
-    components = []    
+def analyze_graph(G):
+    components = []
 
     components = nx.connected_component_subgraphs(G)
-    
+
     i = 0
-    
-    for cc in components:            
+
+    for cc in components:
         #Set the connected component for each group
         for node in cc:
             G.node[node]['component'] = i
-      
-        #Calculate the in component betweeness, closeness and eigenvector centralities        
-        cent_betweenness = nx.betweenness_centrality(cc)              
+
+        #Calculate the in component betweeness, closeness and eigenvector centralities
+        cent_betweenness = nx.betweenness_centrality(cc)
         cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
         cent_closeness = nx.closeness_centrality(cc)
-        
+
         for name in cc.nodes():
             G.node[name]['cc-betweenness'] = cent_betweenness[name]
             G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
             G.node[name]['cc-closeness'] = cent_closeness[name]
-        
-        i +=1     
-    
+
+        i +=1
+
     # Calculate cliques
     cliques = list(nx.find_cliques(G))
     j = 0
@@ -488,24 +460,24 @@ def analyze_graph(G):
                 processed_members.append(member)
             G.node[member]['cliques'].append(j)
         j +=1
-    
-    #calculate degree    
+
+    #calculate degree
     degrees = G.degree()
     for name in degrees:
         G.node[name]['degree'] = degrees[name]
-          
+
     betweenness = nx.betweenness_centrality(G)
     eigenvector = nx.eigenvector_centrality_numpy(G)
     closeness = nx.closeness_centrality(G)
     pagerank = nx.pagerank(G)
     k_cliques = nx.k_clique_communities(G, 3)
-    
+
     for name in G.nodes():
         G.node[name]['betweenness'] = betweenness[name]
         G.node[name]['eigenvector'] = eigenvector[name]
         G.node[name]['closeness'] = closeness[name]
         G.node[name]['pagerank'] = pagerank[name]
-    
+
     for pos, k_clique in enumerate(k_cliques):
         for member in k_clique:
             G.node[member]['k-clique'] = pos
@@ -514,5 +486,5 @@ def analyze_graph(G):
 
     for key in partitions.keys():
         G.node[key]['modularity'] = partitions[key]
-        
+
     return G
