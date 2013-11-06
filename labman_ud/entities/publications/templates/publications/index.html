@@ -78,6 +78,16 @@
                             <a href="{% url publication_info publication.slug %}">
                                 {{ publication.title }}
                             </a>
+
+                            <br>
+
+                            &emsp;<small>
+                                {% for author in publication.publicationauthor_set.all|dictsort:'position' %}
+                                    {{ author.author.full_name }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </small>
+
+                            
                         </td>
 
                         <td class="col-md-1 centered">
