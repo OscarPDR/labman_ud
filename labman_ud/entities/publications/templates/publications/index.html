@@ -10,7 +10,7 @@
         {% else %}
             {% if tag %}
                 <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em>
-            {% elif project_type %}
+            {% elif publication_type %}
                 <h2>{{ publications_length }} publication{{ publications|pluralize }} with type <em>'{{ publication_type.name }}'</em>
             {% elif query_string %}
                 <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
@@ -85,7 +85,7 @@
                         </td>
 
                         <td class="col-md-2">
-                            <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
+                            <a href="{% url view_publication_type publication.publication_type.slug %}">
                                 {{ publication.publication_type.name }}
                             </a>
                         </td>

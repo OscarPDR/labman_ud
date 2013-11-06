@@ -60,7 +60,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None):
             pubs = []
 
             person_ids = Person.objects.filter(slug__contains=query).values('id')
-            publication_ids = PublicationAuthor.objects.filter(person_id__in=person_ids).values('publication_id')
+            publication_ids = PublicationAuthor.objects.filter(author_id__in=person_ids).values('publication_id')
             publication_ids = set([x['publication_id'] for x in publication_ids])
 
             for publication in publications:
