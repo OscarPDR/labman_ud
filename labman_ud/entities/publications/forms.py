@@ -16,5 +16,6 @@ class PublicationSearchForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'type': 'text',
+            'placeholder': 'Publication title or author name',
         })
     )

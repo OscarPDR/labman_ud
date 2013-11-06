@@ -14,12 +14,6 @@ from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
 
-from email.mime.image import MIMEImage
-
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType, ProjectLogo
 from .forms import ProjectSearchForm
 
@@ -81,8 +75,6 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             person_ids = Person.objects.filter(slug__contains=query).values('id')
             project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
             project_ids = set([x['project_id'] for x in project_ids])
-
-            print project_ids
 
             for project in projects:
                 if (query in slugify(project.full_name)) or (project.id in project_ids):

@@ -15,6 +15,6 @@ class ProjectSearchForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'type': 'text',
-            'placeholder': 'Project title or employee name',
+            'placeholder': 'Project title or researcher name',
         })
     )
