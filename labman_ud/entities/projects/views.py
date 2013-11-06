@@ -87,7 +87,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             for project in projects:
                 if (query in slugify(project.full_name)) or (project.id in project_ids):
                     projs.append(project)
-                    
+
             projects = projs
             clean_index = False
 
@@ -219,82 +219,6 @@ def project_info(request, slug):
             'logo': logo,
         },
         context_instance=RequestContext(request))
-
-
-#########################
-# View: email_project
-#########################
-
-@login_required
-def email_project(request, slug):
-    project = get_object_or_404(Project, slug=slug)
-
-    funding_program = FundingProgram.objects.get(id=project.funding_program_id)
-
-    project_manager = Role.objects.get(name='Project Manager')
-
-    lpms = AssignedPerson.objects.filter(project_id=project.id, role=project_manager.id).values('employee_id')
-    project_managers = Person.objects.filter(id__in=lpms).order_by('full_name')
-
-    principal_researcher = Role.objects.get(name='Principal Researcher')
-
-    lprs = AssignedPerson.objects.filter(project_id=project.id, role=principal_researcher.id).values('employee_id')
-    principal_researchers = Person.objects.filter(id__in=lprs).order_by('full_name')
-
-    lrs = AssignedPerson.objects.filter(project_id=project.id, role=researcher.id).values('employee_id')
-    researcher = Role.objects.get(name='Researcher')
-
-    persons = Person.objects.filter(id__in=lrs).order_by('full_name')
-
-    project_leader = Organization.objects.get(id=project.project_leader_id)
-
-    consortium_members = []
-
-    for consortium_member in ConsortiumMember.objects.all().filter(project_id=project.id):
-        org = Organization.objects.get(id=consortium_member.organization.id)
-        consortium_members.append(org.name)
-
-    html_content = render_to_string('projects/project_email_template.html', {
-        'project': project,
-        'funding_program': funding_program,
-        'project_managers': project_managers,
-        'principal_researchers': principal_researchers,
-        'project_leader': project_leader,
-        'consortium_members': consortium_members,
-    })
-    text_content = strip_tags(html_content)
-
-    msg = EmailMultiAlternatives(
-        '[NEW PROJECT]: ' + project.title,                # subject
-        text_content,                                             # message
-        settings.PROJECTS_SENDER_EMAIL,              # from
-        settings.PROJECTS_RECEPTOR_EMAILS,       # to
-    )
-
-    try:
-        image_file = open(project.logo.path, 'rb')
-        msg_image = MIMEImage(image_file.read())
-        image_file.close()
-
-        msg_image.add_header('Content-ID', '<image>', filename=project.logo.path)
-        msg.attach(msg_image)
-    except:
-        pass
-
-    try:
-        image_file = open(funding_program.logo.path, 'rb')
-        msg_image = MIMEImage(image_file.read())
-        image_file.close()
-
-        msg_image.add_header('Content-ID', '<image>', filename = funding_program.logo.path)
-        msg.attach(msg_image)
-    except:
-        pass
-
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
-
-    return HttpResponseRedirect(reverse('project_index'))
 
 
 #########################

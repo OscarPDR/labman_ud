@@ -4,7 +4,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = patterns('',
     url(r'^$', 'entities.projects.views.project_index', name='project_index'),
     url(r'^info/(\S+)$', 'entities.projects.views.project_info', name='project_info'),
-    url(r'^email/(\S+)$', 'entities.projects.views.email_project', name='email_project'),
 
     url(r'^tag/(?P<tag_slug>\S+)/$', 'entities.projects.views.project_index', name='view_project_tag'),
     url(r'^status/(?P<status_slug>\S+)/$', 'entities.projects.views.project_index', name='view_project_status'),
