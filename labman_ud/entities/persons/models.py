@@ -54,6 +54,11 @@ class Person(models.Model):
         blank=True,
     )
 
+    birth_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
     biography = RichTextField(blank=True, null=True)
 
     safe_biography = models.TextField(
