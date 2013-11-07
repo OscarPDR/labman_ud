@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 
 from ckeditor.fields import RichTextField
+from datetime import datetime
 
 
 # Create your models here.
@@ -60,7 +61,7 @@ class News(models.Model):
 
     content = RichTextField()
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now, blank=True)
 
     tags = models.ManyToManyField('utils.Tag', through='NewsTag', related_name='news')
     projects = models.ManyToManyField('projects.Project', through='ProjectRelatedToNews', related_name='news')

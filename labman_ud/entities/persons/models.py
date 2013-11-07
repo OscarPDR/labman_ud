@@ -176,11 +176,21 @@ class Nickname(models.Model):
         max_length=150,
     )
 
+    slug = models.SlugField(
+        max_length=150,
+        blank=True,
+        #unique=True,
+    )
+
     class Meta:
         ordering = ['nickname']
 
     def __unicode__(self):
         return u'%s is also known as: %s' % (self.person.first_name, self.nickname)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nickname)
+        super(Nickname, self).save(*args, **kwargs)
 
 
 #########################

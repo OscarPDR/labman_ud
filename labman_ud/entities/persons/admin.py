@@ -60,9 +60,18 @@ class AccountProfileAdmin(admin.ModelAdmin):
     model = AccountProfile
 
 
+#########################
+# Class: NicknameAdmin
+#########################
+
+class NicknameAdmin(admin.ModelAdmin):
+    model = Nickname
+
+
 ##################################################
 # Register classes
 ##################################################
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(AccountProfile, AccountProfileAdmin)
+admin.site.register(Nickname, NicknameAdmin)
