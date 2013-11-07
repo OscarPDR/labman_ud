@@ -13,12 +13,16 @@ class Command(NoArgsCommand):
     help = ''
 
     def handle_noargs(self, **options):
-        logger.info('Deleting every publication in DB...')
-
         for nick in Nickname.objects.all():
-            bad_person = Person.objects.get(slug=nick.slug)
+            try:
+		bad_person = Person.objects.get(slug=nick.slug)
 
-            if bad_person:
-                for pubauth in PublicationAuthor.objects.filter(author=bad_person):
-                    pubauth.author = nick.person
-                bad_person.delete()
+                if bad_person and bad_person != nick.person:
+		    print 'Deleted... %s' % bad_person.full_name
+                    for pubauth in PublicationAuthor.objects.filter(author=bad_person):
+			print 'Changing authorship of %s' % pubauth.publication
+                        pubauth.author = nick.person
+			pubauth.save()
+                    bad_person.delete()
+	    except:
+		pass
