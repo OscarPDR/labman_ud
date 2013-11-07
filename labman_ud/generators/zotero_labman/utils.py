@@ -5,8 +5,7 @@ from django.utils.timezone import utc
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationType
-from entities.publications.models import PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person, Nickname
@@ -499,3 +498,19 @@ def delete_publication(pub):
     pub.delete()
 
     return ret_dict
+
+
+def correct_nicks():
+    for nick in Nickname.objects.all():
+        try:
+            bad_person = Person.objects.get(slug=nick.slug)
+
+            if bad_person and bad_person != nick.person:
+                logger.info('Deleting... %s' % bad_person.full_name)
+                for pubauth in PublicationAuthor.objects.filter(author=bad_person):
+                    logger.info('Changing authorship of %s' % pubauth.publication)
+                    pubauth.author = nick.person
+                    pubauth.save()
+                bad_person.delete()
+        except:
+            pass
