@@ -1,0 +1,85 @@
+{% extends "labman_ud/base.html" %}
+{% load humanize %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Funding</li>
+
+        <li class="active">Total incomes</li>
+    </ul>
+
+
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET total incomes</h4>
+
+        <div id="chart_div" style="width: 1000px; height: 500px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addRows([
+                {% for income in incomes %}
+                    ['{{ income.key }}', {{ income.value }}, '{{ income.value|intcomma }} € in {{ income.key }}', {{ income.certainty|lower }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                legend: {position: 'none'},
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedTextAngle: 45,
+                    slantedText: true,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                areaOpacity: 0.5,
+                colors: ['#132da3'],
+                connectSteps: false,
+            };
+
+            var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var year = data.getValue(item.row, item.column-1);
+                    window.location.replace('{{ path }}' + year);
+                }
+            }
+        }
+
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

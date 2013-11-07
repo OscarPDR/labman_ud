@@ -1,0 +1,73 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <h2>
+        <a href="{% url person_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ person.full_name }}
+        {% if person.external %}
+            <a target="_blank" href="{% url organization_info person.organization.slug%}">
+                ({{ person.organization.full_name }})
+            </a>
+        {% endif %}
+    </h2>
+
+    <br>
+
+    {% if person.foaf_link %}
+        <a class="btn btn-small btn-inverse" target="_blank" href="{{ person.foaf_link }}"><img src="{{ STATIC_PREFIX }}img/foaf.png" width="24" /> FOAF</a>
+    {% endif %}
+
+
+    <br>
+    <br>
+
+    <div class="row-fluid">
+
+        <div class="accordion" id="accordion">
+
+            {% for key, value in projects.items %}
+                {% if value %}
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#section_{{ forloop.counter }}">
+                                {{ key }} in {{ value|length }} project{{ value|pluralize }}
+                            </a>
+                        </div>
+
+                        <div id="section_{{ forloop.counter }}" class="accordion-body collapse {% if forloop.counter == 1 %}in{% endif %}">
+                            <div class="accordion-inner row-fluid">
+
+                                <table class="table table-striped">
+                                    <tbody>
+                                        {% for item in value %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url project_info item.slug %}">
+                                                        <i class="icon-chevron-right"></i> {{ item.full_name }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

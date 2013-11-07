@@ -1,0 +1,328 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2r: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe.owl#> .
+
+<> a d2r:Server;
+    rdfs:label "SourcePlanet D2R Server";
+    d2r:baseURI <http://dev.morelab.deusto.es/sourceplanet/d2r/>;
+    d2r:port 2020;
+    .
+
+map:database a d2rq:Database;
+    d2rq:jdbcDriver "org.postgresql.Driver";
+    d2rq:jdbcDSN "jdbc:postgresql://localhost:5432/projects_morelab";
+    d2rq:username "morelab";
+    d2rq:password "morelab";
+    .
+
+
+
+
+
+###############################################################################
+#   employees: Employee
+###############################################################################
+
+
+
+# Table employees_employee
+map:Employee a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "employee/@@employees_employee.slug@@";
+    d2rq:class swrcfe:Employee;
+    d2rq:classDefinitionLabel "Employee";
+    .
+map:employee__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property rdfs:label;
+    d2rq:pattern "@@employees_employee.name@@ @@employees_employee.first_surname@@ @@employees_employee.second_surname@@";
+    .
+map:employee_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property foaf:name;
+    d2rq:column "employees_employee.name";
+    .
+map:employee_family_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property foaf:familyName;
+    d2rq:pattern "@@employees_employee.first_surname@@ @@employees_employee.second_surname@@";
+    .
+map:employee_foaf_link a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property swrcfe:hasFOAFLink;
+    d2rq:uriColumn "employees_employee.foaf_link";
+    .
+map:employee_organization a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Employee;
+    d2rq:property swrcfe:worksAt;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "employees_employee.organization_id => organizations_organization.id";
+    .
+
+
+
+
+
+###############################################################################
+#   organizations: Organization
+###############################################################################
+
+
+
+# Table organizations_organization
+map:Organization a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "organization/@@organizations_organization.slug@@";
+    d2rq:class swrcfe:Organization;
+    .
+map:organization__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property rdfs:label;
+    d2rq:pattern "@@organizations_organization.name@@";
+    .
+map:organization_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property swrcfe:hasOrganizationName;
+    d2rq:column "organizations_organization.name";
+    .
+map:organization_country a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property swrcfe:hasOrganizationCountry;
+    d2rq:uriPattern "http://dbpedia.org/resource/Spain";
+    d2rq:condition "organizations_organization.country = 'Spain'";
+    .
+map:organization_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property swrcfe:hasOrganizationHomepage;
+    d2rq:uriColumn "organizations_organization.homepage";
+    .
+map:organization_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property swrcfe:hasOrganizationLogo;
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@organizations_organization.logo@@";
+    d2rq:condition "organizations_organization.logo is not null";
+    .
+
+
+
+
+
+################################################################################
+##   projects_fundingamount: FundingAmount
+################################################################################
+
+
+
+# Table projects_fundingamount
+map:FundingAmount a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "funding_amount/@@projects_project.slug@@/@@projects_fundingamount.year@@";
+    d2rq:class swrcfe:FundingAmount;
+    d2rq:join "projects_fundingamount.project_id => projects_project.id";
+    .
+map:funding_amount__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount;
+    d2rq:property rdfs:label;
+    d2rq:pattern "@@projects_fundingamount.year@@'s funding amount for @@projects_project.title@@";
+    d2rq:join "projects_fundingamount.project_id => projects_project.id";
+    .
+map:funding_amount_amount a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount;
+    d2rq:property swrcfe:hasAmount;
+    d2rq:column "projects_fundingamount.amount";
+    d2rq:datatype xsd:decimal;
+    .
+map:funding_amount_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount;
+    d2rq:property swrcfe:hasYear;
+    d2rq:column "projects_fundingamount.year";
+    d2rq:datatype xsd:gYear;
+    .
+map:funding_amount_project_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingAmount;
+    d2rq:property swrcfe:isFundingAmountOf;
+    d2rq:refersToClassMap map:Project;
+    d2rq:join "projects_fundingamount.project_id => projects_project.id";
+    .
+
+
+
+
+
+################################################################################
+##   funding_programs: FundingProgram
+################################################################################
+
+
+
+# Table funding_programs_fundingprogram
+map:FundingProgram a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "funding_program/@@projects_project.slug@@";
+    d2rq:class swrcfe:FundingProgram;
+    d2rq:join "projects_project.funding_program_id => funding_programs_fundingprogram.id";
+    .
+map:funding_program__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property rdfs:label;
+    d2rq:pattern "Funding program for project @@projects_project.title@@";
+    d2rq:join "projects_project.funding_program_id => funding_programs_fundingprogram.id";
+    .
+map:funding_program_full_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:hasFundingProgramFullName;
+    d2rq:column "funding_programs_fundingprogram.full_name";
+    .
+map:funding_program_short_name a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:hasFundingProgramShortName;
+    d2rq:column "funding_programs_fundingprogram.short_name";
+    .
+map:funding_program_concession_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:hasConcessionYear;
+    d2rq:column "funding_programs_fundingprogram.concession_year";
+    d2rq:datatype xsd:gYear;
+    .
+map:funding_program_geographical_scope a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:hasGeographicalScope;
+    d2rq:column "funding_programs_fundingprogram.geographical_scope";
+    .
+map:funding_program_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:hasFundingProgramLogo;
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@funding_programs_fundingprogram.logo@@";
+    d2rq:condition "funding_programs_fundingprogram.logo is not null";
+    .
+map:funding_program_organization_id__ref a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:FundingProgram;
+    d2rq:property swrcfe:isConceededBy;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "funding_programs_fundingprogram.organization_id => organizations_organization.id";
+    .
+
+
+
+
+
+################################################################################
+##   projects_project: Project
+################################################################################
+
+
+
+# Table projects_project
+map:Project a d2rq:ClassMap;
+    d2rq:dataStorage map:database;
+    d2rq:uriPattern "project/@@projects_project.slug@@";
+    d2rq:class swrcfe:Project;
+    .
+map:project__label a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property rdfs:label;
+    d2rq:pattern "@@projects_project.title@@";
+    .
+map:project_type a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectType;
+    d2rq:column "projects_project.project_type";
+    .
+map:project_title a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dc:title;
+    d2rq:column "projects_project.title";
+    .
+map:project_description a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property dc:description;
+    d2rq:column "projects_project.description";
+    .
+map:project_homepage a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectHomepage;
+    d2rq:uriColumn "projects_project.homepage";
+    .
+map:project_start_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasStartYear;
+    d2rq:column "projects_project.start_year";
+    d2rq:datatype xsd:gYear;
+    .
+map:project_end_year a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasEndYear;
+    d2rq:column "projects_project.end_year";
+    d2rq:datatype xsd:gYear;
+    .
+map:project_status a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasStatus;
+    d2rq:column "projects_project.status";
+    .
+map:project_project_code a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectCode;
+    d2rq:column "projects_project.project_code";
+    .
+map:project_total_funds a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasTotalFunds;
+    d2rq:column "projects_project.total_funds";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_total_funds_deusto a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasTotalOwnFunds;
+    d2rq:column "projects_project.total_funds_deusto";
+    d2rq:datatype xsd:decimal;
+    .
+map:project_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectLogo;
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/media/@@projects_project.logo@@";
+    d2rq:condition "projects_project.logo is not null";
+    .
+map:project_funding_program a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasFundingProgram;
+    d2rq:refersToClassMap map:FundingProgram;
+    d2rq:join "projects_project.funding_program_id => funding_programs_fundingprogram.id";
+    .
+map:project_consortium_member a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasConsortiumMember;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
+    d2rq:join "projects_consortiummember.project_id => projects_project.id";
+    .
+map:project_project_leader a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasProjectLeader;
+    d2rq:refersToClassMap map:Organization;
+    d2rq:join "projects_project.project_leader_id => organizations_organization.id";
+    .
+map:project_funding_amount a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasFundingAmount;
+    d2rq:refersToClassMap map:FundingAmount;
+    d2rq:join "projects_fundingamount.project_id => projects_project.id";
+    .
+map:project_researcher a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property swrcfe:hasResearcher;
+    # d2rq:refersToClassMap map:Employee;
+    d2rq:join "projects_assignedemployee.employee_id => employees_employee.id";
+    d2rq:join "projects_assignedemployee.project_id => projects_project.id";
+    d2rq:uriPattern "http://dev.morelab.deusto.es/sourceplanet/d2r/page/employee/@@employees_employee.slug@@";
+    .

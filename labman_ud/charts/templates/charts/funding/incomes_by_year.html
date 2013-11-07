@@ -1,0 +1,85 @@
+{% extends "labman_ud/base.html" %}
+{% load humanize %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Funding</li>
+        
+        <li>
+            <a href="{% url funding_total_incomes %}">Total incomes</a>
+        </li>
+
+        <li class="active">{{ year }}</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET incomes in {{ year }}</h4>
+
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addRows([
+                {% for key, value in incomes.items %}
+                    ['{{ key }}', {{ value }}, '{{ value|intcomma }} €'],
+                {% endfor %}
+            ]);
+
+            var options = {
+                legend: {position: 'none'},
+                hAxis: {
+                    title: 'Geographical scope',
+                    titleTextStyle: {color: 'black'},
+                    slantedTextAngle: 45,
+                    slantedText: true,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                colors: ['#132da3'],
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var scope = data.getValue(item.row, item.column-1);
+                    window.location.replace('{{ path }}' + scope);
+                }
+            }
+        }
+
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

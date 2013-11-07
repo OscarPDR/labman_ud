@@ -1,0 +1,210 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div id="member-name">
+        <h1 id="member-name">
+            {% if former_member.title %}
+                {{ former_member.title }}
+            {% endif %}
+            
+            {{ former_member.full_name }}
+        </h1>
+
+        {% if position %}
+            <p id="member-position">
+                {{ position }}
+            </p>
+        {% endif %}
+    </div> <!-- end #member-name -->
+
+    <br>
+
+    <div class="tabbable">
+
+        <div class="col-md-3">
+            {% if former_member.profile_picture %}
+                <img id="profile-picture" src="{{ MEDIA_PREFIX }}{{ former_member.profile_picture }}"/>
+            {% else %}
+                {% if former_member.gender == 'Female' %}
+                    <img id="profile-picture" src="{{ STATIC_PREFIX }}img/female.png"/>
+                {% else %}
+                    <img id="profile-picture" src="{{ STATIC_PREFIX }}img/male.png"/>
+                {% endif %}
+            {% endif %}
+
+            {% if job %}
+                <br>
+
+                <div class="centered">
+                    Until {{ job.end_date|date:"F, Y" }}
+                </div>
+            {% endif %}
+
+
+            <div class="soften"></div>
+
+            <ul id="member-tabs" class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#member-projects-tab-pane" data-toggle="tab">
+                        <i class="icon-gears icon-large"></i>&emsp;Projects
+                    </a>
+                </li>
+
+                {% if has_publications %}
+                    <li>
+                        <a href="#member-publications-tab-pane" data-toggle="tab">
+                            <i class="icon-file-text-alt icon-large"></i>&emsp;Publications
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li>
+                    <a href="#member-graphs-tab-pane" data-toggle="tab">
+                        <i class="icon-bar-chart icon-large"></i>&emsp;Graphs
+                    </a>
+                </li>
+            </ul> <!-- end #member-tabs -->
+        </div> <!-- end .col-md-3 member section sidebar -->
+
+        <div class="col-md-9">
+            <div id="member-tab-content" class="tab-content">
+
+                <div class="tab-pane active" id="member-projects-tab-pane">
+                    {% for key, value in projects.items %}
+                        {% if value %}
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    {{ key }} in {{ value|length }} project{{ value|pluralize }}
+                                </div>
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <th>Project name</th>
+
+                                        <th>Start</th>
+
+                                        <th>End</th>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for item in value %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url project_info item.slug %}">
+                                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ item.full_name }}
+                                                    </a>
+                                                </td>
+
+                                                <td>
+                                                    {{ item.start_year }}
+                                                </td>
+
+                                                <td>
+                                                    {{ item.end_year }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <br>
+
+                        {% endif %}
+                    {% endfor %}
+                </div> <!-- end #member-projects-tab-pane .tab-pane -->
+
+                <div id="member-publications-tab-pane" class="tab-pane">
+                    {% for key, value in publications.items %}
+                        {% if value %}
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    {{ value|length }} {{ key|lower }}{{ value|pluralize }}
+                                </div>
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <th>Title</th>
+
+                                        <th>Year</th>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for item in value %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url publication_info item.slug %}">
+                                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ item.title }}
+                                                    </a>
+                                                </td>
+
+                                                <td>
+                                                    {{ item.year }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <br>
+
+                        {% endif %}
+                    {% endfor %}
+                </div> <!-- end #member-publications-tab-pane .tab-pane -->
+
+                <div id="member-graphs-tab-pane" class="tab-pane">
+                </div> <!-- end #member-graphs-tab-pane .tab-pane -->
+
+            </div> <!-- end #about-tab-content -->
+        </div>
+    </div> <!-- end .row .tabbable -->
+    
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#members-nav').addClass('active');
+    </script>
+
+    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+
+    <script>
+        var success = function() {
+            var image = document.getElementById("profile-picture");
+            var image_source = image.src;
+            
+            if (image_source.indexOf("/media/persons/") >= 0) {
+                var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
+                konami_source = konami_source.replace(".jpg", ".gif");
+                konami_source = konami_source.replace(".png", ".gif");
+                image.src = konami_source;
+            }
+
+            if (image_source.indexOf("/img/female.png") >= 0) {
+                image.src = "/static/img/lovelace.png";
+            }
+
+            if (image_source.indexOf("/img/male.png") >= 0) {
+                image.src = "/static/img/einstein.png";
+            }
+
+            var name = document.getElementById("member-name");
+            name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+
+            var position = document.getElementById("member-position");
+            position.innerHTML = "{{ former_member.konami_code_position|safe }}";
+        };
+    
+        var konami = new Konami(success);
+    </script>
+
+{% endblock %}
