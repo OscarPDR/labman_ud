@@ -8,8 +8,8 @@ from django.template.defaultfilters import slugify
 
 # Create your models here.
 
-MIN_YEAR_LIMIT = 2000
-MAX_YEAR_LIMIT = 2030
+MIN_YEAR_LIMIT = 1950
+MAX_YEAR_LIMIT = 2080
 
 
 def publication_path(self, filename):

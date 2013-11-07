@@ -14,8 +14,8 @@ def project_logo_path(self, filename):
     return "%s/%s%s" % ("projects", self.project.slug, os.path.splitext(filename)[-1])
 
 
-MIN_YEAR_LIMIT = 2000
-MAX_YEAR_LIMIT = 2020
+MIN_YEAR_LIMIT = 1950
+MAX_YEAR_LIMIT = 2080
 
 
 PROJECT_STATUS = (
@@ -249,8 +249,22 @@ class AssignedPerson(models.Model):
         blank=True
     )
 
+    tags = models.ManyToManyField('utils.Tag', through='AssignedPersonTag', related_name='assigned_persons')
+
     def __unicode__(self):
         return u'%s is working at %s as a %s' % (self.person.full_name, self.project.short_name, self.role.name)
+
+
+#########################
+# Model: AssignedPersonTag
+#########################
+
+class AssignedPersonTag(models.Model):
+    tag = models.ForeignKey('utils.Tag')
+    assigned_person = models.ForeignKey('AssignedPerson')
+
+    def __unicode__(self):
+        return u'%s tagged as: %s' % (self.assigned_person.person, self.tag.name)
 
 
 #########################
