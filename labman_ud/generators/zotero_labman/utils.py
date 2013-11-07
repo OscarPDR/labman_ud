@@ -25,12 +25,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler(
-    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
-    maxBytes=20000,
-    backupCount=5
-)
-logger.addHandler(handler)
+#handler = logging.handlers.RotatingFileHandler(
+#    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
+#    maxBytes=20000,
+#    backupCount=5
+#)
+#logger.addHandler(handler)
 
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
