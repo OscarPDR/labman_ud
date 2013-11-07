@@ -1,0 +1,71 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <form class="form-search" action="" method="post">
+        {% csrf_token %}
+        <div class="input-append">
+            {{ form.text }}
+            <a class="close" href="{% url person_index %}">&times;</a>
+            <button type="submit" class="btn">Search</button>
+        </div>
+    <form>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if persons.has_previous %}
+                <a href="?page={{ persons.previous_page_number }}"><< previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ persons.number }} of {{ persons.paginator.num_pages }}
+            </span>
+
+            {% if persons.has_next %}
+                <a href="?page={{ persons.next_page_number }}">next >></a>
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="row">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="span6">Full name</th>
+                    <th class="span1">FOAF</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for person in persons %}
+                    <tr>
+                        <td class="span6">
+                            <a href="{% url person_info person.slug %}">
+                                {% if person.external %}
+                                    <i class="icon-road"></i>
+                                {% endif %}
+                                {{ person.full_name }}
+                            </a>
+                            {% if person.external %}
+                                <a target="_blank" href="{% url organization_info person.organization.slug%}">
+                                    ({{ person.organization.full_name }})
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td class="span1">
+                            {% if person.foaf_link %}
+                                <a target="_blank" href="{{ person.foaf_link }}">View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

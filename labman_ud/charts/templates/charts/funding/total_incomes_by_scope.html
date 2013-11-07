@@ -1,0 +1,129 @@
+{% extends "labman_ud/base.html" %}
+{% load humanize %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Funding</li>
+
+        <li class="active">Total incomes by scope</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4>DeustoTech INTERNET incomes by scope</h4>
+
+        <div id="chart_div" style="width: 1000px; height: 500px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn({'type': 'string', 'role': 'tooltip', 'p': {'html': true}});
+            data.addColumn('number', 'Euskadi');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Spain');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Europe');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+            data.addColumn('number', 'Total');
+            data.addColumn({type: 'boolean', role: 'certainty'});
+
+            data.addRows([
+                {% for income in total_incomes %}
+                    ['{{ income.year }}', generateTooltipHTML({{ income.year }}, '{{ income.euskadi|intcomma }} €', '{{ income.spain|intcomma }} €', '{{ income.europe|intcomma }} €', '{{ income.total|intcomma }} €'), {{ income.euskadi }}, {{ income.certainty|lower }}, {{ income.spain }}, {{ income.certainty|lower }}, {{ income.europe }}, {{ income.certainty|lower }}, {{ income.total }}, {{ income.certainty|lower }} ],
+                {% endfor %}
+            ]);
+
+            var options = {
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {color: 'black'},
+                    slantedText: true,
+                    slantedTextAngle: 45,
+                },
+                vAxis: {
+                    title: 'Incomes in €',
+                    titleTextStyle: {color: 'black'},
+                },
+                colors: ['green', 'red', 'blue', 'black'],
+                // seriesType: 'bars',
+                seriesType: 'area',
+                series: {3: {type: "line"}},
+                // This line makes the entire category's tooltip active.
+                focusTarget: 'category',
+                // Use an HTML tooltip.
+                tooltip: { isHtml: true }
+            };
+
+            var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            // Add selection handler.
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            function selectHandler() {
+                var selection = chart.getSelection();
+                for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    var year = data.getValue(item.row, 0);
+                    window.location.replace('/charts/funding/incomes/' + year);
+                }
+            }
+        }
+
+        function generateTooltipHTML(year, euskadi, spain, europe, total) {
+            return '<div style="padding:10px; min-width:150px;">' +
+                            '<h5>' + year + '</h5>' +
+                            '<table class="medals-layout">' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/euskadi.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td class="funding-amount">' +
+                                    euskadi +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/spain.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td class="funding-amount">' +
+                                    spain +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="{{ STATIC_PREFIX }}img/europe.png" width="32" style="padding:5px;"/>' +
+                                '</td>' +
+                                '<td class="funding-amount">' +
+                                    europe +
+                                '</td>' +
+                            '</tr>' +
+                        '</table>' +
+                        '<br>' +
+                        '<b>Total: </b>' + total +
+                    '</div>';
+        }
+
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

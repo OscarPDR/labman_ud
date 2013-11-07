@@ -1,0 +1,261 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div id="publication-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>
+                    <a href="{% url publication_index %}{{ from_page }}">
+                        <img width="32" src="{{ STATIC_PREFIX }}img/back.png" />
+                    </a>
+
+                    {{ publication.title }}
+                </h3>
+            </div> <!-- end .col-md-9 -->
+
+            <div class="col-md-3">
+                <div class="centered">
+                    <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/publication/{{ publication.slug }}">
+                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                    </a>
+                </div>
+
+                <br>
+
+                <blockquote id="publication-type" class="pull-left">
+                    <p>
+                        <a target="_blank" href="{% url view_publication_type publication.publication_type.slug %}">
+                            {{ publication.publication_type.name }}
+                        </a>
+                    </p>
+                </blockquote>
+
+            </div>
+        </div> <!-- end .row -->
+    </div> <!-- end #project-header -->
+
+    <div class="tabbable">
+
+        <div class="col-md-3">
+            {% if pdf %}
+                <div class="well centered">
+                    <a id="document_download" target="_blank" href="{{ MEDIA_PREFIX }}{{ pdf }}">
+                        <img src="{{ STATIC_PREFIX }}img/document_download.png"/>
+                        <button class="btn btn-primary" id="document-download-button">View document</button>
+                        <br>
+                        (&asymp; {{ pdf.size|filesizeformat }})
+                    </a>
+                </div>
+            {% endif %}
+
+            <ul id="publication-tabs" class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#overview_tab" data-toggle="tab">
+                        <i class="icon-info-sign icon-large"></i>&emsp;Overview
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#extended_info_tab" data-toggle="tab">
+                        <i class="icon-list icon-large"></i>&emsp;Extended info
+                    </a>
+                </li>
+
+                {% if related_projects or related_publications %}
+                    <li>
+                        <a href="#related_tab" data-toggle="tab">
+                            <i class="icon-resize-horizontal"></i> Related
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if publication.bibtex %}
+                    <div class="centered">
+                        <a data-toggle="modal" href="#myModal" class="btn btn-default bibtex-button">
+                            <img src="{{ STATIC_PREFIX }}img/bibtex.png" width="75" />
+                        </a>
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title"><img src="{{ STATIC_PREFIX }}img/bibtex.png" width="150" /></h4>
+                                </div>
+
+                                <div class="modal-body">
+                                <pre style="text-align: left;">                                            
+{{ publication.bibtex }}
+                                </pre>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </div>
+                {% endif %}
+
+                {% if tags %}
+                    <br>
+
+                    <h6>Tags</h6>
+
+                    {% for tag in tags %}
+                        <a target="_blank" href="{% url view_publication_tag tag.slug %}">
+                            <span class="label label-info">{{ tag.name }}</span>
+                        </a>
+                    {% endfor %}
+                {% endif %}                
+            </ul>
+
+        </div>
+
+        <div class="col-md-9">
+
+            <div id="publication-tab-content" class="tab-content publication-template">
+
+                <div class="tab-pane active" id="overview_tab">
+
+                    <h5>Authors:</h5>
+
+                    {% for author in authors %}
+                        {% if author.is_active %}
+                            <a target="_blank" href="{% url member_info author.slug %}">
+                                {{ author.full_name }}
+                            </a>
+                        {% else %}
+                            <a target="_blank" href="{% url person_info author.slug %}">
+                                {{ author.full_name }}
+                            </a>
+                        {% endif %}
+
+                        {% if not forloop.last %}
+                            ,&emsp;
+                        {% endif %}
+                    {% endfor %}
+
+                    <br>
+                    <br>
+
+                    <h5>Abstract:</h5>
+
+                    <p id="publication-abstract">
+                        {% if publication.abstract %}
+                            {{ publication.abstract }}
+                        {% else %}
+                            No abstract available.
+                        {% endif %}
+                    </p>
+
+                </div> <!-- end tab-pane #overview_tab -->
+
+                <div class="tab-pane" id="extended_info_tab">
+
+                    {% if publication.publication_type.name == 'Conference paper' %}
+                        {% include 'publications/templates/conference_paper.html' %}
+                    {% endif %}
+
+                    {% if publication.publication_type.name == 'Journal article' %}
+                        {% include 'publications/templates/journal_article.html' %}
+                    {% endif %}
+
+                    {% if publication.publication_type.name == 'Book section' %}
+                        {% include 'publications/templates/book_section.html' %}
+                    {% endif %}
+
+                </div> <!-- end tab-pane #extended_info_tab -->
+
+                <div class="tab-pane" id="related_tab">
+
+                    {% if related_projects %}
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                {{ related_projects|length }} related project{{ related_projects|pluralize }}
+                            </div>
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <th>Title</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                </thead>
+
+                                <tbody>
+                                    {% for project in related_projects %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="{% url project_info project.slug %}">
+                                                    <i class="icon-chevron-right"></i> {{ project.full_name }}
+                                                </a>
+                                            </td>
+
+                                            <td>{{ project.start_year }}</td>
+                                            <td>{{ project.end_year }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <br>
+
+                    {% endif %}
+
+                    {% if related_publications %}
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                {{ related_publications|length }} related publication{{ related_publications|pluralize }}
+                            </div>
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <th>Title</th>
+                                    <th>Year</th>
+                                </thead>
+
+                                <tbody>
+                                    {% for publication in related_publications %}
+                                        <tr>
+                                            <td>
+                                                <a target="_blank" href="{% url publication_info publication.slug %}">
+                                                    <i class="icon-chevron-right"></i> {{ publication.title }}
+                                                </a>
+                                            </td>
+
+                                            <td>{{ publication.year }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    {% endif %}
+
+                </div> <!-- end tab-pane #related_tab -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#publications-nav').addClass('active');
+    </script>
+
+{% endblock %}
+

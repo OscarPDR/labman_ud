@@ -1,0 +1,96 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <h2>
+        <a href="{% url funding_program_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        {{ funding_program.short_name}}
+
+        {% if funding_program.logo %}
+            <img class="funding-call-logo" src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+        {% endif %}
+    </h2>
+
+    <h4 id="funding_program_full_name">
+        {{ funding_program.full_name}}
+    </h4>
+
+    <br>
+
+    <p id="funding-call-info">
+        This funding program is supported by <a target="_blank" href="{% url organization_info funding_program.organization.slug %}">{{ funding_program.organization.full_name }}</a>{% if funding_program.organization.sub_organization_of %}<a target="_blank" href="{% url organization_info funding_program.organization.sub_organization_of.slug %}"> ({{ funding_program.organization.sub_organization_of.full_name }})</a>{% endif %}, providing financial resources to projects developed in {{ funding_program.geographical_scope }}.
+    </p>
+
+    <br>
+
+    <div id="chart_div" style="width: 450px; height: 250px;"></div>
+
+    <br>
+
+    <h6>{{ projects|length }} project{{ projects|pluralize }} funded:</h6>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <th>
+                Full name
+            </th>
+
+            <th>
+                Duration
+            </th>
+        </thead>
+
+        <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>
+                        <a target="_blank" href="{% url project_info project.slug %}"><i class="icon-chevron-right"></i> {{ project.full_name }}</a>
+                    </td>
+
+                    <td>
+                        {{ project.start_year }} - {{ project.end_year }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Number of projects', 'Funding amount'],
+
+                {% for data in datum %}
+                    {{ data }},
+                {% endfor %}
+
+            ]);
+
+            var options = {
+                vAxes: {
+                    0: {minValue: 0, maxValue: 4, format: '#'},
+                },
+                hAxis: {minValue: {{ min_year }}, maxValue: {{ max_year }}, format: '#'},
+                series: {
+                    0: { type: "bars", targetAxisIndex: 0 },
+                    1: { type: "line", targetAxisIndex: 1}
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+{% endblock %}

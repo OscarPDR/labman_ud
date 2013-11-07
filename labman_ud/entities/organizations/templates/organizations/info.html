@@ -1,0 +1,90 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-9">
+            <h2>{{ organization.full_name}}</h2>
+        </div>
+
+        <div class="col-md-3">
+
+            {% if logo %}
+                <div class="centered">
+                    <img class="organization-logo" src="{{ MEDIA_URL }}{{ logo }}" />
+                </div>
+            {% endif %}
+
+            <div class="centered">
+                <a class="btn btn-primary" target="_blank" href="{{ organization.homepage }}">
+                    <i class="icon-globe icon-large"></i>&emsp;Visit homepage
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="row">
+
+        {% if projects_leaded %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Project leader in {{ projects_leaded|length }} project{{ projects_leaded|pluralize }}
+                </div>
+
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% for project in projects_leaded %}
+                            <tr>
+                                <td>
+                                    <a href="{% url project_info project.slug %}">
+                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ project.full_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
+
+        {% endif %}
+
+        {% if projects %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Consortium member in {{ projects|length }} project{{ projects|pluralize }}
+                </div>
+
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% for project in projects %}
+                            <tr>
+                                <td>
+                                    <a href="{% url project_info project.slug %}">
+                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ project.full_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Funding</li>
+
+        <li class="active">Total incomes by project</li>
+    </ul>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <th>Title</th>
+            <th>Start</th>
+            <th>End</th>
+        </thead>
+
+        <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>
+                        <a href="{% url funding_incomes_by_project project.slug %}">
+                            <i class="icon-chevron-right"></i>&emsp;{{ project.full_name }}
+                        </a>
+                    </td>
+
+                    <td>{{ project.start_year }}</td>
+
+                    <td>{{ project.end_year }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

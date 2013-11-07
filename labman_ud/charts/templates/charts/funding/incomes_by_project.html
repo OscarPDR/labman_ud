@@ -1,0 +1,67 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Funding</li>
+
+        <li>
+            <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+        </li>
+
+        <li class="active">{{ project.short_name }}</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4>Income breakdown for: <a target="_blank" href="{% url project_info project.slug %}">{{ project.short_name }}</a></h4>
+        <br>
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    </div>
+
+    <br>
+    <div class="center">
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Income');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addRows([
+                {% for project_income in project_incomes %}
+                    ['{{ project_income.year }}', parseInt({{ project_income.total }}), '{{ project_income.full_name }}'],
+                {% endfor %}
+            ]);
+
+            var options = {
+                is3D: false,
+                tooltip: {
+                    text: 'value',
+                },
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}
