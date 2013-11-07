@@ -387,7 +387,7 @@ def get_publication_details(item):
                 # If it isn't
                 try:
                     # Check if author name correspond with any of the posible nicknames of the authors in DB
-                    nick = Nickname.objects.get(nickname=author_name)
+                    nick = Nickname.objects.get(slug=slugify(author_name))
                     a = nick.person
                 except:
                     # If there is no reference to that person in the DB, create a new one
@@ -419,11 +419,12 @@ def get_publication_details(item):
                 pub.impact_factor = float(impact_factor)
         else:
             # If it doesn't, create the tag as normal
-            t, created = Tag.objects.get_or_create(
-                slug=slugify(tag_str),
-                defaults={'name': tag['tag']}
-            )
-        tags.append(t)
+            if len(tag['tag']) <= 75:
+                t, created = Tag.objects.get_or_create(
+                    slug=slugify(tag_str),
+                    defaults={'name': tag['tag']}
+                )
+                tags.append(t)
 
     return pub, authors, tags, observations
 
