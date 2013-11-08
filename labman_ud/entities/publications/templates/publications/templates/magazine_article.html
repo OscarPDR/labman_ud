@@ -1,0 +1,40 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Published in:</strong>&emsp;{{ parent_publication.title }}
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            {% if publication.issue %}
+                <div class="col-md-4">
+                    <h5>Issue:</h5>
+
+                    <p>
+                        {{ publication.issue }}
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if publication.pages %}
+                <div class="col-md-4">
+                    <h5>Pages:</h5>
+
+                    <p>
+                        {{ publication.pages }}
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if publication.year %}
+                <div class="col-md-4">
+                    <h5>Year:</h5>
+
+                    <p>
+                        {{ publication.year }}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -173,6 +173,10 @@
                         {% include 'publications/templates/book.html' %}
                     {% endif %}
 
+                    {% if publication.publication_type.name == 'Magazine article' %}
+                        {% include 'publications/templates/magazine_article.html' %}
+                    {% endif %}
+
                 </div> <!-- end tab-pane #extended_info_tab -->
 
                 <div class="tab-pane" id="related_tab">
