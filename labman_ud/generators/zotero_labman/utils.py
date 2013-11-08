@@ -5,8 +5,7 @@ from django.utils.timezone import utc
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationType
-from entities.publications.models import PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person, Nickname
@@ -26,12 +25,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler(
-    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
-    maxBytes=20000,
-    backupCount=5
-)
-logger.addHandler(handler)
+#handler = logging.handlers.RotatingFileHandler(
+#    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
+#    maxBytes=20000,
+#    backupCount=5
+#)
+#logger.addHandler(handler)
 
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
@@ -387,7 +386,7 @@ def get_publication_details(item):
                 # If it isn't
                 try:
                     # Check if author name correspond with any of the posible nicknames of the authors in DB
-                    nick = Nickname.objects.get(nickname=author_name)
+                    nick = Nickname.objects.get(slug=slugify(author_name))
                     a = nick.person
                 except:
                     # If there is no reference to that person in the DB, create a new one
@@ -419,11 +418,12 @@ def get_publication_details(item):
                 pub.impact_factor = float(impact_factor)
         else:
             # If it doesn't, create the tag as normal
-            t, created = Tag.objects.get_or_create(
-                slug=slugify(tag_str),
-                defaults={'name': tag['tag']}
-            )
-        tags.append(t)
+            if len(tag['tag']) <= 75:
+                t, created = Tag.objects.get_or_create(
+                    slug=slugify(tag_str),
+                    defaults={'name': tag['tag']}
+                )
+                tags.append(t)
 
     return pub, authors, tags, observations
 
@@ -498,3 +498,19 @@ def delete_publication(pub):
     pub.delete()
 
     return ret_dict
+
+
+def correct_nicks():
+    for nick in Nickname.objects.all():
+        try:
+            bad_person = Person.objects.get(slug=nick.slug)
+
+            if bad_person and bad_person != nick.person:
+                logger.info('Deleting... %s' % bad_person.full_name)
+                for pubauth in PublicationAuthor.objects.filter(author=bad_person):
+                    logger.info('Changing authorship of %s' % pubauth.publication)
+                    pubauth.author = nick.person
+                    pubauth.save()
+                bad_person.delete()
+        except:
+            pass
