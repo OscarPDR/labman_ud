@@ -148,6 +148,7 @@ class ProjectTagAdmin(admin.ModelAdmin):
 
 class AssignedPersonAdmin(admin.ModelAdmin):
     model = AssignedPerson
+
     search_fields = ['project__short_name', 'person__full_name']
     list_display = ['person', 'project', 'role']
     list_filter = ['role']
@@ -159,6 +160,7 @@ class AssignedPersonAdmin(admin.ModelAdmin):
 
 class ConsortiumMemberAdmin(admin.ModelAdmin):
     model = ConsortiumMember
+
     search_fields = ['project__short_name', 'organization__short_name', 'organization__full_name']
     list_display = ['project', 'organization']
 
@@ -169,6 +171,7 @@ class ConsortiumMemberAdmin(admin.ModelAdmin):
 
 class RelatedPublicationAdmin(admin.ModelAdmin):
     model = RelatedPublication
+
     search_fields = ['project__short_name', 'publication__title']
     list_display = ['project', 'publication']
 
