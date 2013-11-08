@@ -1,19 +1,16 @@
 # coding: utf-8
 
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.conf import settings
-
-from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
 from .forms import PublicationSearchForm
-
-from entities.projects.models import Project, RelatedPublication
+from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
 
 from entities.persons.models import Person
-
+from entities.projects.models import Project, RelatedPublication
 from entities.utils.models import Tag
 
 

@@ -2,8 +2,8 @@
 
 import os
 
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.template.defaultfilters import slugify
 
 # Create your models here.
@@ -25,13 +25,14 @@ def publication_path(self, filename):
 
     return "%s/%s/%s/%s%s" % ("publications", self.year, sub_folder, self.slug, os.path.splitext(filename)[-1])
 
+
 def thesis_path(self, filename):
     return "%s/%s/%s%s" % ("publications", "theses", self.slug, os.path.splitext(filename)[-1])
 
 
-#########################
+###########################################################################
 # Model: PublicationType
-#########################
+###########################################################################
 
 class PublicationType(models.Model):
     name = models.CharField(
@@ -60,9 +61,9 @@ class PublicationType(models.Model):
         super(PublicationType, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Publication
-#########################
+###########################################################################
 
 class Publication(models.Model):
     presented_at = models.ForeignKey(
@@ -72,10 +73,8 @@ class Publication(models.Model):
         related_name='publications'
     )
 
-    # REQUIRED
     publication_type = models.ForeignKey('PublicationType')
 
-    # REQUIRED
     title = models.CharField(
         max_length=250,
     )
@@ -92,7 +91,6 @@ class Publication(models.Model):
         unique=True,
     )
 
-    # REQUIRED
     abstract = models.TextField(
         max_length=5000,
     )
@@ -235,9 +233,9 @@ class Publication(models.Model):
         super(Publication, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: PublicationTag
-#########################
+###########################################################################
 
 class PublicationTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -247,9 +245,9 @@ class PublicationTag(models.Model):
         return u'%s tagged as: %s' % (self.publication.title, self.tag.name)
 
 
-#########################
+###########################################################################
 # Model: PublicationAuthor
-#########################
+###########################################################################
 
 class PublicationAuthor(models.Model):
     author = models.ForeignKey('persons.Person')
@@ -263,9 +261,10 @@ class PublicationAuthor(models.Model):
     def __unicode__(self):
         return u'%s has written: %s' % (self.author.full_name, self.publication.title)
 
-#########################
+
+###########################################################################
 # Model: Thesis
-#########################
+###########################################################################
 
 class Thesis(models.Model):
     title = models.CharField(
@@ -316,9 +315,9 @@ class Thesis(models.Model):
         super(Thesis, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: ThesisAbstract
-#########################
+###########################################################################
 
 class ThesisAbstract(models.Model):
     thesis = models.ForeignKey('Thesis')
@@ -333,9 +332,9 @@ class ThesisAbstract(models.Model):
         return u'Abstract in %s for: %s' % (self.language.name, self.thesis.title)
 
 
-#########################
+###########################################################################
 # Model: CoAdvisor
-#########################
+###########################################################################
 
 class CoAdvisor(models.Model):
     thesis = models.ForeignKey('Thesis')
