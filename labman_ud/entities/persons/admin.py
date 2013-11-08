@@ -37,7 +37,7 @@ class JobInline(admin.StackedInline):
 
 class PersonAdmin(admin.ModelAdmin):
     model = Person
-    search_fields = ['full_name',]
+    search_fields = ['full_name', 'slug']
     list_display = ['full_name', 'email', 'is_active' ]
     list_filter = ['is_active']
     inlines = [
@@ -60,9 +60,18 @@ class AccountProfileAdmin(admin.ModelAdmin):
     model = AccountProfile
 
 
+#########################
+# Class: NicknameAdmin
+#########################
+
+class NicknameAdmin(admin.ModelAdmin):
+    model = Nickname
+
+
 ##################################################
 # Register classes
 ##################################################
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(AccountProfile, AccountProfileAdmin)
+admin.site.register(Nickname, NicknameAdmin)

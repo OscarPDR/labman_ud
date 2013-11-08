@@ -8,7 +8,7 @@ from entities.publications.models import Publication
 from datetime import datetime
 from django.utils.timezone import utc
 
-from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items, logger
+from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items, logger, correct_nicks
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -33,3 +33,6 @@ class Command(NoArgsCommand):
         logger.info('Re-syncing with Zotero...')
         last_version_zotero = get_last_zotero_version()
         parse_last_items(last_version_zotero, 0)
+
+        # Correct errors in nicks
+        correct_nicks()
