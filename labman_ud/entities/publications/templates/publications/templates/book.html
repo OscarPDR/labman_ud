@@ -1,0 +1,33 @@
+
+
+<div class="row">
+    {% if publication.publisher %}
+        <div class="col-md-4">
+            <h5>Publisher:</h5>
+
+            <p>
+                {{ publication.publisher }}
+            </p>
+        </div>
+    {% endif %}
+
+    {% if publication.isbn %}
+        <div class="col-md-4">
+            <h5>ISBN:</h5>
+
+            <p>
+                {{ publication.isbn }}
+            </p>
+        </div>
+    {% endif %}
+
+    {% if publication.year %}
+        <div class="col-md-4">
+            <h5>Year:</h5>
+
+            <p>
+                {{ publication.year }}
+            </p>
+        </div>
+    {% endif %}
+</div>
