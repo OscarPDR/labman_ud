@@ -132,9 +132,9 @@ def publication_info(request, slug):
     except:
         pdf = None
 
-    if publication.publication_type.name in ['Book section', 'Conference paper', 'Journal article']:
+    try:
         parent_publication = Publication.objects.get(id=publication.part_of.id)
-    else:
+    except:
         parent_publication = None
 
     bibtex = publication.bibtex.replace(",", ",\n")
