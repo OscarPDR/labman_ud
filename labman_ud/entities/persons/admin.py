@@ -21,6 +21,8 @@ class NicknameInline(admin.TabularInline):
     model = Nickname
     extra = 1
 
+    exclude = ['slug']
+
 
 #########################
 # Class: JobInline
@@ -38,7 +40,7 @@ class JobInline(admin.StackedInline):
 class PersonAdmin(admin.ModelAdmin):
     model = Person
     search_fields = ['full_name', 'slug']
-    list_display = ['full_name', 'email', 'is_active' ]
+    list_display = ['full_name', 'email', 'is_active']
     list_filter = ['is_active']
     inlines = [
         AccountProfileInline,
@@ -66,6 +68,10 @@ class AccountProfileAdmin(admin.ModelAdmin):
 
 class NicknameAdmin(admin.ModelAdmin):
     model = Nickname
+
+    search_fields = ['nickname', 'slug']
+    list_display = ['nickname', 'slug']
+    exclude = ['slug']
 
 
 ##################################################
