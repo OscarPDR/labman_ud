@@ -15,6 +15,7 @@ from ckeditor.fields import RichTextField
 def person_profile_picture_path(self, filename):
     return "%s/%s%s" % ("persons", self.slug, os.path.splitext(filename)[-1])
 
+
 def person_profile_konami_code_picture_path(self, filename):
     return "%s/%s%s" % ("konami_code_persons", self.slug, os.path.splitext(filename)[-1])
 
