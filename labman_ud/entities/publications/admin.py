@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Publication, Thesis, PublicationType, PublicationAuthor, PublicationTag, ThesisAbstract, CoAdvisor
+
+from .models import *
 
 
 #########################
@@ -29,6 +30,7 @@ class PublicationAuthorInline(admin.TabularInline):
 class ThesisAbstractInline(admin.TabularInline):
     model = ThesisAbstract
     extra = 1
+
 
 #########################
 # Class: CoAdvisorInline
@@ -120,10 +122,10 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 # Register classes
 ##################################################
 
+admin.site.register(CoAdvisor, CoAdvisorAdmin)
 admin.site.register(Publication, PublicationAdmin)
-admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationTag, PublicationTagAdmin)
+admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(Thesis, ThesisAdmin)
 admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
-admin.site.register(CoAdvisor, CoAdvisorAdmin)
