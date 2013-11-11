@@ -1,21 +1,16 @@
 # coding: utf-8
 
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.conf import settings
-
-from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
 from .forms import PublicationSearchForm
-
-from entities.projects.models import Project, RelatedPublication
+from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
 
 from entities.persons.models import Person
-
+from entities.projects.models import Project, RelatedPublication
 from entities.utils.models import Tag
 
 
@@ -90,21 +85,23 @@ def publication_index(request, tag_slug=None, publication_type_slug=None):
         # If page is out of range (e.g. 9999), deliver last page of results.
         publications = paginator.page(paginator.num_pages)
 
-    return render_to_response('publications/index.html', {
-            'publications': publications,
-            'form': form,
-            'publications_length': publications_length,
-            'tag': tag,
-            'publication_type': publication_type,
-            'query_string': query_string,
-            'clean_index': clean_index,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'clean_index': clean_index,
+        'form': form,
+        'publication_type': publication_type,
+        'publications': publications,
+        'publications_length': publications_length,
+        'query_string': query_string,
+        'tag': tag,
+    }
+
+    return render_to_response('publications/index.html', return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: publication_info
-#########################
+###########################################################################
 
 def publication_info(request, slug):
 
@@ -125,36 +122,37 @@ def publication_info(request, slug):
 
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
     tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     try:
         pdf = publication.pdf
     except:
         pdf = None
 
-    if publication.publication_type.name in ['Book section', 'Conference paper', 'Journal article']:
+    try:
         parent_publication = Publication.objects.get(id=publication.part_of.id)
-    else:
+    except:
         parent_publication = None
 
     bibtex = publication.bibtex.replace(",", ",\n")
 
-    return render_to_response('publications/info.html', {
-            'publication': publication,
-            'authors': authors,
-            'related_projects': related_projects,
-            'related_publications': related_publications,
-            'tags': tags,
-            'pdf': pdf,
-            'parent_publication': parent_publication,
-            'bibtex': bibtex,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'authors': authors,
+        'bibtex': bibtex,
+        'parent_publication': parent_publication,
+        'pdf': pdf,
+        'publication': publication,
+        'related_projects': related_projects,
+        'related_publications': related_publications,
+        'tags': tags,
+    }
+
+    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: publication_tag_cloud
-#########################
+###########################################################################
 
 def publication_tag_cloud(request):
 
@@ -169,7 +167,9 @@ def publication_tag_cloud(request):
         else:
             tag_dict[t] = 1
 
-    return render_to_response('publications/tag_cloud.html', {
-            'tag_dict': tag_dict,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'tag_dict': tag_dict,
+    }
+
+    return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))

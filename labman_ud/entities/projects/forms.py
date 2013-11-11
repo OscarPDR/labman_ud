@@ -5,9 +5,9 @@ from django import forms
 # Create the form class.
 
 
-# #########################
-# # Class: ProjectSearchForm
-# #########################
+###########################################################################
+# Class: ProjectSearchForm
+###########################################################################
 
 class ProjectSearchForm(forms.Form):
     text = forms.CharField(

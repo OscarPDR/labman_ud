@@ -13,9 +13,9 @@ def network_icon_path(self, filename):
     return "%s/%s%s" % ("networks", self.slug, os.path.splitext(filename)[-1])
 
 
-#########################
+###########################################################################
 # Model: Country
-#########################
+###########################################################################
 
 class Country(models.Model):
     full_name = models.CharField(
@@ -46,13 +46,14 @@ class Country(models.Model):
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
+
         self.slug = slugify(self.short_name)
         super(Country, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: GeographicalScope
-#########################
+###########################################################################
 
 class GeographicalScope(models.Model):
     name = models.CharField(
@@ -81,9 +82,9 @@ class GeographicalScope(models.Model):
         super(GeographicalScope, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Role
-#########################
+###########################################################################
 
 class Role(models.Model):
     name = models.CharField(
@@ -111,9 +112,9 @@ class Role(models.Model):
         super(Role, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Tag
-#########################
+###########################################################################
 
 class Tag(models.Model):
     name = models.CharField(
@@ -147,9 +148,9 @@ class Tag(models.Model):
         super(Tag, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Language
-#########################
+###########################################################################
 
 class Language(models.Model):
     name = models.CharField(
@@ -177,9 +178,9 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Network
-#########################
+###########################################################################
 
 class Network(models.Model):
     name = models.CharField(
@@ -195,8 +196,8 @@ class Network(models.Model):
         blank=True,
     )
 
-    # Recommended size: 64*64 px
-    # Recommended format: .png
+    # recommended size: 64*64 px
+    # recommended format: .png
     icon = models.ImageField(
         upload_to=network_icon_path,
         blank=True,
@@ -214,9 +215,9 @@ class Network(models.Model):
         super(Network, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: PhDProgram
-#########################
+###########################################################################
 
 class PhDProgram(models.Model):
     name = models.CharField(
