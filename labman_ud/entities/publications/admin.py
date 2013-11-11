@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Publication, Thesis, PublicationType, PublicationAuthor, PublicationTag, ThesisAbstract, CoAdvisor
+
+from .models import *
 
 
 #########################
@@ -30,6 +31,7 @@ class ThesisAbstractInline(admin.TabularInline):
     model = ThesisAbstract
     extra = 1
 
+
 #########################
 # Class: CoAdvisorInline
 #########################
@@ -44,14 +46,11 @@ class CoAdvisorInline(admin.TabularInline):
 #########################
 
 class PublicationAdmin(admin.ModelAdmin):
-    class Media:
-        js = ('js/publications.js',)
-
     model = Publication
 
     search_fields = ['title', 'presented_at__short_name']
-    list_display = ['title', 'publication_type', 'presented_at', 'part_of']
-    list_filter = ['publication_type__name']
+    list_display = ['title', 'publication_type', 'year', 'part_of']
+    list_filter = ['publication_type__name', 'year']
     exclude = ['slug']
     inlines = [
         PublicationAuthorInline,
@@ -91,6 +90,10 @@ class PublicationTypeAdmin(admin.ModelAdmin):
 class PublicationAuthorAdmin(admin.ModelAdmin):
     model = PublicationAuthor
 
+    search_fields = ['publication__slug', 'author__slug']
+    list_display = ['publication', 'author']
+    list_filter = ['author__full_name']
+
 
 #########################
 # Class: PublicationTagAdmin
@@ -98,6 +101,10 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
 
 class PublicationTagAdmin(admin.ModelAdmin):
     model = PublicationTag
+
+    search_fields = ['publication__slug', 'tag__slug']
+    list_display = ['publication', 'tag']
+    list_filter = ['tag__name']
 
 
 #########################
@@ -120,10 +127,10 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 # Register classes
 ##################################################
 
+admin.site.register(CoAdvisor, CoAdvisorAdmin)
 admin.site.register(Publication, PublicationAdmin)
-admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationTag, PublicationTagAdmin)
+admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(Thesis, ThesisAdmin)
 admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
-admin.site.register(CoAdvisor, CoAdvisorAdmin)

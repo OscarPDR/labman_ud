@@ -40,9 +40,9 @@ MONTHS = (
 )
 
 
-#########################
+###########################################################################
 # Model: ProjectType
-#########################
+###########################################################################
 
 class ProjectType(models.Model):
     name = models.CharField(
@@ -71,9 +71,9 @@ class ProjectType(models.Model):
         super(ProjectType, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Project
-#########################
+###########################################################################
 
 class Project(models.Model):
     project_leader = models.ForeignKey('organizations.Organization')
@@ -140,8 +140,8 @@ class Project(models.Model):
 
     assigned_people = models.ManyToManyField('persons.Person', through='AssignedPerson', related_name='projects')
     consortium_members = models.ManyToManyField('organizations.Organization', through='ConsortiumMember', related_name='consortium_member_of')
-    tags = models.ManyToManyField('utils.Tag', through='ProjectTag', related_name='projects')
     related_publications = models.ManyToManyField('publications.Publication', through='RelatedPublication', related_name='related_projects')
+    tags = models.ManyToManyField('utils.Tag', through='ProjectTag', related_name='projects')
 
     class Meta:
         ordering = ['slug']
@@ -157,9 +157,9 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: ProjectLogo
-#########################
+###########################################################################
 
 class ProjectLogo(models.Model):
     project = models.ForeignKey('Project')
@@ -174,9 +174,9 @@ class ProjectLogo(models.Model):
         return u'Logo for project: %s' % (self.project.short_name)
 
 
-#########################
+###########################################################################
 # Model: Funding
-#########################
+###########################################################################
 
 class Funding(models.Model):
     project = models.ForeignKey('Project')
@@ -200,9 +200,9 @@ class Funding(models.Model):
         return u'%s funded by %s - Project code: %s' % (self.project.short_name, self.funding_program.short_name, self.project_code)
 
 
-#########################
+###########################################################################
 # Model: FundingAmount
-#########################
+###########################################################################
 
 class FundingAmount(models.Model):
     funding = models.ForeignKey('Funding')
@@ -223,9 +223,9 @@ class FundingAmount(models.Model):
         return u'Year %s - %s € Deusto' % (self.year, self.own_amount)
 
 
-#########################
+###########################################################################
 # Model: AssignedPerson
-#########################
+###########################################################################
 
 class AssignedPerson(models.Model):
     project = models.ForeignKey('Project')
@@ -255,9 +255,9 @@ class AssignedPerson(models.Model):
         return u'%s is working at %s as a %s' % (self.person.full_name, self.project.short_name, self.role.name)
 
 
-#########################
+###########################################################################
 # Model: AssignedPersonTag
-#########################
+###########################################################################
 
 class AssignedPersonTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -267,9 +267,9 @@ class AssignedPersonTag(models.Model):
         return u'%s tagged as: %s' % (self.assigned_person.person, self.tag.name)
 
 
-#########################
+###########################################################################
 # Model: ConsortiumMember
-#########################
+###########################################################################
 
 class ConsortiumMember(models.Model):
     project = models.ForeignKey('Project')
@@ -280,9 +280,9 @@ class ConsortiumMember(models.Model):
         return u'%s is taking part in %s' % (self.organization.short_name, self.project.short_name)
 
 
-#########################
+###########################################################################
 # Model: ProjectTag
-#########################
+###########################################################################
 
 class ProjectTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -292,9 +292,9 @@ class ProjectTag(models.Model):
         return u'%s tagged as: %s' % (self.project.full_name, self.tag.name)
 
 
-#########################
+###########################################################################
 # Model: RelatedPublication
-#########################
+###########################################################################
 
 class RelatedPublication(models.Model):
     project = models.ForeignKey('Project')
