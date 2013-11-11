@@ -141,8 +141,10 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                             )
                             pubtag.save()
 
+                            tag_slug = slugify(str(tag.name.encode('utf-8')))
+
                             # Find publication - project relations through tags
-                            if tag.name in project_slugs:
+                            if tag_slug in project_slugs:
                                 logger.info('Saving found publication-project relationship: %s' % (tag.name))
                                 pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag))
                                 pubproj.save()
