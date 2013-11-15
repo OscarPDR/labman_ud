@@ -2,30 +2,20 @@
 
 from datetime import date
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.db.models import Sum, Min, Max
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from django.conf import settings
-
-from django.db.models import Sum, Min, Max
-
 from entities.funding_programs.models import FundingProgram
-
-from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
-
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
-
 from entities.persons.models import Person
-
+from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
+from entities.publications.models import Publication, PublicationType, PublicationAuthor
 from entities.utils.models import GeographicalScope, Role
 
-import networkx as nx
 from networkx.readwrite import json_graph
-import json
-
 import community
+import json
+import networkx as nx
 
 
 BASE_TEMPLATE = 'labman_ud/base.html'
@@ -35,17 +25,17 @@ CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
 # Create your views here.
 
 
-#########################
+###########################################################################
 # View: chart_index
-#########################
+###########################################################################
 
 def chart_index(request):
     return render_to_response('charts/index.html')
 
 
-#########################
+###########################################################################
 # View: funding_total_incomes
-#########################
+###########################################################################
 
 def funding_total_incomes(request):
     path = str(request.path).replace('total_', '')
@@ -67,16 +57,18 @@ def funding_total_incomes(request):
         certainty = False if (year > current_year) else True
         incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
-    return render_to_response("charts/funding/total_incomes.html", {
-            'incomes': incomes,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'path': path,
+    }
+
+    return render_to_response("charts/funding/total_incomes.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_year
-#########################
+###########################################################################
 
 def funding_incomes_by_year(request, year):
     path = str(request.path).replace('total_', '') + '/'
@@ -96,17 +88,19 @@ def funding_incomes_by_year(request, year):
         scope = funding_program.geographical_scope.name
         incomes[scope] = incomes[scope] + int(year_income.own_amount)
 
-    return render_to_response("charts/funding/incomes_by_year.html", {
-            'incomes': incomes,
-            'year': year,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'path': path,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/incomes_by_year.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_year_and_scope
-#########################
+###########################################################################
 
 def funding_incomes_by_year_and_scope(request, year, scope):
     path = '/charts/incomes_by_project/'
@@ -121,7 +115,11 @@ def funding_incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'slug': project.slug,})
+            project_incomes.append({
+                'short_name': project.short_name,
+                'value': int(year_income.own_amount),
+                'slug': project.slug,
+            })
 
     project_incomes.insert(0, project_incomes.pop())
 
@@ -138,26 +136,30 @@ def funding_incomes_by_year_and_scope(request, year, scope):
     #             project_incomes.append(p)
     #         el = el + 1
 
-    return render_to_response("charts/funding/incomes_by_year_and_scope.html", {
-            'project_incomes': project_incomes,
-            'year': year,
-            'scope': scope,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'path': path,
+        'project_incomes': project_incomes,
+        'scope': scope,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/incomes_by_year_and_scope.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_project_index
-#########################
+###########################################################################
 
 def funding_incomes_by_project_index(request):
     projects = Project.objects.all().order_by('slug')
 
-    return render_to_response("charts/funding/incomes_by_project_index.html", {
-            'projects': projects,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'projects': projects,
+    }
+
+    return render_to_response("charts/funding/incomes_by_project_index.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
@@ -171,16 +173,18 @@ def funding_incomes_by_project(request, project_slug):
 
     project_incomes = FundingAmount.objects.filter(funding_id__in=funding_ids).values('year').annotate(total=Sum('own_amount'))
 
-    return render_to_response("charts/funding/incomes_by_project.html", {
-            'project': project,
-            'project_incomes': project_incomes,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'project': project,
+        'project_incomes': project_incomes,
+    }
+
+    return render_to_response("charts/funding/incomes_by_project.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_total_incomes_by_scope
-#########################
+###########################################################################
 
 def funding_total_incomes_by_scope(request):
     incomes = {}
@@ -230,17 +234,19 @@ def funding_total_incomes_by_scope(request):
             'certainty': certainty,
         })
 
-    return render_to_response("charts/funding/total_incomes_by_scope.html", {
-            'incomes': incomes,
-            'total_incomes': total_incomes,
-            'year': year,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'total_incomes': total_incomes,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/total_incomes_by_scope.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: publications_number_of_publications
-#########################
+###########################################################################
 
 def publications_number_of_publications(request):
     publications = {}
@@ -271,12 +277,14 @@ def publications_number_of_publications(request):
         pub_year = publication.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
-    return render_to_response("charts/publications/number_of_publications.html", {
-            'publications': publications,
-            'publication_types': publication_types,
-            'years': years,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'publication_types': publication_types,
+        'publications': publications,
+        'years': years,
+    }
+
+    return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -307,22 +315,28 @@ def publications_coauthorship(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/publications/co_authorship.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/publications/co_authorship.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
 # View: publications_morelab_coauthorship
 ###########################################################################
 
-def publications_morelab_coauthorship(request):
+def publications_morelab_coauthorship(request, max_position=None):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
     for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if max_position > 2:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
+        else:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
             for pos, author_id in enumerate(_list):
@@ -330,7 +344,7 @@ def publications_morelab_coauthorship(request):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
                     if author.is_active and author2.is_active:
-                        G.add_edge(author.id,author2.id)
+                        G.add_edge(author.id, author2.id)
                         try:
                             G[author.id][author2.id]['weight'] += 1
                         except:
@@ -342,10 +356,12 @@ def publications_morelab_coauthorship(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/publications/co_authorship.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/publications/co_authorship.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -365,7 +381,7 @@ def projects_collaborations(request):
                 for i in range(pos+1, len(_list)):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=_list[i])
-                    G.add_edge(person1.id,person2.id)
+                    G.add_edge(person1.id, person2.id)
                     try:
                         G[person1.id][person2.id]['weight'] += 1
                     except:
@@ -377,10 +393,12 @@ def projects_collaborations(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/collaboration.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/projects/collaboration.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -401,7 +419,7 @@ def projects_morelab_collaborations(request):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=_list[i])
                     if person1.is_active and person2.is_active:
-                        G.add_edge(person1.id,person2.id)
+                        G.add_edge(person1.id, person2.id)
                         try:
                             G[person1.id][person2.id]['weight'] += 1
                         except:
@@ -413,10 +431,12 @@ def projects_morelab_collaborations(request):
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/collaboration_morelab.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/projects/collaboration_morelab.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
