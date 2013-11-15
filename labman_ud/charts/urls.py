@@ -15,13 +15,14 @@ urlpatterns = patterns('',
 
     # /publications
     url(r'^publications/coauthorship/$', 'charts.views.publications_coauthorship', name='publications_coauthorship'),
+    url(r'^publications/morelab_coauthorship/(?P<max_position>\d)$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship_max_position'),
     url(r'^publications/morelab_coauthorship/$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship'),
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
 
-    # /projects    
+    # /projects
     url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
     url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
-    
+
 )
 
 urlpatterns += staticfiles_urlpatterns()
