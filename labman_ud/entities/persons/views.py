@@ -7,11 +7,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
+from charts.utils import nx_graph
 from networkx.readwrite import json_graph
-
-import community
-import json
-import networkx as nx
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
@@ -21,6 +18,8 @@ from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
 
+import json
+import networkx as nx
 
 # Create your views here.
 
@@ -245,7 +244,7 @@ def member_info(request, member_slug):
                     G.node[author2.id]['name'] = author2.full_name
 
     try:
-        G = analyze_graph(G)
+        G = nx_graph.analyze(G)
         ego_g = nx.ego_graph(G, member.id)
         data = json_graph.node_link_data(ego_g)
 
@@ -373,7 +372,7 @@ def former_member_info(request, former_member_slug):
                     G.node[author2.id]['name'] = author2.full_name
 
     try:
-        G = analyze_graph(G)
+        G = nx_graph.analyze(G)
         ego_g = nx.ego_graph(G, former_member.id)
         data = json_graph.node_link_data(ego_g)
 
@@ -460,76 +459,3 @@ def __clean_publication_tags(member_id, min_year, max_year):
             pass
 
     return publication_tags_per_year
-
-
-###########################################################################
-###########################################################################
-### analyze_graph
-###########################################################################
-###########################################################################
-
-def analyze_graph(G):
-    components = []
-
-    components = nx.connected_component_subgraphs(G)
-
-    i = 0
-
-    for cc in components:
-        # set the connected component for each group
-        for node in cc:
-            G.node[node]['component'] = i
-
-        # calculate the in component betweeness, closeness and eigenvector centralities
-        cent_betweenness = nx.betweenness_centrality(cc)
-        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
-        cent_closeness = nx.closeness_centrality(cc)
-
-        for name in cc.nodes():
-            G.node[name]['cc-betweenness'] = cent_betweenness[name]
-            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
-            G.node[name]['cc-closeness'] = cent_closeness[name]
-
-        i += 1
-
-    # calculate cliques
-    cliques = list(nx.find_cliques(G))
-    j = 0
-    processed_members = []
-    for clique in cliques:
-        for member in clique:
-            if not member in processed_members:
-                G.node[member]['cliques'] = []
-                processed_members.append(member)
-
-            G.node[member]['cliques'].append(j)
-
-        j += 1
-
-    # calculate degree
-    degrees = G.degree()
-    for name in degrees:
-        G.node[name]['degree'] = degrees[name]
-
-    betweenness = nx.betweenness_centrality(G)
-    eigenvector = nx.eigenvector_centrality_numpy(G)
-    closeness = nx.closeness_centrality(G)
-    pagerank = nx.pagerank(G)
-    k_cliques = nx.k_clique_communities(G, 3)
-
-    for name in G.nodes():
-        G.node[name]['betweenness'] = betweenness[name]
-        G.node[name]['eigenvector'] = eigenvector[name]
-        G.node[name]['closeness'] = closeness[name]
-        G.node[name]['pagerank'] = pagerank[name]
-
-    for pos, k_clique in enumerate(k_cliques):
-        for member in k_clique:
-            G.node[member]['k-clique'] = pos
-
-    partitions = community.best_partition(G)
-
-    for key in partitions.keys():
-        G.node[key]['modularity'] = partitions[key]
-
-    return G

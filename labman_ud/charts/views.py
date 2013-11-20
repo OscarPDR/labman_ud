@@ -6,14 +6,15 @@ from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from charts.utils import nx_graph
+from networkx.readwrite import json_graph
+
 from entities.funding_programs.models import FundingProgram
 from entities.persons.models import Person
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor
 from entities.utils.models import GeographicalScope, Role
 
-from networkx.readwrite import json_graph
-import community
 import json
 import networkx as nx
 
@@ -303,7 +304,7 @@ def publications_coauthorship(request):
                 for i in range(pos+1, len(_list)):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id,author2.id)
+                    G.add_edge(author.id, author2.id)
                     try:
                         G[author.id][author2.id]['weight'] += 1
                     except:
@@ -311,7 +312,7 @@ def publications_coauthorship(request):
                     G.node[author.id]['name'] = author.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
@@ -352,7 +353,7 @@ def publications_morelab_coauthorship(request, max_position=None):
                         G.node[author.id]['name'] = author.full_name
                         G.node[author2.id]['name'] = author2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
@@ -389,7 +390,7 @@ def projects_collaborations(request):
                     G.node[person1.id]['name'] = person1.full_name
                     G.node[person2.id]['name'] = person2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
@@ -427,7 +428,7 @@ def projects_morelab_collaborations(request):
                         G.node[person1.id]['name'] = person1.full_name
                         G.node[person2.id]['name'] = person2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
@@ -437,74 +438,3 @@ def projects_morelab_collaborations(request):
     }
 
     return render_to_response("charts/projects/collaboration_morelab.html", return_dict, context_instance=RequestContext(request))
-
-
-###########################################################################
-###########################################################################
-### analyze_graph
-###########################################################################
-###########################################################################
-
-def analyze_graph(G):
-    components = []
-
-    components = nx.connected_component_subgraphs(G)
-
-    i = 0
-
-    for cc in components:
-        #Set the connected component for each group
-        for node in cc:
-            G.node[node]['component'] = i
-
-        #Calculate the in component betweeness, closeness and eigenvector centralities
-        cent_betweenness = nx.betweenness_centrality(cc)
-        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
-        cent_closeness = nx.closeness_centrality(cc)
-
-        for name in cc.nodes():
-            G.node[name]['cc-betweenness'] = cent_betweenness[name]
-            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
-            G.node[name]['cc-closeness'] = cent_closeness[name]
-
-        i +=1
-
-    # Calculate cliques
-    cliques = list(nx.find_cliques(G))
-    j = 0
-    processed_members = []
-    for clique in cliques:
-        for member in clique:
-            if not member in processed_members:
-                G.node[member]['cliques'] = []
-                processed_members.append(member)
-            G.node[member]['cliques'].append(j)
-        j +=1
-
-    #calculate degree
-    degrees = G.degree()
-    for name in degrees:
-        G.node[name]['degree'] = degrees[name]
-
-    betweenness = nx.betweenness_centrality(G)
-    eigenvector = nx.eigenvector_centrality_numpy(G)
-    closeness = nx.closeness_centrality(G)
-    pagerank = nx.pagerank(G)
-    k_cliques = nx.k_clique_communities(G, 3)
-
-    for name in G.nodes():
-        G.node[name]['betweenness'] = betweenness[name]
-        G.node[name]['eigenvector'] = eigenvector[name]
-        G.node[name]['closeness'] = closeness[name]
-        G.node[name]['pagerank'] = pagerank[name]
-
-    for pos, k_clique in enumerate(k_cliques):
-        for member in k_clique:
-            G.node[member]['k-clique'] = pos
-
-    partitions = community.best_partition(G)
-
-    for key in partitions.keys():
-        G.node[key]['modularity'] = partitions[key]
-
-    return G
