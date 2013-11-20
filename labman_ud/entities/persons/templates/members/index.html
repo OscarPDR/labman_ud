@@ -4,8 +4,28 @@
 
 {% block content %}
 
+    {% if not organization_slug %}
+        <div class="pull-right">
+            Filters:&emsp;
+            <a href="{% url members_by_organization 'deustotech-internet' %}">
+                <span class="label label-primary">DeustoTech - Internet</span>
+            </a>
+            &emsp;
+            <a href="{% url members_by_organization 'deustotech-telecom' %}">
+                <span class="label label-success">DeustoTech - Telecom</span>
+            </a>
+        </div>
+
+        <br>
+    {% endif %}
+
     <div class="centered">
-        <h2>{{ members|length }} member{{ members|pluralize }}</h2>
+        <h2>
+            {{ members|length }} member{{ members|pluralize }}
+            {% if organization %}
+             in <em>'{{ organization.short_name }}'</em>
+            {% endif %}
+        </h2>
     </div>
 
     <br>
@@ -94,9 +114,9 @@
                 });
             {% endfor %}
         };
-    
+
         var konami = new Konami(success);
-    
+
     </script>
 
 {% endblock %}

@@ -83,7 +83,7 @@ def person_index(request):
 # View: members
 #########################
 
-def members(request):
+def members(request, organization_slug=None):
     members = []
     member_konami_positions = []
 
@@ -100,22 +100,30 @@ def members(request):
             company = None
             position = None
 
-        members.append({
-            "company": company,
-            "full_name": member.full_name,
-            "gender": member.gender,
-            "position": position,
-            "profile_picture_url": member.profile_picture,
-            "slug": member.slug,
-            "title": member.title,
-        })
+        if not organization_slug or (organization_slug == organization.slug):
+            members.append({
+                "company": company,
+                "full_name": member.full_name,
+                "gender": member.gender,
+                "position": position,
+                "profile_picture_url": member.profile_picture,
+                "slug": member.slug,
+                "title": member.title,
+            })
 
         member_konami_positions.append(member.konami_code_position)
 
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+    else:
+        organization = None
+
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'members': members,
         'member_konami_positions': member_konami_positions,
+        'members': members,
+        'organization': organization,
+        'organization_slug': organization_slug,
     }
 
     return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
@@ -125,32 +133,41 @@ def members(request):
 # View: former_members
 #########################
 
-def former_members(request):
+def former_members(request, organization_slug=None):
 
     former_members = []
 
-    organization_ids = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS).values('id')
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
 
-    former_member_ids = Job.objects.filter(organization_id__in=organization_ids).values('person_id')
+    former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
 
     formber_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
 
     for former_member in formber_member_list:
         job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
         organization = Organization.objects.get(id=job.organization_id)
-        former_members.append({
-            'company': organization.short_name,
-            'full_name': former_member.full_name,
-            'gender': former_member.gender,
-            'position': job.position,
-            'profile_picture_url': former_member.profile_picture,
-            'slug': former_member.slug,
-            'title': former_member.title,
-        })
+
+        if not organization_slug or (organization_slug == organization.slug):
+            former_members.append({
+                'company': organization.short_name,
+                'full_name': former_member.full_name,
+                'gender': former_member.gender,
+                'position': job.position,
+                'profile_picture_url': former_member.profile_picture,
+                'slug': former_member.slug,
+                'title': former_member.title,
+            })
+
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+    else:
+        organization = None
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'former_members': former_members,
+        'organization': organization,
+        'organizations': organizations,
     }
 
     return render_to_response("former_members/index.html", return_dict, context_instance=RequestContext(request))
