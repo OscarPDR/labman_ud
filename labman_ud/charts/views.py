@@ -19,10 +19,6 @@ import json
 import networkx as nx
 
 
-BASE_TEMPLATE = 'labman_ud/base.html'
-CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
-
-
 # Create your views here.
 
 
