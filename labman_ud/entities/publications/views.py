@@ -2,6 +2,8 @@
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -23,11 +25,9 @@ PAGINATION_NUMBER = settings.PUBLICATIONS_PAGINATION
 # View: publication_index
 ###########################################################################
 
-def publication_index(request, tag_slug=None, publication_type_slug=None):
+def publication_index(request, tag_slug=None, publication_type_slug=None, query_string=None):
     tag = None
     publication_type = None
-
-    query_string = None
 
     clean_index = False
 
@@ -50,23 +50,27 @@ def publication_index(request, tag_slug=None, publication_type_slug=None):
         form = PublicationSearchForm(request.POST)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            query = slugify(query_string)
 
-            pubs = []
-
-            person_ids = Person.objects.filter(slug__contains=query).values('id')
-            publication_ids = PublicationAuthor.objects.filter(author_id__in=person_ids).values('publication_id')
-            publication_ids = set([x['publication_id'] for x in publication_ids])
-
-            for publication in publications:
-                if (query in slugify(publication.title)) or (publication.id in publication_ids):
-                    pubs.append(publication)
-
-            publications = pubs
-            clean_index = False
+            return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
 
     else:
         form = PublicationSearchForm()
+
+    if query_string:
+        query = slugify(query_string)
+
+        pubs = []
+
+        person_ids = Person.objects.filter(slug__contains=query).values('id')
+        publication_ids = PublicationAuthor.objects.filter(author_id__in=person_ids).values('publication_id')
+        publication_ids = set([x['publication_id'] for x in publication_ids])
+
+        for publication in publications:
+            if (query in slugify(publication.title)) or (publication.id in publication_ids):
+                pubs.append(publication)
+
+        publications = pubs
+        clean_index = False
 
     publications_length = len(publications)
 
