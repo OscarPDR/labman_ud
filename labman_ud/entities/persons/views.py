@@ -411,7 +411,7 @@ def former_member_info(request, former_member_slug):
 
 def person_info(request, slug):
 
-    person = get_object_or_404(Person, slug=slug)
+    person = Person.objects.get(slug=slug)
 
     projects = {}
 
@@ -425,10 +425,24 @@ def person_info(request, slug):
         for project in project_objects:
             projects[role.name].append(project)
 
+    publication_ids = PublicationAuthor.objects.filter(author=person.id).values('publication_id')
+    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
+
+    publications = {}
+
+    for publication_type in PublicationType.objects.all():
+        pub_type = publication_type.name.encode('utf-8')
+        publications[pub_type] = []
+
+    for publication in _publications:
+        pub_type = publication.publication_type.name.encode('utf-8')
+        publications[pub_type].append(publication)
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'person': person,
         'projects': projects,
+        'publications': publications,
     }
 
     return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
