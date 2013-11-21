@@ -56,22 +56,8 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         form = ProjectSearchForm(request.POST)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            # query_string = query_string.replace(' ', '%20')
 
             return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
-
-            # projs = []
-
-            # person_ids = Person.objects.filter(slug__contains=query).values('id')
-            # project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
-            # project_ids = set([x['project_id'] for x in project_ids])
-
-            # for project in projects:
-            #     if (query in slugify(project.full_name)) or (project.id in project_ids):
-            #         projs.append(project)
-
-            # projects = projs
-            # clean_index = False
 
     else:
         form = ProjectSearchForm()
