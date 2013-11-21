@@ -4,24 +4,22 @@
 
 {% block content %}
 
-    {% if not organization_slug %}
-        <div class="pull-right">
-            Filters:&emsp;
-            <a href="{% url former_members_by_organization 'deustotech-internet' %}">
-                <span class="label label-primary">DeustoTech - Internet</span>
-            </a>
-            &emsp;
-            <a href="{% url former_members_by_organization 'deustotech-telecom' %}">
-                <span class="label label-success">DeustoTech - Telecom</span>
-            </a>
-            &emsp;
-            <a href="{% url former_members_by_organization 'morelab' %}">
-                <span class="label label-default">MORElab</span>
-            </a>
-        </div>
+    <div class="pull-right">
+        Filters:&emsp;
+        <a href="{% url former_members_by_organization 'deustotech-internet' %}">
+            <span class="label label-primary">DeustoTech - Internet</span>
+        </a>
+        &emsp;
+        <a href="{% url former_members_by_organization 'deustotech-telecom' %}">
+            <span class="label label-success">DeustoTech - Telecom</span>
+        </a>
+        &emsp;
+        <a href="{% url former_members_by_organization 'morelab' %}">
+            <span class="label label-default">MORElab</span>
+        </a>
+    </div>
 
-        <br>
-    {% endif %}
+    <br>
 
     <div class="centered">
         <h2>
