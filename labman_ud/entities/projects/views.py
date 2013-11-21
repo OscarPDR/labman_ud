@@ -1,7 +1,5 @@
 # coding: utf-8
 
-from django.conf import settings
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -17,8 +15,6 @@ from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
 # Create your views here.
-
-PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
 
 ###########################################################################
@@ -77,21 +73,6 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         clean_index = False
 
     projects_length = len(projects)
-
-    paginator = Paginator(projects, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    try:
-        projects = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        projects = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        projects = paginator.page(paginator.num_pages)
 
     # dictionary to be returned in render_to_response()
     return_dict = {

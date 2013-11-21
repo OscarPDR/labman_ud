@@ -1,4 +1,5 @@
 {% extends "labman_ud/base.html" %}
+{% load pagination_tags %}
 
 
 
@@ -13,21 +14,11 @@
         </div>
     <form>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if persons.has_previous %}
-                <a href="?page={{ persons.previous_page_number }}"><< previous</a>
-            {% endif %}
+    {% autopaginate persons %}
 
-            <span class="current">
-                Page {{ persons.number }} of {{ persons.paginator.num_pages }}
-            </span>
+    {% paginate %}
 
-            {% if persons.has_next %}
-                <a href="?page={{ persons.next_page_number }}">next >></a>
-            {% endif %}
-        </span>
-    </div>
+    <br>
 
     <div class="row">
         <table class="table table-striped table-bordered">
