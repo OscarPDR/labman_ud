@@ -1,6 +1,8 @@
 # coding: utf-8
 
+from django.core.urlresolvers import reverse
 from django.db.models import Min, Max
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -30,31 +32,39 @@ OWN_ORGANIZATION_SLUGS = ['deustotech-internet', 'deustotech-telecom', 'morelab'
 # View: person_index
 #########################
 
-def person_index(request):
-    persons = Person.objects.all().order_by('full_name')
+def person_index(request, query_string=None):
+    clean_index = True
+
+    if query_string:
+        query = slugify(query_string)
+        persons = Person.objects.filter(slug__contains=query)
+        clean_index = False
+    else:
+        persons = Person.objects.all()
+
+    persons = persons.order_by('full_name')
 
     if request.method == 'POST':
         form = PersonSearchForm(request.POST)
 
         if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
+            query_string = form.cleaned_data['text']
+            clean_index = False
 
-            emps = []
-
-            for person in persons:
-                if query in person.slug:
-                    emps.append(person)
-
-            persons = emps
+            return HttpResponseRedirect(reverse('view_person_query', kwargs={'query_string': query_string}))
 
     else:
         form = PersonSearchForm()
 
+    persons_length = len(persons)
+
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'clean_index': clean_index,
         'form': form,
         'persons': persons,
+        'persons_length': persons_length,
+        'query_string': query_string,
     }
 
     return render_to_response("persons/index.html", return_dict, context_instance=RequestContext(request))

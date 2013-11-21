@@ -5,6 +5,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('',
     url(r'^$', 'entities.persons.views.person_index', name='person_index'),
+    url(r'^query/(?P<query_string>\D+)/$', 'entities.persons.views.person_index', name='view_person_query'),
     url(r'^info/(\S+)$', 'entities.persons.views.person_info', name='person_info'),
 
     url(r'^members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='members_by_organization'),
