@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^funding/incomes_by_project/(?P<project_slug>\S+)$', 'charts.views.funding_incomes_by_project', name='funding_incomes_by_project'),
 
     # /publications
+    url(r'^publications/coauthorship/(?P<max_position>\d)$', 'charts.views.publications_coauthorship', name='publications_coauthorship_max_position'),
     url(r'^publications/coauthorship/$', 'charts.views.publications_coauthorship', name='publications_coauthorship'),
     url(r'^publications/morelab_coauthorship/(?P<max_position>\d)$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship_max_position'),
     url(r'^publications/morelab_coauthorship/$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship'),
