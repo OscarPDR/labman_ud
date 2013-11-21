@@ -6,6 +6,9 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+
 from .forms import ProjectSearchForm
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType, ProjectLogo
 
@@ -23,12 +26,10 @@ PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 # View: project_index
 ###########################################################################
 
-def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None):
+def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None, query_string=None):
     tag = None
     status = None
     project_type = None
-
-    query_string = None
 
     clean_index = False
 
@@ -55,23 +56,40 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         form = ProjectSearchForm(request.POST)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            query = slugify(query_string)
+            # query_string = query_string.replace(' ', '%20')
 
-            projs = []
+            return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
-            person_ids = Person.objects.filter(slug__contains=query).values('id')
-            project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
-            project_ids = set([x['project_id'] for x in project_ids])
+            # projs = []
 
-            for project in projects:
-                if (query in slugify(project.full_name)) or (project.id in project_ids):
-                    projs.append(project)
+            # person_ids = Person.objects.filter(slug__contains=query).values('id')
+            # project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
+            # project_ids = set([x['project_id'] for x in project_ids])
 
-            projects = projs
-            clean_index = False
+            # for project in projects:
+            #     if (query in slugify(project.full_name)) or (project.id in project_ids):
+            #         projs.append(project)
+
+            # projects = projs
+            # clean_index = False
 
     else:
         form = ProjectSearchForm()
+
+    if query_string:
+        query = slugify(query_string)
+        projs = []
+
+        person_ids = Person.objects.filter(slug__contains=query).values('id')
+        project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
+        project_ids = set([x['project_id'] for x in project_ids])
+
+        for project in projects:
+            if (query in slugify(project.full_name)) or (project.id in project_ids):
+                projs.append(project)
+
+        projects = projs
+        clean_index = False
 
     projects_length = len(projects)
 
