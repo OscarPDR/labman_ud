@@ -2,6 +2,8 @@
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -23,10 +25,8 @@ PAGINATION_NUMBER = settings.ORGANIZATIONS_PAGINATION
 # View: organization_index
 ###########################################################################
 
-def organization_index(request, organization_type_slug=None):
+def organization_index(request, organization_type_slug=None, query_string=None):
     organization_type = None
-
-    query_string = None
 
     clean_index = False
 
@@ -45,19 +45,23 @@ def organization_index(request, organization_type_slug=None):
 
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            query = slugify(query_string)
 
-            orgs = []
-
-            for organization in organizations:
-                if query in slugify(organization.full_name):
-                    orgs.append(organization)
-
-            organizations = orgs
-            clean_index = False
+            return HttpResponseRedirect(reverse('view_organization_query', kwargs={'query_string': query_string}))
 
     else:
         form = OrganizationSearchForm()
+
+    if query_string:
+        query = slugify(query_string)
+
+        orgs = []
+
+        for organization in organizations:
+            if query in slugify(organization.full_name):
+                orgs.append(organization)
+
+        organizations = orgs
+        clean_index = False
 
     organizations_length = len(organizations)
 
