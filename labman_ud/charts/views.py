@@ -288,12 +288,15 @@ def publications_number_of_publications(request):
 # View: publications_coauthorship
 ###########################################################################
 
-def publications_coauthorship(request):
+def publications_coauthorship(request, max_position=None):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
     for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if max_position > 2:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
+        else:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
             for pos, author_id in enumerate(_list):
