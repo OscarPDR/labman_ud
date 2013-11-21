@@ -12,60 +12,62 @@
     <br>
 
     <!-- <a href="" onclick="window.open(
-            'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
-            'facebook-share-dialog', 
+            'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+            'facebook-share-dialog',
             'width=626,height=436'
         ); return false;">
         Share on Facebook
     </a> -->
 
     <div class="row">
-        <div class="col-md-8 news-body">
+        <div class="{% if related %}col-md-8 {% endif %} news-body">
             {{ news.content|safe }}
         </div>
-    
-        <div class="col-md-3 well pull-right">
-            <h5>Related:</h5>
 
-            {% if related_persons %}
-                {% for person in related_persons %}
-                    <i class="icon icon-user icon-large"></i>&emsp;
-                    {% if person.is_active %}
-                        <a target="_blank" href="{% url member_info person.slug %}">
-                            {{ person.full_name }}
+        {% if related %}
+            <div class="col-md-3 well pull-right">
+                <h5>Related:</h5>
+
+                {% if related_persons %}
+                    {% for person in related_persons %}
+                        <i class="icon icon-user icon-large"></i>&emsp;
+                        {% if person.is_active %}
+                            <a target="_blank" href="{% url member_info person.slug %}">
+                                {{ person.full_name }}
+                            </a>
+                        {% else %}
+                            <a target="_blank" href="{% url person_info person.slug %}">
+                                {{ person.full_name }}
+                            </a>
+                        {% endif %}
+                        <br>
+                    {% endfor %}
+                    <br>
+                {% endif %}
+
+                {% if related_projects %}
+                    {% for project in related_projects %}
+                        <i class="icon icon-gears icon-large"></i>&emsp;
+                        <a target="_blank" href="{% url project_info project.slug %}">
+                            {{ project.short_name }}
                         </a>
-                    {% else %}
-                        <a target="_blank" href="{% url person_info person.slug %}">
-                            {{ person.full_name }}
+                        <br>
+                    {% endfor %}
+                    <br>
+                {% endif %}
+
+                {% if related_publications %}
+                    {% for publication in related_publications %}
+                        <i class="icon icon-file-text-alt icon-large"></i>&emsp;
+                        <a target="_blank" href="{% url publication_info publication.slug %}">
+                            {{ publication.title }}
                         </a>
-                    {% endif %}
+                        <br>
+                    {% endfor %}
                     <br>
-                {% endfor %}
-                <br>
-            {% endif %}
-
-            {% if related_projects %}
-                {% for project in related_projects %}
-                    <i class="icon icon-gears icon-large"></i>&emsp;
-                    <a target="_blank" href="{% url project_info project.slug %}">
-                        {{ project.short_name }}
-                    </a>
-                    <br>
-                {% endfor %}
-                <br>
-            {% endif %}
-
-            {% if related_publications %}
-                {% for publication in related_publications %}
-                    <i class="icon icon-file-text-alt icon-large"></i>&emsp;
-                    <a target="_blank" href="{% url publication_info publication.slug %}">
-                        {{ publication.title }}
-                    </a>
-                    <br>
-                {% endfor %}
-                <br>
-            {% endif %}
-        </div>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 
     <ul>
