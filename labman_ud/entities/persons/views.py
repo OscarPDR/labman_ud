@@ -1,7 +1,5 @@
 # coding: utf-8
 
-from django.conf import settings
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Min, Max
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -22,8 +20,6 @@ import json
 import networkx as nx
 
 # Create your views here.
-
-PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
 
 REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
 
@@ -54,21 +50,6 @@ def person_index(request):
 
     else:
         form = PersonSearchForm()
-
-    paginator = Paginator(persons, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    try:
-        persons = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        persons = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        persons = paginator.page(paginator.num_pages)
 
     # dictionary to be returned in render_to_response()
     return_dict = {

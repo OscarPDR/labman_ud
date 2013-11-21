@@ -1,7 +1,5 @@
 # coding: utf-8
 
-from django.conf import settings
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -16,9 +14,6 @@ from entities.projects.models import Project, ConsortiumMember
 
 
 # Create your views here.
-
-
-PAGINATION_NUMBER = settings.ORGANIZATIONS_PAGINATION
 
 
 ###########################################################################
@@ -64,21 +59,6 @@ def organization_index(request, organization_type_slug=None, query_string=None):
         clean_index = False
 
     organizations_length = len(organizations)
-
-    paginator = Paginator(organizations, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    try:
-        organizations = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        organizations = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        organizations = paginator.page(paginator.num_pages)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
