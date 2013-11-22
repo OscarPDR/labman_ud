@@ -30,7 +30,7 @@
 
                 {% if related_persons %}
                     {% for person in related_persons %}
-                        <i class="icon icon-user icon-large"></i>&emsp;
+                        <i class="fa fa-user fa-large"></i>&emsp;
                         {% if person.is_active %}
                             <a target="_blank" href="{% url member_info person.slug %}">
                                 {{ person.full_name }}
@@ -47,7 +47,7 @@
 
                 {% if related_projects %}
                     {% for project in related_projects %}
-                        <i class="icon icon-gears icon-large"></i>&emsp;
+                        <i class="fa fa-gears fa-large"></i>&emsp;
                         <a target="_blank" href="{% url project_info project.slug %}">
                             {{ project.short_name }}
                         </a>
@@ -58,7 +58,7 @@
 
                 {% if related_publications %}
                     {% for publication in related_publications %}
-                        <i class="icon icon-file-text-alt icon-large"></i>&emsp;
+                        <i class="fa fa-file-text-o fa-large"></i>&emsp;
                         <a target="_blank" href="{% url publication_info publication.slug %}">
                             {{ publication.title }}
                         </a>
