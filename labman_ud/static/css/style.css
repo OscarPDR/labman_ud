@@ -438,7 +438,7 @@ footer > a {
     text-align: justify;
     font-weight: 200;
     line-height: 1.4em;
-    font-size: 16px; 
+    font-size: 16px;
 }
 
 .member {
@@ -508,7 +508,10 @@ footer > a {
     border: 1px solid #999;
     border-radius: 0.5em;
     padding: 1.5em;
+}
 
+.news-body > p {
+    text-align: justify;
 }
 
 .soften {
@@ -591,4 +594,23 @@ footer > a {
 
 #clean-filters:hover {
     color: #666;
+}
+
+.indicator-image {
+    margin: 0.5em;
+}
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+.dl-horizontal > .day-number {
+    width: 50px;
+    font-size: 18px;
+
+}
+
+.dl-horizontal > .news-title {
+    margin-left: 100px;
 }

@@ -115,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pagination_bootstrap.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'labman_ud.urls'
@@ -130,6 +131,10 @@ TEMPLATE_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
     'django.core.context_processors.request',
 )
 
@@ -182,6 +187,8 @@ INSTALLED_APPS = (
 
     # Celery: background task queueing system
     'djcelery',
+
+    'pagination_bootstrap',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -272,11 +279,15 @@ SUIT_CONFIG = {
 # project's global variables
 ################################################
 
-EMPLOYEES_PAGINATION = 10
-FUNDING_PROGRAMS_PAGINATION = 10
-ORGANIZATIONS_PAGINATION = 10
-PROJECTS_PAGINATION = 10
-PUBLICATIONS_PAGINATION = 10
+# The default amount of items to show on a page if no number is specified.
+PAGINATION_DEFAULT_PAGINATION = 10
+
+# The number of items to the left and to the right of the current page to display (accounting for ellipses).
+PAGINATION_DEFAULT_WINDOW = 3
+
+# Determines whether an invalid page raises an Http404 or just sets the invalid_page context variable.
+# True does the former and False does the latter.
+PAGINATION_INVALID_PAGE_RAISES_404 = True
 
 # Django email settings
 EMAIL_HOST = ''

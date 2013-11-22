@@ -13,9 +13,9 @@ def organization_logo_path(self, filename):
     return '%s/%s%s' % ('organizations', self.organization.slug, os.path.splitext(filename)[-1])
 
 
-#########################
+###########################################################################
 # Model: OrganizationType
-#########################
+###########################################################################
 
 class OrganizationType(models.Model):
     name = models.CharField(
@@ -44,9 +44,9 @@ class OrganizationType(models.Model):
         super(OrganizationType, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Organization
-#########################
+###########################################################################
 
 class Organization(models.Model):
     organization_type = models.ForeignKey('OrganizationType')
@@ -91,22 +91,23 @@ class Organization(models.Model):
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.full_name
+
         else:
             self.short_name = self.short_name
+
         self.slug = slugify(self.short_name.encode('utf-8'))
         super(Organization, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: OrganizationLogo
-#########################
+###########################################################################
 
 class OrganizationLogo(models.Model):
     organization = models.ForeignKey('Organization')
 
     logo = models.ImageField(
         upload_to=organization_logo_path,
-        verbose_name='Logo',
         blank=True,
         null=True,
     )

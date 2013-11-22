@@ -54,22 +54,33 @@
             <ul id="publication-tabs" class="nav nav-pills nav-stacked">
                 <li class="active">
                     <a href="#overview_tab" data-toggle="tab">
-                        <i class="icon-info-sign icon-large"></i>&emsp;Overview
+                        <i class="fa fa-info fa-large"></i>&emsp;Overview
                     </a>
                 </li>
 
                 <li>
                     <a href="#extended_info_tab" data-toggle="tab">
-                        <i class="icon-list icon-large"></i>&emsp;Extended info
+                        <i class="fa fa-list fa-large"></i>&emsp;Extended info
                     </a>
                 </li>
 
                 {% if related_projects or related_publications %}
                     <li>
                         <a href="#related_tab" data-toggle="tab">
-                            <i class="icon-resize-horizontal"></i> Related
+                            <i class="fa fa-resize-horizontal"></i> Related
                         </a>
                     </li>
+                {% endif %}
+
+                {% if indicators_list %}
+                    <br>
+
+                    <div class="centered">
+                        {% for indicator in indicators_list %}
+                            <img class="indicator-image" src="{{ STATIC_PREFIX }}img/indicators/{{ indicator.slug }}.png"/>
+                            <br>
+                        {% endfor %}
+                    </div>
                 {% endif %}
 
                 {% if publication.bibtex %}
@@ -87,7 +98,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                <pre style="text-align: left;">                                            
+                                <pre style="text-align: left;">
 {{ publication.bibtex }}
                                 </pre>
                                 </div>
@@ -101,17 +112,17 @@
                     </div>
                 {% endif %}
 
-                {% if tags %}
+                {% if tag_list %}
                     <br>
 
                     <h6>Tags</h6>
 
-                    {% for tag in tags %}
+                    {% for tag in tag_list %}
                         <a target="_blank" href="{% url view_publication_tag tag.slug %}">
                             <span class="label label-info">{{ tag.name }}</span>
                         </a>
                     {% endfor %}
-                {% endif %}                
+                {% endif %}
             </ul>
 
         </div>
@@ -169,6 +180,14 @@
                         {% include 'publications/templates/book_section.html' %}
                     {% endif %}
 
+                    {% if publication.publication_type.name == 'Book' %}
+                        {% include 'publications/templates/book.html' %}
+                    {% endif %}
+
+                    {% if publication.publication_type.name == 'Magazine article' %}
+                        {% include 'publications/templates/magazine_article.html' %}
+                    {% endif %}
+
                 </div> <!-- end tab-pane #extended_info_tab -->
 
                 <div class="tab-pane" id="related_tab">
@@ -192,7 +211,7 @@
                                         <tr>
                                             <td>
                                                 <a target="_blank" href="{% url project_info project.slug %}">
-                                                    <i class="icon-chevron-right"></i> {{ project.full_name }}
+                                                    <i class="fa fa-chevron-right"></i> {{ project.full_name }}
                                                 </a>
                                             </td>
 
@@ -226,7 +245,7 @@
                                         <tr>
                                             <td>
                                                 <a target="_blank" href="{% url publication_info publication.slug %}">
-                                                    <i class="icon-chevron-right"></i> {{ publication.title }}
+                                                    <i class="fa fa-chevron-right"></i> {{ publication.title }}
                                                 </a>
                                             </td>
 

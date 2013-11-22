@@ -1,47 +1,30 @@
 # coding: utf-8
 
-import datetime
-from datetime import date
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.contrib.auth.decorators import login_required
-
-from django.conf import settings
-
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType, ProjectLogo
 from .forms import ProjectSearchForm
-
-from entities.persons.models import Person
-
-from entities.organizations.models import Organization
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType, ProjectLogo
 
 from entities.funding_programs.models import FundingProgram
-
+from entities.persons.models import Person
 from entities.publications.models import Publication
-
 from entities.utils.models import Role, Tag
 
 # Create your views here.
 
-PAGINATION_NUMBER = settings.PROJECTS_PAGINATION
 
-
-#########################
+###########################################################################
 # View: project_index
-#########################
+###########################################################################
 
-def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None):
+def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None, query_string=None):
     tag = None
     status = None
     project_type = None
-
-    query_string = None
 
     clean_index = False
 
@@ -68,57 +51,47 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         form = ProjectSearchForm(request.POST)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            query = slugify(query_string)
 
-            projs = []
-
-            person_ids = Person.objects.filter(slug__contains=query).values('id')
-            project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
-            project_ids = set([x['project_id'] for x in project_ids])
-
-            for project in projects:
-                if (query in slugify(project.full_name)) or (project.id in project_ids):
-                    projs.append(project)
-
-            projects = projs
-            clean_index = False
+            return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
     else:
         form = ProjectSearchForm()
 
+    if query_string:
+        query = slugify(query_string)
+        projs = []
+
+        person_ids = Person.objects.filter(slug__contains=query).values('id')
+        project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
+        project_ids = set([x['project_id'] for x in project_ids])
+
+        for project in projects:
+            if (query in slugify(project.full_name)) or (project.id in project_ids):
+                projs.append(project)
+
+        projects = projs
+        clean_index = False
+
     projects_length = len(projects)
 
-    paginator = Paginator(projects, PAGINATION_NUMBER)
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'clean_index': clean_index,
+        'form': form,
+        'project_type': project_type,
+        'projects': projects,
+        'projects_length': projects_length,
+        'query_string': query_string,
+        'status': status,
+        'tag': tag,
+    }
 
-    page = request.GET.get('page')
-
-    try:
-        projects = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        projects = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        projects = paginator.page(paginator.num_pages)
-
-    return render_to_response("projects/index.html", {
-            "projects": projects,
-            'form': form,
-            'projects_length': projects_length,
-            'tag': tag,
-            'status': status,
-            'project_type': project_type,
-            'query_string': query_string,
-            'clean_index': clean_index,
-        },
-        context_instance=RequestContext(request))
+    return render_to_response("projects/index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: project_info
-#########################
+###########################################################################
 
 def project_info(request, slug):
 
@@ -154,6 +127,7 @@ def project_info(request, slug):
             start_month = assigned_person.start_date.strftime('%B')
             start_year = assigned_person.start_date.year
             start_date = u'%s %s' % (start_month, start_year)
+
         except:
             start_date = None
 
@@ -161,27 +135,32 @@ def project_info(request, slug):
             end_month = assigned_person.end_date.strftime('%B')
             end_year = assigned_person.end_date.year
             end_date = u'%s %s' % (end_month, end_year)
+
         except:
             end_date = None
 
         working_period = None
+
         if start_date and end_date:
             working_period = u'(from %s to %s)' % (start_date, end_date)
+
         if start_date and not end_date:
             working_period = u'(since %s)' % (start_date)
 
         person_item = {
-                'full_name': person.full_name,
-                'is_active': person.is_active,
-                'slug': person.slug,
-                'working_period': working_period,
-                'description': assigned_person.description,
-            }
+            'description': assigned_person.description,
+            'full_name': person.full_name,
+            'is_active': person.is_active,
+            'slug': person.slug,
+            'working_period': working_period,
+        }
 
         if role.slug == 'principal-researcher':
             principal_researchers.append(person_item)
+
         if role.slug == 'project-manager':
             project_managers.append(person_item)
+
         if role.slug == 'researcher':
             researchers.append(person_item)
 
@@ -194,28 +173,31 @@ def project_info(request, slug):
     try:
         project_logo = ProjectLogo.objects.get(project=project.id)
         logo = project_logo.logo
+
     except:
         logo = None
 
-    return render_to_response("projects/info.html", {
-            'project': project,
-            'project_managers': project_managers,
-            'principal_researchers': principal_researchers,
-            'researchers': researchers,
-            'fundings': fundings,
-            'funding_programs': funding_programs,
-            'funding_amounts': funding_amounts,
-            'consortium_members': consortium_members,
-            'related_publications': related_publications,
-            'tags': tags,
-            'logo': logo,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'consortium_members': consortium_members,
+        'funding_amounts': funding_amounts,
+        'funding_programs': funding_programs,
+        'fundings': fundings,
+        'logo': logo,
+        'principal_researchers': principal_researchers,
+        'project': project,
+        'project_managers': project_managers,
+        'related_publications': related_publications,
+        'researchers': researchers,
+        'tags': tags,
+    }
+
+    return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: project_tag_cloud
-#########################
+###########################################################################
 
 def project_tag_cloud(request):
 
@@ -225,12 +207,16 @@ def project_tag_cloud(request):
 
     for tag in tags:
         t = tag.tag.name
+
         if t in tag_dict.keys():
             tag_dict[t] = tag_dict[t] + 1
+
         else:
             tag_dict[t] = 1
 
-    return render_to_response('projects/tag_cloud.html', {
-            'tag_dict': tag_dict,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'tag_dict': tag_dict,
+    }
+
+    return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))

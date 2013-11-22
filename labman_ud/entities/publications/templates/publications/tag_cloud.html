@@ -4,7 +4,7 @@
 
 {% block header_css %}
 
-<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/jqcloud.css"/>
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/jqcloud.css"/>
 
 {% endblock %}
 
@@ -33,7 +33,8 @@
         ];
 
         $(function() {
-            // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+            // When DOM is ready, select the container element and call the jQCloud method, 
+            // passing the array of words as the first argument.
             $("#publication_tag_cloud").jQCloud(word_array);
         });
     </script>

@@ -4,8 +4,30 @@
 
 {% block content %}
 
+    <div class="pull-right">
+        Filters:&emsp;
+        <a href="{% url former_members_by_organization 'deustotech-internet' %}">
+            <span class="label label-primary">DeustoTech - Internet</span>
+        </a>
+        &emsp;
+        <a href="{% url former_members_by_organization 'deustotech-telecom' %}">
+            <span class="label label-success">DeustoTech - Telecom</span>
+        </a>
+        &emsp;
+        <a href="{% url former_members_by_organization 'morelab' %}">
+            <span class="label label-default">MORElab</span>
+        </a>
+    </div>
+
+    <br>
+
     <div class="centered">
-        <h2>{{ former_members|length }} former member{{ former_members|pluralize }}</h2>
+        <h2>
+            {{ former_members|length }} former member{{ former_members|pluralize }}
+            {% if organization %}
+             in <em>'{{ organization.short_name }}'</em>
+            {% endif %}
+        </h2>
     </div>
 
     <br>
@@ -68,26 +90,40 @@
     <script type="text/javascript">
         var success = function() {
             var images = $("img.circular").map(function () { return this; });
-            $.each(images, function(i) {
-                var image_source = images[i].src;
-                if (image_source.indexOf("/media/persons/") >= 0) {
-                    var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
-                    konami_source = konami_source.replace(".jpg", ".gif");
-                    konami_source = konami_source.replace(".png", ".gif");
-                    images[i].src = konami_source;
-                }
 
-                if (image_source.indexOf("/img/female.png") >= 0) {
-                    images[i].src = "/static/img/lovelace.png";
-                }
+            {% for former_member_konami_profile_picture in former_member_konami_profile_pictures %}
+                $.each(images, function(i) {
+                    if (i == {{ forloop.counter0 }}) {
+                        if ("{{ former_member_konami_profile_picture|safe }}" != "") {
+                            images[i].src = "{{ MEDIA_PREFIX }}/{{ former_member_konami_profile_picture|safe }}";
+                        }
 
-                if (image_source.indexOf("/img/male.png") >= 0) {
-                    images[i].src = "/static/img/einstein.png";
-                }
-            });
-        }
-    
-        var konami = new Konami(success);  
+                        if (images[i].src.indexOf("/img/female.png") >= 0) {
+                            images[i].src = "/static/img/lovelace.png";
+                        }
+
+                        if (images[i].src.indexOf("/img/male.png") >= 0) {
+                            images[i].src = "/static/img/einstein.png";
+                        }
+                    };
+                });
+            {% endfor %}
+
+            var positions = $(".member-position").map(function () { return this; });
+
+            {% for former_konami_position in former_member_konami_positions %}
+                $.each(positions, function(i) {
+                    if (i == {{ forloop.counter0 }}) {
+                        if ("{{ former_konami_position|safe }}" != "") {
+                            positions[i].innerHTML = "{{ former_konami_position|safe }}";
+                        }
+                    };
+                });
+            {% endfor %}
+        };
+
+        var konami = new Konami(success);
+
     </script>
 
 {% endblock %}

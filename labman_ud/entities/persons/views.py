@@ -1,98 +1,83 @@
 # coding: utf-8
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
+from django.db.models import Min, Max
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.db.models import Sum, Min, Max
+from charts.utils import nx_graph
+from networkx.readwrite import json_graph
 
-from django.conf import settings
-
-from django.contrib.auth.decorators import login_required
-
-from .models import Person, Job, AccountProfile
 from .forms import PersonSearchForm
-
-from entities.projects.models import Project, AssignedPerson
-
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
-
-from entities.utils.models import Role, Tag, Network
+from .models import Person, Job, AccountProfile
 
 from entities.organizations.models import Organization
+from entities.projects.models import Project, AssignedPerson
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.utils.models import Role, Tag, Network
 
-import networkx as nx
-from networkx.readwrite import json_graph
 import json
-
-import community
-
-from collections import Counter, OrderedDict
-from itertools import islice
-
+import networkx as nx
 
 # Create your views here.
 
-PAGINATION_NUMBER = settings.EMPLOYEES_PAGINATION
+REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
+
+OWN_ORGANIZATION_SLUGS = ['deustotech-internet', 'deustotech-telecom', 'morelab']
 
 
 #########################
 # View: person_index
 #########################
 
-def person_index(request):
-    persons = Person.objects.all().order_by('full_name')
+def person_index(request, query_string=None):
+    clean_index = True
+
+    if query_string:
+        query = slugify(query_string)
+        persons = Person.objects.filter(slug__contains=query)
+        clean_index = False
+    else:
+        persons = Person.objects.all()
+
+    persons = persons.order_by('full_name')
 
     if request.method == 'POST':
         form = PersonSearchForm(request.POST)
+
         if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
+            query_string = form.cleaned_data['text']
+            clean_index = False
 
-            emps = []
-
-            for person in persons:
-                if query in person.slug:
-                    emps.append(person)
-
-            persons = emps
+            return HttpResponseRedirect(reverse('view_person_query', kwargs={'query_string': query_string}))
 
     else:
         form = PersonSearchForm()
 
-    paginator = Paginator(persons, PAGINATION_NUMBER)
+    persons_length = len(persons)
 
-    page = request.GET.get('page')
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'clean_index': clean_index,
+        'form': form,
+        'persons': persons,
+        'persons_length': persons_length,
+        'query_string': query_string,
+    }
 
-    try:
-        persons = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        persons = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        persons = paginator.page(paginator.num_pages)
-
-    return render_to_response("persons/index.html", {
-            'persons': persons,
-            'form': form,
-        },
-        context_instance = RequestContext(request))
+    return render_to_response("persons/index.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
 # View: members
 #########################
 
-def members(request):
-
-    members = []
+def members(request, organization_slug=None):
     member_konami_positions = []
+    member_konami_profile_pictures = []
+    members = []
 
     member_list = Person.objects.filter(is_active=True)
 
@@ -102,62 +87,91 @@ def members(request):
             organization = Organization.objects.get(id=job.organization_id)
             company = organization.short_name
             position = job.position
+
         except:
             company = None
             position = None
 
-        members.append({
-            "title": member.title,
-            "full_name": member.full_name,
-            "company": company,
-            "position": position,
-            "profile_picture_url": member.profile_picture,
-            "slug": member.slug,
-            "gender": member.gender,
-        })
+        if not organization_slug or (organization_slug == organization.slug):
+            members.append({
+                "company": company,
+                "full_name": member.full_name,
+                "gender": member.gender,
+                "position": position,
+                "profile_picture_url": member.profile_picture,
+                "slug": member.slug,
+                "title": member.title,
+            })
 
         member_konami_positions.append(member.konami_code_position)
+        member_konami_profile_pictures.append(member.profile_konami_code_picture)
 
-    return render_to_response("members/index.html", {
-            'members': members,
-            "member_konami_positions": member_konami_positions,
-        },
-        context_instance=RequestContext(request))
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+    else:
+        organization = None
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'member_konami_positions': member_konami_positions,
+        'member_konami_profile_pictures': member_konami_profile_pictures,
+        'members': members,
+        'organization': organization,
+        'organization_slug': organization_slug,
+    }
+
+    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
 # View: former_members
 #########################
 
-def former_members(request):
+def former_members(request, organization_slug=None):
 
+    former_member_konami_positions = []
+    former_member_konami_profile_pictures = []
     former_members = []
 
-    # Change to own organization/s
-    org_slugs = ['deustotech-internet', 'deustotech-telecom', 'morelab']
-    organization_ids = Organization.objects.filter(slug__in=org_slugs).values('id')
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
 
-    former_member_ids = Job.objects.filter(organization_id__in=organization_ids).values('person_id')
+    former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
 
     formber_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
 
     for former_member in formber_member_list:
         job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
         organization = Organization.objects.get(id=job.organization_id)
-        former_members.append({
-            "title": former_member.title,
-            "full_name": former_member.full_name,
-            "company": organization.short_name,
-            "position": job.position,
-            "profile_picture_url": former_member.profile_picture,
-            "slug": former_member.slug,
-            "gender": former_member.gender,
-        })
 
-    return render_to_response("former_members/index.html", {
-            'former_members': former_members,
-        },
-        context_instance=RequestContext(request))
+        if not organization_slug or (organization_slug == organization.slug):
+            former_members.append({
+                'company': organization.short_name,
+                'full_name': former_member.full_name,
+                'gender': former_member.gender,
+                'position': job.position,
+                'profile_picture_url': former_member.profile_picture,
+                'slug': former_member.slug,
+                'title': former_member.title,
+            })
+
+        former_member_konami_positions.append(former_member.konami_code_position)
+        former_member_konami_profile_pictures.append(former_member.profile_konami_code_picture)
+
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+    else:
+        organization = None
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'former_member_konami_positions': former_member_konami_positions,
+        'former_member_konami_profile_pictures': former_member_konami_profile_pictures,
+        'former_members': former_members,
+        'organization': organization,
+        'organizations': organizations,
+    }
+
+    return render_to_response("former_members/index.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
@@ -171,6 +185,7 @@ def member_info(request, member_slug):
     try:
         job = Job.objects.get(person_id=member.id, end_date=None)
         position = job.position
+
     except:
         job = None
         position = None
@@ -183,6 +198,7 @@ def member_info(request, member_slug):
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
         project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
+
         for project in project_objects:
             projects[role.name].append(project)
 
@@ -208,7 +224,7 @@ def member_info(request, member_slug):
         number_of_publications[pub_type] = {}
 
         for year in years:
-            number_of_publications[pub_type][year] = 0    
+            number_of_publications[pub_type][year] = 0
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
@@ -224,26 +240,32 @@ def member_info(request, member_slug):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
+
     for pub in pubs:
         author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
+
             for pos, author_id in enumerate(_list):
                 for i in range(pos+1, len(_list)):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id,author2.id)
+                    G.add_edge(author.id, author2.id)
+
                     try:
                         G[author.id][author2.id]['weight'] += 1
+
                     except:
                         G[author.id][author2.id]['weight'] = 1
                     G.node[author.id]['name'] = author.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
     try:
-        G = analyze_graph(G)
+        G = nx_graph.analyze(G)
         ego_g = nx.ego_graph(G, member.id)
         data = json_graph.node_link_data(ego_g)
+
     except:
         data = {}
 
@@ -255,26 +277,27 @@ def member_info(request, member_slug):
     for account_profile in account_profiles:
         network = Network.objects.get(id=account_profile.network_id)
         account_item = {
-            'profile_id': account_profile.profile_id,
-            'network_name': network.name,
             'base_url': network.base_url,
             'icon_url': network.icon,
+            'network_name': network.name,
+            'profile_id': account_profile.profile_id,
         }
         accounts.append(account_item)
 
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        # 'publication_tags_per_year': publication_tags_per_year,
+        'accounts': accounts,
+        'data': json.dumps(data),
+        'has_publications': has_publications,
+        'member': member,
+        'number_of_publications': number_of_publications,
+        'position': position,
+        'projects': projects,
+        'publications': publications,
+    }
 
-    return render_to_response("members/info.html", {
-            'member': member,
-            'position': position,
-            'projects': projects,
-            'publications': publications,
-            'has_publications': has_publications,
-            'number_of_publications': number_of_publications,
-            # 'publication_tags_per_year': publication_tags_per_year,
-            'accounts': accounts,
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -285,11 +308,12 @@ def former_member_info(request, former_member_slug):
 
     former_member = Person.objects.get(slug=former_member_slug)
 
-    organization = Organization.objects.get(slug='deustotech-internet')
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
 
     try:
-        job = Job.objects.filter(person_id=former_member.id, organization=organization.id).order_by('-end_date')[0]
+        job = Job.objects.filter(person_id=former_member.id, organization_id__in=organizations).order_by('-end_date')[0]
         position = job.position
+
     except:
         job = None
         position = None
@@ -302,6 +326,7 @@ def former_member_info(request, former_member_slug):
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=former_member.id, role=role.id).values('project_id')
         project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
+
         for project in project_objects:
             projects[role.name].append(project)
 
@@ -327,7 +352,7 @@ def former_member_info(request, former_member_slug):
         number_of_publications[pub_type] = {}
 
         for year in years:
-            number_of_publications[pub_type][year] = 0    
+            number_of_publications[pub_type][year] = 0
 
     publication_ids = PublicationAuthor.objects.filter(author=former_member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
@@ -343,43 +368,51 @@ def former_member_info(request, former_member_slug):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
+
     for pub in pubs:
         author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
+
             for pos, author_id in enumerate(_list):
                 for i in range(pos+1, len(_list)):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id,author2.id)
+                    G.add_edge(author.id, author2.id)
+
                     try:
                         G[author.id][author2.id]['weight'] += 1
+
                     except:
                         G[author.id][author2.id]['weight'] = 1
                     G.node[author.id]['name'] = author.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
     try:
-        G = analyze_graph(G)
+        G = nx_graph.analyze(G)
         ego_g = nx.ego_graph(G, former_member.id)
         data = json_graph.node_link_data(ego_g)
+
     except:
         data = {}
 
     # publication_tags_per_year = __clean_publication_tags(former_member.id, min_year, max_year)
 
-    return render_to_response("former_members/info.html", {
-            'former_member': former_member,
-            'job': job,
-            'position': position,
-            'projects': projects,
-            'publications': publications,
-            'has_publications': has_publications,
-            'number_of_publications': number_of_publications,
-            # 'publication_tags_per_year': publication_tags_per_year,
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        # 'publication_tags_per_year': publication_tags_per_year,
+        'data': json.dumps(data),
+        'former_member': former_member,
+        'has_publications': has_publications,
+        'job': job,
+        'number_of_publications': number_of_publications,
+        'position': position,
+        'projects': projects,
+        'publications': publications,
+    }
+
+    return render_to_response("former_members/info.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
@@ -388,7 +421,7 @@ def former_member_info(request, former_member_slug):
 
 def person_info(request, slug):
 
-    person = get_object_or_404(Person, slug=slug)
+    person = Person.objects.get(slug=slug)
 
     projects = {}
 
@@ -398,14 +431,31 @@ def person_info(request, slug):
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=person.id, role=role.id).values('project_id')
         project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
+
         for project in project_objects:
             projects[role.name].append(project)
 
-    return render_to_response("persons/info.html", {
-            'person': person,
-            'projects': projects,
-        },
-        context_instance=RequestContext(request))
+    publication_ids = PublicationAuthor.objects.filter(author=person.id).values('publication_id')
+    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
+
+    publications = {}
+
+    for publication_type in PublicationType.objects.all():
+        pub_type = publication_type.name.encode('utf-8')
+        publications[pub_type] = []
+
+    for publication in _publications:
+        pub_type = publication.publication_type.name.encode('utf-8')
+        publications[pub_type].append(publication)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'person': person,
+        'projects': projects,
+        'publications': publications,
+    }
+
+    return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
 
 
 ####################################################################################################
@@ -413,19 +463,13 @@ def person_info(request, slug):
 ####################################################################################################
 
 def __clean_publication_tags(member_id, min_year, max_year):
-    project_tags = Project.objects.all().values('id')
-
     publication_ids = PublicationAuthor.objects.filter(author_id=member_id).values('publication_id')
-
-    publications = Publication.objects.filter(id__in=publication_ids)
 
     pub_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id')
     all_pub_tags = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id__name', 'publication_id__year')
     pub_tags = Tag.objects.filter(id__in=pub_tag_ids).values_list('name', flat=True).distinct()
 
-    removable_items = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
-
-    tags = [x for x in pub_tags if x not in removable_items]
+    tags = [x for x in pub_tags if x not in REMOVABLE_TAGS]
 
     publication_tags_per_year = {}
 
@@ -442,80 +486,8 @@ def __clean_publication_tags(member_id, min_year, max_year):
             year = pub_tag.get('publication_id__year')
 
             publication_tags_per_year[tag_name][year] = publication_tags_per_year[tag_name][year] + 1
+
         except:
             pass
 
     return publication_tags_per_year
-
-
-###########################################################################
-###########################################################################
-### analyze_graph
-###########################################################################
-###########################################################################
-
-def analyze_graph(G):    
-    components = []    
-
-    components = nx.connected_component_subgraphs(G)
-    
-    i = 0
-    
-    for cc in components:            
-        #Set the connected component for each group
-        for node in cc:
-            G.node[node]['component'] = i
-      
-        #Calculate the in component betweeness, closeness and eigenvector centralities        
-        cent_betweenness = nx.betweenness_centrality(cc)              
-        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
-        cent_closeness = nx.closeness_centrality(cc)
-        
-        for name in cc.nodes():
-            G.node[name]['cc-betweenness'] = cent_betweenness[name]
-            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
-            G.node[name]['cc-closeness'] = cent_closeness[name]
-        
-        i +=1     
-    
-    # Calculate cliques
-    cliques = list(nx.find_cliques(G))
-    j = 0
-    processed_members = []
-    for clique in cliques:
-        for member in clique:
-            if not member in processed_members:
-                G.node[member]['cliques'] = []
-                processed_members.append(member)
-            G.node[member]['cliques'].append(j)
-        j +=1
-    
-    #calculate degree    
-    degrees = G.degree()
-    for name in degrees:
-        G.node[name]['degree'] = degrees[name]
-          
-    betweenness = nx.betweenness_centrality(G)
-    eigenvector = nx.eigenvector_centrality_numpy(G)
-    closeness = nx.closeness_centrality(G)
-    pagerank = nx.pagerank(G)
-    k_cliques = nx.k_clique_communities(G, 3)
-    
-    for name in G.nodes():
-        G.node[name]['betweenness'] = betweenness[name]
-        G.node[name]['eigenvector'] = eigenvector[name]
-        G.node[name]['closeness'] = closeness[name]
-        G.node[name]['pagerank'] = pagerank[name]
-    
-    for pos, k_clique in enumerate(k_cliques):
-        for member in k_clique:
-            G.node[member]['k-clique'] = pos
-
-    partitions = community.best_partition(G)
-
-    for key in partitions.keys():
-        G.node[key]['modularity'] = partitions[key]
-        # G.nodes()[key]['modularity'] = partitions[key]
-        # G.node[element]['modularity'] = key
-        
-    return G
