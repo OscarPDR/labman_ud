@@ -508,7 +508,10 @@ footer > a {
     border: 1px solid #999;
     border-radius: 0.5em;
     padding: 1.5em;
+}
 
+.news-body > p {
+    text-align: justify;
 }
 
 .soften {
