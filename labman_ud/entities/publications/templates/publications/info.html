@@ -72,6 +72,17 @@
                     </li>
                 {% endif %}
 
+                {% if indicators_list %}
+                    <br>
+
+                    <div class="centered">
+                        {% for indicator in indicators_list %}
+                            <img class="indicator-image" src="{{ STATIC_PREFIX }}img/indicators/{{ indicator.slug }}.png"/>
+                            <br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 {% if publication.bibtex %}
                     <div class="centered">
                         <a data-toggle="modal" href="#myModal" class="btn btn-default bibtex-button">
@@ -87,7 +98,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                <pre style="text-align: left;">                                            
+                                <pre style="text-align: left;">
 {{ publication.bibtex }}
                                 </pre>
                                 </div>
@@ -101,17 +112,17 @@
                     </div>
                 {% endif %}
 
-                {% if tags %}
+                {% if tag_list %}
                     <br>
 
                     <h6>Tags</h6>
 
-                    {% for tag in tags %}
+                    {% for tag in tag_list %}
                         <a target="_blank" href="{% url view_publication_tag tag.slug %}">
                             <span class="label label-info">{{ tag.name }}</span>
                         </a>
                     {% endfor %}
-                {% endif %}                
+                {% endif %}
             </ul>
 
         </div>

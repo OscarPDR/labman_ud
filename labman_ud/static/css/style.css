@@ -438,7 +438,7 @@ footer > a {
     text-align: justify;
     font-weight: 200;
     line-height: 1.4em;
-    font-size: 16px; 
+    font-size: 16px;
 }
 
 .member {
@@ -591,4 +591,8 @@ footer > a {
 
 #clean-filters:hover {
     color: #666;
+}
+
+.indicator-image {
+    margin: 0.5em;
 }
