@@ -215,7 +215,6 @@ LOGGING = {
 
 CKEDITOR_MEDIA_PREFIX = '/media/ckeditor_uploads/'
 CKEDITOR_UPLOAD_PATH = PROJECT_DIR.child('media') + '/ckeditor_uploads/'
-CKEDITOR_UPLOAD_PREFIX = '/media/ckeditor_uploads/'
 
 CKEDITOR_CONFIGS = {
     'default': {
