@@ -16,6 +16,8 @@ from entities.utils.models import Tag
 
 # Create your views here.
 
+INDICATORS_TAG_SLUGS = ['isi', 'corea', 'coreb', 'corec', 'q1', 'q2', 'q3', 'q4']
+
 
 ###########################################################################
 # View: publication_index
@@ -108,6 +110,15 @@ def publication_info(request, slug):
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
     tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
 
+    tag_list = []
+    indicators_list = []
+
+    for tag in tags:
+        if tag.slug in INDICATORS_TAG_SLUGS:
+            indicators_list.append(tag)
+        else:
+            tag_list.append(tag)
+
     try:
         pdf = publication.pdf
     except:
@@ -124,12 +135,13 @@ def publication_info(request, slug):
     return_dict = {
         'authors': authors,
         'bibtex': bibtex,
+        'indicators_list': indicators_list,
         'parent_publication': parent_publication,
         'pdf': pdf,
         'publication': publication,
         'related_projects': related_projects,
         'related_publications': related_publications,
-        'tags': tags,
+        'tag_list': tag_list,
     }
 
     return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
