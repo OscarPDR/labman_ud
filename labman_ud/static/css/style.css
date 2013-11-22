@@ -604,3 +604,13 @@ footer > a {
     background-color: yellow;
     font-weight: bold;
 }
+
+.dl-horizontal > .day-number {
+    width: 50px;
+    font-size: 18px;
+
+}
+
+.dl-horizontal > .news-title {
+    margin-left: 100px;
+}

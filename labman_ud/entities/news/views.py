@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from collections import OrderedDict
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -18,7 +20,15 @@ from entities.publications.models import Publication
 ###########################################################################
 
 def news_index(request):
-    news = News.objects.all().order_by('-created')
+    _news = News.objects.all().order_by('-created')
+
+    news = OrderedDict()
+
+    for news_piece in _news:
+        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
+        if not year_month in news:
+            news[year_month] = []
+        news[year_month].append(news_piece)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
