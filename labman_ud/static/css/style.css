@@ -596,3 +596,8 @@ footer > a {
 .indicator-image {
     margin: 0.5em;
 }
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}

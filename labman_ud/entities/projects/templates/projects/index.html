@@ -120,4 +120,12 @@
         $('#projects-nav').addClass('active');
     </script>
 
+    {% if query_string %}
+        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+
+        <script>
+            $('tbody').highlight('{{ query_string }}');
+        </script>
+    {% endif %}
+
 {% endblock %}
