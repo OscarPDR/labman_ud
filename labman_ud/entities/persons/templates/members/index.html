@@ -82,23 +82,24 @@
     <script type="text/javascript">
         var success = function() {
             var images = $("img.circular").map(function () { return this; });
-            $.each(images, function(i) {
-                var image_source = images[i].src;
-                if (image_source.indexOf("/media/persons/") >= 0) {
-                    var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
-                    konami_source = konami_source.replace(".jpg", ".gif");
-                    konami_source = konami_source.replace(".png", ".gif");
-                    images[i].src = konami_source;
-                }
 
-                if (image_source.indexOf("/img/female.png") >= 0) {
-                    images[i].src = "/static/img/lovelace.png";
-                }
+            {% for member_konami_profile_picture in member_konami_profile_pictures %}
+                $.each(images, function(i) {
+                    if (i == {{ forloop.counter0 }}) {
+                        if ("{{ member_konami_profile_picture|safe }}" != "") {
+                            images[i].src = "{{ MEDIA_PREFIX }}/{{ member_konami_profile_picture|safe }}";
+                        }
 
-                if (image_source.indexOf("/img/male.png") >= 0) {
-                    images[i].src = "/static/img/einstein.png";
-                }
-            });
+                        if (images[i].src.indexOf("/img/female.png") >= 0) {
+                            images[i].src = "/static/img/lovelace.png";
+                        }
+
+                        if (images[i].src.indexOf("/img/male.png") >= 0) {
+                            images[i].src = "/static/img/einstein.png";
+                        }
+                    };
+                });
+            {% endfor %}
 
             var positions = $(".member-position").map(function () { return this; });
 

@@ -75,8 +75,9 @@ def person_index(request, query_string=None):
 #########################
 
 def members(request, organization_slug=None):
-    members = []
     member_konami_positions = []
+    member_konami_profile_pictures = []
+    members = []
 
     member_list = Person.objects.filter(is_active=True)
 
@@ -103,6 +104,7 @@ def members(request, organization_slug=None):
             })
 
         member_konami_positions.append(member.konami_code_position)
+        member_konami_profile_pictures.append(member.profile_konami_code_picture)
 
     if organization_slug:
         organization = Organization.objects.get(slug=organization_slug)
@@ -112,6 +114,7 @@ def members(request, organization_slug=None):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'member_konami_positions': member_konami_positions,
+        'member_konami_profile_pictures': member_konami_profile_pictures,
         'members': members,
         'organization': organization,
         'organization_slug': organization_slug,
@@ -126,6 +129,8 @@ def members(request, organization_slug=None):
 
 def former_members(request, organization_slug=None):
 
+    former_member_konami_positions = []
+    former_member_konami_profile_pictures = []
     former_members = []
 
     organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
@@ -149,6 +154,9 @@ def former_members(request, organization_slug=None):
                 'title': former_member.title,
             })
 
+        former_member_konami_positions.append(former_member.konami_code_position)
+        former_member_konami_profile_pictures.append(former_member.profile_konami_code_picture)
+
     if organization_slug:
         organization = Organization.objects.get(slug=organization_slug)
     else:
@@ -156,6 +164,8 @@ def former_members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'former_member_konami_positions': former_member_konami_positions,
+        'former_member_konami_profile_pictures': former_member_konami_profile_pictures,
         'former_members': former_members,
         'organization': organization,
         'organizations': organizations,
@@ -298,10 +308,10 @@ def former_member_info(request, former_member_slug):
 
     former_member = Person.objects.get(slug=former_member_slug)
 
-    organization_ids = Organization.objects.get(slug__in=OWN_ORGANIZATION_SLUGS).values('organization_id')
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
 
     try:
-        job = Job.objects.filter(person_id=former_member.id, organization_id__in=organization_ids).order_by('-end_date')[0]
+        job = Job.objects.filter(person_id=former_member.id, organization_id__in=organizations).order_by('-end_date')[0]
         position = job.position
 
     except:

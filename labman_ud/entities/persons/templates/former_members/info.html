@@ -9,7 +9,7 @@
             {% if former_member.title %}
                 {{ former_member.title }}
             {% endif %}
-            
+
             {{ former_member.full_name }}
         </h1>
 
@@ -164,7 +164,7 @@
             </div> <!-- end #about-tab-content -->
         </div>
     </div> <!-- end .row .tabbable -->
-    
+
 {% endblock %}
 
 
@@ -181,12 +181,9 @@
         var success = function() {
             var image = document.getElementById("profile-picture");
             var image_source = image.src;
-            
+
             if (image_source.indexOf("/media/persons/") >= 0) {
-                var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
-                konami_source = konami_source.replace(".jpg", ".gif");
-                konami_source = konami_source.replace(".png", ".gif");
-                image.src = konami_source;
+                image.src = "{{ MEDIA_PREFIX }}/{{ former_member.profile_konami_code_picture }}";
             }
 
             if (image_source.indexOf("/img/female.png") >= 0) {
@@ -198,12 +195,21 @@
             }
 
             var name = document.getElementById("member-name");
-            name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+
+            if ("{{ former_member.gender }}" == "Female") {
+                name.innerHTML = name.innerHTML.replace("Dr.", "Lady");
+            }
+            else {
+                name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+            }
 
             var position = document.getElementById("member-position");
-            position.innerHTML = "{{ former_member.konami_code_position|safe }}";
+
+            if ("{{ former_member.konami_code_position|safe }}" != "") {
+                position.innerHTML = "{{ former_member.konami_code_position|safe }}";
+            }
         };
-    
+
         var konami = new Konami(success);
     </script>
 
