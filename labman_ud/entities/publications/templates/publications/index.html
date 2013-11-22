@@ -36,7 +36,7 @@
 
         <div class="col-md-2 pull-right">
             <a href="{% url publication_tag_cloud %}" class="btn btn-info">
-                <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
+                <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
             </a>
         </div>
     </div>
@@ -94,7 +94,7 @@
                         <td class="col-md-1 centered">
                             {% if publication.bibtex %}
                                 <a data-toggle="modal" href="#myModal">
-                                    <i class="icon-paperclip icon-2x"></i>
+                                    <i class="fa fa-paperclip fa-2x"></i>
                                 </a>
 
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -123,7 +123,7 @@
                         <td class="col-md-1 centered">
                             {% if publication.pdf %}
                                 <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
-                                    <i class="icon-file-text icon-2x"></i>
+                                    <i class="fa fa-file-text fa-2x"></i>
                                 </a>
                             {% endif %}
                         </td>

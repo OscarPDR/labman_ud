@@ -49,21 +49,21 @@
             <ul id="member-tabs" class="nav nav-pills nav-stacked">
                 <li class="active">
                     <a href="#member-projects-tab-pane" data-toggle="tab">
-                        <i class="icon-gears icon-large"></i>&emsp;Projects
+                        <i class="fa fa-gears fa-large"></i>&emsp;Projects
                     </a>
                 </li>
 
                 {% if has_publications %}
                     <li>
                         <a href="#member-publications-tab-pane" data-toggle="tab">
-                            <i class="icon-file-text-alt icon-large"></i>&emsp;Publications
+                            <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
                         </a>
                     </li>
                 {% endif %}
 
                 <li>
                     <a href="#member-graphs-tab-pane" data-toggle="tab">
-                        <i class="icon-bar-chart icon-large"></i>&emsp;Graphs
+                        <i class="fa fa-bar-chart-o fa-large"></i>&emsp;Graphs
                     </a>
                 </li>
             </ul> <!-- end #member-tabs -->
@@ -95,7 +95,7 @@
                                             <tr>
                                                 <td>
                                                     <a href="{% url project_info item.slug %}">
-                                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ item.full_name }}
+                                                        &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.full_name }}
                                                     </a>
                                                 </td>
 
@@ -139,7 +139,7 @@
                                             <tr>
                                                 <td>
                                                     <a href="{% url publication_info item.slug %}">
-                                                        &emsp;<i class="icon-chevron-right"></i>&emsp;{{ item.title }}
+                                                        &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
                                                     </a>
                                                 </td>
 

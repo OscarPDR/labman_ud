@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" name="submit" class="btn btn-primary center"><i class="icon-ok icon-white"></i> Query</button>
+                    <button type="submit" name="submit" class="btn btn-primary center"><i class="fa fa-ok fa-white"></i> Query</button>
 
                 </fieldset>
             </form>
@@ -71,7 +71,7 @@
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a id="sparql-title" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#sparql_query" onclick="changeTitle();">
-                                <i class="icon-chevron-down"></i> Show SPARQL query
+                                <i class="fa fa-chevron-down"></i> Show SPARQL query
                             </a>
                         </div>
 
@@ -172,10 +172,10 @@
         function changeTitle() {
             title = $('#sparql-title').html();
             if (title.indexOf('Show') !== -1) {
-                $('#sparql-title').html('<i class="icon-chevron-up"></i> Hide SPARQL query');
+                $('#sparql-title').html('<i class="fa fa-chevron-up"></i> Hide SPARQL query');
             }
             else {
-                $('#sparql-title').html('<i class="icon-chevron-down"></i> Show SPARQL query');
+                $('#sparql-title').html('<i class="fa fa-chevron-down"></i> Show SPARQL query');
             }
         }
     </script>
