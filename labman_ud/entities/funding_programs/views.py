@@ -1,6 +1,5 @@
 # coding: utf-8
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -11,16 +10,12 @@ from django.db.models import Sum, Min, Max
 
 from django.conf import settings
 
-from django.contrib.auth.decorators import login_required
-
 from .models import FundingProgram
 from .forms import FundingProgramForm, FundingProgramSearchForm
 
 from entities.projects.models import Project, Funding, FundingAmount
 
 # Create your views here.
-
-PAGINATION_NUMBER = settings.FUNDING_PROGRAMS_PAGINATION
 
 
 #########################
@@ -47,20 +42,6 @@ def funding_program_index(request):
     else:
         form = FundingProgramSearchForm()
 
-    paginator = Paginator(funding_programs, PAGINATION_NUMBER)
-
-    page = request.GET.get('page')
-
-    try:
-        funding_programs = paginator.page(page)
-
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        funding_programs = paginator.page(1)
-
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        funding_programs = paginator.page(paginator.num_pages)
     return render_to_response("funding_programs/index.html", {
             'funding_programs': funding_programs,
             'form': form,

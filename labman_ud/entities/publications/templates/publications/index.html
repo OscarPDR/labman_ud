@@ -1,4 +1,5 @@
 {% extends "labman_ud/base.html" %}
+{% load pagination_tags %}
 
 
 
@@ -35,26 +36,16 @@
 
         <div class="col-md-2 pull-right">
             <a href="{% url publication_tag_cloud %}" class="btn btn-info">
-                <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
+                <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
             </a>
         </div>
     </div>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if publications.has_previous %}
-                <a href="?page={{ publications.previous_page_number }}"><< previous</a>
-            {% endif %}
+    {% autopaginate publications %}
 
-            <span class="current">
-                Page {{ publications.number }} of {{ publications.paginator.num_pages }}
-            </span>
+    {% paginate %}
 
-            {% if publications.has_next %}
-                <a href="?page={{ publications.next_page_number }}">next >></a>
-            {% endif %}
-        </span>
-    </div>
+    <br>
 
     <div class="row">
         <table class="table table-striped table-bordered table-hover">
@@ -87,7 +78,7 @@
                                 {% endfor %}
                             </small>
 
-                            
+
                         </td>
 
                         <td class="col-md-1 centered">
@@ -103,7 +94,7 @@
                         <td class="col-md-1 centered">
                             {% if publication.bibtex %}
                                 <a data-toggle="modal" href="#myModal">
-                                    <i class="icon-paperclip icon-2x"></i>
+                                    <i class="fa fa-paperclip fa-2x"></i>
                                 </a>
 
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -132,7 +123,7 @@
                         <td class="col-md-1 centered">
                             {% if publication.pdf %}
                                 <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
-                                    <i class="icon-file-text icon-2x"></i>
+                                    <i class="fa fa-file-text fa-2x"></i>
                                 </a>
                             {% endif %}
                         </td>
@@ -151,5 +142,13 @@
     <script>
         $('#publications-nav').addClass('active');
     </script>
+
+    {% if query_string %}
+        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+
+        <script>
+            $('tbody').highlight('{{ query_string }}');
+        </script>
+    {% endif %}
 
 {% endblock %}

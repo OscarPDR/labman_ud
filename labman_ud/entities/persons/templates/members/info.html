@@ -9,7 +9,7 @@
             {% if member.title %}
                 {{ member.title }}
             {% endif %}
-            
+
             {{ member.full_name }}
         </h1>
 
@@ -37,19 +37,19 @@
 
             <div id="contact-member">
                 {% if member.email %}
-                    &emsp;<i class="icon-envelope-alt icon-large" style="color: #999;"></i>&emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                    &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>&emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
                     <br>
                 {% endif %}
 
                 {% if member.phone_number %}
                     <br>
-                    &emsp;<i class="icon-phone icon-large" style="color: #999;"></i>&emsp;{{ member.phone_number }} - <strong>ext: </strong> {{ member.phone_extension }}
+                    &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>&emsp;{{ member.phone_number }} - <strong>ext: </strong> {{ member.phone_extension }}
                     <br>
                 {% endif %}
 
                 {% if member.personal_website %}
                     <br>
-                    &emsp;<i class="icon-globe icon-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
+                    &emsp;<i class="fa fa-globe fa-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
                     <br>
                 {% endif %}
 
@@ -59,20 +59,20 @@
             <ul id="member-tabs" class="nav nav-pills nav-stacked">
                 <li class="active">
                     <a href="#member-biography-tab-pane" data-toggle="tab">
-                        <i class="icon-user icon-large"></i>&emsp;Biography
+                        <i class="fa fa-user fa-large"></i>&emsp;Biography
                     </a>
                 </li>
 
                 <li>
                     <a href="#member-projects-tab-pane" data-toggle="tab">
-                        <i class="icon-gears icon-large"></i>&emsp;Projects
+                        <i class="fa fa-gears fa-large"></i>&emsp;Projects
                     </a>
                 </li>
 
                 {% if has_publications %}
                     <li>
                         <a href="#member-publications-tab-pane" data-toggle="tab">
-                            <i class="icon-file-text-alt icon-large"></i>&emsp;Publications
+                            <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
                         </a>
                     </li>
                 {% endif %}
@@ -80,14 +80,14 @@
                 {% if accounts %}
                     <li>
                         <a href="#member-profiles-tab-pane" data-toggle="tab">
-                            <i class="icon-cloud icon-large"></i>&emsp;Profiles
+                            <i class="fa fa-cloud fa-large"></i>&emsp;Profiles
                         </a>
                     </li>
                 {% endif %}
 
                 <li>
                     <a href="#member-graphs-tab-pane" data-toggle="tab">
-                        <i class="icon-bar-chart icon-large"></i>&emsp;Graphs
+                        <i class="fa fa-bar-chart-o fa-large"></i>&emsp;Graphs
                     </a>
                 </li>
             </ul> <!-- end #member-tabs -->
@@ -123,7 +123,7 @@
             </div> <!-- end #about-tab-content -->
         </div>
     </div> <!-- end .row .tabbable -->
-    
+
 {% endblock %}
 
 
@@ -140,12 +140,9 @@
         var success = function() {
             var image = document.getElementById("profile-picture");
             var image_source = image.src;
-            
+
             if (image_source.indexOf("/media/persons/") >= 0) {
-                var konami_source = image_source.replace("/media/persons/", "/media/konami_code_persons/");
-                konami_source = konami_source.replace(".jpg", ".gif");
-                konami_source = konami_source.replace(".png", ".gif");
-                image.src = konami_source;
+                image.src = "{{ MEDIA_PREFIX }}/{{ member.profile_konami_code_picture }}";
             }
 
             if (image_source.indexOf("/img/female.png") >= 0) {
@@ -157,12 +154,21 @@
             }
 
             var name = document.getElementById("member-name");
-            name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+
+            if ("{{ member.gender }}" == "Female") {
+                name.innerHTML = name.innerHTML.replace("Dr.", "Lady");
+            }
+            else {
+                name.innerHTML = name.innerHTML.replace("Dr.", "Lord");
+            }
 
             var position = document.getElementById("member-position");
-            position.innerHTML = "{{ member.konami_code_position|safe }}";
+
+            if ("{{ member.konami_code_position|safe }}" != "") {
+                position.innerHTML = "{{ member.konami_code_position|safe }}";
+            }
         };
-    
+
         var konami = new Konami(success);
     </script>
 

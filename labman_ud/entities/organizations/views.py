@@ -1,103 +1,102 @@
 # coding: utf-8
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.conf import settings
 
-from django.contrib.auth.decorators import login_required
-
-from .models import Organization, OrganizationLogo
-from .forms import OrganizationForm, OrganizationSearchForm
+from .forms import OrganizationSearchForm
+from .models import Organization, OrganizationType, OrganizationLogo
 
 from entities.projects.models import Project, ConsortiumMember
-from entities.projects.forms import *
+
 
 # Create your views here.
 
-PAGINATION_NUMBER = settings.ORGANIZATIONS_PAGINATION
 
-
-#########################
+###########################################################################
 # View: organization_index
-#########################
+###########################################################################
 
-def organization_index(request):
-    organizations = Organization.objects.all().order_by('full_name')
+def organization_index(request, organization_type_slug=None, query_string=None):
+    organization_type = None
+
+    clean_index = False
+
+    if organization_type_slug:
+        organization_type = OrganizationType.objects.get(slug=organization_type_slug)
+        organizations = Organization.objects.filter(organization_type=organization_type.id)
+
+    else:
+        clean_index = True
+        organizations = Organization.objects.all()
+
+    organizations = organizations.order_by('full_name')
 
     if request.method == 'POST':
         form = OrganizationSearchForm(request.POST)
+
         if form.is_valid():
-            query = form.cleaned_data['text']
-            query = slugify(query)
+            query_string = form.cleaned_data['text']
 
-            orgs = []
-
-            for organization in organizations:
-                if query in slugify(organization.full_name):
-                    orgs.append(organization)
-
-            organizations = orgs
+            return HttpResponseRedirect(reverse('view_organization_query', kwargs={'query_string': query_string}))
 
     else:
         form = OrganizationSearchForm()
 
-    paginator = Paginator(organizations, PAGINATION_NUMBER)
+    if query_string:
+        query = slugify(query_string)
 
-    page = request.GET.get('page')
+        orgs = []
 
-    try:
-        organizations = paginator.page(page)
+        for organization in organizations:
+            if query in slugify(organization.full_name):
+                orgs.append(organization)
 
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        organizations = paginator.page(1)
+        organizations = orgs
+        clean_index = False
 
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        organizations = paginator.page(paginator.num_pages)
+    organizations_length = len(organizations)
 
-    return render_to_response("organizations/index.html", {
-            'organizations': organizations,
-            'form': form,
-        },
-        context_instance = RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'clean_index': clean_index,
+        'form': form,
+        'organization_type': organization_type,
+        'organizations': organizations,
+        'organizations_length': organizations_length,
+        'query_string': query_string,
+    }
+
+    return render_to_response("organizations/index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: organization_info
-#########################
+###########################################################################
 
 def organization_info(request, slug):
-    from_page = ''
-
-    http_referer = request.META['HTTP_REFERER']
-
-    if '?page=' in http_referer:
-        from_page = http_referer[http_referer.rfind('/')+1:]
-
-    organization = get_object_or_404(Organization, slug=slug)
+    organization = Organization.objects.get(slug=slug)
 
     try:
         organization_logo = OrganizationLogo.objects.get(organization=organization.id)
         logo = organization_logo.logo
+
     except:
         logo = None
 
-    projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('full_name')
+    projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('-start_year', '-end_year', 'full_name')
 
     consortium_ids = ConsortiumMember.objects.filter(organization_id=organization.id).values('project_id')
-    projects = Project.objects.filter(id__in=consortium_ids).order_by('full_name')
+    projects = Project.objects.filter(id__in=consortium_ids).order_by('-start_year', '-end_year', 'full_name')
 
-    return render_to_response("organizations/info.html", {
-            'organization': organization,
-            'projects_leaded': projects_leaded,
-            'projects': projects,
-            'from_page': from_page,
-            'logo': logo,
-        },
-        context_instance = RequestContext(request))
+    return_dict = {
+        'logo': logo,
+        'organization': organization,
+        'projects': projects,
+        'projects_leaded': projects_leaded,
+    }
+
+    return render_to_response("organizations/info.html", return_dict, context_instance=RequestContext(request))

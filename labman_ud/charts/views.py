@@ -2,50 +2,37 @@
 
 from datetime import date
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.db.models import Sum, Min, Max
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from django.conf import settings
-
-from django.db.models import Sum, Min, Max
+from charts.utils import nx_graph
+from networkx.readwrite import json_graph
 
 from entities.funding_programs.models import FundingProgram
-
-from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
-
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
-
 from entities.persons.models import Person
-
+from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
+from entities.publications.models import Publication, PublicationType, PublicationAuthor
 from entities.utils.models import GeographicalScope, Role
 
-import networkx as nx
-from networkx.readwrite import json_graph
 import json
-
-import community
-
-
-BASE_TEMPLATE = 'labman_ud/base.html'
-CLEAN_BASE_TEMPLATE = 'labman_ud/clean_base.html'
+import networkx as nx
 
 
 # Create your views here.
 
 
-#########################
+###########################################################################
 # View: chart_index
-#########################
+###########################################################################
 
 def chart_index(request):
     return render_to_response('charts/index.html')
 
 
-#########################
+###########################################################################
 # View: funding_total_incomes
-#########################
+###########################################################################
 
 def funding_total_incomes(request):
     path = str(request.path).replace('total_', '')
@@ -67,16 +54,18 @@ def funding_total_incomes(request):
         certainty = False if (year > current_year) else True
         incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
-    return render_to_response("charts/funding/total_incomes.html", {
-            'incomes': incomes,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'path': path,
+    }
+
+    return render_to_response("charts/funding/total_incomes.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_year
-#########################
+###########################################################################
 
 def funding_incomes_by_year(request, year):
     path = str(request.path).replace('total_', '') + '/'
@@ -96,17 +85,19 @@ def funding_incomes_by_year(request, year):
         scope = funding_program.geographical_scope.name
         incomes[scope] = incomes[scope] + int(year_income.own_amount)
 
-    return render_to_response("charts/funding/incomes_by_year.html", {
-            'incomes': incomes,
-            'year': year,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'path': path,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/incomes_by_year.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_year_and_scope
-#########################
+###########################################################################
 
 def funding_incomes_by_year_and_scope(request, year, scope):
     path = '/charts/incomes_by_project/'
@@ -121,7 +112,11 @@ def funding_incomes_by_year_and_scope(request, year, scope):
         project = Project.objects.get(id=funding.project_id)
 
         if funding_program.geographical_scope.name == scope:
-            project_incomes.append({'short_name': project.short_name, 'value': int(year_income.own_amount), 'slug': project.slug,})
+            project_incomes.append({
+                'short_name': project.short_name,
+                'value': int(year_income.own_amount),
+                'slug': project.slug,
+            })
 
     project_incomes.insert(0, project_incomes.pop())
 
@@ -138,26 +133,30 @@ def funding_incomes_by_year_and_scope(request, year, scope):
     #             project_incomes.append(p)
     #         el = el + 1
 
-    return render_to_response("charts/funding/incomes_by_year_and_scope.html", {
-            'project_incomes': project_incomes,
-            'year': year,
-            'scope': scope,
-            'path': path,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'path': path,
+        'project_incomes': project_incomes,
+        'scope': scope,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/incomes_by_year_and_scope.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_project_index
-#########################
+###########################################################################
 
 def funding_incomes_by_project_index(request):
     projects = Project.objects.all().order_by('slug')
 
-    return render_to_response("charts/funding/incomes_by_project_index.html", {
-            'projects': projects,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'projects': projects,
+    }
+
+    return render_to_response("charts/funding/incomes_by_project_index.html", return_dict, context_instance=RequestContext(request))
 
 
 #########################
@@ -171,16 +170,18 @@ def funding_incomes_by_project(request, project_slug):
 
     project_incomes = FundingAmount.objects.filter(funding_id__in=funding_ids).values('year').annotate(total=Sum('own_amount'))
 
-    return render_to_response("charts/funding/incomes_by_project.html", {
-            'project': project,
-            'project_incomes': project_incomes,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'project': project,
+        'project_incomes': project_incomes,
+    }
+
+    return render_to_response("charts/funding/incomes_by_project.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_total_incomes_by_scope
-#########################
+###########################################################################
 
 def funding_total_incomes_by_scope(request):
     incomes = {}
@@ -230,17 +231,19 @@ def funding_total_incomes_by_scope(request):
             'certainty': certainty,
         })
 
-    return render_to_response("charts/funding/total_incomes_by_scope.html", {
-            'incomes': incomes,
-            'total_incomes': total_incomes,
-            'year': year,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'incomes': incomes,
+        'total_incomes': total_incomes,
+        'year': year,
+    }
+
+    return render_to_response("charts/funding/total_incomes_by_scope.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: publications_number_of_publications
-#########################
+###########################################################################
 
 def publications_number_of_publications(request):
     publications = {}
@@ -271,31 +274,36 @@ def publications_number_of_publications(request):
         pub_year = publication.year
         publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
-    return render_to_response("charts/publications/number_of_publications.html", {
-            'publications': publications,
-            'publication_types': publication_types,
-            'years': years,
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'publication_types': publication_types,
+        'publications': publications,
+        'years': years,
+    }
+
+    return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
 # View: publications_coauthorship
 ###########################################################################
 
-def publications_coauthorship(request):
+def publications_coauthorship(request, max_position=None):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
     for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if max_position > 2:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
+        else:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
             for pos, author_id in enumerate(_list):
                 for i in range(pos+1, len(_list)):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id,author2.id)
+                    G.add_edge(author.id, author2.id)
                     try:
                         G[author.id][author2.id]['weight'] += 1
                     except:
@@ -303,26 +311,32 @@ def publications_coauthorship(request):
                     G.node[author.id]['name'] = author.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/publications/co_authorship.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/publications/co_authorship.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
 # View: publications_morelab_coauthorship
 ###########################################################################
 
-def publications_morelab_coauthorship(request):
+def publications_morelab_coauthorship(request, max_position=None):
     G = nx.Graph()
 
     pubs = Publication.objects.all()
     for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+        if max_position > 2:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
+        else:
+            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
         if author_ids:
             _list = [author_id['author_id'] for author_id in author_ids]
             for pos, author_id in enumerate(_list):
@@ -330,7 +344,7 @@ def publications_morelab_coauthorship(request):
                     author = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
                     if author.is_active and author2.is_active:
-                        G.add_edge(author.id,author2.id)
+                        G.add_edge(author.id, author2.id)
                         try:
                             G[author.id][author2.id]['weight'] += 1
                         except:
@@ -338,14 +352,16 @@ def publications_morelab_coauthorship(request):
                         G.node[author.id]['name'] = author.full_name
                         G.node[author2.id]['name'] = author2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/publications/co_authorship.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/publications/co_authorship.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -365,7 +381,7 @@ def projects_collaborations(request):
                 for i in range(pos+1, len(_list)):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=_list[i])
-                    G.add_edge(person1.id,person2.id)
+                    G.add_edge(person1.id, person2.id)
                     try:
                         G[person1.id][person2.id]['weight'] += 1
                     except:
@@ -373,14 +389,16 @@ def projects_collaborations(request):
                     G.node[person1.id]['name'] = person1.full_name
                     G.node[person2.id]['name'] = person2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/collaboration.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
+
+    return render_to_response("charts/projects/collaboration.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -401,7 +419,7 @@ def projects_morelab_collaborations(request):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=_list[i])
                     if person1.is_active and person2.is_active:
-                        G.add_edge(person1.id,person2.id)
+                        G.add_edge(person1.id, person2.id)
                         try:
                             G[person1.id][person2.id]['weight'] += 1
                         except:
@@ -409,82 +427,13 @@ def projects_morelab_collaborations(request):
                         G.node[person1.id]['name'] = person1.full_name
                         G.node[person2.id]['name'] = person2.full_name
 
-    G = analyze_graph(G)
+    G = nx_graph.analyze(G)
 
     data = json_graph.node_link_data(G)
 
-    return render_to_response("charts/projects/collaboration_morelab.html", {
-            'data': json.dumps(data),
-        },
-        context_instance=RequestContext(request))
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'data': json.dumps(data),
+    }
 
-
-###########################################################################
-###########################################################################
-### analyze_graph
-###########################################################################
-###########################################################################
-
-def analyze_graph(G):
-    components = []
-
-    components = nx.connected_component_subgraphs(G)
-
-    i = 0
-
-    for cc in components:
-        #Set the connected component for each group
-        for node in cc:
-            G.node[node]['component'] = i
-
-        #Calculate the in component betweeness, closeness and eigenvector centralities
-        cent_betweenness = nx.betweenness_centrality(cc)
-        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
-        cent_closeness = nx.closeness_centrality(cc)
-
-        for name in cc.nodes():
-            G.node[name]['cc-betweenness'] = cent_betweenness[name]
-            G.node[name]['cc-eigenvector'] = cent_eigenvector[name]
-            G.node[name]['cc-closeness'] = cent_closeness[name]
-
-        i +=1
-
-    # Calculate cliques
-    cliques = list(nx.find_cliques(G))
-    j = 0
-    processed_members = []
-    for clique in cliques:
-        for member in clique:
-            if not member in processed_members:
-                G.node[member]['cliques'] = []
-                processed_members.append(member)
-            G.node[member]['cliques'].append(j)
-        j +=1
-
-    #calculate degree
-    degrees = G.degree()
-    for name in degrees:
-        G.node[name]['degree'] = degrees[name]
-
-    betweenness = nx.betweenness_centrality(G)
-    eigenvector = nx.eigenvector_centrality_numpy(G)
-    closeness = nx.closeness_centrality(G)
-    pagerank = nx.pagerank(G)
-    k_cliques = nx.k_clique_communities(G, 3)
-
-    for name in G.nodes():
-        G.node[name]['betweenness'] = betweenness[name]
-        G.node[name]['eigenvector'] = eigenvector[name]
-        G.node[name]['closeness'] = closeness[name]
-        G.node[name]['pagerank'] = pagerank[name]
-
-    for pos, k_clique in enumerate(k_cliques):
-        for member in k_clique:
-            G.node[member]['k-clique'] = pos
-
-    partitions = community.best_partition(G)
-
-    for key in partitions.keys():
-        G.node[key]['modularity'] = partitions[key]
-
-    return G
+    return render_to_response("charts/projects/collaboration_morelab.html", return_dict, context_instance=RequestContext(request))

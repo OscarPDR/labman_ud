@@ -4,15 +4,18 @@
 
 {% block content %}
 
-    <ul>
-        {% for new in news %}
-            <li>
-                <a href="{% url view_news new.slug %}">
-                    {{ new.title }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% for key, value in news.items %}
+        <blockquote>
+            <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+
+            <dl class="dl-horizontal">
+                {% for item in value %}
+                    <dt class="day-number">{{ item.created|date:"d" }}</dt>
+                    <dd class="news-title"><a href="{% url view_news item.slug %}">{{ item.title }}</a></dd>
+                {% endfor %}
+            </dl>
+        </blockquote>
+    {% endfor %}
 
 {% endblock %}
 

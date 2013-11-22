@@ -1,4 +1,5 @@
 {% extends "labman_ud/base.html" %}
+{% load pagination_tags %}
 
 
 
@@ -37,26 +38,16 @@
 
         <div class="col-md-2 pull-right">
             <a href="{% url project_tag_cloud %}" class="btn btn-info">
-                <i class="icon icon-cloud icon-large"></i>&emsp;View tag cloud
+                <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
             </a>
         </div>
     </div>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if projects.has_previous %}
-                <a href="?page={{ projects.previous_page_number }}"><< previous</a>
-            {% endif %}
+    {% autopaginate projects %}
 
-            <span class="current">
-                Page {{ projects.number }} of {{ projects.paginator.num_pages }}
-            </span>
+    {% paginate %}
 
-            {% if projects.has_next %}
-                <a href="?page={{ projects.next_page_number }}">next >></a>
-            {% endif %}
-        </span>
-    </div>
+    <br>
 
     <table class="table table-striped table-bordered table-hover">
         <thead>
@@ -109,9 +100,9 @@
 
                     <td class="col-md-1 centered">
                         {% if project.homepage %}
-                        <a target="_blank" href="{{ project.homepage }}">
-                            <i class="icon-globe"></i>
-                        </a>
+                            <a target="_blank" href="{{ project.homepage }}">
+                                <i class="fa fa-globe"></i>
+                            </a>
                         {% endif %}
                     </td>
                 </tr>
@@ -128,5 +119,13 @@
     <script>
         $('#projects-nav').addClass('active');
     </script>
+
+    {% if query_string %}
+        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+
+        <script>
+            $('tbody').highlight('{{ query_string }}');
+        </script>
+    {% endif %}
 
 {% endblock %}
