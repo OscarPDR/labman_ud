@@ -1,626 +1,574 @@
 <?xml version="1.0"?>
 
 
-<!DOCTYPE Ontology [
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
-    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY ontology "http://swrc.ontoware.org/ontology#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY swrcfe "http://www.morelab.deusto.es/ontologies/swrcfe.owl#" >
 ]>
 
 
-<Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.morelab.deusto.es/ontologies/swrcfe.owl"
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     ontologyIRI="http://www.morelab.deusto.es/ontologies/swrcfe.owl">
-    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
-    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
-    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
-    <Prefix name="swrcfe" IRI="http://www.morelab.deusto.es/ontologies/swrcfe.owl#"/>
-    <Prefix name="ontology" IRI="http://swrc.ontoware.org/ontology#"/>
-    <Import>http://xmlns.com/foaf/0.1/</Import>
-    <Import>http://data.semanticweb.org/ns/swc/swrc</Import>
-    <Import>http://purl.org/ontology/places</Import>
-    <Annotation>
-        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
-        <Literal datatypeIRI="&xsd;double">5.0</Literal>
-    </Annotation>
-    <Annotation>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <Literal datatypeIRI="&xsd;double">SWRCFE (SWRC Funding Extension) is an extension of the SWRC ontology (http://ontoware.org/swrc/), used to represent funding in R&amp;D projects (who finances the project, in what period of time and with which amount of money).
-The most recent version of the ontology is v5.0 (25th November, 2013).
-Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).</Literal>
-    </Annotation>
-    <Annotation>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <Literal datatypeIRI="&xsd;double">SWRCFE (SWRC Funding Extension) es una extensión de la ontología SWRC (http://ontoware.org/swrc/) cuya finalidad es representar la financiación en proyectos de I+D+i (quién financia el proyecto, en que período de tiempo y con que cuantía).
+     xmlns:ontology="http://swrc.ontoware.org/ontology#"
+     xmlns:swrcfe="http://www.morelab.deusto.es/ontologies/swrcfe.owl#">
+    <Ontology rdf:about="http://www.morelab.deusto.es/ontologies/swrcfe.owl">
+        <versionInfo rdf:datatype="&xsd;double">5.0</versionInfo>
+        <rdfs:comment rdf:datatype="&xsd;double">SWRCFE (SWRC Funding Extension) es una extensión de la ontología SWRC (http://ontoware.org/swrc/) cuya finalidad es representar la financiación en proyectos de I+D+i (quién financia el proyecto, en que período de tiempo y con que cuantía).
 La versión más reciente de esta ontología es la v5.0 (25 de noviembre, 2013).
-Desarrollada por el grupo de investigación MORElab, DeustoTech (Universidad de Deusto, España).</Literal>
-    </Annotation>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:AccountProfile"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:Funding"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:GeographicalScope"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:Language"/>
-    </Declaration>
-    <Declaration>
-        <Class abbreviatedIRI="ontology:PublicationAuthor"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#FundingAmount"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#FundingProgram"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:assignedPerson"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:carriedOutIn"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:createdPublication"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:doneBy"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:fundingProgram"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:funds"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:geographicalScope"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:hasProceedings"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:heldBy"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:hostCountry"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:network"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:project"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:projectLeader"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:relatedPublication"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:supportedBy"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty abbreviatedIRI="ontology:university"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:authorPosition"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:bibtex"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:bookTitle"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:eventEndDate"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:eventLocation"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:eventStartDate"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:eventType"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:fundedYear"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:hostCity"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:impactFactor"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:jobEndDate"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:jobStartDate"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:journalAbbreviation"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:member"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:organizationType"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:ownAmount"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:position"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:profileId"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:projectCode"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:projectType"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:publicationShortTitle"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:publicationType"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:publicationYear"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:role"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:seriesNumber"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:seriesText"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:totalFunds"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:workEndDate"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty abbreviatedIRI="ontology:workStartDate"/>
-    </Declaration>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:assignedPerson"/>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:carriedOutIn"/>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:createdPublication"/>
-        <Class abbreviatedIRI="ontology:PublicationAuthor"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:doneBy"/>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:fundingProgram"/>
-        <Class abbreviatedIRI="ontology:Funding"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:funds"/>
-        <Class abbreviatedIRI="ontology:Funding"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:geographicalScope"/>
-        <Class IRI="#FundingProgram"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:hasProceedings"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:heldBy"/>
-        <Class abbreviatedIRI="ontology:AccountProfile"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:hostCountry"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:network"/>
-        <Class abbreviatedIRI="ontology:AccountProfile"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:project"/>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:projectLeader"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:relatedPublication"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:supportedBy"/>
-        <Class IRI="#FundingProgram"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty abbreviatedIRI="ontology:university"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:assignedPerson"/>
-        <Class IRI="http://xmlns.com/foaf/0.1/Person"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:carriedOutIn"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:createdPublication"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:doneBy"/>
-        <Class IRI="http://xmlns.com/foaf/0.1/Person"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:fundingProgram"/>
-        <Class IRI="#FundingProgram"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:funds"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:geographicalScope"/>
-        <Class abbreviatedIRI="ontology:GeographicalScope"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:hasProceedings"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:heldBy"/>
-        <Class IRI="http://xmlns.com/foaf/0.1/Person"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:hostCountry"/>
-        <Class IRI="http://purl.org/ontology/places#Country"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:network"/>
-        <Class IRI="http://xmlns.com/foaf/0.1/OnlineAccount"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:project"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:projectLeader"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:relatedPublication"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:supportedBy"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty abbreviatedIRI="ontology:university"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </ObjectPropertyRange>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:authorPosition"/>
-        <Class abbreviatedIRI="ontology:PublicationAuthor"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:bibtex"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:bookTitle"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:eventEndDate"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:eventLocation"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:eventStartDate"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:eventType"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:fundedYear"/>
-        <Class IRI="#FundingAmount"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:hostCity"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:impactFactor"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:jobEndDate"/>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:jobStartDate"/>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:journalAbbreviation"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:member"/>
-        <Class IRI="http://xmlns.com/foaf/0.1/Person"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:organizationType"/>
-        <Class abbreviatedIRI="ontology:Organization"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:ownAmount"/>
-        <Class IRI="#FundingAmount"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:position"/>
-        <Class abbreviatedIRI="ontology:Job"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:profileId"/>
-        <Class abbreviatedIRI="ontology:AccountProfile"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:projectCode"/>
-        <Class abbreviatedIRI="ontology:Funding"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:projectType"/>
-        <Class abbreviatedIRI="ontology:Project"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:publicationShortTitle"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:publicationType"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:publicationYear"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:role"/>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:series"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:seriesNumber"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:seriesText"/>
-        <Class abbreviatedIRI="ontology:Publication"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:totalFunds"/>
-        <Class abbreviatedIRI="ontology:Funding"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:workEndDate"/>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:workStartDate"/>
-        <Class abbreviatedIRI="ontology:AssignedPerson"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty abbreviatedIRI="ontology:year"/>
-        <Class abbreviatedIRI="ontology:Event"/>
-    </DataPropertyDomain>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:authorPosition"/>
-        <Datatype abbreviatedIRI="xsd:integer"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:bibtex"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:bookTitle"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:eventEndDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:eventLocation"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:eventStartDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:eventType"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:fundedYear"/>
-        <Datatype abbreviatedIRI="xsd:gYear"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:hostCity"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:impactFactor"/>
-        <Datatype abbreviatedIRI="xsd:decimal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:jobEndDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:jobStartDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:journalAbbreviation"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:member"/>
-        <Datatype abbreviatedIRI="xsd:boolean"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:organizationType"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:ownAmount"/>
-        <Datatype abbreviatedIRI="xsd:decimal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:position"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:profileId"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:projectCode"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:projectType"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:publicationShortTitle"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:publicationType"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:publicationYear"/>
-        <Datatype abbreviatedIRI="xsd:gYear"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:role"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:series"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:seriesNumber"/>
-        <Datatype abbreviatedIRI="xsd:integer"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:seriesText"/>
-        <Datatype abbreviatedIRI="rdfs:Literal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:totalFunds"/>
-        <Datatype abbreviatedIRI="xsd:decimal"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:workEndDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:workStartDate"/>
-        <Datatype abbreviatedIRI="xsd:date"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty abbreviatedIRI="ontology:year"/>
-        <Datatype abbreviatedIRI="xsd:gYear"/>
-    </DataPropertyRange>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>#FundingAmount</IRI>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Amount of money funded, including the quantity and the year it was conceeded.</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>#FundingAmount</IRI>
-        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Financiación recibida, incluyendo la cantidad y el año en que fue concedida.</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
-        <IRI>#FundingAmount</IRI>
-        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Cuantía de la financiación</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
-        <IRI>#FundingAmount</IRI>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding amount</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>#FundingProgram</IRI>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding program that funded the project. It should describe the funding program&apos;s name, which organization promotes it and the geographical scope of the funding.</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>#FundingProgram</IRI>
-        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Programa de financiación que financia el proyecto. Debería especificar el nombre del programa, la organización que lo patrocina y el ámbito geográfico del mismo.</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
-        <IRI>#FundingProgram</IRI>
-        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Funding program</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
-        <IRI>#FundingProgram</IRI>
-        <Literal xml:lang="es" datatypeIRI="&rdf;PlainLiteral">Programa de financiación</Literal>
-    </AnnotationAssertion>
-</Ontology>
+Desarrollada por el grupo de investigación MORElab, DeustoTech (Universidad de Deusto, España).</rdfs:comment>
+        <rdfs:comment rdf:datatype="&xsd;double">SWRCFE (SWRC Funding Extension) is an extension of the SWRC ontology (http://ontoware.org/swrc/), used to represent funding in R&amp;D projects (who finances the project, in what period of time and with which amount of money).
+The most recent version of the ontology is v5.0 (25th November, 2013).
+Developed by MORElab Research Group at Deustotech (University of Deusto, Spain).</rdfs:comment>
+        <imports rdf:resource="http://data.semanticweb.org/ns/swc/swrc"/>
+        <imports rdf:resource="http://purl.org/ontology/places"/>
+        <imports rdf:resource="http://xmlns.com/foaf/0.1/"/>
+    </Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2001/XMLSchema#gYear -->
+
+    <rdfs:Datatype rdf:about="&xsd;gYear"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#assignedPerson -->
+
+    <ObjectProperty rdf:about="&ontology;assignedPerson">
+        <rdfs:domain rdf:resource="&ontology;AssignedPerson"/>
+        <rdfs:range rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#carriedOutIn -->
+
+    <ObjectProperty rdf:about="&ontology;carriedOutIn">
+        <rdfs:domain rdf:resource="&ontology;Job"/>
+        <rdfs:range rdf:resource="&ontology;Organization"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#createdPublication -->
+
+    <ObjectProperty rdf:about="&ontology;createdPublication">
+        <rdfs:range rdf:resource="&ontology;Publication"/>
+        <rdfs:domain rdf:resource="&ontology;PublicationAuthor"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#doneBy -->
+
+    <ObjectProperty rdf:about="&ontology;doneBy">
+        <rdfs:domain rdf:resource="&ontology;Job"/>
+        <rdfs:range rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#fundingProgram -->
+
+    <ObjectProperty rdf:about="&ontology;fundingProgram">
+        <rdfs:domain rdf:resource="&ontology;Funding"/>
+        <rdfs:range rdf:resource="&swrcfe;FundingProgram"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#funds -->
+
+    <ObjectProperty rdf:about="&ontology;funds">
+        <rdfs:domain rdf:resource="&ontology;Funding"/>
+        <rdfs:range rdf:resource="&ontology;Project"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#geographicalScope -->
+
+    <ObjectProperty rdf:about="&ontology;geographicalScope">
+        <rdfs:range rdf:resource="&ontology;GeographicalScope"/>
+        <rdfs:domain rdf:resource="&swrcfe;FundingProgram"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#hasProceedings -->
+
+    <ObjectProperty rdf:about="&ontology;hasProceedings">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&ontology;Publication"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#heldBy -->
+
+    <ObjectProperty rdf:about="&ontology;heldBy">
+        <rdfs:domain rdf:resource="&ontology;AccountProfile"/>
+        <rdfs:range rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#hostCountry -->
+
+    <ObjectProperty rdf:about="&ontology;hostCountry">
+        <rdfs:range rdf:resource="http://purl.org/ontology/places#Country"/>
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#network -->
+
+    <ObjectProperty rdf:about="&ontology;network">
+        <rdfs:domain rdf:resource="&ontology;AccountProfile"/>
+        <rdfs:range rdf:resource="http://xmlns.com/foaf/0.1/OnlineAccount"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#project -->
+
+    <ObjectProperty rdf:about="&ontology;project">
+        <rdfs:domain rdf:resource="&ontology;AssignedPerson"/>
+        <rdfs:range rdf:resource="&ontology;Project"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#projectLeader -->
+
+    <ObjectProperty rdf:about="&ontology;projectLeader">
+        <rdfs:range rdf:resource="&ontology;Organization"/>
+        <rdfs:domain rdf:resource="&ontology;Project"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#relatedPublication -->
+
+    <ObjectProperty rdf:about="&ontology;relatedPublication">
+        <rdfs:domain rdf:resource="&ontology;Project"/>
+        <rdfs:range rdf:resource="&ontology;Publication"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#supportedBy -->
+
+    <ObjectProperty rdf:about="&ontology;supportedBy">
+        <rdfs:range rdf:resource="&ontology;Organization"/>
+        <rdfs:domain rdf:resource="&swrcfe;FundingProgram"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#university -->
+
+    <ObjectProperty rdf:about="&ontology;university">
+        <rdfs:range rdf:resource="&ontology;Organization"/>
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+    </ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#authorPosition -->
+
+    <DatatypeProperty rdf:about="&ontology;authorPosition">
+        <rdfs:domain rdf:resource="&ontology;PublicationAuthor"/>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#bibtex -->
+
+    <DatatypeProperty rdf:about="&ontology;bibtex">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#bookTitle -->
+
+    <DatatypeProperty rdf:about="&ontology;bookTitle">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#eventEndDate -->
+
+    <DatatypeProperty rdf:about="&ontology;eventEndDate">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#eventLocation -->
+
+    <DatatypeProperty rdf:about="&ontology;eventLocation">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#eventStartDate -->
+
+    <DatatypeProperty rdf:about="&ontology;eventStartDate">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#eventType -->
+
+    <DatatypeProperty rdf:about="&ontology;eventType">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#fundedYear -->
+
+    <DatatypeProperty rdf:about="&ontology;fundedYear">
+        <rdfs:domain rdf:resource="&swrcfe;FundingAmount"/>
+        <rdfs:range rdf:resource="&xsd;gYear"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#hostCity -->
+
+    <DatatypeProperty rdf:about="&ontology;hostCity">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#impactFactor -->
+
+    <DatatypeProperty rdf:about="&ontology;impactFactor">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#jobEndDate -->
+
+    <DatatypeProperty rdf:about="&ontology;jobEndDate">
+        <rdfs:domain rdf:resource="&ontology;Job"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#jobStartDate -->
+
+    <DatatypeProperty rdf:about="&ontology;jobStartDate">
+        <rdfs:domain rdf:resource="&ontology;Job"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#journalAbbreviation -->
+
+    <DatatypeProperty rdf:about="&ontology;journalAbbreviation">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#member -->
+
+    <DatatypeProperty rdf:about="&ontology;member">
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+        <rdfs:domain rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#organizationType -->
+
+    <DatatypeProperty rdf:about="&ontology;organizationType">
+        <rdfs:domain rdf:resource="&ontology;Organization"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#ownAmount -->
+
+    <DatatypeProperty rdf:about="&ontology;ownAmount">
+        <rdfs:domain rdf:resource="&swrcfe;FundingAmount"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#position -->
+
+    <DatatypeProperty rdf:about="&ontology;position">
+        <rdfs:domain rdf:resource="&ontology;Job"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#profileId -->
+
+    <DatatypeProperty rdf:about="&ontology;profileId">
+        <rdfs:domain rdf:resource="&ontology;AccountProfile"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#projectCode -->
+
+    <DatatypeProperty rdf:about="&ontology;projectCode">
+        <rdfs:domain rdf:resource="&ontology;Funding"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#projectType -->
+
+    <DatatypeProperty rdf:about="&ontology;projectType">
+        <rdfs:domain rdf:resource="&ontology;Project"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#publicationShortTitle -->
+
+    <DatatypeProperty rdf:about="&ontology;publicationShortTitle">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#publicationType -->
+
+    <DatatypeProperty rdf:about="&ontology;publicationType">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#publicationYear -->
+
+    <DatatypeProperty rdf:about="&ontology;publicationYear">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&xsd;gYear"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#role -->
+
+    <DatatypeProperty rdf:about="&ontology;role">
+        <rdfs:domain rdf:resource="&ontology;AssignedPerson"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#series -->
+
+    <rdf:Description rdf:about="&ontology;series">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#seriesNumber -->
+
+    <DatatypeProperty rdf:about="&ontology;seriesNumber">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#seriesText -->
+
+    <DatatypeProperty rdf:about="&ontology;seriesText">
+        <rdfs:domain rdf:resource="&ontology;Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#totalFunds -->
+
+    <DatatypeProperty rdf:about="&ontology;totalFunds">
+        <rdfs:domain rdf:resource="&ontology;Funding"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#workEndDate -->
+
+    <DatatypeProperty rdf:about="&ontology;workEndDate">
+        <rdfs:domain rdf:resource="&ontology;AssignedPerson"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#workStartDate -->
+
+    <DatatypeProperty rdf:about="&ontology;workStartDate">
+        <rdfs:domain rdf:resource="&ontology;AssignedPerson"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#year -->
+
+    <rdf:Description rdf:about="&ontology;year">
+        <rdfs:domain rdf:resource="&ontology;Event"/>
+        <rdfs:range rdf:resource="&xsd;gYear"/>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#AccountProfile -->
+
+    <Class rdf:about="&ontology;AccountProfile"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#AssignedPerson -->
+
+    <Class rdf:about="&ontology;AssignedPerson"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#Funding -->
+
+    <Class rdf:about="&ontology;Funding"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#GeographicalScope -->
+
+    <Class rdf:about="&ontology;GeographicalScope"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#Job -->
+
+    <Class rdf:about="&ontology;Job"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#Language -->
+
+    <Class rdf:about="&ontology;Language"/>
+    
+
+
+    <!-- http://swrc.ontoware.org/ontology#PublicationAuthor -->
+
+    <Class rdf:about="&ontology;PublicationAuthor"/>
+    
+
+
+    <!-- http://www.morelab.deusto.es/ontologies/swrcfe.owl#FundingAmount -->
+
+    <Class rdf:about="&swrcfe;FundingAmount">
+        <rdfs:label xml:lang="en">Funding amount</rdfs:label>
+        <rdfs:label xml:lang="es">Cuantía de la financiación</rdfs:label>
+        <rdfs:comment xml:lang="en">Amount of money funded, including the quantity and the year it was conceeded.</rdfs:comment>
+        <rdfs:comment xml:lang="es">Financiación recibida, incluyendo la cantidad y el año en que fue concedida.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.morelab.deusto.es/ontologies/swrcfe.owl#FundingProgram -->
+
+    <Class rdf:about="&swrcfe;FundingProgram">
+        <rdfs:label xml:lang="en">Funding program</rdfs:label>
+        <rdfs:label xml:lang="es">Programa de financiación</rdfs:label>
+        <rdfs:comment xml:lang="en">Funding program that funded the project. It should describe the funding program&apos;s name, which organization promotes it and the geographical scope of the funding.</rdfs:comment>
+        <rdfs:comment xml:lang="es">Programa de financiación que financia el proyecto. Debería especificar el nombre del programa, la organización que lo patrocina y el ámbito geográfico del mismo.</rdfs:comment>
+    </Class>
+</rdf:RDF>
 
 
 

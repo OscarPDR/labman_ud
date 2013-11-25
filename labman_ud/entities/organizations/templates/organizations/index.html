@@ -53,7 +53,7 @@
             {% for organization in organizations %}
                 <tr>
                     <td class="col-md-6">
-                        <a target="_blank" href="http://dev.morelab.deusto.es/sourceplanet/d2r/resource/organization/{{ organization.slug }}">
+                        <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>&emsp;
                         <a href="{% url organization_info organization.slug %}">
