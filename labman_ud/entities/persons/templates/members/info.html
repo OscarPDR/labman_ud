@@ -43,7 +43,7 @@
 
                 {% if member.phone_number %}
                     <br>
-                    &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>&emsp;{{ member.phone_number }} - <strong>ext: </strong> {{ member.phone_extension }}
+                    &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>&emsp;{{ member.phone_number }}{% if member.phone_extension %} - <strong>ext: </strong> {{ member.phone_extension }}{% endif %}
                     <br>
                 {% endif %}
 
