@@ -98,14 +98,19 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
             if items and items != lastitems:
                 for item in items:
                     if item['itemType'] in SUPPORTED_ITEM_TYPES:
+                        # Delete publication if exists
+                        pub = None
                         try:
-                            # Delete publication if exists
                             pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
+                        except:
+                            try:
+                                pub = Publication.objects.get(slug=slugify(str(item['title'].encode('utf-8'))))
+                            except:
+                                pass
 
+                        if pub:
                             logger.info('Item already exists! Deleting...')
                             delete_publication(pub)
-                        except:
-                            pass
 
                         # Create new publication
                         logger.info('Creating new publication: %s' % (item['title']))
@@ -113,9 +118,6 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                         pub, authors, tags, observations = get_publication_details(item)
                         if observations:
                             logger.info('Saved but... %s' % (observations))
-
-                        # Create new log entry
-                        zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
 
                         logger.info('Saving publication...')
 
@@ -150,6 +152,7 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                                 pubproj.save()
 
                         # Save log
+                        zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
                         zotlog.publication = pub
                         zotlog.save()
                         logger.info('OK!')
@@ -378,7 +381,17 @@ def get_publication_details(item):
     authors = []
     for creator in item['creators']:
         if creator['creatorType'] == 'author':
-            author_name = str(creator['firstName'].encode('utf-8')) + ' ' + str(creator['lastName'].encode('utf-8'))
+            author_name = ''
+            if 'name' in creator and creator['name']:
+                author_name = str(creator['name'].encode('utf-8'))
+                first_surname = author_name.split(' ')[-1]
+                first_name = author_name.replace(' ' + first_surname, '')
+
+            first_name = str(creator['firstName'].encode('utf-8')) if 'firstName' in creator and creator['firstName'] else 'John'
+            first_surname = str(creator['lastName'].encode('utf-8')) if 'lastName' in creator and creator['lastName'] else 'Doe'
+
+            if not author_name:
+                author_name = '%s %s' % (first_name, first_surname)
 
             author_slug = slugify(author_name)
             try:
@@ -393,8 +406,8 @@ def get_publication_details(item):
                 except:
                     # If there is no reference to that person in the DB, create a new one
                     a = Person(
-                       first_name=creator['firstName'],
-                       first_surname=creator['lastName']
+                       first_name=first_name,
+                       first_surname=first_surname
                        )
                     a.save()
                     # TODO: Send email to admins notifying the creation of new person
