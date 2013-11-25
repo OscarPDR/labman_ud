@@ -136,6 +136,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
+    'labman_ud.context_processors.global_vars',
 )
 
 INSTALLED_APPS = (
