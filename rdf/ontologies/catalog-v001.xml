@@ -2,8 +2,8 @@
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <uri id="Imports Wizard Entry" name="http://purl.org/ontology/places" uri="http://purl.org/ontology/places#"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1385372958469" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v3.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1385372958469" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v5.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1385372958469" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v4.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1385390221411" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v3.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1385390221411" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v5.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1385390221411" name="duplicate:http://www.morelab.deusto.es/ontologies/swrcfe.owl" uri="swrcfe.v4.owl"/>
     </group>
 </catalog>
