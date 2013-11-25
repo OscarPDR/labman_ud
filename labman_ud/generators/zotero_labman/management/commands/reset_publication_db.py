@@ -8,7 +8,7 @@ from entities.publications.models import Publication
 from datetime import datetime
 from django.utils.timezone import utc
 
-from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items, logger, correct_nicks
+from generators.zotero_labman.utils import delete_publication, get_last_zotero_version, parse_last_items, logger, correct_nicks, restore_news
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -21,9 +21,10 @@ class Command(NoArgsCommand):
         backup_dataset = []
 
         for pub in Publication.objects.all():
+            backup_data = None
             backup_data = delete_publication(pub)
             if backup_data:
-                backup_dataset.append(backup_data)
+                backup_dataset.extend(backup_data)
 
         # Generate a log specifying a Zotero library version equal to 0, with the aim of re-syncing all publications
         zotlog = ZoteroLog(zotero_key='-RESYNC-', updated=datetime.utcnow().replace(tzinfo=utc), version=0, observations='')
@@ -36,3 +37,7 @@ class Command(NoArgsCommand):
 
         # Correct errors in nicks
         correct_nicks()
+
+        # Restore news
+        logger.info('Restoring news...')
+        restore_news(backup_dataset)

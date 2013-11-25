@@ -10,15 +10,17 @@ from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
+from entities.news.models import PublicationRelatedToNews
 
 from pyzotero import zotero
 from dateutil import parser
 from datetime import datetime
 
+from sets import Set
+
 import requests
 import os
 import re
-import operator
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -79,6 +81,9 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
     # Get the slugs of all the projects in labman to create pub-proj relationships (based on tag comparision)
     project_slugs = [slug['slug'] for slug in Project.objects.all().order_by('slug').values('slug')]
 
+    # Dataset of backed up info from deleted publications
+    backup_dataset = []
+
     if version == last_version:
         logger.info('Labman is already updated to last version in Zotero (%i)! :-)' % (last_version))
     else:
@@ -116,7 +121,10 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
 
                         if pub:
                             logger.info('Item already exists! Deleting...')
-                            delete_publication(pub)
+                            backup_data = None
+                            backup_data = delete_publication(pub)
+                            if backup_data:
+                                backup_dataset.extend(backup_data)
 
                         # Create new publication
                         logger.info('Creating new publication: %s' % (item['title']))
@@ -168,6 +176,10 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
         # Generate a log specifying that the sync has finished for X version (due to avoid synchronization errors)
         zotlog = ZoteroLog(zotero_key='-SYNCFINISHED-', updated=datetime.utcnow().replace(tzinfo=utc), version=last_version, observations='')
         zotlog.save()
+
+        # Restore news of deleted items, if any
+        logger.info('Restoring news of deleted items, if any')
+        restore_news(backup_dataset)
 
 
 def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
@@ -484,29 +496,40 @@ def get_bibtex(item_key):
 
 
 def delete_publication(pub):
+    # We return a list of backup dicts, of the publication and its children
+    ret_list = []
+
     try:
         zot_key = ZoteroLog.objects.filter(publication=pub).order_by('-created')[0].zotero_key
     except IndexError:
         zot_key = None
 
-    # Return restored data dictionary
-    publ_proj = []
+    publ_proj = Set()
     if pub.projects.all():
         for proj in pub.projects.all():
-            publ_proj.append(proj)
+            publ_proj.add(proj)
 
-    ret_dict = None
+    # I don't understand why publ_news = pub.news.all() doesn't work as expected: the ret_dict is 
+    # generated correctly -with a list of news-, but when returned the list appears empty :-?
+    publ_news = Set()
+    if pub.news.all():
+        for nw in pub.news.all():
+            publ_news.add(nw)
 
-    if zot_key:
-        ret_dict = {
-            'zot_key': zot_key,
-            'publ_event': pub.presented_at,
-            'publ_lang': pub.language,
-            'publ_observations': pub.observations,
-            'publ_uni': pub.university,
-            'publ_parentpub': pub.part_of,
-            'publ_proj': publ_proj,
-        }
+    # Create restored data dictionary
+    ret_dict = {
+        'zot_key': zot_key,
+        'publ_event': pub.presented_at,
+        'publ_lang': pub.language,
+        'publ_observations': pub.observations,
+        'publ_uni': pub.university,
+        'publ_parentpub': pub.part_of,
+        'publ_proj': publ_proj,
+        'publ_news': publ_news,
+    } if zot_key else None
+
+    if ret_dict:
+        ret_list.append(ret_dict)
 
     # Delete PDF file
     if pub.pdf:
@@ -515,10 +538,17 @@ def delete_publication(pub):
         except:
             pass
 
+    # Check and backup if it has any children before deleting it (otherwise they will be deleted without backing up)
+    for part in pub.has_part.all():
+        backup_data = None
+        backup_data = delete_publication(part)
+        if backup_data:
+            ret_list.extend(backup_data)
+
     # Delete publication object
     pub.delete()
 
-    return ret_dict
+    return ret_list
 
 
 def correct_nicks():
@@ -535,3 +565,23 @@ def correct_nicks():
                 bad_person.delete()
         except:
             pass
+
+
+def restore_news(backup_dataset):
+    for pub_backup in backup_dataset:
+        pub = None
+        try:
+            pub = ZoteroLog.objects.filter(zotero_key=pub_backup['zot_key']).order_by('-created')[0].publication
+        except:
+            pass
+
+        if pub:
+            for nw in pub_backup['publ_news']:
+                logger.info('Restoring %s - %s...' % (pub, nw))
+                pn = PublicationRelatedToNews()
+                pn.publication = pub
+                pn.news = nw
+                pn.save()
+
+    logger.info('OK!')
+    logger.info('-'*30)
