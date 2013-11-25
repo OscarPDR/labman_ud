@@ -47,7 +47,12 @@
                             {% endif %}
                         </a>
                         <br>
-                        <span class="member-name">{% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}</span>
+                        <span class="member-name">
+                            <a target="_blank" href="{{ RDF_URI }}persons/{{ member.slug }}">&emsp;
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/><a target="_blank" href="{{ RDF_URI }}persons/{{ member.slug }}">
+                            </a>
+                            {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
+                        </span>
                         <br>
                         <span class="member-position">{{ member.position }}</span>
                         <br>
