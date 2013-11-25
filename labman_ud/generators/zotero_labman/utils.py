@@ -61,8 +61,14 @@ def get_zotero_variables():
 def get_last_zotero_version():
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
-    return max(r.json().items(), key=operator.itemgetter(1))[1]
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&limit=1&order=dateModified&key=' + api_key)
+    # max_items = max(r.json().items(), key=operator.itemgetter(1))[1]
+    max_items = r.json().items()[0][1]
+
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&limit=1&order=dateModified&key=' + api_key)
+    max_trash = r.json().items()[0][1]
+
+    return max(max_items, max_trash)
 
 
 def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
