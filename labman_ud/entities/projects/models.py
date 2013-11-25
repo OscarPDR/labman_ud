@@ -11,7 +11,7 @@ from django.template.defaultfilters import slugify
 
 
 def project_logo_path(self, filename):
-    return "%s/%s%s" % ("projects", self.project.slug, os.path.splitext(filename)[-1])
+    return "%s/%s%s" % ("projects", self.slug, os.path.splitext(filename)[-1])
 
 
 MIN_YEAR_LIMIT = 1950

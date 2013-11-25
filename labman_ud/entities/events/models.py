@@ -10,7 +10,7 @@ from django.template.defaultfilters import slugify
 
 
 def event_logo_path(self, filename):
-    return '%s/%s%s' % ('events', self.event.slug, os.path.splitext(filename)[-1])
+    return '%s/%s%s' % ('events', self.slug, os.path.splitext(filename)[-1])
 
 
 def viva_photo_path(self, filename):
