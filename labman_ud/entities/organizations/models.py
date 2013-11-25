@@ -79,6 +79,12 @@ class Organization(models.Model):
         null=True,
     )
 
+    logo = models.ImageField(
+        upload_to=organization_logo_path,
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         ordering = ['slug']
 
@@ -97,20 +103,3 @@ class Organization(models.Model):
 
         self.slug = slugify(self.short_name.encode('utf-8'))
         super(Organization, self).save(*args, **kwargs)
-
-
-###########################################################################
-# Model: OrganizationLogo
-###########################################################################
-
-class OrganizationLogo(models.Model):
-    organization = models.ForeignKey('Organization')
-
-    logo = models.ImageField(
-        upload_to=organization_logo_path,
-        blank=True,
-        null=True,
-    )
-
-    def __unicode__(self):
-        return u'Logo for organization: %s' % (self.organization.short_name)

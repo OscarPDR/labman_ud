@@ -8,7 +8,7 @@ from django.template.defaultfilters import slugify
 
 
 from .forms import OrganizationSearchForm
-from .models import Organization, OrganizationType, OrganizationLogo
+from .models import Organization, OrganizationType
 
 from entities.projects.models import Project, ConsortiumMember
 
@@ -80,12 +80,7 @@ def organization_index(request, organization_type_slug=None, query_string=None):
 def organization_info(request, slug):
     organization = Organization.objects.get(slug=slug)
 
-    try:
-        organization_logo = OrganizationLogo.objects.get(organization=organization.id)
-        logo = organization_logo.logo
-
-    except:
-        logo = None
+    logo = organization.logo if organization.logo else None
 
     projects_leaded = Project.objects.filter(project_leader=organization.id).order_by('-start_year', '-end_year', 'full_name')
 

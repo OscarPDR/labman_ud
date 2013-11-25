@@ -2,16 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Organization, OrganizationType, OrganizationLogo
-
-
-###########################################################################
-# Class: OrganizationLogoInline
-###########################################################################
-
-class OrganizationLogoInline(admin.StackedInline):
-    model = OrganizationLogo
-    extra = 1
+from .models import Organization, OrganizationType
 
 
 ###########################################################################
@@ -25,9 +16,6 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'short_name', 'organization_type']
     list_filter = ['country__full_name', 'organization_type__name']
     exclude = ['slug']
-    inlines = [
-        OrganizationLogoInline,
-    ]
 
 
 ###########################################################################

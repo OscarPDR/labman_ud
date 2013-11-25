@@ -138,6 +138,14 @@ class Project(models.Model):
         blank=True,
     )
 
+    logo = models.ImageField(
+        upload_to=project_logo_path,
+        blank=True,
+        null=True,
+    )
+
+    private_funding_details = models.BooleanField(default=False)
+
     assigned_people = models.ManyToManyField('persons.Person', through='AssignedPerson', related_name='projects')
     consortium_members = models.ManyToManyField('organizations.Organization', through='ConsortiumMember', related_name='consortium_member_of')
     related_publications = models.ManyToManyField('publications.Publication', through='RelatedPublication', related_name='related_projects')
@@ -155,23 +163,6 @@ class Project(models.Model):
 
         self.slug = slugify(str(self.short_name))
         super(Project, self).save(*args, **kwargs)
-
-
-###########################################################################
-# Model: ProjectLogo
-###########################################################################
-
-class ProjectLogo(models.Model):
-    project = models.ForeignKey('Project')
-
-    logo = models.ImageField(
-        upload_to=project_logo_path,
-        blank=True,
-        null=True,
-    )
-
-    def __unicode__(self):
-        return u'Logo for project: %s' % (self.project.short_name)
 
 
 ###########################################################################

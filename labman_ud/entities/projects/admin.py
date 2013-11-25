@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Project, ProjectType, ProjectLogo, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication, ProjectTag
+from .models import Project, ProjectType, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication, ProjectTag
 
 
 ###########################################################################
@@ -33,15 +33,6 @@ class FundingInline(admin.TabularInline):
     inlines = [
         FundingAmountInline,
     ]
-
-
-###########################################################################
-# Class: ProjectLogoInline
-###########################################################################
-
-class ProjectLogoInline(admin.TabularInline):
-    model = ProjectLogo
-    extra = 1
 
 
 ###########################################################################
@@ -88,7 +79,6 @@ class ProjectAdmin(admin.ModelAdmin):
         FundingInline,
         ConsortiumMemberInline,
         AssignedPersonInline,
-        ProjectLogoInline,
         RelatedPublicationInline,
         ProjectTagInline,
     ]

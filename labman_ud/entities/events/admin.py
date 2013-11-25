@@ -1,16 +1,7 @@
 # coding: utf-8
 
 from django.contrib import admin
-from .models import Event, EventType, EventLogo, Viva, VivaPanel
-
-
-#########################
-# Class: EventLogoInline
-#########################
-
-class EventLogoInline(admin.TabularInline):
-    model = EventLogo
-    extra = 1
+from .models import Event, EventType, Viva, VivaPanel
 
 
 #########################
@@ -36,9 +27,6 @@ class EventAdmin(admin.ModelAdmin):
     exclude = [
         'slug',
     ]
-    inlines = [
-        EventLogoInline,
-    ]
 
 
 #########################
@@ -55,17 +43,6 @@ class VivaAdmin(admin.ModelAdmin):
 
 class VivaPanelAdmin(admin.ModelAdmin):
     model = VivaPanel
-
-
-#########################
-# Class: EventTypeAdmin
-#########################
-
-class EventTypeAdmin(admin.ModelAdmin):
-    model = EventType
-    exclude = [
-        'slug',
-    ]
 
 
 ##################################################
