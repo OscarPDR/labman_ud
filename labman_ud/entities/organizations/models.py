@@ -10,7 +10,7 @@ from django.template.defaultfilters import slugify
 
 
 def organization_logo_path(self, filename):
-    return '%s/%s%s' % ('organizations', self.organization.slug, os.path.splitext(filename)[-1])
+    return '%s/%s%s' % ('organizations', self.slug, os.path.splitext(filename)[-1])
 
 
 ###########################################################################
