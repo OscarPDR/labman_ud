@@ -52,6 +52,9 @@
                     &emsp;<i class="fa fa-globe fa-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
                     <br>
                 {% endif %}
+                <br>
+                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/><a target="_blank" href="{{ RDF_URI }}persons/{{ member.slug }}">&emsp;RDF Description
+                </a>
 
                 <div class="soften"></div>
             </div> <!-- end #contact-member -->
