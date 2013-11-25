@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
 from .forms import ProjectSearchForm
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType, ProjectLogo
+from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
 
 from entities.funding_programs.models import FundingProgram
 from entities.persons.models import Person
@@ -170,12 +170,7 @@ def project_info(request, slug):
     tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
     # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
-    try:
-        project_logo = ProjectLogo.objects.get(project=project.id)
-        logo = project_logo.logo
-
-    except:
-        logo = None
+    logo = project.logo if project.logo else None
 
     # dictionary to be returned in render_to_response()
     return_dict = {

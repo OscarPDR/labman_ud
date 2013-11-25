@@ -117,6 +117,13 @@ class Event(models.Model):
         blank=True,
     )
 
+    logo = models.ImageField(
+        upload_to=event_logo_path,
+        verbose_name='Logo',
+        blank=True,
+        null=True,
+    )
+
     proceedings = models.ForeignKey('publications.Publication', blank=True, null=True, related_name='conference')
 
     class Meta:
@@ -131,24 +138,6 @@ class Event(models.Model):
 
         self.slug = slugify(self.short_name)
         super(Event, self).save(*args, **kwargs)
-
-
-#########################
-# Model: EventLogo
-#########################
-
-class EventLogo(models.Model):
-    event = models.ForeignKey('Event')
-
-    logo = models.ImageField(
-        upload_to=event_logo_path,
-        verbose_name='Logo',
-        blank=True,
-        null=True,
-    )
-
-    def __unicode__(self):
-        return u'Logo for event: %s' % (self.event.short_name)
 
 
 #########################
