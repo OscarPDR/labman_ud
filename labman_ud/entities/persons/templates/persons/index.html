@@ -49,10 +49,10 @@
                         <td>
                             &emsp;
                             {% if person.is_active %}
-                                <a target="_blank" href="{% url member_info person.slug %}">
+                                <a href="{% url member_info person.slug %}">
                                     <i class="fa fa-user fa-large"></i>&emsp;
                             {% else %}
-                                <a target="_blank" href="{% url person_info person.slug %}">
+                                <a href="{% url person_info person.slug %}">
                             {% endif %}
                                 {{ person.full_name }}
                             </a>
