@@ -250,11 +250,13 @@ def publications_number_of_publications(request):
 
     publication_types = PublicationType.objects.all()
 
-    min_year = Publication.objects.aggregate(Min('published'))
+    # min_year = Publication.objects.aggregate(Min('published'))
     max_year = Publication.objects.aggregate(Max('published'))
 
-    min_year = min_year.get('published__min').year
+    # min_year = min_year.get('published__min').year
     max_year = max_year.get('published__max').year
+
+    min_year = 2000
 
     years = []
     for year in range(min_year, max_year + 1):
