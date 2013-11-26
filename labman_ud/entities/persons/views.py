@@ -103,8 +103,8 @@ def members(request, organization_slug=None):
                 "title": member.title,
             })
 
-        member_konami_positions.append(member.konami_code_position)
-        member_konami_profile_pictures.append(member.profile_konami_code_picture)
+            member_konami_positions.append(member.konami_code_position)
+            member_konami_profile_pictures.append(member.profile_konami_code_picture)
 
     if organization_slug:
         organization = Organization.objects.get(slug=organization_slug)
@@ -154,8 +154,8 @@ def former_members(request, organization_slug=None):
                 'title': former_member.title,
             })
 
-        former_member_konami_positions.append(former_member.konami_code_position)
-        former_member_konami_profile_pictures.append(former_member.profile_konami_code_picture)
+            former_member_konami_positions.append(former_member.konami_code_position)
+            former_member_konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
     if organization_slug:
         organization = Organization.objects.get(slug=organization_slug)
