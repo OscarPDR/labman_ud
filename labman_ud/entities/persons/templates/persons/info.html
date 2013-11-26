@@ -8,18 +8,11 @@
         <a href="{% url person_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ person.full_name }}
         {% if person.external %}
-            <a target="_blank" href="{% url organization_info person.organization.slug%}">
+            <a href="{% url organization_info person.organization.slug%}">
                 ({{ person.organization.full_name }})
             </a>
         {% endif %}
     </h2>
-
-    <br>
-
-    {% if person.foaf_link %}
-        <a class="btn btn-small btn-inverse" target="_blank" href="{{ person.foaf_link }}"><img src="{{ STATIC_PREFIX }}img/foaf.png" width="24" /> FOAF</a>
-    {% endif %}
-
 
     <br>
     <br>
