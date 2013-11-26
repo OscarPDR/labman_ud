@@ -78,9 +78,6 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
 
     zot = zotero.Zotero(library_id, library_type, api_key)
 
-    # Get the slugs of all the projects in labman to create pub-proj relationships (based on tag comparision)
-    project_slugs = [slug['slug'] for slug in Project.objects.all().order_by('slug').values('slug')]
-
     # Dataset of backed up info from deleted publications
     backup_dataset = []
 
@@ -129,7 +126,7 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                         # Create new publication
                         logger.info('Creating new publication: %s' % (item['title']))
                         pub = None
-                        pub, authors, tags, observations = get_publication_details(item)
+                        pub, authors, tags, tag_project_rels, observations = get_publication_details(item)
                         if observations:
                             logger.info('Saved but... %s' % (observations))
 
@@ -156,17 +153,13 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                                 tag=tag
                             )
                             pubtag.save()
-
-                            tag_slug = slugify(str(tag.name.encode('utf-8')))
-
-                            # Find publication - project relations through tags
-                            if tag_slug in project_slugs:
-                                logger.info('Saving found publication-project relationship: %s' % (tag.name))
-                                try:
-                                    pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag_slug))
-                                    pubproj.save()
-                                except:
-                                    logger.info('Unable to create the relationship :-/')
+                        for tag in tag_project_rels:
+                            logger.info('Saving found publication-project relationship: %s' % (tag))
+                            try:
+                                pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag))
+                                pubproj.save()
+                            except:
+                                logger.info('Unable to create the relationship :-/')
 
                         # Save log
                         zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
@@ -183,6 +176,51 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
         # Restore news of deleted items, if any
         logger.info('Restoring news of deleted items, if any')
         restore_news(backup_dataset)
+
+
+def check_what_is_missing(last_version, prefix='[CHECK_MISSING]'):
+    api_key, library_id, library_type, api_limit = get_zotero_variables()
+
+    zot = zotero.Zotero(library_id, library_type, api_key)
+
+    gen = zot.makeiter(zot.items(limit=api_limit, order='dateModified', sort='desc', newer=0))
+
+    lastitems = []
+    item_set = Set()
+
+    moreitems = True
+    while moreitems:
+        try:
+            items = gen.next()
+        except StopIteration:
+            moreitems = False
+
+        if items and items != lastitems:
+            for item in items:
+                if item['itemType'] in ['attachment', 'note']:
+                    pass
+                elif item['itemType'] not in SUPPORTED_ITEM_TYPES:
+                    logger.info('Item not in supported types...')
+                    logger.info(item['itemType'])
+                else:
+                    pub = None
+                    try:
+                        pub = ZoteroLog.objects.filter(zotero_key=item['key']).order_by('-created')[0].publication
+                    except:
+                        try:
+                            pub = Publication.objects.get(slug=slugify(str(item['title'].encode('utf-8'))))
+                        except:
+                            pass
+
+                    if not pub:
+                        logger.info('Item doesn\'t exist...')
+                        item_set.add(item['title'])
+            lastitems = items
+
+    logger.info('-'*40)
+    logger.info(item_set)
+    logger.info(len(item_set))
+    logger.info('-'*40)
 
 
 def sync_deleted_items(last_version, version, prefix='[DELETE_SYNC]'):
@@ -436,9 +474,14 @@ def get_publication_details(item):
 
     # Tags
     tags = []
+    tag_project_rels = []
+
+    # Get the slugs of all the projects in labman to create pub-proj relationships (based on tag comparision)
+    project_slugs = [slug['slug'] for slug in Project.objects.all().order_by('slug').values('slug')]
 
     for tag in item['tags']:
         tag_str = str(tag['tag'].encode('utf-8'))
+        tag_slug = slugify(tag_str)
 
         # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
         jcr_pattern = r'(jcr|if)(\d(\.|\,)\d+)'
@@ -452,6 +495,9 @@ def get_publication_details(item):
                 parentpub.save()
             else:
                 pub.impact_factor = float(impact_factor)
+        elif tag_slug in project_slugs:
+            # Find publication - project relations through tags
+            tag_project_rels.append(tag_slug)
         else:
             # If it doesn't, create the tag as normal
             if len(tag['tag']) <= 75:
@@ -461,7 +507,7 @@ def get_publication_details(item):
                 )
                 tags.append(t)
 
-    return pub, authors, tags, observations
+    return pub, authors, tags, tag_project_rels, observations
 
 
 def get_attached_pdf(item_key, path):
