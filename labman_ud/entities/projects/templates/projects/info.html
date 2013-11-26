@@ -1,8 +1,6 @@
 {% extends "labman_ud/base.html" %}
 {% load humanize %}
 
-
-
 {% block content %}
 
     <div id="project-header">
@@ -25,7 +23,7 @@
 
                 <blockquote id="project-type" class="pull-left">
                     <p>
-                        <a target="_blank" href="{% url view_project_type project.project_type.slug %}">
+                        <a href="{% url view_project_type project.project_type.slug %}">
                             {{ project.project_type.name }}
                         </a>
                     </p>
@@ -83,7 +81,7 @@
                 <h6>Tags</h6>
 
                 {% for tag in tags %}
-                    <a target="_blank" href="{% url view_project_tag tag.slug %}">
+                    <a href="{% url view_project_tag tag.slug %}">
                         <span class="label label-info">{{ tag.name }}</span>
                     </a>
                 {% endfor %}
@@ -269,9 +267,9 @@
                         {% for item in project_managers %}
                             <li>
                                 {% if item.is_active %}
-                                    <a target="_blank" href="{% url member_info item.slug %}">
+                                    <a href="{% url member_info item.slug %}">
                                 {% else %}
-                                    <a target="_blank" href="{% url person_info item.slug %}">
+                                    <a href="{% url person_info item.slug %}">
                                 {% endif %}
                                         {{ item.full_name }}
                                     </a>
@@ -290,9 +288,9 @@
                         {% for item in principal_researchers %}
                             <li>
                                 {% if item.is_active %}
-                                    <a target="_blank" href="{% url member_info item.slug %}">
+                                    <a href="{% url member_info item.slug %}">
                                 {% else %}
-                                    <a target="_blank" href="{% url person_info item.slug %}">
+                                    <a href="{% url person_info item.slug %}">
                                 {% endif %}
                                         {{ item.full_name }}
                                     </a>
@@ -311,9 +309,9 @@
                         {% for item in researchers %}
                             <li>
                                 {% if item.is_active %}
-                                    <a target="_blank" href="{% url member_info item.slug %}">
+                                    <a href="{% url member_info item.slug %}">
                                 {% else %}
-                                    <a target="_blank" href="{% url person_info item.slug %}">
+                                    <a href="{% url person_info item.slug %}">
                                 {% endif %}
                                         {{ item.full_name }}
                                     </a>
@@ -334,7 +332,7 @@
                     <h5>Project leader:</h5>
                     <ul>
                         <li>
-                            <a target="_blank" href="{% url organization_info project.project_leader.slug %}">
+                            <a href="{% url organization_info project.project_leader.slug %}">
                                 {{ project.project_leader.full_name }}
                             </a>
                         </li>
@@ -347,7 +345,7 @@
                         <ul>
                             {% for consortium_member in consortium_members %}
                                 <li>
-                                    <a target="_blank" href="{% url organization_info consortium_member.organization.slug %}">
+                                    <a href="{% url organization_info consortium_member.organization.slug %}">
                                         {{ consortium_member.organization.full_name }}
                                     </a>
                                 </li>
@@ -361,7 +359,7 @@
 
                 <div class="tab-pane" id="pr_publications">
 
-                    <table class="table table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover">
                         <thead>
                             <th>Title</th>
                             <th>Year</th>
@@ -372,7 +370,7 @@
                             {% for publication in related_publications %}
                                 <tr class="vertical-alignment">
                                     <td class="col-md-8">
-                                        <a target="_blank" href="{% url publication_info publication.slug %}">
+                                        <a href="{% url publication_info publication.slug %}">
                                             {{ publication.title }}
                                         </a>
                                     </td>

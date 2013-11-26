@@ -187,7 +187,10 @@ def project_info(request, slug):
         'tags': tags,
     }
 
-    return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
+    if project.project_type.name == 'Internal Project':
+        return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
+    else:
+        return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
