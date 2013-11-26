@@ -9,8 +9,8 @@ from entities.publications.models import Publication, PublicationType, Publicati
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person, Nickname, Job
-from entities.projects.models import Project, RelatedPublication
-from entities.news.models import PublicationRelatedToNews
+from entities.projects.models import Project, RelatedPublication, ProjectTag
+from entities.news.models import PublicationRelatedToNews, NewsTag
 
 from pyzotero import zotero
 from dateutil import parser
@@ -620,5 +620,33 @@ def remove_unrelated_persons():
             persons_to_remove.add(person)
             logger.info(' Person to be deleted: %s' % person.full_name)
             person.delete()
+
+    logger.info('Removed %d items' % removed_objects)
+
+
+###########################################################################
+# def: remove_unrelated_tags()
+###########################################################################
+
+def remove_unrelated_tags():
+    used_tag_ids = Set()
+
+    for item in PublicationTag.objects.all():
+        used_tag_ids.add(item.tag.id)
+
+    for item in ProjectTag.objects.all():
+        used_tag_ids.add(item.tag.id)
+
+    for item in NewsTag.objects.all():
+        used_tag_ids.add(item.tag.id)
+
+    unused_tags = Tag.objects.exclude(id__in=used_tag_ids)
+
+    removed_objects = 0
+
+    for tag in unused_tags:
+        logger.info(' Tag to be deleted: %s' % tag.name)
+        tag.delete()
+        removed_objects += 1
 
     logger.info('Removed %d items' % removed_objects)
