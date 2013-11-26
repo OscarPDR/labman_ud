@@ -611,8 +611,14 @@ def remove_unrelated_persons():
 
     persons_to_remove = Set()
 
+    removed_objects = 0
+
     for person in unused_persons:
         jobs = Job.objects.filter(person=person, organization__in=own_organizations)
         if len(jobs) == 0:
+            removed_objects += 1
             persons_to_remove.add(person)
-            logger.info('Person to delete: %s' % person.full_name)
+            logger.info(' Person to be deleted: %s' % person.full_name)
+            person.delete()
+
+    logger.info('Removed %d items' % removed_objects)
