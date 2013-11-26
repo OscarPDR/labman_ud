@@ -162,8 +162,11 @@ def parse_last_items(last_version, version=0, prefix='[NEW_ITEMS_SYNC]'):
                             # Find publication - project relations through tags
                             if tag_slug in project_slugs:
                                 logger.info('Saving found publication-project relationship: %s' % (tag.name))
-                                pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag))
-                                pubproj.save()
+                                try:
+                                    pubproj = RelatedPublication(publication=pub, project=Project.objects.get(slug=tag_slug))
+                                    pubproj.save()
+                                except:
+                                    logger.info('Unable to create the relationship :-/')
 
                         # Save log
                         zotlog = ZoteroLog(zotero_key=item['key'], updated=parser.parse(item['updated']), version=last_version, observations=observations)
