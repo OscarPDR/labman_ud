@@ -8,7 +8,7 @@ from entities.events.models import Event, EventType
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
-from entities.persons.models import Person, Nickname
+from entities.persons.models import Person, Nickname, Job
 from entities.projects.models import Project, RelatedPublication
 from entities.news.models import PublicationRelatedToNews
 
@@ -509,7 +509,7 @@ def delete_publication(pub):
         for proj in pub.projects.all():
             publ_proj.add(proj)
 
-    # I don't understand why publ_news = pub.news.all() doesn't work as expected: the ret_dict is 
+    # I don't understand why publ_news = pub.news.all() doesn't work as expected: the ret_dict is
     # generated correctly -with a list of news-, but when returned the list appears empty :-?
     publ_news = Set()
     if pub.news.all():
@@ -585,3 +585,31 @@ def restore_news(backup_dataset):
 
     logger.info('OK!')
     logger.info('-'*30)
+
+
+###########################################################################
+# def: remove_unrelated_persons()
+###########################################################################
+
+def remove_unrelated_persons():
+    unused_person_ids = Set()
+    organization_slugs = ['morelab', 'deustotech-internet', 'deustotech-telecom']
+
+    all_persons = Person.objects.all()
+    own_organizations = Organization.objects.filter(slug__in=organization_slugs)
+
+    for person in all_persons:
+        publications = person.publications.all()
+        projects = person.projects.all()
+        if (len(publications) == 0) and (len(projects) == 0):
+            unused_person_ids.add(person.id)
+
+    unused_persons = Person.objects.filter(id__in=unused_person_ids, is_active=False)
+
+    persons_to_remove = Set()
+
+    for person in unused_persons:
+        jobs = Job.objects.filter(person=person, organization__in=own_organizations)
+        if len(jobs) == 0:
+            persons_to_remove.add(person)
+            logger.info('Person to delete: %s' % person.full_name)
