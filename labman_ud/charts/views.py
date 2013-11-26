@@ -274,7 +274,7 @@ def publications_number_of_publications(request):
     for publication in all_publications:
         pub_type = publication.publication_type.name.encode('utf-8')
         pub_year = publication.year
-        if year in range(min_year, max_year + 1):
+        if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
 
     # dictionary to be returned in render_to_response()
