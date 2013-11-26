@@ -47,7 +47,7 @@
                     </td>
 
                     <td class="span8">
-                        <a target="_blank" href="{% url organization_info funding_program.organization.slug %}">
+                        <a href="{% url organization_info funding_program.organization.slug %}">
                             {{ funding_program.organization.full_name }}
 
                             {% if funding_program.organization.sub_organization_of %}
