@@ -23,21 +23,13 @@
 
 <> a d2r:Server;
     d2r:limitPerClassMap false;
-    rdfs:label "labman d2r server";
-    d2r:baseURI <http://apps.morelab.deusto.es:2020/labman/>;
-    d2r:port 2020;
-    d2r:vocabularyIncludeInstances true;
-    d2r:autoReloadMapping false;
-    d2r:sparqlTimeout 300;
-    d2r:pageTimeout 5;
-
     .
 
 map:database a d2rq:Database;
     d2rq:jdbcDriver "org.postgresql.Driver";
-    d2rq:jdbcDSN "jdbc:postgresql://localhost:5432/labman";
-    d2rq:username "labman";
-    d2rq:password "0l3ntz3r0";
+    d2rq:jdbcDSN "jdbc:postgresql://localhost/labman";
+    d2rq:username "postgres";
+    d2rq:password "postgres";
     .
 
 ###########################################################################
