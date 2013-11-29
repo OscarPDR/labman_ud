@@ -20,7 +20,7 @@
     </a> -->
 
     <div class="row">
-        <div class="{% if related %}col-md-8 {% endif %} news-body">
+        <div id="news-body" {% if related %}class="col-md-8"{% endif %}>
             {{ news.content|safe }}
         </div>
 
@@ -81,4 +81,11 @@
 
 
 {% block scripts %}
+
+    <script>
+        $( "#news-body img").each(function() {
+            $(this).addClass("img-responsive");
+        });
+    </script>
+
 {% endblock %}
