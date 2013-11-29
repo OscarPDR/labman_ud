@@ -6,8 +6,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.html import strip_tags
 
-from ckeditor.fields import RichTextField
-
+from redactor.fields import RedactorField
 
 # Create your models here.
 
@@ -60,7 +59,7 @@ class Person(models.Model):
         null=True,
     )
 
-    biography = RichTextField(blank=True, null=True)
+    biography = RedactorField(blank=True, null=True)
 
     safe_biography = models.TextField(
         max_length=2500,
