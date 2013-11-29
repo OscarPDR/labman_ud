@@ -7,7 +7,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.conf import settings
 
-from ckeditor.fields import RichTextField
+from redactor.fields import RedactorField
+
 from datetime import datetime
 
 
@@ -59,7 +60,7 @@ class News(models.Model):
         unique=True,
     )
 
-    content = RichTextField()
+    content = RedactorField()
 
     created = models.DateTimeField(default=datetime.now, blank=True)
 
