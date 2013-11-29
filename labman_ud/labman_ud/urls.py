@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Third-party app urls
-    url(r'^ckeditor/', include('ckeditor.urls')),
+    url(r'^redactor/', include('redactor.urls')),
 
     # Just for development purposes, serve in another way in production
     #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),

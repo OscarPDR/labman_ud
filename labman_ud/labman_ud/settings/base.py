@@ -161,8 +161,10 @@ INSTALLED_APPS = (
     # Re-usable applications
     'django_extensions',
     'logentry_admin',
+
     'ckeditor',
-    'django_wysiwyg',
+
+    'redactor',
 
     # Custom applications with data models
     'entities.events',
@@ -221,30 +223,15 @@ LOGGING = {
     }
 }
 
+
 CKEDITOR_MEDIA_PREFIX = '/media/ckeditor_uploads/'
 CKEDITOR_UPLOAD_PATH = PROJECT_DIR.child('media') + '/ckeditor_uploads/'
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar_Full': [
-            {'name': 'document', 'items': ['Source', '-', 'Templates']},
-            {'name': 'clipboard', 'items': ['Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo']},
-            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SpellChecker', 'Scayt']},
-            '/',
-            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
-            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv']},
-            {'name': 'justification', 'items': ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-            {'name': 'links', 'items': ['Link', 'Unlink']},
-            {'name': 'insert', 'items': ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak']},
-            '/',
-            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
-            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks', '-', 'About']}
-        ]
-    },
+REDACTOR_OPTIONS = {
+    'lang': 'en',
 }
 
-DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
+REDACTOR_UPLOAD = 'news_uploads/'
 
 # Django Suit configuration example
 SUIT_CONFIG = {
