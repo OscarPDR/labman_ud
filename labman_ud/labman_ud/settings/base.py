@@ -162,8 +162,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'logentry_admin',
 
-    'ckeditor',
-
     'redactor',
 
     # Custom applications with data models
@@ -222,10 +220,6 @@ LOGGING = {
         },
     }
 }
-
-
-CKEDITOR_MEDIA_PREFIX = '/media/ckeditor_uploads/'
-CKEDITOR_UPLOAD_PATH = PROJECT_DIR.child('media') + '/ckeditor_uploads/'
 
 REDACTOR_OPTIONS = {
     'lang': 'en',
