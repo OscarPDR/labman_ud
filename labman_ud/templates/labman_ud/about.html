@@ -14,11 +14,11 @@
                     </a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="#contributions-tab-pane" data-toggle="tab">
                         <i class="fa fa-cloud-upload fa-large"></i>&emsp;Contributions
                     </a>
-                </li>
+                </li> -->
 
                 <li>
                     <a href="#collaborations-tab-pane" data-toggle="tab">
@@ -27,10 +27,16 @@
                 </li>
 
                 <li>
+                    <a href="#prototyping-tab-pane" data-toggle="tab">
+                        <i class="fa fa-flask fa-large"></i>&emsp;Rapid prototyping services
+                    </a>
+                </li>
+
+                <!-- <li>
                     <a href="#working-at-morelab-tab-pane" data-toggle="tab">
                         <i class="fa fa-laptop fa-large"></i>&emsp;Working at MORElab
                     </a>
-                </li>
+                </li> -->
             </ul> <!-- end #about-tabs -->
         </div> <!-- end .col-md-3 about section sidebar -->
 
@@ -38,11 +44,15 @@
             <div id="about-tab-content" class="tab-content">
 
                 <div class="tab-pane active" id="about-tab-pane">
-                    <h2>User-centered Intelligent Services for Anything, Anywhere at Anytime</h2>
+                    <h3>User-centered Intelligent Services for Anything, Anywhere at Anytime</h3>
+
+                    <br>
 
                     <p>
                         Broadly, <em>DeustoTech-Internet</em> undertakes basic and applied research on the topics of Human-Environment (mobile-mediated) Interaction, Middleware supported by Semantic Web technologies for Wireless Embedded Devices, Applied Artificial Intelligence for User Behaviour Learning and Environment Reaction, Physical World Object Instrumentation and Internet Computing: Web 3.0 and beyond, Ubiquitous Web, Linked Data.
                     </p>
+
+                    <br>
 
                     <p>
                         Our main research areas are:
@@ -57,17 +67,21 @@
                     </ul>
                 </div> <!-- end #about-tab-pane -->
 
-                <div class="tab-pane" id="contributions-tab-pane">
+                <!-- <div class="tab-pane" id="contributions-tab-pane">
                     {% include 'labman_ud/about/contributions.html' %}
-                </div> <!-- end #contributions-tab-pane -->
+                </div> --> <!-- end #contributions-tab-pane -->
 
                 <div class="tab-pane" id="collaborations-tab-pane">
                     {% include 'labman_ud/about/collaborations.html' %}
                 </div> <!-- end #collaborations-tab-pane -->
 
-                <div class="tab-pane" id="working-at-morelab-tab-pane">
+                <div class="tab-pane" id="prototyping-tab-pane">
+                    {% include 'labman_ud/about/prototyping.html' %}
+                </div> <!-- end #prototyping-tab-pane -->
+
+                <!-- <div class="tab-pane" id="working-at-morelab-tab-pane">
                     {% include 'labman_ud/about/working_at_morelab.html' %}
-                </div> <!-- end #working-at-morelab-tab-pane -->
+                </div> --> <!-- end #working-at-morelab-tab-pane -->
 
             </div> <!-- end #about-tab-content -->
         </div>
