@@ -102,6 +102,11 @@ map:Event_description a d2rq:PropertyBridge;
     d2rq:property dc:description;
     d2rq:column "events_event.description";
     .
+map:Event_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Event;
+    d2rq:property foaf:depiction;
+    d2rq:column "events_event.logo";
+    .
 map:Event_proceedings_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Event;
     d2rq:property swrcfe:hasProceedings;
@@ -119,12 +124,6 @@ map:Event_host_country_id__ref a d2rq:PropertyBridge;
     d2rq:property places:hostCountry;
     d2rq:refersToClassMap map:Country;
     d2rq:join "events_event.host_country_id => utils_country.id";
-    .
-map:Event_logo__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Event;
-    d2rq:property foaf:depiction;
-    d2rq:join "events_event.id => events_eventlogo.event_id";
-    d2rq:uriPattern "http://localhost:8000/media/@@events_eventlogo.logo@@"
     .
 
 ###########################################################################
@@ -314,6 +313,11 @@ map:Organization_homepage a d2rq:PropertyBridge;
     d2rq:property foaf:homepage;
     d2rq:uriColumn "organizations_organization.homepage";
     .
+map:Organization_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Organization;
+    d2rq:property foaf:depiction;
+    d2rq:uriColumn "organizations_organization.logo";
+    .
 map:Organization_organization_type_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Organization;
     d2rq:property swrcfe:organizationType;
@@ -332,12 +336,6 @@ map:Organization_country_id__ref a d2rq:PropertyBridge;
     d2rq:property foaf:based_near;
     d2rq:refersToClassMap map:Country;
     d2rq:join "organizations_organization.country_id => utils_country.id";
-    .
-map:Organization_logo__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Organization;
-    d2rq:property foaf:depiction;
-    d2rq:join "organizations_organization.id => organizations_organizationlogo.organization_id";
-    d2rq:uriPattern "http://localhost:8000/media/@@organizations_organizationlogo.logo@@"
     .
 
 ###########################################################################
@@ -682,6 +680,11 @@ map:Project_status a d2rq:PropertyBridge;
     d2rq:property swrc:status;
     d2rq:column "projects_project.status";
     .
+map:Project_logo a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:Project;
+    d2rq:property foaf:depiction;
+    d2rq:uriColumn "projects_project.logo";
+    .
 map:Project_project_leader_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
     d2rq:property swrcfe:projectLeader;
@@ -694,12 +697,6 @@ map:Project_consortium_member__ref a d2rq:PropertyBridge;
     d2rq:refersToClassMap map:Organization;
     d2rq:join "projects_project.id => projects_consortiummember.project_id";
     d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
-    .
-map:Project_logo__ref a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Project;
-    d2rq:property foaf:depiction;
-    d2rq:join "projects_project.id => projects_projectlogo.project_id";
-    d2rq:uriPattern "http://localhost:8000/media/@@projects_projectlogo.logo@@"
     .
 map:Project_tag__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
