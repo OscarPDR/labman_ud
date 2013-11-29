@@ -16,8 +16,6 @@ admin.site.unregister(Site)
 
 urlpatterns = patterns('',
     url(r'^$', 'labman_ud.views.home', name='home'),
-    url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
     url(r'^about/$', 'labman_ud.views.about', name='about'),
 
@@ -40,10 +38,10 @@ urlpatterns = patterns('',
     url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Third-party app urls
-    url(r'^ckeditor/', include('ckeditor.urls')),
+    url(r'^redactor/', include('redactor.urls')),
 
     # Just for development purposes, serve in another way in production
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()
