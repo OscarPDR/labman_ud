@@ -24,7 +24,7 @@
 <> a d2r:Server;
     d2r:limitPerClassMap false;
     rdfs:label "labman d2r server";
-    d2r:baseURI <http://apps.morelab.deusto.es/labman/>;
+    d2r:baseURI <http://www.morelab.deusto.es/labman/>;
     d2r:port 2020;
     d2r:vocabularyIncludeInstances true;
     d2r:autoReloadMapping false;
