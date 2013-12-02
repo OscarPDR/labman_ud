@@ -13,9 +13,14 @@ from redactor.fields import RedactorField
 
 # Create your models here.
 
+PROXY_DICT = {
+    'http': settings.HTTP_PROXY,
+    'https': settings.HTTPS_PROXY,
+}
+
 
 def post_tweet(title, slug):
-    r = requests.get('%s%s%s' % (settings.KARMACRACY_URL, settings.NEWS_DETAIL_BASE_URL, slug))
+    r = requests.get('%s%s%s' % (settings.KARMACRACY_URL, settings.NEWS_DETAIL_BASE_URL, slug), proxies=PROXY_DICT)
 
     short_link = r.text
 
@@ -32,8 +37,6 @@ def post_tweet(title, slug):
         tweet_title = title
 
     tweet = '%s: %s' % (tweet_title, short_link)
-
-    print tweet
 
     try:
         tweetpony_api.update_status(status=tweet)
@@ -69,7 +72,7 @@ class News(models.Model):
         return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.title.encode('utf-8')))
+        self.slug = slugify(self.title)
 
         post_tweet(self.title, self.slug)
 
