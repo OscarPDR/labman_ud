@@ -298,4 +298,8 @@ ZOTERO_CRONTAB = crontab(hour='*/2')
 # Celery config
 djcelery.setup_loader()
 BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-CELERYBEAT_SCHEDULER='djcelery.schedulers.DatabaseScheduler'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+KARMACRACY_URL = ''
+NEWS_DETAIL_BASE_URL = ''
+NEWS_TITLE_MAX_LENGTH = 120
