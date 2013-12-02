@@ -14,8 +14,8 @@ from redactor.fields import RedactorField
 # Create your models here.
 
 
-def post_tweet(obj):
-    r = requests.get('%s%s%s' % (settings.KARMACRACY_URL, settings.NEWS_DETAIL_BASE_URL, obj.slug))
+def post_tweet(title, slug):
+    r = requests.get('%s%s%s' % (settings.KARMACRACY_URL, settings.NEWS_DETAIL_BASE_URL, slug))
 
     short_link = r.text
 
@@ -26,10 +26,10 @@ def post_tweet(obj):
         access_token_secret=settings.TWEETPONY_ACCESS_TOKEN_SECRET
     )
 
-    if len(obj.title) >= settings.NEWS_TITLE_MAX_LENGTH:
-        tweet_title = '%s...' % (obj.title[:settings.NEWS_TITLE_MAX_LENGTH])
+    if len(title) >= settings.NEWS_TITLE_MAX_LENGTH:
+        tweet_title = '%s...' % (title[:settings.NEWS_TITLE_MAX_LENGTH])
     else:
-        tweet_title = obj.title
+        tweet_title = title
 
     tweet = '%s: %s' % (tweet_title, short_link)
 
@@ -71,7 +71,7 @@ class News(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
 
-        #post_tweet(self)
+        post_tweet(self.title, self.slug)
 
         super(News, self).save(*args, **kwargs)
 
