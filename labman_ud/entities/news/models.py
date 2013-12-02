@@ -1,29 +1,23 @@
 # coding: utf-8
 
-import bitly_api
+import requests
 import tweetpony
 
+from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
-from django.conf import settings
-
-from redactor.fields import RedactorField
 
 from datetime import datetime
+from redactor.fields import RedactorField
 
 
 # Create your models here.
 
 
-NEWS_DETAIL_BASE_URL = 'http://dev.morelab.deusto.es/labman_ud/news/view/'
-NEWS_TITLE_MAX_LENGTH = 100
-
-
 def post_tweet(obj):
-    bitly = bitly_api.Connection(access_token=settings.BITLY_ACCESS_TOKEN)
+    r = requests.get('%s%s%s' % (settings.KARMACRACY_URL, settings.NEWS_DETAIL_BASE_URL, obj.slug))
 
-    long_url = '%s%s' % (NEWS_DETAIL_BASE_URL, obj.slug)
-    short_link = bitly.shorten(long_url)
+    short_link = r.text
 
     tweetpony_api = tweetpony.API(
         consumer_key=settings.TWEETPONY_CONSUMER_KEY,
@@ -32,12 +26,14 @@ def post_tweet(obj):
         access_token_secret=settings.TWEETPONY_ACCESS_TOKEN_SECRET
     )
 
-    if len(obj.title) >= NEWS_TITLE_MAX_LENGTH:
-        tweet_title = '%s...' % (obj.title[:NEWS_TITLE_MAX_LENGTH])
+    if len(obj.title) >= settings.NEWS_TITLE_MAX_LENGTH:
+        tweet_title = '%s...' % (obj.title[:settings.NEWS_TITLE_MAX_LENGTH])
     else:
         tweet_title = obj.title
 
-    tweet = '%s: %s' % (tweet_title, short_link['url'])
+    tweet = '%s: %s' % (tweet_title, short_link)
+
+    print tweet
 
     try:
         tweetpony_api.update_status(status=tweet)
@@ -75,7 +71,7 @@ class News(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
 
-        # post_tweet(self)
+        #post_tweet(self)
 
         super(News, self).save(*args, **kwargs)
 
