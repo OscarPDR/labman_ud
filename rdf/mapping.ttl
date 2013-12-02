@@ -269,7 +269,7 @@ map:FundingProgram_logo__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
     d2rq:property foaf:depiction;
     d2rq:join "funding_programs_fundingprogramlogo.funding_program_id => funding_programs_fundingprogram.id";
-    d2rq:uriPattern "http://localhost:8000/media/@@funding_programs_fundingprogramlogo.logo@@"
+    d2rq:uriPattern "http://www.morelab.deusto.es/labman/media/@@funding_programs_fundingprogramlogo.logo@@"
     .
 map:FundingProgram_geographical_scope_id__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:FundingProgram;
@@ -492,7 +492,7 @@ map:Person_is_active a d2rq:PropertyBridge;
 map:Person_profile_picture a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Person;
     d2rq:property foaf:depiction;
-    d2rq:uriPattern "http://localhost:8000/media/@@persons_person.profile_picture@@";
+    d2rq:uriPattern "http://www.morelab.deusto.es/labman/media/@@persons_person.profile_picture@@";
     .
 map:Person_person__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Person;
@@ -756,7 +756,7 @@ map:Publication_doi a d2rq:PropertyBridge;
 map:Publication_pdf a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Publication;
     d2rq:property rdfs:seeAlso;
-    d2rq:uriPattern "http://localhost:8000/media/@@publications_publication.pdf@@";
+    d2rq:uriPattern "http://www.morelab.deusto.es/labman/media/@@publications_publication.pdf@@";
     .
 map:Publication_journal_abbreviation a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Publication;
@@ -1110,7 +1110,7 @@ map:Network_base_url a d2rq:PropertyBridge;
 map:Network_icon a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Network;
     d2rq:property foaf:depiction;
-    d2rq:uriPattern "http://localhost:8000/media/@@utils_network.icon@@";
+    d2rq:uriPattern "http://www.morelab.deusto.es/labman/media/@@utils_network.icon@@";
     .
 
 ###########################################################################
