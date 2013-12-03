@@ -39,12 +39,10 @@ def __get_person_data(person):
         position = job.position
 
     except:
-	job = None
         organization = None
         position = None
 
     return {
-	'job': job,
         'person': person,
         'organization': organization,
         'position': position,
