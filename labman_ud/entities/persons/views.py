@@ -190,17 +190,19 @@ def former_members(request, organization_slug=None):
 
     for former_member in former_member_list:
         job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
-        if job.end_date:
-            former[job.end_date] = former_member
-        else:
-            print former_member.full_name
+
+        if not job.end_date in fm.keys():
+            fm[job.end_date] = []
+
+        fm[job.end_date].append(former_member)
 
     ordered_dict = OrderedDict(sorted(former.items(), key=lambda t: t[0], reverse=True))
 
     former_member_list = []
 
     for value in ordered_dict.values():
-        former_member_list.append(value)
+        for item in value:
+            former_member_list.append(item)
 
     for former_member in former_member_list:
         job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
