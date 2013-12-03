@@ -428,6 +428,19 @@ footer > a {
     border: 2px solid #222;
 }
 
+.head-internet-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    border: 2px solid #999;
+    padding: 3px;
+    margin-bottom: 1em;
+}
+
+.head-internet-image:hover {
+    border: 2px solid #222;
+}
+
 #team-image {
     box-shadow: 2px 2px 3px black;
     margin-top: 2.5em;
