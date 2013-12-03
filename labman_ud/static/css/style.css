@@ -415,7 +415,7 @@ footer > a {
     padding: 0 1.5em;
 }
 
-.circular {
+.circular, .head-internet-image {
     width: 200px;
     height: 200px;
     border-radius: 100px;
@@ -424,20 +424,7 @@ footer > a {
     margin-bottom: 1em;
 }
 
-.circular:hover {
-    border: 2px solid #222;
-}
-
-.head-internet-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
-    border: 2px solid #999;
-    padding: 3px;
-    margin-bottom: 1em;
-}
-
-.head-internet-image:hover {
+.circular:hover, .head-internet-image:hover {
     border: 2px solid #222;
 }
 
@@ -460,11 +447,11 @@ footer > a {
     max-height: 300px;
 }
 
-.member-name {
+.member-name, .head-internet-name, .head-telecom-name {
     font-weight: bold;
 }
 
-.member-position {
+.member-position, .head-internet-position, .head-telecom-position {
     font-style: italic;
     color: #999;
 }

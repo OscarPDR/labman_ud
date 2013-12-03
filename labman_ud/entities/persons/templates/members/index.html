@@ -67,24 +67,24 @@
                 <div class="centered">
                     <a href="{% url member_info head_of_telecom.slug %}">
                         {% if head_of_telecom.profile_picture_url %}
-                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
+                            <img class="head-telecom-image" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
                         {% else %}
                             {% if head_of_telecom.gender == 'Female' %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                <img class="head-telecom-image" src="{{ STATIC_PREFIX }}img/female.png"/>
                             {% else %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                <img class="head-telecom-image" src="{{ STATIC_PREFIX }}img/male.png"/>
                             {% endif %}
                         {% endif %}
                     </a>
                     <br>
-                    <span class="member-name">
+                    <span class="head-telecom-name">
                         <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_telecom.slug }}">&emsp;
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
                         {% if head_of_telecom.title %}{{head_of_telecom.title}} {% endif %}{{ head_of_telecom.full_name }}
                     </span>
                     <br>
-                    <span class="member-position">{{ head_of_telecom.position }}</span>
+                    <span class="head-telecom-position">{{ head_of_telecom.position }}</span>
                     <br>
                     <span class="label label-success">DeustoTech - Telecom</span>
                 </div>
@@ -184,16 +184,14 @@
                 });
             {% endfor %}
 
+
             var head_of_internet = {{ head_of_internet|safe }};
 
             var head_of_internet_image = $(".head-internet-image");
+            var profile_konami_code_picture = head_of_internet['profile_konami_code_picture'];
 
-console.log(head_of_internet);
-console.log(head_of_internet_image);
-console.log(head_of_internet['profile_konami_code_picture']);
-
-            if (head_of_internet['member_konami_profile_picture'] != "") {
-                head_of_internet_image.src = "{{ MEDIA_PREFIX }}/" + head_of_internet['member_konami_profile_picture'];
+            if (profile_konami_code_picture != "") {
+                head_of_internet_image.src = "{{ MEDIA_PREFIX }}/" + profile_konami_code_picture;
             }
 
             if (head_of_internet_image.src.indexOf("/img/female.png") >= 0) {
@@ -202,6 +200,38 @@ console.log(head_of_internet['profile_konami_code_picture']);
 
             if (head_of_internet_image.src.indexOf("/img/male.png") >= 0) {
                 head_of_internet_image.src = "{{ STATIC_PREFIX }}img/einstein.png";
+            }
+
+            var head_of_internet_position = $(".head-internet-position");
+            var konami_code_position = head_of_internet['konami_code_position'];
+
+            if (konami_code_position != '') {
+                head_of_internet_position.innerHTML = konami_code_position;
+            }
+
+
+            var head_of_telecom = {{ head_of_telecom|safe }};
+
+            var head_of_telecom_image = $(".head-telecom-image");
+            var profile_konami_code_picture = head_of_telecom['profile_konami_code_picture'];
+
+            if (profile_konami_code_picture != "") {
+                head_of_telecom_image.src = "{{ MEDIA_PREFIX }}/" + profile_konami_code_picture;
+            }
+
+            if (head_of_telecom_image.src.indexOf("/img/female.png") >= 0) {
+                head_of_telecom_image.src = "{{ STATIC_PREFIX }}img/lovelace.png";
+            }
+
+            if (head_of_telecom_image.src.indexOf("/img/male.png") >= 0) {
+                head_of_telecom_image.src = "{{ STATIC_PREFIX }}img/einstein.png";
+            }
+
+            var head_of_telecom_position = $(".head-telecom-position");
+            var konami_code_position = head_of_telecom['konami_code_position'];
+
+            if (konami_code_position != '') {
+                head_of_telecom_position.innerHTML = konami_code_position;
             }
         };
 
