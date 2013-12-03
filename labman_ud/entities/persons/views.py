@@ -182,7 +182,8 @@ def former_members(request, organization_slug=None):
 
     former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
 
-    former_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
+    former_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False)
+    former_member_list = former_member_list.order_by('first_surname', 'second_surname', 'first_name')
 
     former = {}
     ordered_dict = OrderedDict()
