@@ -20,9 +20,9 @@
     <div class="centered">
         <h2>
             {% if organization_slug %}
-                {{ members|length + 1 }}
+                {{ members|length|add:"1" }}
             {% else %}
-                {{ members|length + 2 }}
+                {{ members|length|add:"2" }}
             {% endif %} member{{ members|pluralize }}
             {% if organization %}
              in <em>'{{ organization.short_name }}'</em>
