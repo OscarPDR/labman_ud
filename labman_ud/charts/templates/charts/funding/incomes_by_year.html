@@ -5,9 +5,11 @@
 
 {% block content %}
 
+    {{ path }}
+
     <ul class="breadcrumb">
         <li>Funding</li>
-        
+
         <li>
             <a href="{% url funding_total_incomes %}">Total incomes</a>
         </li>
@@ -71,7 +73,7 @@
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace('{{ path }}' + scope);
+                    window.location.replace('/labman/charts/funding/incomes/{{ year }}/' + scope);
                 }
             }
         }

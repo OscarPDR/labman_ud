@@ -7,7 +7,7 @@
 
     <ul class="breadcrumb">
         <li>Funding</li>
-        
+
         <li>
             <a href="{% url funding_total_incomes %}">Total incomes</a>
         </li>
@@ -67,7 +67,7 @@
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var project_slug = data.getValue(item.row, 2);
-                    window.location.replace('{{ path }}' + project_slug);
+                    window.location.replace('/labman/charts/funding/incomes_by_project/' + project_slug);
                 }
             }
         }

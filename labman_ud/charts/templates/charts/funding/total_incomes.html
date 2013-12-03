@@ -71,7 +71,7 @@
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var year = data.getValue(item.row, item.column-1);
-                    window.location.replace('{{ path }}' + year);
+                    window.location.replace('/labman/charts/funding/incomes/' + year);
                 }
             }
         }
