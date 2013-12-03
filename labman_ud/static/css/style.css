@@ -415,7 +415,7 @@ footer > a {
     padding: 0 1.5em;
 }
 
-.circular, .head-internet-image {
+.circular, .head-internet-image, .head-telecom-image {
     width: 200px;
     height: 200px;
     border-radius: 100px;
@@ -424,7 +424,7 @@ footer > a {
     margin-bottom: 1em;
 }
 
-.circular:hover, .head-internet-image:hover {
+.circular:hover, .head-internet-image:hover, .head-telecom-image:hover {
     border: 2px solid #222;
 }
 

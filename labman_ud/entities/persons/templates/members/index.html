@@ -191,25 +191,25 @@
             var profile_konami_code_picture = head_of_internet['profile_konami_code_picture'];
 
             if (profile_konami_code_picture != "") {
-                head_of_internet_image.src = "{{ MEDIA_PREFIX }}/" + profile_konami_code_picture;
-            }
+                head_of_internet_image.attr("src", "{{ MEDIA_PREFIX }}" + profile_konami_code_picture);
+            };
 
             if (head_of_internet_image.src.indexOf("/img/female.png") >= 0) {
                 head_of_internet_image.src = "{{ STATIC_PREFIX }}img/lovelace.png";
-            }
+            };
 
             if (head_of_internet_image.src.indexOf("/img/male.png") >= 0) {
                 head_of_internet_image.src = "{{ STATIC_PREFIX }}img/einstein.png";
-            }
+            };
 
             var head_of_internet_position = $(".head-internet-position");
             var konami_code_position = head_of_internet['konami_code_position'];
 
             if (konami_code_position != '') {
-                head_of_internet_position.innerHTML = konami_code_position;
-            }
+                head_of_internet_position.text(konami_code_position);
+            };
 
-
+/*
             var head_of_telecom = {{ head_of_telecom|safe }};
 
             var head_of_telecom_image = $(".head-telecom-image");
@@ -232,7 +232,7 @@
 
             if (konami_code_position != '') {
                 head_of_telecom_position.innerHTML = konami_code_position;
-            }
+            }*/
         };
 
         var konami = new Konami(success);
