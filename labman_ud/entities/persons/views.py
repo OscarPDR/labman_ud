@@ -57,15 +57,15 @@ def __get_head_data(head):
     data = __get_person_data(head)
 
     return {
-        'company': data['organization'].short_name,
-        'full_name': head.full_name,
-        'gender': head.gender,
-        'position': data['position'],
-        'profile_picture_url': head.profile_picture,
-        'slug': head.slug,
-        'title': head.title,
-        'profile_konami_code_picture': head.profile_konami_code_picture,
-        'konami_code_position': head.konami_code_position,
+        'company': str(data['organization'].short_name),
+        'full_name': str((head.full_name).encode('utf-8')),
+        'gender': str(head.gender),
+        'position': str(data['position']),
+        'profile_picture_url': str(head.profile_picture.name),
+        'slug': str(head.slug),
+        'title': str(head.title),
+        'profile_konami_code_picture': str(head.profile_konami_code_picture.name),
+        'konami_code_position': str(head.konami_code_position),
     }
 
 
