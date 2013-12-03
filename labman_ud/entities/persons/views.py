@@ -28,6 +28,47 @@ REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
 OWN_ORGANIZATION_SLUGS = ['deustotech-internet', 'deustotech-telecom', 'morelab']
 
 
+###########################################################################
+# View: __get_person_data
+###########################################################################
+
+def __get_person_data(person):
+    try:
+        job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
+        organization = Organization.objects.get(id=job.organization_id)
+        position = job.position
+
+    except:
+        organization = None
+        position = None
+
+    return {
+        'person': person,
+        'organization': organization,
+        'position': position,
+    }
+
+
+###########################################################################
+# View: __get_head_data
+###########################################################################
+
+def __get_head_data(head):
+    data = __get_person_data(head)
+
+    return {
+        'company': data['organization'].short_name,
+        'full_name': head.full_name,
+        'gender': head.gender,
+        'position': data['position'],
+        'profile_picture_url': head.profile_picture,
+        'slug': head.slug,
+        'title': head.title,
+        'profile_konami_code_picture': head.profile_konami_code_picture,
+        'konami_code_position': head.konami_code_position,
+    }
+
+
 #########################
 # View: person_index
 #########################
@@ -79,28 +120,29 @@ def members(request, organization_slug=None):
     member_konami_profile_pictures = []
     members = []
 
-    member_list = Person.objects.filter(is_active=True)
+    # MORElab only
+    pr_internet = Person.objects.filter(full_name='Diego López-de-Ipiña')
+    head_of_internet = __get_head_data(pr_internet)
+
+    pr_telecom = Person.objects.filter(full_name='Jon Legarda')
+    head_of_telecom = __get_head_data(pr_telecom)
+
+    member_list = Person.objects.filter(is_active=True).exclude(pr_internet).exclude(pr_telecom)
+    member_list = member_list.order_by('first_surname', 'last_surname', 'name')
+    # End of MORElab only
 
     for member in member_list:
-        try:
-            job = Job.objects.filter(person_id=member.id).order_by('-end_date')[0]
-            organization = Organization.objects.get(id=job.organization_id)
-            company = organization.short_name
-            position = job.position
+        member_data = __get_person_data(member)
 
-        except:
-            company = None
-            position = None
-
-        if not organization_slug or (organization_slug == organization.slug):
+        if not organization_slug or (organization_slug == member_data['organization'].slug):
             members.append({
-                "company": company,
-                "full_name": member.full_name,
-                "gender": member.gender,
-                "position": position,
-                "profile_picture_url": member.profile_picture,
-                "slug": member.slug,
-                "title": member.title,
+                'company': member_data['organization'].short_name,
+                'full_name': member.full_name,
+                'gender': member.gender,
+                'position': member_data['position'],
+                'profile_picture_url': member.profile_picture,
+                'slug': member.slug,
+                'title': member.title,
             })
 
             member_konami_positions.append(member.konami_code_position)
@@ -113,6 +155,8 @@ def members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'head_of_internet': head_of_internet,
+        'head_of_telecom': head_of_telecom,
         'member_konami_positions': member_konami_positions,
         'member_konami_profile_pictures': member_konami_profile_pictures,
         'members': members,

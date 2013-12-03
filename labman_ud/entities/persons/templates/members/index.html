@@ -29,6 +29,68 @@
     <br>
 
     <div class="row">
+        <div id="head_of_internet" class="col-md-3 member">
+            <div class="centered">
+                <a href="{% url member_info head_of_internet.slug %}">
+                    {% if head_of_internet.profile_picture_url %}
+                        <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
+                    {% else %}
+                        {% if head_of_internet.gender == 'Female' %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                        {% else %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                        {% endif %}
+                    {% endif %}
+                </a>
+                <br>
+                <span class="member-name">
+                    <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_internet.slug }}">&emsp;
+                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                    </a>
+                    {% if head_of_internet.title %}{{head_of_internet.title}} {% endif %}{{ head_of_internet.full_name }}
+                </span>
+                <br>
+                <span class="member-position">{{ head_of_internet.position }}</span>
+                <br>
+                <span class="label label-primary">DeustoTech - Internet</span>
+            </div>
+        </div>
+
+        <div id="head_of_telecom" class="col-md-3 member">
+            <div class="centered">
+                <a href="{% url member_info head_of_telecom.slug %}">
+                    {% if head_of_telecom.profile_picture_url %}
+                        <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
+                    {% else %}
+                        {% if head_of_telecom.gender == 'Female' %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                        {% else %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                        {% endif %}
+                    {% endif %}
+                </a>
+                <br>
+                <span class="member-name">
+                    <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_telecom.slug }}">&emsp;
+                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                    </a>
+                    {% if head_of_telecom.title %}{{head_of_telecom.title}} {% endif %}{{ head_of_telecom.full_name }}
+                </span>
+                <br>
+                <span class="member-position">{{ head_of_telecom.position }}</span>
+                <br>
+                <span class="label label-success">DeustoTech - Telecom</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">Former members</a>
+    </div>
+
+    <br>
+
+    <div class="row">
         {% for member in members %}
 
             {% if forloop.counter0|divisibleby:4 %}{% endif %}
@@ -68,10 +130,6 @@
         {% endfor %}
     </div>
 
-    <div>
-        <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">Former members</a>
-    </div>
-
 {% endblock %}
 
 
@@ -96,11 +154,11 @@
                         }
 
                         if (images[i].src.indexOf("/img/female.png") >= 0) {
-                            images[i].src = "/static/img/lovelace.png";
+                            images[i].src = "{{ STATIC_PREFIX }}img/lovelace.png";
                         }
 
                         if (images[i].src.indexOf("/img/male.png") >= 0) {
-                            images[i].src = "/static/img/einstein.png";
+                            images[i].src = "{{ STATIC_PREFIX }}img/einstein.png";
                         }
                     };
                 });

@@ -99,11 +99,11 @@
                         }
 
                         if (images[i].src.indexOf("/img/female.png") >= 0) {
-                            images[i].src = "/static/img/lovelace.png";
+                            images[i].src = "{{ STATIC_PREFIX }}img/lovelace.png";
                         }
 
                         if (images[i].src.indexOf("/img/male.png") >= 0) {
-                            images[i].src = "/static/img/einstein.png";
+                            images[i].src = "{{ STATIC_PREFIX }}img/einstein.png";
                         }
                     };
                 });
