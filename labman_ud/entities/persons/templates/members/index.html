@@ -184,9 +184,13 @@
                 });
             {% endfor %}
 
-            var head_of_internet = {{ head_of_internet }};
+            var head_of_internet = {{ head_of_internet|safe }};
 
-            head_of_internet_image = $(".head-internet-image");
+            var head_of_internet_image = $(".head-internet-image");
+
+console.log(head_of_internet);
+console.log(head_of_internet_image);
+console.log(head_of_internet['profile_konami_code_picture']);
 
             if (head_of_internet['member_konami_profile_picture'] != "") {
                 head_of_internet_image.src = "{{ MEDIA_PREFIX }}/" + head_of_internet['member_konami_profile_picture'];
