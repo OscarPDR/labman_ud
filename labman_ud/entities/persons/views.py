@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
 from charts.utils import nx_graph
+from collections import OrderedDict
 from networkx.readwrite import json_graph
 
 from .forms import PersonSearchForm
@@ -181,9 +182,26 @@ def former_members(request, organization_slug=None):
 
     former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
 
-    formber_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
+    former_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False).order_by('slug')
 
-    for former_member in formber_member_list:
+    former = {}
+    ordered_dict = OrderedDict()
+
+    for former_member in former_member_list:
+        job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
+        if job.end_date:
+            former[job.end_date] = former_member
+        else:
+            print former_member.full_name
+
+    ordered_dict = OrderedDict(sorted(former.items(), key=lambda t: t[0], reverse=True))
+
+    former_member_list = []
+
+    for value in ordered_dict.values():
+        former_member_list.append(value)
+
+    for former_member in former_member_list:
         job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
         organization = Organization.objects.get(id=job.organization_id)
 
