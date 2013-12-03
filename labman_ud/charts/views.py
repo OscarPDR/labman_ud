@@ -35,8 +35,6 @@ def chart_index(request):
 ###########################################################################
 
 def funding_total_incomes(request):
-    path = str(request.path).replace('total_', '')
-
     min_year = FundingAmount.objects.aggregate(Min('year'))
     max_year = FundingAmount.objects.aggregate(Max('year'))
 
@@ -57,7 +55,6 @@ def funding_total_incomes(request):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'incomes': incomes,
-        'path': path,
     }
 
     return render_to_response("charts/funding/total_incomes.html", return_dict, context_instance=RequestContext(request))
@@ -68,8 +65,6 @@ def funding_total_incomes(request):
 ###########################################################################
 
 def funding_incomes_by_year(request, year):
-    path = str(request.path).replace('total_', '') + '/'
-
     incomes = {}
 
     geographical_scopes = GeographicalScope.objects.all()
@@ -88,7 +83,6 @@ def funding_incomes_by_year(request, year):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'incomes': incomes,
-        'path': path,
         'year': year,
     }
 
@@ -100,8 +94,6 @@ def funding_incomes_by_year(request, year):
 ###########################################################################
 
 def funding_incomes_by_year_and_scope(request, year, scope):
-    path = '/charts/incomes_by_project/'
-
     project_incomes = []
 
     year_incomes = FundingAmount.objects.filter(year=year).order_by('own_amount')
@@ -135,7 +127,6 @@ def funding_incomes_by_year_and_scope(request, year, scope):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'path': path,
         'project_incomes': project_incomes,
         'scope': scope,
         'year': year,
