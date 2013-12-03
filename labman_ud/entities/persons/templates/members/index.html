@@ -19,7 +19,11 @@
 
     <div class="centered">
         <h2>
-            {{ members|length }} member{{ members|pluralize }}
+            {% if organization_slug %}
+                {{ members|length + 1 }}
+            {% else %}
+                {{ members|length + 2 }}
+            {% endif %} member{{ members|pluralize }}
             {% if organization %}
              in <em>'{{ organization.short_name }}'</em>
             {% endif %}
@@ -29,59 +33,63 @@
     <br>
 
     <div class="row">
-        <div id="head_of_internet" class="col-md-3 col-md-offset-3 member">
-            <div class="centered">
-                <a href="{% url member_info head_of_internet.slug %}">
-                    {% if head_of_internet.profile_picture_url %}
-                        <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
-                    {% else %}
-                        {% if head_of_internet.gender == 'Female' %}
-                            <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+        {% if not organization_slug or organization_slug == 'deustotech-internet' %}
+            <div id="head_of_internet" class="col-md-3 member">
+                <div class="centered">
+                    <a href="{% url member_info head_of_internet.slug %}">
+                        {% if head_of_internet.profile_picture_url %}
+                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
                         {% else %}
-                            <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                            {% if head_of_internet.gender == 'Female' %}
+                                <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                            {% else %}
+                                <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                </a>
-                <br>
-                <span class="member-name">
-                    <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_internet.slug }}">&emsp;
-                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                     </a>
-                    {% if head_of_internet.title %}{{head_of_internet.title}} {% endif %}{{ head_of_internet.full_name }}
-                </span>
-                <br>
-                <span class="member-position">{{ head_of_internet.position }}</span>
-                <br>
-                <span class="label label-primary">DeustoTech - Internet</span>
+                    <br>
+                    <span class="member-name">
+                        <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_internet.slug }}">&emsp;
+                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                        </a>
+                        {% if head_of_internet.title %}{{head_of_internet.title}} {% endif %}{{ head_of_internet.full_name }}
+                    </span>
+                    <br>
+                    <span class="member-position">{{ head_of_internet.position }}</span>
+                    <br>
+                    <span class="label label-primary">DeustoTech - Internet</span>
+                </div>
             </div>
-        </div>
+        {% endif %}
 
-        <div id="head_of_telecom" class="col-md-3 member">
-            <div class="centered">
-                <a href="{% url member_info head_of_telecom.slug %}">
-                    {% if head_of_telecom.profile_picture_url %}
-                        <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
-                    {% else %}
-                        {% if head_of_telecom.gender == 'Female' %}
-                            <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+        {% if not organization_slug or organization_slug == 'deustotech-telecom' %}
+            <div id="head_of_telecom" class="col-md-3 member">
+                <div class="centered">
+                    <a href="{% url member_info head_of_telecom.slug %}">
+                        {% if head_of_telecom.profile_picture_url %}
+                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
                         {% else %}
-                            <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                            {% if head_of_telecom.gender == 'Female' %}
+                                <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                            {% else %}
+                                <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                </a>
-                <br>
-                <span class="member-name">
-                    <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_telecom.slug }}">&emsp;
-                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                     </a>
-                    {% if head_of_telecom.title %}{{head_of_telecom.title}} {% endif %}{{ head_of_telecom.full_name }}
-                </span>
-                <br>
-                <span class="member-position">{{ head_of_telecom.position }}</span>
-                <br>
-                <span class="label label-success">DeustoTech - Telecom</span>
+                    <br>
+                    <span class="member-name">
+                        <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_telecom.slug }}">&emsp;
+                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                        </a>
+                        {% if head_of_telecom.title %}{{head_of_telecom.title}} {% endif %}{{ head_of_telecom.full_name }}
+                    </span>
+                    <br>
+                    <span class="member-position">{{ head_of_telecom.position }}</span>
+                    <br>
+                    <span class="label label-success">DeustoTech - Telecom</span>
+                </div>
             </div>
-        </div>
+        {% endif %}
 
         <div>
             <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">Former members</a>
