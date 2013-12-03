@@ -39,10 +39,12 @@ def __get_person_data(person):
         position = job.position
 
     except:
+	job = None
         organization = None
         position = None
 
     return {
+	'job': job,
         'person': person,
         'organization': organization,
         'position': position,
@@ -121,14 +123,14 @@ def members(request, organization_slug=None):
     members = []
 
     # MORElab only
-    pr_internet = Person.objects.filter(full_name='Diego López-de-Ipiña')
+    pr_internet = Person.objects.get(full_name='Diego López-de-Ipiña')
     head_of_internet = __get_head_data(pr_internet)
 
-    pr_telecom = Person.objects.filter(full_name='Jon Legarda')
+    pr_telecom = Person.objects.get(full_name='Jon Legarda')
     head_of_telecom = __get_head_data(pr_telecom)
 
-    member_list = Person.objects.filter(is_active=True).exclude(pr_internet).exclude(pr_telecom)
-    member_list = member_list.order_by('first_surname', 'last_surname', 'name')
+    member_list = Person.objects.filter(is_active=True).exclude(id__in=[pr_internet.id, pr_telecom.id])
+    member_list = member_list.order_by('first_surname', 'second_surname', 'first_name')
     # End of MORElab only
 
     for member in member_list:
