@@ -38,24 +38,24 @@
                 <div class="centered">
                     <a href="{% url member_info head_of_internet.slug %}">
                         {% if head_of_internet.profile_picture_url %}
-                            <img class="circular" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
+                            <img class="head-internet-image" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
                         {% else %}
                             {% if head_of_internet.gender == 'Female' %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                <img class="head-internet-image" src="{{ STATIC_PREFIX }}img/female.png"/>
                             {% else %}
-                                <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                <img class="head-internet-image" src="{{ STATIC_PREFIX }}img/male.png"/>
                             {% endif %}
                         {% endif %}
                     </a>
                     <br>
-                    <span class="member-name">
+                    <span class="head-internet-name">
                         <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_internet.slug }}">&emsp;
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
                         {% if head_of_internet.title %}{{head_of_internet.title}} {% endif %}{{ head_of_internet.full_name }}
                     </span>
                     <br>
-                    <span class="member-position">{{ head_of_internet.position }}</span>
+                    <span class="head-internet-position">{{ head_of_internet.position }}</span>
                     <br>
                     <span class="label label-primary">DeustoTech - Internet</span>
                 </div>
@@ -183,6 +183,22 @@
                     };
                 });
             {% endfor %}
+
+            var head_of_internet = {{ head_of_internet }};
+
+            head_of_internet_image = $(".head-internet-image");
+
+            if (head_of_internet['member_konami_profile_picture'] != "") {
+                head_of_internet_image.src = "{{ MEDIA_PREFIX }}/" + head_of_internet['member_konami_profile_picture'];
+            }
+
+            if (head_of_internet_image.src.indexOf("/img/female.png") >= 0) {
+                head_of_internet_image.src = "{{ STATIC_PREFIX }}img/lovelace.png";
+            }
+
+            if (head_of_internet_image.src.indexOf("/img/male.png") >= 0) {
+                head_of_internet_image.src = "{{ STATIC_PREFIX }}img/einstein.png";
+            }
         };
 
         var konami = new Konami(success);
