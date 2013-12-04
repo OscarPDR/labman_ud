@@ -479,4 +479,4 @@ def publications_egonetwork(request, person_slug):
         'person': person,
     }
 
-    return render_to_response("publications/egonetwork.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("charts/publications/egonetwork.html", return_dict, context_instance=RequestContext(request))
