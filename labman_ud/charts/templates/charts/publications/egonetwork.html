@@ -9,7 +9,7 @@
 
         <li>Egonetwork</li>
 
-        <li class="active">{{ person.full_name }}</li>
+        <li class="active">{{ author.full_name }}</li>
     </ul>
 
     <br>
@@ -70,7 +70,7 @@
                 .attr("class", "node")
                 // .attr("r", 10)
                 .attr("r", function(d) {
-                    if (d.name == "{{ member.full_name }}")
+                    if (d.name == "{{ author.full_name }}")
                         return 30;
                     else
                         return 10;
