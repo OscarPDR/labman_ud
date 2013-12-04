@@ -452,16 +452,16 @@ def publications_egonetwork(request, author_slug):
 
             for pos, author_id in enumerate(_list):
                 for i in range(pos+1, len(_list)):
-                    author = Person.objects.get(id=author_id)
+                    author1 = Person.objects.get(id=author_id)
                     author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id, author2.id)
+                    G.add_edge(author1.id, author2.id)
 
                     try:
-                        G[author.id][author2.id]['weight'] += 1
+                        G[author1.id][author2.id]['weight'] += 1
 
                     except:
-                        G[author.id][author2.id]['weight'] = 1
-                    G.node[author.id]['name'] = author.full_name
+                        G[author1.id][author2.id]['weight'] = 1
+                    G.node[author1.id]['name'] = author1.full_name
                     G.node[author2.id]['name'] = author2.full_name
 
     try:
