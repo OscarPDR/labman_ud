@@ -14,7 +14,7 @@
 
     <br>
 
-    <div id="egonetwork-graph"></div>
+    <div id="egonetwork-graph" width="700" height="600"></div>
 
     <br>
 
@@ -37,7 +37,8 @@
         var force = d3.layout.force()
             .linkStrength(function(d) { return Math.sqrt(d.weight); })
             .friction(0.5)
-            .charge(-10000)
+            .gravity(0.5)
+            .charge(-3000)
             .linkDistance(125)
             .size([width, height]);
 
