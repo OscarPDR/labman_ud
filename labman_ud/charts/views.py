@@ -12,7 +12,7 @@ from networkx.readwrite import json_graph
 from entities.funding_programs.models import FundingProgram
 from entities.persons.models import Person
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
-from entities.publications.models import Publication, PublicationType, PublicationAuthor
+from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import GeographicalScope, Role
 
 import json
@@ -527,3 +527,31 @@ def publications_by_author(request, author_slug):
     }
 
     return render_to_response("charts/publications/number_of_publications_by_author.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: tags_by_author
+###########################################################################
+
+def tags_by_author(request, author_slug):
+    tag_dict = {}
+
+    author = Person.objects.get(slug=author_slug)
+
+    publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
+    tags = PublicationTag.objects.all(publication_id__in=publication_ids)
+
+    for tag in tags:
+        t = tag.tag.name
+        if t in tag_dict.keys():
+            tag_dict[t] = tag_dict[t] + 1
+        else:
+            tag_dict[t] = 1
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'author': author,
+        'tag_dict': tag_dict,
+    }
+
+    return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
