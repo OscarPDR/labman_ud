@@ -431,3 +431,52 @@ def projects_morelab_collaborations(request):
     }
 
     return render_to_response("charts/projects/collaboration_morelab.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: publications_egonetwork
+###########################################################################
+
+def publications_egonetwork(request, person_slug):
+    person = Person.objects.get(slug=person_slug)
+
+    G = nx.Graph()
+
+    pubs = Publication.objects.all()
+
+    for pub in pubs:
+        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
+        if author_ids:
+            _list = [author_id['author_id'] for author_id in author_ids]
+
+            for pos, author_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    author = Person.objects.get(id=author_id)
+                    author2 = Person.objects.get(id=_list[i])
+                    G.add_edge(author.id, author2.id)
+
+                    try:
+                        G[author.id][author2.id]['weight'] += 1
+
+                    except:
+                        G[author.id][author2.id]['weight'] = 1
+                    G.node[author.id]['name'] = author.full_name
+                    G.node[author2.id]['name'] = author2.full_name
+
+    try:
+        G = nx_graph.analyze(G)
+        ego_g = nx.ego_graph(G, person.id)
+        data = json_graph.node_link_data(ego_g)
+
+    except:
+        data = {}
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        # 'publication_tags_per_year': publication_tags_per_year,
+        'data': json.dumps(data),
+        'person': person,
+    }
+
+    return render_to_response("publications/egonetwork.html", return_dict, context_instance=RequestContext(request))
