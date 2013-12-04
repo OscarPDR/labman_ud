@@ -22,6 +22,7 @@ import requests
 import os
 import re
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -49,6 +50,86 @@ SUPPORTED_ITEM_TYPES = {
     'conferencePaper': 'Conference paper',
 }
 
+
+# Dict used for tag dissambiguation
+tag_nicks = {
+        'AAL' : 'Ambient Assisted Living',
+        'ambient assisted living environments' : 'Ambient Assisted Living',
+        'assisted living' : 'Ambient Assisted Living',
+        'assistive' : 'Ambient Assisted Living',
+        'ambient assisted citizens' : 'ambient assisted cities',
+        'Artificial Intelligence (incl. Robotics)' : 'Artificial Intelligence',
+        'Computational Intelligence' : 'Artificial Intelligence',
+        'Computation by Abstract Devices' : 'Artificial Intelligence',
+        'bayesian network' : 'Bayesian Networks',
+        'client-server system' : 'client-server systems',
+        'Computers and Society' : '',
+        'Computer Science' : '',
+        'computer science education' : '',
+        'Computer Science, general' : '', 
+        'content creation; user centered design contextual design' : 'Content Creation',
+        'context'
+        'context-aware' : 'Context-Aware Computing', 
+        'context-aware development toolkits' : 'Context-Aware Computing', 
+        'context-awareness'  : 'Context-Aware Computing', 
+        'context-aware services development' : 'Context-Aware Computing', 
+        'context-aware system development' : 'Context-Aware Computing', 
+        'context-aware systems' : 'Context-Aware Computing', 
+        'context data management' : 'Context-Aware Computing', 
+        'context data sources' : 'Context-Aware Computing', 
+        'context management' : 'Context-Aware Computing', 
+        'Context modeling': 'context modelling',
+        'contextual design' : 'Context-Aware Computing', 
+        'data handling' : 'Data Management',
+        'dispositivos móviles' : 'Mobile Devices',
+        'domain expert' : 'domain experts',
+        'Domotic' : 'Domotics',
+        'domotics' : 'Domotics', 
+        'Educational programs' : 'Educational Technologies',
+        'educational technology' : 'Educational Technologies',
+        'elderly' : 'Elderly People',
+        'Elders': 'Elderly People',
+        'Embedded' : 'Embedded Devices',
+        'emergency detection' : 'Emergency Management',
+        'evaluación' : 'Evaluation',
+        'experiencia del usuario' : 'User Experience',
+        'first-order didactic resource' : 'Educational Technologies',
+        'Fuzzy' : 'Fuzzy Logic',
+        'gestión de energía' : 'Energu Management',
+        'Grid Services' : 'Grid',
+        'hci' : 'Human Computer Interaction',
+        'Information Systems Applications (incl.Internet)' : '',
+        'Information Systems Applications (incl. Internet)' : '',
+        'inference' : 'inference mechanisms',
+        'IoT' : 'Internet of Things',
+        'learning' : 'Educational Technologies',
+        'Opinion Minning' : 'opinion mining',
+        'Persuasive Technologies' : 'persuasive technology',
+        'reasoners' : 'Reasoning Engines',
+        'Recomendation Systems' : 'Recommendation Systems',
+        'seguridad' : 'Security',
+        'semantic' : 'Semantic Technologies',
+        'Semantic reasoners' : 'Semantic Inference',
+        'semantic reasoning' : 'Semantic Inference',
+        'Semantics' : 'Semantic Technologies',
+        'servicios móviles' : 'Mobile Services',
+        'Smart everyday objects' : 'Smart Everyday Object',
+        'smart phones' : 'smartphones',
+        'social content sharing' : 'Social Data Mining',
+        'software design' : 'Software Engineering',
+        'triple space' : 'triple space computing',
+        'triple space computing paradigm' : 'triple space computing',
+        'triplespaces' : 'triple space computing',
+        'ubiquitous' : 'ubiquitous computing',
+        'uncertainty' : 'Uncertainty Reasoning',
+        'wearable computers' : 'Wearable Computing'
+}
+
+def dissambiguate(tag):
+    correct_tag = tag
+    if tag in tag_nicks.keys():
+        correct_tag = tag_nicks[tag]
+    return correct_tag
 
 def get_zotero_variables():
     # TODO: Check variables
@@ -481,6 +562,7 @@ def get_publication_details(item):
 
     for tag in item['tags']:
         tag_str = str(tag['tag'].encode('utf-8'))
+        tag_str = dissambiguate(tag_str)
         tag_slug = slugify(tag_str)
 
         # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
@@ -669,6 +751,10 @@ def remove_unrelated_persons():
 
     logger.info('Removed %d items' % removed_objects)
 
+
+def load_tag_nicks(path='tag_nicks.json'):
+    nicks = json.load(open(path, 'r'))
+    return nicks
 
 ###########################################################################
 # def: remove_unrelated_tags()

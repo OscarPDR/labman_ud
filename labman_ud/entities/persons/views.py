@@ -244,7 +244,6 @@ def former_members(request, organization_slug=None):
 #########################
 
 def member_info(request, member_slug):
-
     member = Person.objects.get(slug=member_slug)
 
     try:
@@ -268,28 +267,12 @@ def member_info(request, member_slug):
             projects[role.name].append(project)
 
     publications = {}
-    number_of_publications = {}
-
-    min_year = Publication.objects.aggregate(Min('year'))
-    max_year = Publication.objects.aggregate(Max('year'))
-
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
-
-    years = []
-
-    for year in range(min_year, max_year + 1):
-        years.append(year)
 
     publication_types = PublicationType.objects.all()
 
     for publication_type in publication_types:
         pub_type = publication_type.name.encode('utf-8')
         publications[pub_type] = []
-        number_of_publications[pub_type] = {}
-
-        for year in years:
-            number_of_publications[pub_type][year] = 0
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
@@ -300,41 +283,6 @@ def member_info(request, member_slug):
         pub_type = publication.publication_type.name.encode('utf-8')
         pub_year = publication.year
         publications[pub_type].append(publication)
-        number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
-
-    G = nx.Graph()
-
-    pubs = Publication.objects.all()
-
-    for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
-
-        if author_ids:
-            _list = [author_id['author_id'] for author_id in author_ids]
-
-            for pos, author_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    author = Person.objects.get(id=author_id)
-                    author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id, author2.id)
-
-                    try:
-                        G[author.id][author2.id]['weight'] += 1
-
-                    except:
-                        G[author.id][author2.id]['weight'] = 1
-                    G.node[author.id]['name'] = author.full_name
-                    G.node[author2.id]['name'] = author2.full_name
-
-    try:
-        G = nx_graph.analyze(G)
-        ego_g = nx.ego_graph(G, member.id)
-        data = json_graph.node_link_data(ego_g)
-
-    except:
-        data = {}
-
-    # publication_tags_per_year = __clean_publication_tags(member.id, min_year, max_year)
 
     accounts = []
     account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
@@ -351,12 +299,9 @@ def member_info(request, member_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        # 'publication_tags_per_year': publication_tags_per_year,
         'accounts': accounts,
-        'data': json.dumps(data),
         'has_publications': has_publications,
         'member': member,
-        'number_of_publications': number_of_publications,
         'position': position,
         'projects': projects,
         'publications': publications,
