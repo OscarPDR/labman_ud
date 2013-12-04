@@ -80,7 +80,7 @@
                                 <span class="label">{{ project.status }}</span>
                             </a>
                         {% endifequal %}
-                        {% ifequal project.status 'In development' %}
+                        {% ifequal project.status 'Ongoing' %}
                             <a href="{% url view_project_status project.status|slugify %}">
                                 <span class="label label-info">{{ project.status }}</span>
                             </a>
