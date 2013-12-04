@@ -40,6 +40,10 @@ h5, h6 {
     color: #999;
 }
 
+.nav-justified li a:hover {
+    background-image: -webkit-linear-gradient(top, #d8d8d8 0%, #d8d8d8 100%);
+}
+
 #principal-h1 {
     font-family: 'Open Sans', cursive;
     color: #999;
@@ -404,6 +408,14 @@ footer > a {
 
 .footer-social > a {
     margin: 0;
+}
+
+.footer-social img {
+    -webkit-filter: grayscale(1);
+}
+
+.footer-social img:hover {
+    -webkit-filter: grayscale(0);
 }
 
 .form-search {
