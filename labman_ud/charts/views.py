@@ -431,3 +431,99 @@ def projects_morelab_collaborations(request):
     }
 
     return render_to_response("charts/projects/collaboration_morelab.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: publications_egonetwork
+###########################################################################
+
+def publications_egonetwork(request, author_slug):
+    author = Person.objects.get(slug=author_slug)
+
+    G = nx.Graph()
+
+    pubs = Publication.objects.all()
+
+    for pub in pubs:
+        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+
+        if author_ids:
+            _list = [author_id['author_id'] for author_id in author_ids]
+
+            for pos, author_id in enumerate(_list):
+                for i in range(pos+1, len(_list)):
+                    author1 = Person.objects.get(id=author_id)
+                    author2 = Person.objects.get(id=_list[i])
+                    G.add_edge(author1.id, author2.id)
+
+                    try:
+                        G[author1.id][author2.id]['weight'] += 1
+
+                    except:
+                        G[author1.id][author2.id]['weight'] = 1
+                    G.node[author1.id]['name'] = author1.full_name
+                    G.node[author2.id]['name'] = author2.full_name
+
+    try:
+        G = nx_graph.analyze(G)
+        ego_g = nx.ego_graph(G, author.id)
+        data = json_graph.node_link_data(ego_g)
+
+    except:
+        data = {}
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        # 'publication_tags_per_year': publication_tags_per_year,
+        'data': json.dumps(data),
+        'author': author,
+    }
+
+    return render_to_response("charts/publications/egonetwork.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: publications_by_author
+###########################################################################
+
+def publications_by_author(request, author_slug):
+    publications = {}
+    publication_types = PublicationType.objects.all()
+
+    author = Person.objects.get(slug=author_slug)
+
+    publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
+    _publications = Publication.objects.filter(id__in=publication_ids)
+
+    min_year = _publications.aggregate(Min('year'))
+    max_year = _publications.aggregate(Max('year'))
+
+    min_year = min_year.get('year__min')
+    max_year = max_year.get('year__max')
+
+    years = []
+
+    for year in range(min_year, max_year + 1):
+        years.append(year)
+
+    for publication_type in publication_types:
+        pub_type = publication_type.name.encode('utf-8')
+        publications[pub_type] = {}
+        for year in range(min_year, max_year + 1):
+            publications[pub_type][year] = 0
+
+    for publication in _publications:
+        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_year = publication.year
+        if pub_year in range(min_year, max_year + 1):
+            publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'author': author,
+        'publication_types': publication_types,
+        'publications': publications,
+        'years': years,
+    }
+
+    return render_to_response("charts/publications/number_of_publications_by_author.html", return_dict, context_instance=RequestContext(request))
