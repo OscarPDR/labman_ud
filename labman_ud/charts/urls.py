@@ -14,13 +14,14 @@ urlpatterns = patterns('',
     url(r'^funding/incomes_by_project/(?P<project_slug>\S+)$', 'charts.views.funding_incomes_by_project', name='funding_incomes_by_project'),
 
     # /publications
+    url(r'^publications/egonetwork/(?P<author_slug>\S+)$', 'charts.views.publications_egonetwork', name='publications_egonetwork'),
+    url(r'^publications/total_number/(?P<author_slug>\S+)$', 'charts.views.publications_by_author', name='publications_by_author'),
+
     url(r'^publications/coauthorship/(?P<max_position>\d)$', 'charts.views.publications_coauthorship', name='publications_coauthorship_max_position'),
     url(r'^publications/coauthorship/$', 'charts.views.publications_coauthorship', name='publications_coauthorship'),
     url(r'^publications/morelab_coauthorship/(?P<max_position>\d)$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship_max_position'),
     url(r'^publications/morelab_coauthorship/$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship'),
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
-
-    url(r'^publications/egonetwork/(?P<person_slug>\S+)$', 'charts.views.publications_egonetwork', name='publications_egonetwork'),
 
     # /projects
     url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
