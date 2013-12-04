@@ -1,0 +1,58 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block header_css %}
+
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/jqcloud.css"/>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li>Publications</li>
+
+        <li>Tags</li>
+
+        <li class="active">{{ author.full_name }}</li>
+    </ul>
+
+    <br>
+
+    <div class="centered">
+        <!-- Dimensions of the tag cloud container element must be explicitly specified -->
+        <div id="publication_tag_cloud" style="width: 1000px; height: 450px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jqcloud-1.0.4.min.js"></script>
+
+    <script>
+        var word_array = [
+            {% for key, value in tag_dict.items %}
+                {text: "{{ key }}", weight: "{{ value }}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            // When DOM is ready, select the container element and call the jQCloud method,
+            // passing the array of words as the first argument.
+            $("#publication_tag_cloud").jQCloud(word_array);
+        });
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}
