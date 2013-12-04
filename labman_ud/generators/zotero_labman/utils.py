@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.template.defaultfilters import slugify
 
 from django.conf import settings
@@ -63,12 +65,7 @@ tag_nicks = {
         'Computation by Abstract Devices' : 'Artificial Intelligence',
         'bayesian network' : 'Bayesian Networks',
         'client-server system' : 'client-server systems',
-        'Computers and Society' : '',
-        'Computer Science' : '',
-        'computer science education' : '',
-        'Computer Science, general' : '', 
         'content creation; user centered design contextual design' : 'Content Creation',
-        'context'
         'context-aware' : 'Context-Aware Computing', 
         'context-aware development toolkits' : 'Context-Aware Computing', 
         'context-awareness'  : 'Context-Aware Computing', 
@@ -95,11 +92,11 @@ tag_nicks = {
         'experiencia del usuario' : 'User Experience',
         'first-order didactic resource' : 'Educational Technologies',
         'Fuzzy' : 'Fuzzy Logic',
-        'gestión de energía' : 'Energu Management',
+        'gestión de energía' : 'Energy Management',
         'Grid Services' : 'Grid',
         'hci' : 'Human Computer Interaction',
-        'Information Systems Applications (incl.Internet)' : '',
-        'Information Systems Applications (incl. Internet)' : '',
+        'Information Systems Applications (incl.Internet)' : 'Information Systems Applications',
+        'Information Systems Applications (incl. Internet)' : 'Information Systems Applications',
         'inference' : 'inference mechanisms',
         'IoT' : 'Internet of Things',
         'learning' : 'Educational Technologies',
@@ -584,8 +581,8 @@ def get_publication_details(item):
             # If it doesn't, create the tag as normal
             if len(tag['tag']) <= 75:
                 t, created = Tag.objects.get_or_create(
-                    slug=slugify(tag_str),
-                    defaults={'name': tag['tag']}
+                    slug=tag_slug,
+                    defaults={'name': tag_str}
                 )
                 tags.append(t)
 
