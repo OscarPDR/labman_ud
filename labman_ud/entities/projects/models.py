@@ -20,7 +20,7 @@ MAX_YEAR_LIMIT = 2080
 
 PROJECT_STATUS = (
     ('Not started', 'Not started'),
-    ('In development', 'In development'),
+    ('Ongoing', 'Ongoing'),
     ('Finished', 'Finished'),
 )
 
