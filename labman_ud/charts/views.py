@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -529,6 +530,7 @@ def publications_by_author(request, author_slug):
     return render_to_response("charts/publications/number_of_publications_by_author.html", return_dict, context_instance=RequestContext(request))
 
 
+@login_required
 ###########################################################################
 # View: tags_by_author
 ###########################################################################

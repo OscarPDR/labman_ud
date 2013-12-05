@@ -1,0 +1,20 @@
+
+<h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
+
+<div class="soften-limited"></div>
+
+<ul>
+    {% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
+    </li>
+    {% endif %}
+
+    <li>
+        <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
+    </li>
+
+    <li>
+        <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
+    </li>
+</ul>
