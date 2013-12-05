@@ -221,6 +221,9 @@ LOGGING = {
     }
 }
 
+LOGIN_URL = 'login/'
+LOGOUT_URL = 'logout/'
+
 REDACTOR_OPTIONS = {
     'lang': 'en',
 }
