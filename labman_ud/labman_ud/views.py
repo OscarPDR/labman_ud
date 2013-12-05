@@ -1,7 +1,9 @@
 # coding: utf-8
 
-from django.shortcuts import render_to_response
 from django.contrib.auth import logout
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from entities.news.models import News
@@ -29,8 +31,7 @@ def home(request):
 
 def logout_view(request):
     logout(request)
-    # Redirect to a success page.
-    return render_to_response('labman_ud/index.html')
+    return HttpResponseRedirect(reverse('home'))
 
 
 #########################

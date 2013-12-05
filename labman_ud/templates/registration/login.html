@@ -1,54 +1,26 @@
 {% extends "labman_ud/base.html" %}
 
+
+
 {% block content %}
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 well">
+                {% if form.errors %}
+                    <p>Your username and password didn't match. Please try again.</p>
+                {% endif %}
 
-    <div class="row-fluid">
-	<div class="span4"></div>
-        <div class="span4">
-
-            <form action="" method="post" class="form-horizontal">
+                <form class="form-signin col-md-4" method="post" action="{% url django.contrib.auth.views.login %}">
                 {% csrf_token %}
-
-                <legend>Login</legend>
-
-                <br />
-
-                <fieldset>
-
-                    {% if form.errors %}
-                        <div class="alert alert-error">
-                            <p>Your username and password didn't match, please try again.</p>
-                        </div>
-                    {% endif %}
-
+                    {{ form.username }}
+                    {{ form.password }}
                     <br>
-
-                    <div class="control-group">
-                        <label class="control-label" id="label">{{ form.username.label }}</label>
-                        <div class="controls">
-                            {{ form.username }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label" id="label">{{ form.password.label }}</label>
-                        <div class="controls">
-                            {{ form.password }}
-                        </div>
-                    </div>
-
-                    {% if next %}
-                        <input type="hidden" name="next" value="{{ next }}" />
-                    {% else %}
-                        <input type="hidden" name="next" value="/sourceplanet/" />
-                    {% endif %}
-                    <input class="btn btn-primary" type="submit" value="Login" />
-
-                </fieldset>
-	    </form>
-        </div>
-	<div class="span4"></div>
-    </div>
+                    <input class="btn btn-primary" type="submit" value="login" />
+                    <input type="hidden" name="next" value="/" />
+                </form>
+            </div>
+        </div> <!-- end .row -->
+    </div> <!-- end .container -->
 
 {% endblock %}

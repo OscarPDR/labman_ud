@@ -100,11 +100,22 @@
                             </a>
                         </li> -->
                     </ul> <!-- end .nav .nav-justified -->
-                    
+
                     {% if user.is_authenticated %}
-                    <div class="registered-user">
-                        <span>Welcome, {{ user.username }}</span>
-                    </div>
+                        <div class="registered-user">
+                            <span>
+                                Registered as
+                                <strong>
+                                    {% if user.first_name %}
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    {% else %}
+                                        {{ user.username }}
+                                    {% endif %}
+                                </strong>
+                            </span>
+                            &emsp;
+                            <a class="btn btn-danger btn-xs" href="{% url logout_view %}">Logout</a>
+                        </div>
                     {% endif %}
 
                 </div> <!-- end .masthead -->
