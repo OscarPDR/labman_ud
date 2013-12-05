@@ -631,3 +631,8 @@ footer > a {
 .dl-horizontal > .news-title {
     margin-left: 100px;
 }
+
+.registered-user {
+    margin-bottom: 0.75em;
+    text-align: right;
+}
