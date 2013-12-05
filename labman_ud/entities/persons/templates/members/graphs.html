@@ -6,15 +6,15 @@
 <ul>
     {% if user.is_authenticated %}
     <li>
-        <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
+        <a href="{% url publications_egonetwork member.slug %}">Egonetwork</a>
     </li>
     {% endif %}
 
     <li>
-        <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
+        <a href="{% url publications_by_author member.slug %}">Number of publications</a>
     </li>
 
     <li>
-        <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
+        <a href="{% url tags_by_author member.slug %}">Tag cloud</a>
     </li>
 </ul>
