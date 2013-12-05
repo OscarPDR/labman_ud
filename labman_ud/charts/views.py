@@ -541,7 +541,7 @@ def tags_by_author(request, author_slug):
     author = Person.objects.get(slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-    tags = PublicationTag.objects.all(publication_id__in=publication_ids)
+    tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
 
     for tag in tags:
         t = tag.tag.name
@@ -556,4 +556,4 @@ def tags_by_author(request, author_slug):
         'tag_dict': tag_dict,
     }
 
-    return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+    return render_to_response('charts/publications/tags_by_author.html', return_dict, context_instance=RequestContext(request))
