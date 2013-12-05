@@ -530,7 +530,6 @@ def publications_by_author(request, author_slug):
     return render_to_response("charts/publications/number_of_publications_by_author.html", return_dict, context_instance=RequestContext(request))
 
 
-@login_required
 ###########################################################################
 # View: tags_by_author
 ###########################################################################
