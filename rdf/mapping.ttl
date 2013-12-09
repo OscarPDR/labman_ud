@@ -428,7 +428,7 @@ map:Job_person_id__ref a d2rq:PropertyBridge;
 # Table Person
 map:Person a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "persons/@@persons_person.slug@@";
+    d2rq:uriPattern "people/@@persons_person.slug@@";
     d2rq:class foaf:Person;
     d2rq:classDefinitionLabel "persons_person";
     .
