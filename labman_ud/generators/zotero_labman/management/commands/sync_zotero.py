@@ -13,8 +13,8 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         try:
-            last_version_db_trash = ZoteroLog.objects.filter(Q(zotero_key='-SYNCFINISHED-') | Q(zotero_key='-RESYNC-')).filter(delete=False).order_by('-created')[0].version
-            last_version_db = ZoteroLog.objects.filter(Q(zotero_key='-SYNCFINISHED-') | Q(zotero_key='-RESYNC-')).filter(delete=True).order_by('-created')[0].version
+            last_version_db_trash = ZoteroLog.objects.filter(Q(zotero_key='-SYNCFINISHED-') | Q(zotero_key='-RESYNC-')).filter(delete=True).order_by('-created')[0].version
+            last_version_db = ZoteroLog.objects.filter(Q(zotero_key='-SYNCFINISHED-') | Q(zotero_key='-RESYNC-')).filter(delete=False).order_by('-created')[0].version
         except:
             last_version_db = 0
 
