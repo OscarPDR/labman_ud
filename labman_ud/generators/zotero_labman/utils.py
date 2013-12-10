@@ -66,22 +66,22 @@ tag_nicks = {
         'bayesian network' : 'Bayesian Networks',
         'client-server system' : 'client-server systems',
         'content creation; user centered design contextual design' : 'Content Creation',
-        'context-aware' : 'Context-Aware Computing', 
-        'context-aware development toolkits' : 'Context-Aware Computing', 
-        'context-awareness'  : 'Context-Aware Computing', 
-        'context-aware services development' : 'Context-Aware Computing', 
-        'context-aware system development' : 'Context-Aware Computing', 
-        'context-aware systems' : 'Context-Aware Computing', 
-        'context data management' : 'Context-Aware Computing', 
-        'context data sources' : 'Context-Aware Computing', 
-        'context management' : 'Context-Aware Computing', 
+        'context-aware' : 'Context-Aware Computing',
+        'context-aware development toolkits' : 'Context-Aware Computing',
+        'context-awareness'  : 'Context-Aware Computing',
+        'context-aware services development' : 'Context-Aware Computing',
+        'context-aware system development' : 'Context-Aware Computing',
+        'context-aware systems' : 'Context-Aware Computing',
+        'context data management' : 'Context-Aware Computing',
+        'context data sources' : 'Context-Aware Computing',
+        'context management' : 'Context-Aware Computing',
         'Context modeling': 'context modelling',
-        'contextual design' : 'Context-Aware Computing', 
+        'contextual design' : 'Context-Aware Computing',
         'data handling' : 'Data Management',
         'dispositivos móviles' : 'Mobile Devices',
         'domain expert' : 'domain experts',
         'Domotic' : 'Domotics',
-        'domotics' : 'Domotics', 
+        'domotics' : 'Domotics',
         'Educational programs' : 'Educational Technologies',
         'educational technology' : 'Educational Technologies',
         'elderly' : 'Elderly People',
@@ -141,11 +141,12 @@ def get_zotero_variables():
 def get_last_zotero_version():
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&limit=1&order=dateModified&key=' + api_key)
+    # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&limit=1&order=dateModified&key=' + api_key)
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
     # max_items = max(r.json().items(), key=operator.itemgetter(1))[1]
     max_items = r.json().items()[0][1]
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&limit=1&order=dateModified&key=' + api_key)
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
     max_trash = r.json().items()[0][1]
 
     return max(max_items, max_trash)
