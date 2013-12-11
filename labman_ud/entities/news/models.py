@@ -74,7 +74,8 @@ class News(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
 
-        post_tweet(self.title, self.slug)
+        if self.pk is None:
+            post_tweet(self.title, self.slug)
 
         super(News, self).save(*args, **kwargs)
 
