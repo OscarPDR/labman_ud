@@ -1,10 +1,11 @@
 #!/bin/bash
 
-declare -a apps=( 'events' 'funding_programs' 'organizations' 'persons' 'projects' 'publications' 'utils' )
+declare -a apps=( 'events' 'funding_programs' 'news' 'organizations' 'persons' 'projects' 'publications' 'utils' )
 
 today=$(date +"%m_%d_%Y")
 
 for app in ${apps[*]}; do
+    mkdir -p entities/$app/fixtures
     if [ -f entities/$app/fixtures/initial_data.json ]; then
         mv entities/$app/fixtures/initial_data.json entities/$app/fixtures/initial_data_$today.json
     fi
