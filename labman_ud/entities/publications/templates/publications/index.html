@@ -93,11 +93,11 @@
 
                         <td class="col-md-1 centered">
                             {% if publication.bibtex %}
-                                <a data-toggle="modal" href="#myModal">
+                                <a data-toggle="modal" href="#myModal_{{ forloop.counter }}">
                                     <i class="fa fa-paperclip fa-2x"></i>
                                 </a>
 
-                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="myModal_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                         <div class="modal-header">
