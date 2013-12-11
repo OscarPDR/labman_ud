@@ -9,4 +9,4 @@ for app in ${apps[*]}; do
     cp entities/$app/fixtures/initial_data.json  entities_fixtures/$app/fixtures/initial_data.json
 done
 
-tar -cvf fixtures.tar /entities_fixtures
+tar -cvf fixtures.tar entities_fixtures
