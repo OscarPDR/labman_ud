@@ -49,7 +49,7 @@
                     </a>
                     <br>
                     <span class="head-internet-name">
-                        <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_internet.slug }}">&emsp;
+                        <a target="_blank" href="{{ RDF_URI }}people/{{ head_of_internet.slug }}">&emsp;
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
                         {% if head_of_internet.title %}{{head_of_internet.title}} {% endif %}{{ head_of_internet.full_name }}
@@ -78,7 +78,7 @@
                     </a>
                     <br>
                     <span class="head-telecom-name">
-                        <a target="_blank" href="{{ RDF_URI }}persons/{{ head_of_telecom.slug }}">&emsp;
+                        <a target="_blank" href="{{ RDF_URI }}people/{{ head_of_telecom.slug }}">&emsp;
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>
                         {% if head_of_telecom.title %}{{head_of_telecom.title}} {% endif %}{{ head_of_telecom.full_name }}
@@ -120,7 +120,7 @@
                         </a>
                         <br>
                         <span class="member-name">
-                            <a target="_blank" href="{{ RDF_URI }}persons/{{ member.slug }}">&emsp;
+                            <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
                                 <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                             </a>
                             {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
