@@ -23,4 +23,4 @@ class ZoteroLog(models.Model):
     publication = models.ForeignKey(Publication, default=None, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s | %s | %s' % (self.version, self.zotero_key, self.publication.id)
+        return u'%s | %s' % (self.version, self.zotero_key)
