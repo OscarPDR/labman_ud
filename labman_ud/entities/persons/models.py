@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 from django.utils.html import strip_tags
 
 from redactor.fields import RedactorField
@@ -34,7 +35,7 @@ TITLES = (
 # Model: Person
 #########################
 
-class Person(models.Model):
+class Person(BaseModel):
     first_name = models.CharField(
         max_length=25,
     )
@@ -157,7 +158,7 @@ class Person(models.Model):
 # Model: AccountProfile
 #########################
 
-class AccountProfile(models.Model):
+class AccountProfile(BaseModel):
     person = models.ForeignKey('Person')
 
     network = models.ForeignKey('utils.Network')
@@ -174,7 +175,7 @@ class AccountProfile(models.Model):
 # Model: Nickname
 #########################
 
-class Nickname(models.Model):
+class Nickname(BaseModel):
     person = models.ForeignKey('Person', related_name='nicknames')
 
     nickname = models.CharField(
@@ -202,7 +203,7 @@ class Nickname(models.Model):
 # Model: Job
 #########################
 
-class Job(models.Model):
+class Job(BaseModel):
     person = models.ForeignKey('Person')
 
     position = models.CharField(
@@ -235,7 +236,7 @@ class Job(models.Model):
 # Model: PhDProgramFollowedByPerson
 #########################
 
-class PhDProgramFollowedByPerson(models.Model):
+class PhDProgramFollowedByPerson(BaseModel):
     person = models.ForeignKey('Person')
     phd_program = models.ForeignKey('utils.PhDProgram')
 
@@ -244,6 +245,6 @@ class PhDProgramFollowedByPerson(models.Model):
 # Model: ThesisRegisteredByPerson
 #########################
 
-class ThesisRegisteredByPerson(models.Model):
+class ThesisRegisteredByPerson(BaseModel):
     person = models.ForeignKey('Person')
     thesis = models.ForeignKey('publications.Thesis')

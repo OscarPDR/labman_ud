@@ -5,6 +5,7 @@ import os
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 # Create your models here.
 
@@ -34,7 +35,7 @@ def thesis_path(self, filename):
 # Model: PublicationType
 ###########################################################################
 
-class PublicationType(models.Model):
+class PublicationType(BaseModel):
     name = models.CharField(
         max_length=100,
     )
@@ -65,7 +66,7 @@ class PublicationType(models.Model):
 # Model: Publication
 ###########################################################################
 
-class Publication(models.Model):
+class Publication(BaseModel):
     presented_at = models.ForeignKey(
         'events.Event',
         blank=True,
@@ -237,7 +238,7 @@ class Publication(models.Model):
 # Model: PublicationTag
 ###########################################################################
 
-class PublicationTag(models.Model):
+class PublicationTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
     publication = models.ForeignKey('Publication')
 
@@ -249,7 +250,7 @@ class PublicationTag(models.Model):
 # Model: PublicationAuthor
 ###########################################################################
 
-class PublicationAuthor(models.Model):
+class PublicationAuthor(BaseModel):
     author = models.ForeignKey('persons.Person')
     publication = models.ForeignKey('Publication')
 
@@ -266,7 +267,7 @@ class PublicationAuthor(models.Model):
 # Model: Thesis
 ###########################################################################
 
-class Thesis(models.Model):
+class Thesis(BaseModel):
     title = models.CharField(
         max_length=1000,
     )
@@ -319,7 +320,7 @@ class Thesis(models.Model):
 # Model: ThesisAbstract
 ###########################################################################
 
-class ThesisAbstract(models.Model):
+class ThesisAbstract(BaseModel):
     thesis = models.ForeignKey('Thesis')
     language = models.ForeignKey('utils.Language')
 
@@ -336,7 +337,7 @@ class ThesisAbstract(models.Model):
 # Model: CoAdvisor
 ###########################################################################
 
-class CoAdvisor(models.Model):
+class CoAdvisor(BaseModel):
     thesis = models.ForeignKey('Thesis')
     co_advisor = models.ForeignKey('persons.Person')
 

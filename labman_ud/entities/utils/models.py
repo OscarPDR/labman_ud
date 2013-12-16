@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 
 # Create your models here.
@@ -17,7 +18,7 @@ def network_icon_path(self, filename):
 # Model: Country
 ###########################################################################
 
-class Country(models.Model):
+class Country(BaseModel):
     full_name = models.CharField(
         max_length=250,
     )
@@ -55,7 +56,7 @@ class Country(models.Model):
 # Model: GeographicalScope
 ###########################################################################
 
-class GeographicalScope(models.Model):
+class GeographicalScope(BaseModel):
     name = models.CharField(
         max_length=100,
         verbose_name=u'Name',
@@ -86,7 +87,7 @@ class GeographicalScope(models.Model):
 # Model: Role
 ###########################################################################
 
-class Role(models.Model):
+class Role(BaseModel):
     name = models.CharField(
         max_length=100,
     )
@@ -116,7 +117,7 @@ class Role(models.Model):
 # Model: Tag
 ###########################################################################
 
-class Tag(models.Model):
+class Tag(BaseModel):
     name = models.CharField(
         max_length=75,
     )
@@ -152,7 +153,7 @@ class Tag(models.Model):
 # Model: Language
 ###########################################################################
 
-class Language(models.Model):
+class Language(BaseModel):
     name = models.CharField(
         max_length=50,
     )
@@ -182,7 +183,7 @@ class Language(models.Model):
 # Model: Network
 ###########################################################################
 
-class Network(models.Model):
+class Network(BaseModel):
     name = models.CharField(
         max_length=150,
     )
@@ -219,7 +220,7 @@ class Network(models.Model):
 # Model: PhDProgram
 ###########################################################################
 
-class PhDProgram(models.Model):
+class PhDProgram(BaseModel):
     name = models.CharField(
         max_length=500,
     )

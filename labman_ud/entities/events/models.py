@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 
 # Create your models here.
@@ -28,7 +29,7 @@ VIVA_RESULTS = (
 # Model: EventType
 #########################
 
-class EventType(models.Model):
+class EventType(BaseModel):
     name = models.CharField(
         max_length=100,
     )
@@ -59,7 +60,7 @@ class EventType(models.Model):
 # Model: Event
 #########################
 
-class Event(models.Model):
+class Event(BaseModel):
     event_type = models.ForeignKey('EventType')
 
     full_name = models.CharField(
@@ -144,7 +145,7 @@ class Event(models.Model):
 # Model: Viva
 #########################
 
-class Viva(models.Model):
+class Viva(BaseModel):
     date = models.DateField()
 
     result = models.CharField(
@@ -163,7 +164,7 @@ class Viva(models.Model):
 # Model: VivaPanel
 #########################
 
-class VivaPanel(models.Model):
+class VivaPanel(BaseModel):
     chair = models.ForeignKey(
         'persons.Person',
         related_name='is_chair',

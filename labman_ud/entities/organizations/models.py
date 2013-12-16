@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 
 # Create your models here.
@@ -17,7 +18,7 @@ def organization_logo_path(self, filename):
 # Model: OrganizationType
 ###########################################################################
 
-class OrganizationType(models.Model):
+class OrganizationType(BaseModel):
     name = models.CharField(
         max_length=100,
     )
@@ -48,7 +49,7 @@ class OrganizationType(models.Model):
 # Model: Organization
 ###########################################################################
 
-class Organization(models.Model):
+class Organization(BaseModel):
     organization_type = models.ForeignKey('OrganizationType')
 
     sub_organization_of = models.ForeignKey(
