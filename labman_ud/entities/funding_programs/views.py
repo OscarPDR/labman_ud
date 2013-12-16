@@ -1,17 +1,13 @@
 # coding: utf-8
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
 from django.db.models import Sum, Min, Max
 
-from django.conf import settings
-
 from .models import FundingProgram
-from .forms import FundingProgramForm, FundingProgramSearchForm
+from .forms import FundingProgramSearchForm
 
 from entities.projects.models import Project, Funding, FundingAmount
 

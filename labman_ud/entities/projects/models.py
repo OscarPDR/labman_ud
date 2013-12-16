@@ -5,7 +5,7 @@ import os
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
-
+from entities.core.models import BaseModel
 
 # Create your models here.
 
@@ -44,7 +44,7 @@ MONTHS = (
 # Model: ProjectType
 ###########################################################################
 
-class ProjectType(models.Model):
+class ProjectType(BaseModel):
     name = models.CharField(
         max_length=100,
     )
@@ -75,7 +75,7 @@ class ProjectType(models.Model):
 # Model: Project
 ###########################################################################
 
-class Project(models.Model):
+class Project(BaseModel):
     project_leader = models.ForeignKey('organizations.Organization')
 
     project_type = models.ForeignKey('ProjectType')
@@ -169,7 +169,7 @@ class Project(models.Model):
 # Model: Funding
 ###########################################################################
 
-class Funding(models.Model):
+class Funding(BaseModel):
     project = models.ForeignKey('Project')
 
     funding_program = models.ForeignKey('funding_programs.FundingProgram')
@@ -195,7 +195,7 @@ class Funding(models.Model):
 # Model: FundingAmount
 ###########################################################################
 
-class FundingAmount(models.Model):
+class FundingAmount(BaseModel):
     funding = models.ForeignKey('Funding')
 
     own_amount = models.DecimalField(
@@ -218,7 +218,7 @@ class FundingAmount(models.Model):
 # Model: AssignedPerson
 ###########################################################################
 
-class AssignedPerson(models.Model):
+class AssignedPerson(BaseModel):
     project = models.ForeignKey('Project')
 
     person = models.ForeignKey('persons.Person')
@@ -250,7 +250,7 @@ class AssignedPerson(models.Model):
 # Model: AssignedPersonTag
 ###########################################################################
 
-class AssignedPersonTag(models.Model):
+class AssignedPersonTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
     assigned_person = models.ForeignKey('AssignedPerson')
 
@@ -262,7 +262,7 @@ class AssignedPersonTag(models.Model):
 # Model: ConsortiumMember
 ###########################################################################
 
-class ConsortiumMember(models.Model):
+class ConsortiumMember(BaseModel):
     project = models.ForeignKey('Project')
 
     organization = models.ForeignKey('organizations.Organization')
@@ -275,7 +275,7 @@ class ConsortiumMember(models.Model):
 # Model: ProjectTag
 ###########################################################################
 
-class ProjectTag(models.Model):
+class ProjectTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
     project = models.ForeignKey('Project')
 
@@ -287,7 +287,7 @@ class ProjectTag(models.Model):
 # Model: RelatedPublication
 ###########################################################################
 
-class RelatedPublication(models.Model):
+class RelatedPublication(BaseModel):
     project = models.ForeignKey('Project')
     publication = models.ForeignKey('publications.Publication', related_name='projects')
 

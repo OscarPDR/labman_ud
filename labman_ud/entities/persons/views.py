@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 from charts.utils import nx_graph
 from collections import OrderedDict

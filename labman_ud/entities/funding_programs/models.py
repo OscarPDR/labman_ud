@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 
 # Create your models here.
@@ -17,7 +18,7 @@ def funding_program_logo_path(self, filename):
 # Model: FundingProgram
 #########################
 
-class FundingProgram(models.Model):
+class FundingProgram(BaseModel):
     organization = models.ForeignKey('organizations.Organization')
 
     full_name = models.CharField(
@@ -62,7 +63,7 @@ class FundingProgram(models.Model):
 # Model: FundingProgramLogo
 #########################
 
-class FundingProgramLogo(models.Model):
+class FundingProgramLogo(BaseModel):
     funding_program = models.ForeignKey('FundingProgram')
 
     logo = models.ImageField(

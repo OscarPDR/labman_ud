@@ -6,6 +6,7 @@ import tweetpony
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
+from entities.core.models import BaseModel
 
 from datetime import datetime
 from redactor.fields import RedactorField
@@ -48,7 +49,7 @@ def post_tweet(title, slug):
 # Model: New
 #########################
 
-class News(models.Model):
+class News(BaseModel):
     title = models.CharField(
         max_length=250,
     )
@@ -84,7 +85,7 @@ class News(models.Model):
 # Model: NewsTag
 #########################
 
-class NewsTag(models.Model):
+class NewsTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
     news = models.ForeignKey('News')
 
@@ -96,7 +97,7 @@ class NewsTag(models.Model):
 # Model: ProjectRelatedToNews
 #########################
 
-class ProjectRelatedToNews(models.Model):
+class ProjectRelatedToNews(BaseModel):
     project = models.ForeignKey('projects.Project')
     news = models.ForeignKey('News')
 
@@ -108,7 +109,7 @@ class ProjectRelatedToNews(models.Model):
 # Model: PublicationRelatedToNews
 #########################
 
-class PublicationRelatedToNews(models.Model):
+class PublicationRelatedToNews(BaseModel):
     publication = models.ForeignKey('publications.Publication')
     news = models.ForeignKey('News')
 
@@ -120,7 +121,7 @@ class PublicationRelatedToNews(models.Model):
 # Model: PersonRelatedToNews
 #########################
 
-class PersonRelatedToNews(models.Model):
+class PersonRelatedToNews(BaseModel):
     person = models.ForeignKey('persons.Person')
     news = models.ForeignKey('News')
 

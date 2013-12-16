@@ -6,7 +6,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-
 from .forms import OrganizationSearchForm
 from .models import Organization, OrganizationType
 
