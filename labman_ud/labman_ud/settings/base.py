@@ -121,7 +121,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'labman_ud.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'labman_ud.wsgi.application'
+# WSGI_APPLICATION = 'labman_ud.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -173,6 +173,7 @@ INSTALLED_APPS = (
     'entities.projects',
     'entities.publications',
     'entities.utils',
+    'entities.core',
 
     # Custom applications for data consulting only
     'charts',
@@ -306,3 +307,15 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 KARMACRACY_URL = ''
 NEWS_DETAIL_BASE_URL = ''
 NEWS_TITLE_MAX_LENGTH = 120
+
+HTTP_PROXY = ''
+HTTPS_PROXY = ''
+
+RDF_URI = ''
+
+D2R_TO_VIRTUOSO = False
+D2R_SPARQL_URL = ''
+D2R_MAPPING_PATH = ''
+VIRTUOSO_ODBC = ''
+VIRTUOSO_GRAPH = RDF_URI
+
