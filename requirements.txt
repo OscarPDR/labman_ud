@@ -29,3 +29,7 @@ python-dateutil==2.2
 pytz==2013.8
 requests==2.0.1
 six==1.4.1
+rdflib==4.0.1
+http://github.com/maparent/pyodbc/tarball/v3-virtuoso#egg=pyodbc
+https://pypi.python.org/packages/source/u/uricore/uricore-0.1.2.tar.gz#egg=uricore
+-e hg+https://bitbucket.org/maparent/virtuoso#egg=virtuoso
