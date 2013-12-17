@@ -1,10 +1,12 @@
 from celery.task import task
 from django.conf import settings
 
-from rdflib import Graph, ConjunctiveGraph, URIRef
+from rdflib import Graph, ConjunctiveGraph, URIRef, Literal
 from rdflib.store import Store
 from rdflib.plugin import get as plugin
+
 import re
+import requests
 
 
 def get_uri_for(instance):
@@ -51,28 +53,28 @@ def get_virtuoso_graph():
 
     return data_graph
 
-def get_d2r_graph():
-    d2r_url = getattr(settings, 'D2R_SPARQL_URL', None)
-    d2r_graph = ConjunctiveGraph(store='SPARQLStore')
-    d2r_graph.open(d2r_url)
-    return d2r_graph
-
 @task(ignore_result=True)
 def save_rdf(instance):
     print '-'*15 + 'SAVE' + '-'*15
 
     data_graph = get_virtuoso_graph()
-    d2r_graph = get_d2r_graph()
 
-    for t in d2r_graph.triples((URIRef(get_uri_for(instance)), None, None)):
+    instance_uri = get_uri_for(instance)
+
+    params = {'query': 'SELECT DISTINCT ?p ?o WHERE { <%s> ?p ?o }' % instance_uri, 'format': 'json'}
+
+    r = requests.get(getattr(settings, 'D2R_SPARQL_URL'), params=params)
+    jsn = r.json()
+    for res in jsn['results']['bindings']:
+        p = URIRef(res['p']['value'])
+        o = URIRef(res['o']['value']) if res['o']['type'] == 'uri' else Literal(res['o']['value'])
         try:
-            if t[2] and str(t[2]) != 'None':
-                data_graph.add(t)
+            if res['o']['value'] and str(o) != 'None':
+                data_graph.add(( URIRef(instance_uri), p, o ))
         except:
             pass
 
     data_graph.close()
-    d2r_graph.close()
 
 
 @task(ignore_result=True)
@@ -80,9 +82,7 @@ def delete_rdf(instance):
     print '-'*15 + 'DELETE' + '-'*15
 
     data_graph = get_virtuoso_graph()
-    d2r_graph = get_d2r_graph()
 
     data_graph.remove((URIRef(get_uri_for(instance)), None, None))
 
     data_graph.close()
-    d2r_graph.close()
