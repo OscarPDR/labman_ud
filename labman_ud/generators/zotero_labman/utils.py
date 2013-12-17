@@ -25,17 +25,10 @@ import os
 import re
 import logging
 import json
+import operator
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Add the log message handler to the logger
-#handler = logging.handlers.RotatingFileHandler(
-#    getattr(settings, 'ZOTERO_LOG_PATH', 'zotero_labman.log'),
-#    maxBytes=20000,
-#    backupCount=5
-#)
-#logger.addHandler(handler)
 
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
@@ -141,13 +134,18 @@ def get_zotero_variables():
 def get_last_zotero_version():
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
-    # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&limit=1&order=dateModified&key=' + api_key)
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
-    # max_items = max(r.json().items(), key=operator.itemgetter(1))[1]
-    max_items = r.json().items()[0][1]
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
+    max_items = max(r.json().items(), key=operator.itemgetter(1))[1]
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
-    max_trash = r.json().items()[0][1]
+    # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&limit=1&order=dateModified&key=' + api_key)
+    # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
+    # max_items = r.json().items()[0][1]
+
+    # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
+    # max_trash = r.json().items()[0][1]
+
+    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&key=' + api_key)
+    max_trash = max(r.json().items(), key=operator.itemgetter(1))[1]
 
     return max(max_items, max_trash)
 
