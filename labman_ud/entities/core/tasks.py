@@ -67,7 +67,14 @@ def save_rdf(instance):
     jsn = r.json()
     for res in jsn['results']['bindings']:
         p = URIRef(res['p']['value'])
-        o = URIRef(res['o']['value']) if res['o']['type'] == 'uri' else Literal(res['o']['value'])
+
+        o_val = res['o']['value']
+        if str(o_val).lower() == 't':
+            o_val = 'true' # As string to make it work with Jena and other frameworks that don't accept true booleans (rdflib parses it well too)
+        elif str(o_val).lower() == 'f':
+            o_val = 'false' # As string to make it work with Jena and other frameworks that don't accept true booleans (rdflib parses it well too)
+        o = URIRef(o_val) if res['o']['type'] == 'uri' else Literal(o_val)
+
         try:
             if res['o']['value'] and str(o) != 'None':
                 data_graph.add(( URIRef(instance_uri), p, o ))
