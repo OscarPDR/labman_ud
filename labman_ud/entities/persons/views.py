@@ -126,7 +126,7 @@ def members(request, organization_slug=None):
     pr_internet = Person.objects.get(full_name='Diego López-de-Ipiña')
     head_of_internet = __get_head_data(pr_internet)
 
-    pr_telecom = Person.objects.get(full_name='Jon Legarda')
+    pr_telecom = Person.objects.get(first_name='Jon', first_surname='Legarda')
     head_of_telecom = __get_head_data(pr_telecom)
 
     member_list = Person.objects.filter(is_active=True).exclude(id__in=[pr_internet.id, pr_telecom.id])
