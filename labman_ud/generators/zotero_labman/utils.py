@@ -557,33 +557,36 @@ def get_publication_details(item):
     project_slugs = [slug['slug'] for slug in Project.objects.all().order_by('slug').values('slug')]
 
     for tag in item['tags']:
-        tag_str = str(tag['tag'].encode('utf-8'))
-        tag_str = dissambiguate(tag_str)
-        tag_slug = slugify(tag_str)
+        try:
+            tag_str = str(tag['tag'].encode('utf-8'))
+            tag_str = dissambiguate(tag_str)
+            tag_slug = slugify(tag_str)
 
-        # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
-        jcr_pattern = r'(jcr|if)(\d(\.|\,)\d+)'
-        jcr_match = re.match(jcr_pattern, tag_str)
-        if jcr_match:
-            impact_factor = jcr_match.groups()[1]
-            if jcr_match.groups()[2] == ',':
-                impact_factor = impact_factor.replace(',', '.')
-            if parentpub:
-                parentpub.impact_factor = float(impact_factor)
-                parentpub.save()
+            # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
+            jcr_pattern = r'(jcr|if)(\d(\.|\,)\d+)'
+            jcr_match = re.match(jcr_pattern, tag_str)
+            if jcr_match:
+                impact_factor = jcr_match.groups()[1]
+                if jcr_match.groups()[2] == ',':
+                    impact_factor = impact_factor.replace(',', '.')
+                if parentpub:
+                    parentpub.impact_factor = float(impact_factor)
+                    parentpub.save()
+                else:
+                    pub.impact_factor = float(impact_factor)
+            elif tag_slug in project_slugs:
+                # Find publication - project relations through tags
+                tag_project_rels.append(tag_slug)
             else:
-                pub.impact_factor = float(impact_factor)
-        elif tag_slug in project_slugs:
-            # Find publication - project relations through tags
-            tag_project_rels.append(tag_slug)
-        else:
-            # If it doesn't, create the tag as normal
-            if len(tag['tag']) <= 75:
-                t, created = Tag.objects.get_or_create(
-                    slug=tag_slug,
-                    defaults={'name': tag_str}
-                )
-                tags.append(t)
+                # If it doesn't, create the tag as normal
+                if len(tag['tag']) <= 75:
+                    t, created = Tag.objects.get_or_create(
+                        slug=tag_slug,
+                        defaults={'name': tag_str}
+                    )
+                    tags.append(t)
+        except:
+            pass
 
     return pub, authors, tags, tag_project_rels, observations
 
