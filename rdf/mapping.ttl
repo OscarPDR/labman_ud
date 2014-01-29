@@ -559,7 +559,7 @@ map:AssignedPerson_project_id__ref a d2rq:PropertyBridge;
 # Table projects_funding
 map:Funding a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "funding/@@projects_funding.project_code@@";
+    d2rq:uriPattern "funding/@@projects_funding.slug@@";
     d2rq:class swrcfe:Funding;
     d2rq:classDefinitionLabel "projects_funding";
     .
