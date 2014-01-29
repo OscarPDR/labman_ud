@@ -187,8 +187,21 @@ class Funding(BaseModel):
         null=True,
     )
 
+    slug = models.SlugField(
+        max_length=500,
+        blank=True,
+    )
+
     def __unicode__(self):
         return u'%s funded by %s - Project code: %s' % (self.project.short_name, self.funding_program.short_name, self.project_code)
+
+    def save(self, *args, **kwargs):
+        if not self.project_code:
+            self.slug = self.project.slug + '_' + self.funding_program.slug
+        else:
+            self.slug = slugify(str(self.project_code))
+
+        super(Funding, self).save(*args, **kwargs)
 
 
 ###########################################################################
