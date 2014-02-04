@@ -11,11 +11,10 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix swrc: <http://ontoware.org/swrc/swrc/SWRCOWL/swrc_updated_v0.7.1.owl#> .
 @prefix muto: <http://purl.org/muto/core#> .
 @prefix places: <http://purl.org/ontology/places#> .
 
-@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe.owl#> .
+@prefix swrcfe: <http://www.morelab.deusto.es/ontologies/swrcfe#> .
 
 @prefix d2r: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#> .
 @prefix meta: <http://www4.wiwiss.fu-berlin.de/bizer/d2r-server/metadata#> .
@@ -559,7 +558,7 @@ map:AssignedPerson_project_id__ref a d2rq:PropertyBridge;
 # Table projects_funding
 map:Funding a d2rq:ClassMap;
     d2rq:dataStorage map:database;
-    d2rq:uriPattern "funding/@@projects_funding.project_code@@";
+    d2rq:uriPattern "funding/@@projects_funding.slug@@";
     d2rq:class swrcfe:Funding;
     d2rq:classDefinitionLabel "projects_funding";
     .
@@ -635,7 +634,7 @@ map:FundingAmount_funding_id__ref a d2rq:PropertyBridge;
 map:Project a d2rq:ClassMap;
     d2rq:dataStorage map:database;
     d2rq:uriPattern "projects/@@projects_project.slug@@";
-    d2rq:class swrc:Project;
+    d2rq:class swrcfe:Project;
     d2rq:classDefinitionLabel "projects_project";
     .
 map:Project__label a d2rq:PropertyBridge;
@@ -665,19 +664,19 @@ map:Project_homepage a d2rq:PropertyBridge;
     .
 map:Project_start_date a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
-    d2rq:property swrc:startDate;
+    d2rq:property swrcfe:startDate;
     d2rq:pattern "@@projects_project.start_year@@-@@projects_project.start_month@@";
     d2rq:datatype xsd:gYearMonth;
     .
 map:Project_end_date a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
-    d2rq:property swrc:endDate;
+    d2rq:property swrcfe:endDate;
     d2rq:pattern "@@projects_project.end_year@@-@@projects_project.end_month@@";
     d2rq:datatype xsd:gYearMonth;
     .
 map:Project_status a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
-    d2rq:property swrc:status;
+    d2rq:property swrcfe:status;
     d2rq:column "projects_project.status";
     .
 map:Project_logo a d2rq:PropertyBridge;
@@ -693,7 +692,7 @@ map:Project_project_leader_id__ref a d2rq:PropertyBridge;
     .
 map:Project_consortium_member__ref a d2rq:PropertyBridge;
     d2rq:belongsToClassMap map:Project;
-    d2rq:property swrc:carriedOutBy;
+    d2rq:property swrcfe:carriedOutBy;
     d2rq:refersToClassMap map:Organization;
     d2rq:join "projects_project.id => projects_consortiummember.project_id";
     d2rq:join "projects_consortiummember.organization_id => organizations_organization.id";
