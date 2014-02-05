@@ -67,14 +67,14 @@
                 </li>
 
                 <li>
-                    <a href="#member-projects-tab-pane" data-toggle="tab">
+                    <a href="{% url member_projects member.slug %}" data-toggle="tab">
                         <i class="fa fa-gears fa-large"></i>&emsp;Projects
                     </a>
                 </li>
 
                 {% if has_publications %}
                     <li>
-                        <a href="#member-publications-tab-pane" data-toggle="tab">
+                        <a href="{% url member_publications member.slug %}" data-toggle="tab">
                             <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
                         </a>
                     </li>
@@ -82,14 +82,14 @@
 
                 {% if accounts %}
                     <li>
-                        <a href="#member-profiles-tab-pane" data-toggle="tab">
+                        <a href="{% url member_profiles member.slug %}" data-toggle="tab">
                             <i class="fa fa-cloud fa-large"></i>&emsp;Profiles
                         </a>
                     </li>
                 {% endif %}
 
                 <li>
-                    <a href="#member-graphs-tab-pane" data-toggle="tab">
+                    <a href="{% url member_graphs member.slug %}" data-toggle="tab">
                         <i class="fa fa-bar-chart-o fa-large"></i>&emsp;Graphs
                     </a>
                 </li>
@@ -99,29 +99,15 @@
         <div class="col-md-9">
             <div id="member-tab-content" class="tab-content">
 
-                <div class="tab-pane active" id="member-biography-tab-pane">
-                    {% if member.biography %}
-                        {{ member.biography|safe }}
-                    {% else %}
-                        No biography... yet.
-                    {% endif %}
-                </div> <!-- end #member-biography-tab-pane .tab-pane -->
-
-                <div class="tab-pane" id="member-projects-tab-pane">
-                    {% include 'members/projects.html' %}
-                </div> <!-- end #member-projects-tab-pane .tab-pane -->
-
-                <div id="member-publications-tab-pane" class="tab-pane">
-                    {% include 'members/publications.html' %}
-                </div> <!-- end #member-publications-tab-pane .tab-pane -->
-
-                <div id="member-profiles-tab-pane" class="tab-pane">
-                    {% include 'members/profiles.html' %}
-                </div> <!-- end #member-profiles-tab-pane .tab-pane -->
-
-                <div id="member-graphs-tab-pane" class="tab-pane">
-                    {% include 'members/graphs.html' %}
-                </div> <!-- end #member-graphs-tab-pane .tab-pane -->
+                {% block member_content %}
+                    <div class="tab-pane active" id="member-biography-tab-pane">
+                        {% if member.biography %}
+                            {{ member.biography|safe }}
+                        {% else %}
+                            No biography... yet.
+                        {% endif %}
+                    </div>
+                {% endblock %}
 
             </div> <!-- end #about-tab-content -->
         </div>
