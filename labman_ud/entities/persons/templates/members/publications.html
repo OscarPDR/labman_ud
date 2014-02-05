@@ -1,38 +1,47 @@
+{% extends "members/info.html" %}
 
-{% for key, value in publications.items %}
-    {% if value %}
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                {{ value|length }} {{ key|lower }}{{ value|pluralize }}
-            </div>
 
-            <table class="table table-striped table-hover">
-                <thead>
-                    <th>Title</th>
+{% block member_content %}
 
-                    <th>Year</th>
-                </thead>
+    <div class="tab-pane">
+        {% for key, value in publications.items %}
+            {% if value %}
 
-                <tbody>
-                    {% for item in value %}
-                        <tr>
-                            <td>
-                                <a href="{% url publication_info item.slug %}">
-                                    &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
-                                </a>
-                            </td>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        {{ value|length }} {{ key|lower }}{{ value|pluralize }}
+                    </div>
 
-                            <td>
-                                {{ item.year }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <th>Title</th>
 
-        <br>
+                            <th>Year</th>
+                        </thead>
 
-    {% endif %}
-{% endfor %}
+                        <tbody>
+                            {% for item in value %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url publication_info item.slug %}">
+                                            &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        {{ item.year }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

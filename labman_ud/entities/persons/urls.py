@@ -9,6 +9,10 @@ urlpatterns = patterns('',
     url(r'^info/(\S+)$', 'entities.persons.views.person_info', name='person_info'),
 
     url(r'^members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='members_by_organization'),
+    url(r'^members/(?P<member_slug>\S+)/projects/$', 'entities.persons.views.member_projects', name='member_projects'),
+    url(r'^members/(?P<member_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='member_publications'),
+    url(r'^members/(?P<member_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='member_profiles'),
+    url(r'^members/(?P<member_slug>\S+)/graphs/$', 'entities.persons.views.member_graphs', name='member_graphs'),
     url(r'^members/(?P<member_slug>\S+)/$', 'entities.persons.views.member_info', name='member_info'),
     url(r'^members/$', 'entities.persons.views.members', name='members'),
 

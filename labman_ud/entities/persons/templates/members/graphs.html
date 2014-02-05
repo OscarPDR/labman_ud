@@ -1,22 +1,31 @@
+{% extends "members/info.html" %}
 
-<h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
 
-<div class="soften-limited"></div>
 
-<ul>
-    <li>
-        <a href="{% url publications_egonetwork member.slug %}">Egonetwork</a>
-    </li>
+{% block member_content %}
 
-    <li>
-        <a href="{% url publications_by_author member.slug %}">Number of publications</a>
-    </li>
+    <div class="tab-pane">
+        <h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
 
-    <li>
-        <a href="{% url tags_by_author member.slug %}">Tag cloud</a>
-    </li>
-</ul>
+        <div class="soften-limited"></div>
 
-{# Write inside this block the links protected from public rendering (if any) #}
-{% if user.is_authenticated %}
-{% endif %}
+        <ul>
+            <li>
+                <a href="{% url publications_egonetwork member.slug %}">Egonetwork</a>
+            </li>
+
+            <li>
+                <a href="{% url publications_by_author member.slug %}">Number of publications</a>
+            </li>
+
+            <li>
+                <a href="{% url tags_by_author member.slug %}">Tag cloud</a>
+            </li>
+        </ul>
+
+        {# Write inside this block the links protected from public rendering (if any) #}
+        {% if user.is_authenticated %}
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -71,9 +71,9 @@ def __get_head_data(head):
     }
 
 
-#########################
+###########################################################################
 # View: person_index
-#########################
+###########################################################################
 
 def person_index(request, query_string=None):
     clean_index = True
@@ -113,9 +113,9 @@ def person_index(request, query_string=None):
     return render_to_response("persons/index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: members
-#########################
+###########################################################################
 
 def members(request, organization_slug=None):
     member_konami_positions = []
@@ -169,9 +169,9 @@ def members(request, organization_slug=None):
     return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: former_members
-#########################
+###########################################################################
 
 def former_members(request, organization_slug=None):
 
@@ -240,9 +240,9 @@ def former_members(request, organization_slug=None):
     return render_to_response("former_members/index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: member_info
-#########################
+###########################################################################
 
 def member_info(request, member_slug):
     member = Person.objects.get(slug=member_slug)
@@ -255,6 +255,22 @@ def member_info(request, member_slug):
         job = None
         position = None
 
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'member': member,
+        'position': position,
+    }
+
+    return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: member_projects
+###########################################################################
+
+def member_projects(request, member_slug):
+    member = Person.objects.get(slug=member_slug)
+
     projects = {}
 
     roles = Role.objects.all()
@@ -266,6 +282,21 @@ def member_info(request, member_slug):
 
         for project in project_objects:
             projects[role.name].append(project)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'projects': projects,
+    }
+
+    return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: member_publications
+###########################################################################
+
+def member_publications(request, member_slug):
+    member = Person.objects.get(slug=member_slug)
 
     publications = {}
 
@@ -282,8 +313,23 @@ def member_info(request, member_slug):
 
     for publication in _publications:
         pub_type = publication.publication_type.name.encode('utf-8')
-        pub_year = publication.year
         publications[pub_type].append(publication)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'publications': publications,
+        'has_publications': has_publications,
+    }
+
+    return render_to_response("members/publications.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: member_profiles
+###########################################################################
+
+def member_profiles(request, member_slug):
+    member = Person.objects.get(slug=member_slug)
 
     accounts = []
     account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
@@ -301,14 +347,24 @@ def member_info(request, member_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'accounts': accounts,
-        'has_publications': has_publications,
-        'member': member,
-        'position': position,
-        'projects': projects,
-        'publications': publications,
     }
 
-    return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/profiles.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: member_graphs
+###########################################################################
+
+def member_graphs(request, member_slug):
+    member = Person.objects.get(slug=member_slug)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'member': member,
+    }
+
+    return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -426,9 +482,9 @@ def former_member_info(request, former_member_slug):
     return render_to_response("former_members/info.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: person_info
-#########################
+###########################################################################
 
 def person_info(request, slug):
 
