@@ -5,14 +5,18 @@
 {% block member_content %}
 
     <div class="tab-pane">
-        <br>
+        {% if accounts %}
+            <br>
 
-        {% for account in accounts %}
-            &emsp;<img src="{{ MEDIA_PREFIX }}{{ account.icon_url }}" width="32" height="32"/>&emsp;<a target="_blank" href="{{ account.base_url }}{{ account.profile_id}}">
-                {{ account.network_name }}
-            </a>
-            <br><br>
-        {% endfor %}
+            {% for account in accounts %}
+                &emsp;<img src="{{ MEDIA_PREFIX }}{{ account.icon_url }}" width="32" height="32"/>&emsp;<a target="_blank" href="{{ account.base_url }}{{ account.profile_id}}">
+                    {{ account.network_name }}
+                </a>
+                <br><br>
+            {% endfor %}
+        {% else %}
+            {{ member.full_name }} doesn't share any public profile for the moment.
+        {% endif %}
     </div>
 
 {% endblock %}
