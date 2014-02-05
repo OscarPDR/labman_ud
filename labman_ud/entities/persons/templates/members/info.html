@@ -72,21 +72,17 @@
                     </a>
                 </li>
 
-                {% if has_publications %}
-                    <li>
-                        <a href="{% url member_publications member.slug %}" data-toggle="tab">
-                            <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
-                        </a>
-                    </li>
-                {% endif %}
+                <li>
+                    <a href="{% url member_publications member.slug %}" data-toggle="tab">
+                        <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
+                    </a>
+                </li>
 
-                {% if accounts %}
-                    <li>
-                        <a href="{% url member_profiles member.slug %}" data-toggle="tab">
-                            <i class="fa fa-cloud fa-large"></i>&emsp;Profiles
-                        </a>
-                    </li>
-                {% endif %}
+                <li>
+                    <a href="{% url member_profiles member.slug %}" data-toggle="tab">
+                        <i class="fa fa-cloud fa-large"></i>&emsp;Profiles
+                    </a>
+                </li>
 
                 <li>
                     <a href="{% url member_graphs member.slug %}" data-toggle="tab">
