@@ -6,7 +6,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 
 from charts.utils import nx_graph
 from collections import OrderedDict
@@ -268,16 +267,23 @@ def member_info(request, member_slug):
 # View: member_projects
 ###########################################################################
 
-def member_projects(request, member_slug):
+def member_projects(request, member_slug, role_slug=None):
     member = Person.objects.get(slug=member_slug)
 
     projects = {}
 
-    roles = Role.objects.all()
+    has_projects = False
+
+    if role_slug:
+        roles = [Role.objects.get(slug=role_slug)]
+    else:
+        roles = Role.objects.all()
 
     for role in roles:
         projects[role.name] = []
         project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
+        if project_ids:
+            has_projects = True
         project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
 
         for project in project_objects:
@@ -286,6 +292,7 @@ def member_projects(request, member_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'member': member,
+        'has_projects': has_projects,
         'projects': projects,
     }
 
@@ -296,25 +303,27 @@ def member_projects(request, member_slug):
 # View: member_publications
 ###########################################################################
 
-def member_publications(request, member_slug):
+def member_publications(request, member_slug, publication_type_slug=None):
     member = Person.objects.get(slug=member_slug)
 
     publications = {}
 
-    publication_types = PublicationType.objects.all()
+    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+    has_publications = True if publication_ids else False
+
+    if publication_type_slug:
+        publication_types = [PublicationType.objects.get(slug=publication_type_slug)]
+    else:
+        publication_types = PublicationType.objects.all()
 
     for publication_type in publication_types:
         pub_type = publication_type.name.encode('utf-8')
         publications[pub_type] = []
 
-    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
-    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
+        _publications = Publication.objects.filter(id__in=publication_ids, publication_type=publication_type).order_by('-year')
 
-    has_publications = True if _publications else False
-
-    for publication in _publications:
-        pub_type = publication.publication_type.name.encode('utf-8')
-        publications[pub_type].append(publication)
+        for publication in _publications:
+            publications[pub_type].append(publication)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
