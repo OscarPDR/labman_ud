@@ -1,26 +1,44 @@
+{% extends "labman_ud/about.html" %}
 
-<p>
-    MORElab research group provides 3D solutions for <strong>Rapid Prototyping</strong> and <strong>Rapid Manufacturing</strong> in educational, industrial, medical, architectural, reverse engineering and many other fields. With us you can gain access to different 3D technologies, materials and prototype characteristics.
-</p>
 
-<div class="row">
-    <img class="img-responsive col-md-6 col-md-offset-3"src="{{ STATIC_PREFIX }}img/prototyping/prototyping_top.jpg"/>
-</div>
 
-<br>
+{% block about_content %}
+    <div class="tab-pane active">
+        <p>
+            MORElab research group provides 3D solutions for <strong>Rapid Prototyping</strong> and <strong>Rapid Manufacturing</strong> in educational, industrial, medical, architectural, reverse engineering and many other fields. With us you can gain access to different 3D technologies, materials and prototype characteristics.
+        </p>
 
-<p>
-    Our 3D printers can create large parts, up to 350x250x200mm, with a maximum of 0.0875mm resolution using <strong>InkJet technology</strong> [ProJet 660] and up to 200x200x250mm, with a maximum of 0.25mm resolution with the <strong>FDM</strong> (Fused Deposition Material) <strong>technology</strong> [RapMan 3.0]. The <strong>ProJet 660</strong> is one of the smartest solution to a full color, hyperrealist quality and functional large scale prototype.
-</p>
+        <div class="row">
+            <img class="img-responsive col-md-6 col-md-offset-3"src="{{ STATIC_PREFIX }}img/prototyping/prototyping_top.jpg"/>
+        </div>
 
-<p>
-    We offer high quality rapid prototyping services for the most demanding needs with really competitive prices. We can help you to move your rapid prototype concept to CAD model and to prototype.
-</p>
+        <br>
 
-<p>
-    For a personalized cost estimation, please export your 3D model as an *.STL (monochrome) or *.VRML (full color) file and send it to <strong>szilard.kados [at] deusto [dot] es</strong> and we will contact you as soon as possible with the best and cheapest 3D solution.
-</p>
+        <p>
+            Our 3D printers can create large parts, up to 350x250x200mm, with a maximum of 0.0875mm resolution using <strong>InkJet technology</strong> [ProJet 660] and up to 200x200x250mm, with a maximum of 0.25mm resolution with the <strong>FDM</strong> (Fused Deposition Material) <strong>technology</strong> [RapMan 3.0]. The <strong>ProJet 660</strong> is one of the smartest solution to a full color, hyperrealist quality and functional large scale prototype.
+        </p>
 
-<div class="row">
-    <img class="img-responsive col-md-4 col-md-offset-4"src="{{ STATIC_PREFIX }}img/prototyping/prototyping_footer.jpg"/>
-</div>
+        <p>
+            We offer high quality rapid prototyping services for the most demanding needs with really competitive prices. We can help you to move your rapid prototype concept to CAD model and to prototype.
+        </p>
+
+        <p>
+            For a personalized cost estimation, please export your 3D model as an *.STL (monochrome) or *.VRML (full color) file and send it to <strong>szilard.kados [at] deusto [dot] es</strong> and we will contact you as soon as possible with the best and cheapest 3D solution.
+        </p>
+
+        <div class="row">
+            <img class="img-responsive col-md-4 col-md-offset-4"src="{{ STATIC_PREFIX }}img/prototyping/prototyping_footer.jpg"/>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block about_scripts %}
+
+    <script>
+        $('.about').removeClass('active');
+        $('.about_prototyping').addClass('active');
+    </script>
+
+{% endblock %}

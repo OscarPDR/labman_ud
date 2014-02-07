@@ -16,6 +16,8 @@ admin.site.unregister(Site)
 urlpatterns = patterns('',
     url(r'^$', 'labman_ud.views.home', name='home'),
 
+    url(r'^about/collaborations/$', 'labman_ud.views.about_collaborations', name='about_collaborations'),
+    url(r'^about/prototyping/$', 'labman_ud.views.about_prototyping', name='about_prototyping'),
     url(r'^about/$', 'labman_ud.views.about', name='about'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
