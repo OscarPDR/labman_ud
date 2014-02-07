@@ -1,24 +1,42 @@
+{% extends "labman_ud/about.html" %}
 
-<p>
-    MORElab collaborates with several organizations within or outside the University of Deusto. We have established contact with:
-</p>
 
-<ul>
-    <li>Associations</li>
-    <li>Companies</li>
-    <li>Foundations</li>
-    <li>Public administrations</li>
-    <li>Research centres</li>
-    <li>Universities</li>
-    <li>etc.</li>
-</ul>
 
-<br>
+{% block about_content %}
+    <div class="tab-pane active">
+        <p>
+            MORElab collaborates with several organizations within or outside the University of Deusto. We have established contact with:
+        </p>
 
-<p>
-    See the full list of <a href="{% url organization_index %}">organizations we have worked with</a>.
-</p>
+        <ul>
+            <li>Associations</li>
+            <li>Companies</li>
+            <li>Foundations</li>
+            <li>Public administrations</li>
+            <li>Research centres</li>
+            <li>Universities</li>
+            <li>etc.</li>
+        </ul>
 
-<p>
-    The following list also show some of the <a href="{% url person_index %}">people who have worked or published with us</a>.
-</p>
+        <br>
+
+        <p>
+            See the full list of <a href="{% url organization_index %}">organizations we have worked with</a>.
+        </p>
+
+        <p>
+            The following list also show some of the <a href="{% url person_index %}">people who have worked or published with us</a>.
+        </p>
+    </div>
+{% endblock %}
+
+
+
+{% block about_scripts %}
+
+    <script>
+        $('.about').removeClass('active');
+        $('.about_collaborations').addClass('active');
+    </script>
+
+{% endblock %}

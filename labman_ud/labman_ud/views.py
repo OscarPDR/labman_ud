@@ -43,6 +43,22 @@ def about(request):
 
 
 #########################
+# View: about_collaborations
+#########################
+
+def about_collaborations(request):
+    return render_to_response('labman_ud/about/collaborations.html')
+
+
+#########################
+# View: about_prototyping
+#########################
+
+def about_prototyping(request):
+    return render_to_response('labman_ud/about/prototyping.html')
+
+
+#########################
 # View: view404
 #########################
 

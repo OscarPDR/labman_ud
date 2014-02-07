@@ -8,8 +8,8 @@
 
         <div class="col-md-3">
             <ul id="about-tabs" class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#about-tab-pane" data-toggle="tab">
+                <li class="about active">
+                    <a href="{% url about %}">
                         <i class="fa fa-info fa-large"></i>&emsp;MORElab
                     </a>
                 </li>
@@ -20,14 +20,14 @@
                     </a>
                 </li> -->
 
-                <li>
-                    <a href="#collaborations-tab-pane" data-toggle="tab">
+                <li class="about_collaborations">
+                    <a href="{% url about_collaborations %}">
                         <i class="fa fa-comments fa-large"></i>&emsp;Collaborations
                     </a>
                 </li>
 
-                <li>
-                    <a href="#prototyping-tab-pane" data-toggle="tab">
+                <li class="about_prototyping">
+                    <a href="{% url about_prototyping %}">
                         <i class="fa fa-cogs fa-large"></i>&emsp;Rapid prototyping services
                     </a>
                 </li>
@@ -43,59 +43,45 @@
         <div class="col-md-9">
             <div id="about-tab-content" class="tab-content">
 
-                <div class="tab-pane active" id="about-tab-pane">
-                    <h3>User-centered Intelligent Services for Anything, Anywhere at Anytime</h3>
+                {% block about_content %}
+                    <div class="tab-pane active" id="about-tab-pane">
+                        <h3>User-centered Intelligent Services for Anything, Anywhere at Anytime</h3>
 
-                    <br>
-
-                    <p>
-                        Broadly, <em>DeustoTech-Internet</em> undertakes basic and applied research on the topics of Human-Environment (mobile-mediated) Interaction, Middleware supported by Semantic Web technologies for Wireless Embedded Devices, Applied Artificial Intelligence for User Behaviour Learning and Environment Reaction, Physical World Object Instrumentation and Internet Computing: Web 3.0 and beyond, Ubiquitous Web, Linked Data.
-                    </p>
-
-                    <br>
-
-                    <p>
-                        Our main research areas are:
-                    </p>
-
-                    <ul>
-                        <li>Context-aware Mobile Computing for Enhanced User-Environment Interaction</li>
-                        <li>Semantic Middleware for Embedded Wirelessly-connected Devices</li>
-                        <li>Smart Environments of Augmented Internet-connected Objects</li>
-                        <li>Ambient Assisted Living (AAL): adaptive accessible interfaces and social robotics</li>
-                        <li>Future Internet: Internet of Services, Internet of Things and Semantic Web</li>
-                    </ul>
-
-                    <br>
-
-                    <p>
-                        Should you be interested in any kind of collaboration with our research group, please contact:
-                    </p>
-
-                    <p>
-                        &emsp;&emsp;<strong>Dr. Diego López de Ipiña</strong>
                         <br>
-                        &emsp;&emsp;<em>Principal Researcher at DeustoTech-INTERNET</em>
+
+                        <p>
+                            Broadly, <em>DeustoTech-Internet</em> undertakes basic and applied research on the topics of Human-Environment (mobile-mediated) Interaction, Middleware supported by Semantic Web technologies for Wireless Embedded Devices, Applied Artificial Intelligence for User Behaviour Learning and Environment Reaction, Physical World Object Instrumentation and Internet Computing: Web 3.0 and beyond, Ubiquitous Web, Linked Data.
+                        </p>
+
                         <br>
-                        &emsp;&emsp;dipina [AT] deusto [DOT] es
-                    </p>
-                </div> <!-- end #about-tab-pane -->
 
-                <!-- <div class="tab-pane" id="contributions-tab-pane">
-                    {% include 'labman_ud/about/contributions.html' %}
-                </div> --> <!-- end #contributions-tab-pane -->
+                        <p>
+                            Our main research areas are:
+                        </p>
 
-                <div class="tab-pane" id="collaborations-tab-pane">
-                    {% include 'labman_ud/about/collaborations.html' %}
-                </div> <!-- end #collaborations-tab-pane -->
+                        <ul>
+                            <li>Context-aware Mobile Computing for Enhanced User-Environment Interaction</li>
+                            <li>Semantic Middleware for Embedded Wirelessly-connected Devices</li>
+                            <li>Smart Environments of Augmented Internet-connected Objects</li>
+                            <li>Ambient Assisted Living (AAL): adaptive accessible interfaces and social robotics</li>
+                            <li>Future Internet: Internet of Services, Internet of Things and Semantic Web</li>
+                        </ul>
 
-                <div class="tab-pane" id="prototyping-tab-pane">
-                    {% include 'labman_ud/about/prototyping.html' %}
-                </div> <!-- end #prototyping-tab-pane -->
+                        <br>
 
-                <!-- <div class="tab-pane" id="working-at-morelab-tab-pane">
-                    {% include 'labman_ud/about/working_at_morelab.html' %}
-                </div> --> <!-- end #working-at-morelab-tab-pane -->
+                        <p>
+                            Should you be interested in any kind of collaboration with our research group, please contact:
+                        </p>
+
+                        <p>
+                            &emsp;&emsp;<strong>Dr. Diego López de Ipiña</strong>
+                            <br>
+                            &emsp;&emsp;<em>Principal Researcher at DeustoTech-INTERNET</em>
+                            <br>
+                            &emsp;&emsp;dipina [AT] deusto [DOT] es
+                        </p>
+                    </div> <!-- end #about-tab-pane -->
+                {% endblock %}
 
             </div> <!-- end #about-tab-content -->
         </div>
@@ -110,5 +96,7 @@
     <script>
         $('#about-nav').addClass('active');
     </script>
+
+    {% block about_scripts %}{% endblock %}
 
 {% endblock %}
