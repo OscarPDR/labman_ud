@@ -4,7 +4,7 @@
 
 {% block member_content %}
 
-    <div class="tab-pane">
+    <div class="tab-pane active">
         {% if accounts %}
             <br>
 
@@ -18,5 +18,16 @@
             {{ member.full_name }} doesn't share any public profile for the moment.
         {% endif %}
     </div>
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('active');
+        $('.member_profiles').addClass('active');
+    </script>
 
 {% endblock %}

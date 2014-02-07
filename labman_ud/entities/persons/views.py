@@ -285,6 +285,7 @@ def member_projects(request, member_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'member': member,
         'projects': projects,
     }
 
@@ -317,6 +318,7 @@ def member_publications(request, member_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'member': member,
         'publications': publications,
         'has_publications': has_publications,
     }
@@ -346,6 +348,7 @@ def member_profiles(request, member_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'member': member,
         'accounts': accounts,
     }
 
@@ -364,7 +367,7 @@ def member_graphs(request, member_slug):
         'member': member,
     }
 
-    return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/graphs.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
