@@ -4,7 +4,7 @@
 
 {% block member_content %}
 
-    <div class="tab-pane">
+    <div class="tab-pane active">
 
         {% for key, value in projects.items %}
             {% if value %}
@@ -51,5 +51,16 @@
         {% endfor %}
 
     </div>
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('active');
+        $('.member_projects').addClass('active');
+    </script>
 
 {% endblock %}

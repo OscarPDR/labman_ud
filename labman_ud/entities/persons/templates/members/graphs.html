@@ -4,7 +4,7 @@
 
 {% block member_content %}
 
-    <div class="tab-pane">
+    <div class="tab-pane active">
         <h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
 
         <div class="soften-limited"></div>
@@ -27,5 +27,16 @@
         {% if user.is_authenticated %}
         {% endif %}
     </div>
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('active');
+        $('.member_graphs').addClass('active');
+    </script>
 
 {% endblock %}

@@ -60,32 +60,32 @@
             </div> <!-- end #contact-member -->
 
             <ul id="member-tabs" class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#member-biography-tab-pane" data-toggle="tab">
+                <li class="member_biography active">
+                    <a href="{% url member_info member.slug %}">
                         <i class="fa fa-user fa-large"></i>&emsp;Biography
                     </a>
                 </li>
 
-                <li>
-                    <a href="{% url member_projects member.slug %}" data-toggle="tab">
+                <li class="member_projects">
+                    <a href="{% url member_projects member.slug %}">
                         <i class="fa fa-gears fa-large"></i>&emsp;Projects
                     </a>
                 </li>
 
-                <li>
-                    <a href="{% url member_publications member.slug %}" data-toggle="tab">
+                <li class="member_publications">
+                    <a href="{% url member_publications member.slug %}">
                         <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
                     </a>
                 </li>
 
-                <li>
-                    <a href="{% url member_profiles member.slug %}" data-toggle="tab">
+                <li class="member_profiles">
+                    <a href="{% url member_profiles member.slug %}">
                         <i class="fa fa-cloud fa-large"></i>&emsp;Profiles
                     </a>
                 </li>
 
-                <li>
-                    <a href="{% url member_graphs member.slug %}" data-toggle="tab">
+                <li class="member_graphs">
+                    <a href="{% url member_graphs member.slug %}">
                         <i class="fa fa-bar-chart-o fa-large"></i>&emsp;Graphs
                     </a>
                 </li>
@@ -156,5 +156,7 @@
 
         var konami = new Konami(success);
     </script>
+
+    {% block people_scripts %}{% endblock %}
 
 {% endblock %}
