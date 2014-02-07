@@ -26,6 +26,8 @@ import re
 import logging
 import json
 import operator
+import difflib
+import itertools
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -755,6 +757,7 @@ def load_tag_nicks(path='tag_nicks.json'):
     nicks = json.load(open(path, 'r'))
     return nicks
 
+
 ###########################################################################
 # def: remove_unrelated_tags()
 ###########################################################################
@@ -781,3 +784,25 @@ def remove_unrelated_tags():
         removed_objects += 1
 
     logger.info('Removed %d items' % removed_objects)
+
+
+###########################################################################
+# def: check_for_similar_names()
+###########################################################################
+
+def check_for_similar_names(threshold_ratio):
+    logger.info('Checking for similar names...')
+    logger.info('#' * 75)
+
+    name_list = []
+
+    persons = Person.objects.all()
+
+    for person in persons:
+        name_list.append(person.full_name)
+
+    for test_name, testing_name in itertools.combinations(name_list, 2):
+        ratio = difflib.SequenceMatcher(None, test_name, testing_name).ratio()
+
+        if (ratio > threshold_ratio):
+            logger.info('%f\t%s\t\t\tcould be\t\t\t%s' % (ratio, test_name, testing_name))
