@@ -4,7 +4,8 @@ from django.core.management.base import NoArgsCommand
 from generators.zotero_labman.models import ZoteroLog
 from django.db.models import Q
 
-from generators.zotero_labman.utils import get_last_zotero_version, parse_last_items, sync_deleted_items, correct_nicks
+from generators.zotero_labman.utils import get_last_zotero_version, parse_last_items, sync_deleted_items, correct_nicks, check_for_similar_names
+
 
 class Command(NoArgsCommand):
     can_import_settings = True
@@ -28,8 +29,5 @@ class Command(NoArgsCommand):
         # Correct errors in nicks
         correct_nicks()
 
-
-
-
-
-
+        # Check for similar names
+        check_for_similar_names(0.75)
