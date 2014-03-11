@@ -526,11 +526,6 @@ footer > a {
     text-align: justify;
 }
 
-.news-img-responsive {
-    height: auto;
-    max-width: 100%;
-}
-
 .soften {
     height: 5px;
     margin: 3em 0 1.5em 0;
