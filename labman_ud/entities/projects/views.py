@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 from .forms import ProjectSearchForm
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
 
-from entities.funding_programs.models import FundingProgram
+from entities.funding_programs.models import FundingProgram, FundingProgramLogo
 from entities.persons.models import Person
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
@@ -172,11 +172,14 @@ def project_info(request, slug):
 
     logo = project.logo if project.logo else None
 
+    funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'consortium_members': consortium_members,
         'funding_amounts': funding_amounts,
         'funding_programs': funding_programs,
+        'funding_program_logos': funding_program_logos,
         'fundings': fundings,
         'logo': logo,
         'principal_researchers': principal_researchers,
