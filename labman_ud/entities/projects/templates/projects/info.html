@@ -470,28 +470,24 @@
                 .attr("d", arc)
                 .style("fill", function(d) { return color(d.data.year); });
 
-            // g.append("text")
-            //     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-            //     .attr("dy", ".35em")
-            //     .style("text-anchor", "middle")
-            //     .text(function(d) { return d.data.year; });
-
             g.append("rect")
                 .attr("class", "label-boxes")
                 .attr("transform", function(d) {
                     var centroid = arc.centroid(d);
-                    var x = centroid[0] - 15;
-                    var y = centroid[1] - 5;
-                    // return "translate(" + arc.centroid(d) + ")";
+                    var x = centroid[0] - 20;
+                    var y = centroid[1] - 12;
                     return "translate(" + x + ", " + y + ")";
                 })
-                .attr("width", 100)
-                .attr("height", 25)
+                .attr("width", 40)
+                .attr("height", 24)
+                .attr("rx", "5")
+                .attr("ry", "5")
                 .style("stroke", "none")
                 .style("fill", "#fff")
                 .style("fill-opacity", ".5")
                 .style("shape-rendering", "crispEdges")
                 g.append("text")
+                    .attr("class", "pie-chart-text")
                     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
                     .attr("dy", ".35em")
                     .style("text-anchor", "middle")

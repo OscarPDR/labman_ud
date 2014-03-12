@@ -631,3 +631,7 @@ footer > a {
     margin-bottom: 0.75em;
     text-align: right;
 }
+
+.pie-chart-text {
+    font: normal 1em Arial;
+}
