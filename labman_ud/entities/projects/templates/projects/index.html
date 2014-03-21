@@ -111,7 +111,7 @@
     </table>
 
     <small class="pull-right">
-        <strong>Last update:</strong>&emsp;{{ last_modified.log_modified }}
+        <strong>Last update:</strong>&emsp;{{ last_modified.log_modified|date:"F d, Y - H:i" }}
     </small>
 
 {% endblock %}
