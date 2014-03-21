@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     # Re-usable applications
     'django_extensions',
     'logentry_admin',
+    'debug_toolbar',
 
     'redactor',
 
