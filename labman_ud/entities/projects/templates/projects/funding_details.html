@@ -1,0 +1,222 @@
+{% extends "projects/info.html" %}
+{% load humanize %}
+
+
+
+{% block project_content %}
+
+    <div class="tab-pane active" id="project-funding-details">
+
+    {% for funding in fundings %}
+        <div class="panel panel-primary">
+
+            {% with forloop.counter as funding_loop %}
+
+            {% for funding_program in funding_programs %}
+                {% if funding_program.id == funding.funding_program.id %}
+
+                    <div class="panel-heading">
+                        {{ funding_program.full_name }}
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <h5>Supported by:</h5>
+                                <p>
+                                    {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
+                                    {% if funding_program.organization.sub_organization_of %}
+                                        ({{ funding_program.organization.sub_organization_of.full_name }})
+                                    {% endif %}
+                                </p>
+
+                                <br>
+
+                                <h5>Project code:</h5>
+                                <p>
+                                    {% if funding.project_code %}
+                                        {{ funding.project_code }}
+                                    {% else %}
+                                        No information available
+                                    {% endif %}
+                                </p>
+
+                                <br>
+
+                                <h5>Duration:</h5>
+                                <p>
+                                    {% if project.start_year %}
+                                        Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
+                                    {% else %}
+                                        No information available
+                                    {% endif %}
+                                </p>
+
+                                <br>
+                            </div> <!-- end .col-md-6 -->
+
+                            {% if funding_program_logos %}
+                                <div class="col-md-6 centered">
+                                    {% for logo in funding_program_logos %}
+                                        <img class="funding-program-logo" src="{{ MEDIA_URL }}{{ logo.logo }}" />
+                                        <br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div> <!-- end .row -->
+
+                        {% if funding_amounts %}
+
+                            <br>
+
+                            <div class="row funding-row">
+
+                                <div class="col-md-6">
+                                    <h5>Amounts:</h5>
+
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>DeustoTech</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for funding_amount in funding_amounts %}
+                                                {% if funding_amount.funding.id = funding.id %}
+
+                                                    <tr>
+                                                        <td>{{ funding_amount.year }}</td>
+                                                        <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
+                                                    </tr>
+
+                                                {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div> <!-- end .col-md-6 -->
+
+                                <div class="col-md-6 donut-chart">
+                                    <div id="donut-chart_{{ funding_loop }}"></div>
+                                </div>
+                            </div> <!-- end .row .funding-row -->
+
+                        {% else %}
+                            <div class="row">
+                                <p>
+                                    No detailed funding information available
+                                </p>
+                            </div>
+                        {% endif %}
+
+                    </div> <!-- end .panel-body -->
+
+                {% endif %} <!-- funding_program.id == funding.funding_program.id -->
+            {% endfor %} <!-- funding_program in funding_programs -->
+
+            {% endwith %}
+
+        </div> <!-- end .panel .panel-primary -->
+    {% endfor %} <!-- funding in fundings -->
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block project_scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/jquery-1.10.2.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script>
+        var donut_chart_width = $('#project-funding-details').width() / 2;
+
+        var width = donut_chart_width,
+            height = 225,
+            radius = Math.min(width, height) / 2;
+
+        var color = d3.scale.category10();
+
+        {% for funding in fundings %}
+            {% with forloop.counter as funding_loop %}
+                var forloop_counter = {{ funding_loop }};
+                var funding_id = {{ funding.id }};
+
+                drawChart(forloop_counter, funding_id);
+            {% endwith %}
+        {% endfor %}
+
+        function drawChart(forloop_counter, funding_id) {
+            var data = [];
+
+            {% for funding_amount in funding_amounts %}
+                {% with funding_amount.funding.id as current_funding_id %}
+                    var current_funding_id = {{ current_funding_id }};
+
+                    if (current_funding_id == funding_id) {
+                        data.push({year: "{{ funding_amount.year }}", amount: parseFloat({{ funding_amount.own_amount }})});
+                    }
+                {% endwith %}
+            {% endfor %}
+
+            var arc = d3.svg.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(radius - 60);
+
+            var pie = d3.layout.pie()
+                .sort(null)
+                .value(function(d) { return d.amount; });
+
+            var svg = d3.select("#donut-chart_" + forloop_counter).append("svg")
+                .attr("width", width)
+                .attr("height", height +10)
+                .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+            var g = svg.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                    .attr("class", "arc");
+
+            g.append("path")
+                .attr("d", arc)
+                .style("fill", function(d) { return color(d.data.year); });
+
+            g.append("rect")
+                .attr("class", "label-boxes")
+                .attr("transform", function(d) {
+                    var centroid = arc.centroid(d);
+                    var x = centroid[0] - 20;
+                    var y = centroid[1] - 12;
+                    return "translate(" + x + ", " + y + ")";
+                })
+                .attr("width", 40)
+                .attr("height", 24)
+                .attr("rx", "5")
+                .attr("ry", "5")
+                .style("stroke", "none")
+                .style("fill", "#fff")
+                .style("fill-opacity", ".5")
+                .style("shape-rendering", "crispEdges")
+                g.append("text")
+                    .attr("class", "pie-chart-text")
+                    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "middle")
+                    .text(function(d) { return d.data.year; });
+        };
+
+    </script>
+
+    <script>
+        $('.project_info').removeClass('active');
+        $('.project_funding_details').addClass('active');
+    </script>
+
+{% endblock %}

@@ -1,5 +1,4 @@
 {% extends "labman_ud/base.html" %}
-{% load humanize %}
 
 {% block content %}
 
@@ -43,33 +42,33 @@
             {% endif %}
 
             <ul id="project-tabs" class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#pr_general_info" data-toggle="tab">
+                <li class="project_info active">
+                    <a href="{% url project_info project.slug %}">
                         <i class="fa fa-info fa-large"></i>&emsp;General information
                     </a>
                 </li>
 
-                <li>
-                    <a href="#pr_funding_details" data-toggle="tab">
+                <li class="project_funding_details">
+                    <a href="{% url project_funding_details project.slug %}">
                         <i class="fa fa-money fa-large"></i>&emsp;Funding details
                     </a>
                 </li>
 
-                <li>
-                    <a href="#pr_assigned_employees" data-toggle="tab">
+                <li class="project_assigned_persons">
+                    <a href="{% url project_assigned_persons project.slug %}">
                         <i class="fa fa-group fa-large"></i>&emsp;Employees
                     </a>
                 </li>
 
-                <li>
-                    <a href="#pr_consortium_members" data-toggle="tab">
+                <li class="project_consortium_members">
+                    <a href="{% url project_consortium_members project.slug %}">
                         <i class="fa fa-sitemap fa-large"></i>&emsp;Consortium members
                     </a>
                 </li>
 
                 {% if related_publications %}
-                    <li>
-                        <a href="#pr_publications" data-toggle="tab">
+                    <li class="project_related_publications">
+                        <a href="{% url project_related_publications project.slug %}">
                             <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
                         </a>
                     </li>
@@ -82,8 +81,9 @@
                 <h6>Tags</h6>
 
                 {% for tag in tags %}
-                    <a href="{% url view_project_tag tag.slug %}">
+                    <a class="project-tag" href="{% url view_project_tag tag.slug %}">
                         <span class="label label-info">{{ tag.name }}</span>
+                        <br>
                     </a>
                 {% endfor %}
             </div>
@@ -93,306 +93,51 @@
 
             <div id="project-tab-content" class="tab-content project-template">
 
-                <!-- begin tab-pane #pr_general_info -->
+                {% block project_content %}
+                    <div class="tab-pane active" id="project-info">
 
-                <div class="tab-pane active" id="pr_general_info">
+                        {% if project.homepage %}
+                            <h5>Homepage:</h5>
+                            <p>
+                                <a target="_blank" href="{{ project.homepage }}">
+                                    {{ project.homepage }}
+                                </a>
+                            </p>
+                            <br>
+                        {% endif %}
 
-                    {% if project.homepage %}
-                        <h5>Homepage:</h5>
+                        <h5>Duration:</h5>
                         <p>
-                            <a target="_blank" href="{{ project.homepage }}">
-                                {{ project.homepage }}
-                            </a>
-                        </p>
-                        <br>
-                    {% endif %}
-
-                    <h5>Duration:</h5>
-                    <p>
-                        {{ project.start_year }} - {{ project.end_year }}
-                        &emsp;
-                        {% ifequal project.status 'Not started' %}
-                            <span class="label">{{ project.status }}</span>
-                        {% endifequal %}
-                        {% ifequal project.status 'Ongoing' %}
-                            <span class="label label-info">{{ project.status }}</span>
-                        {% endifequal %}
-                        {% ifequal project.status 'Finished' %}
-                            <span class="label label-success">{{ project.status }}</span>
-                        {% endifequal %}
-                    </p>
-
-                    <br>
-
-                    {% if project.description != "-" %}
-
-                        <h5>Description:</h5>
-                        <p>
-                            {{ project.description }}
+                            {{ project.start_year }} - {{ project.end_year }}
+                            &emsp;
+                            {% ifequal project.status 'Not started' %}
+                                <span class="label">{{ project.status }}</span>
+                            {% endifequal %}
+                            {% ifequal project.status 'Ongoing' %}
+                                <span class="label label-info">{{ project.status }}</span>
+                            {% endifequal %}
+                            {% ifequal project.status 'Finished' %}
+                                <span class="label label-success">{{ project.status }}</span>
+                            {% endifequal %}
                         </p>
 
                         <br>
-                    {% endif %}
 
-                </div>
+                        {% if project.description != "-" %}
 
-                <!-- end tab-pane #pr_general_info -->
+                            <h5>Description:</h5>
+                            <p>
+                                {{ project.description }}
+                            </p>
 
-                <!-- begin tab-pane #pr_funding_details -->
+                            <br>
+                        {% endif %}
 
-                <div class="tab-pane" id="pr_funding_details">
-                    {% for funding in fundings %}
+                    </div>
+                {% endblock %}
 
-                        <div class="panel panel-primary">
+            </div> <!-- end #project-tab-content -->
 
-                            {% with forloop.counter as funding_loop %}
-
-                            {% for funding_program in funding_programs %}
-                                {% if funding_program.id == funding.funding_program.id %}
-
-                                    <div class="panel-heading">
-                                        {{ funding_program.full_name }}
-                                    </div>
-
-                                    <div class="panel-body">
-
-                                        <div class="row">
-
-                                            <div class="col-md-6">
-                                                <h5>Supported by:</h5>
-                                                <p>
-                                                    {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
-                                                    {% if funding_program.organization.sub_organization_of %}
-                                                        ({{ funding_program.organization.sub_organization_of.full_name }})
-                                                    {% endif %}
-                                                </p>
-
-                                                <br>
-
-                                                <h5>Project code:</h5>
-                                                <p>
-                                                    {% if funding.project_code %}
-                                                        {{ funding.project_code }}
-                                                    {% else %}
-                                                        No information available
-                                                    {% endif %}
-                                                </p>
-
-                                                <br>
-
-                                                <h5>Duration:</h5>
-                                                <p>
-                                                    {% if project.start_year %}
-                                                        Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
-                                                    {% else %}
-                                                        No information available
-                                                    {% endif %}
-                                                </p>
-
-                                                <br>
-                                            </div> <!-- end .col-md-6 -->
-
-                                            {% if funding_program_logos %}
-                                                <div class="col-md-6 centered">
-                                                    {% for logo in funding_program_logos %}
-                                                        <img class="funding-program-logo" src="{{ MEDIA_URL }}{{ logo.logo }}" />
-                                                        <br>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </div> <!-- end .row -->
-
-                                        {% if funding_amounts %}
-
-                                            <br>
-
-                                            <div class="row funding-row">
-
-                                                <div class="col-md-6">
-                                                    <h5>Amounts:</h5>
-
-                                                    <table class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Year</th>
-                                                                <th>DeustoTech</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                            {% for funding_amount in funding_amounts %}
-                                                                {% if funding_amount.funding.id = funding.id %}
-
-                                                                    <tr>
-                                                                        <td>{{ funding_amount.year }}</td>
-                                                                        <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
-                                                                    </tr>
-
-                                                                {% endif %}
-                                                        {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div> <!-- end .col-md-6 -->
-
-                                                <div class="col-md-6 donut-chart">
-                                                    <div id="donut-chart_{{ funding_loop }}"></div>
-                                                </div>
-                                            </div> <!-- end .row -->
-
-                                        {% else %}
-                                            <div class="row">
-                                                <p>
-                                                    No detailed funding information available
-                                                </p>
-                                            </div>
-                                        {% endif %}
-
-                                    </div> <!-- end .panel-body -->
-
-                                {% endif %} <!-- funding_program.id == funding.funding_program.id -->
-                            {% endfor %} <!-- funding_program in funding_programs -->
-
-                            {% endwith %}
-
-                        </div> <!-- end .panel .panel-primary -->
-
-                    {% endfor %} <!-- funding in fundings -->
-                </div>
-
-                <!-- end tab-pane #pr_funding_details -->
-
-                <!-- begin tab-pane #pr_assigned_employees -->
-
-                <div class="tab-pane" id="pr_assigned_employees">
-
-                    <h5>Project manager{{ project_managers|pluralize }}</h5>
-
-                    <ul>
-                        {% for item in project_managers %}
-                            <li>
-                                {% if item.is_active %}
-                                    <a href="{% url member_info item.slug %}">
-                                {% else %}
-                                    <a href="{% url person_info item.slug %}">
-                                {% endif %}
-                                        {{ item.full_name }}
-                                    </a>
-                                {% if item.working_period %}
-                                    &emsp;{{ item.working_period }}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                    <br>
-
-                    <h5>Principal researcher{{ principal_researchers|pluralize }}</h5>
-
-                    <ul>
-                        {% for item in principal_researchers %}
-                            <li>
-                                {% if item.is_active %}
-                                    <a href="{% url member_info item.slug %}">
-                                {% else %}
-                                    <a href="{% url person_info item.slug %}">
-                                {% endif %}
-                                        {{ item.full_name }}
-                                    </a>
-                                {% if item.working_period %}
-                                    &emsp;{{ item.working_period }}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                    <br>
-
-                    <h5>Researcher{{ researchers|pluralize }}</h5>
-
-                    <ul>
-                        {% for item in researchers %}
-                            <li>
-                                {% if item.is_active %}
-                                    <a href="{% url member_info item.slug %}">
-                                {% else %}
-                                    <a href="{% url person_info item.slug %}">
-                                {% endif %}
-                                        {{ item.full_name }}
-                                    </a>
-                                {% if item.working_period %}
-                                    &emsp;{{ item.working_period }}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <!-- end tab-pane #pr_assigned_employees -->
-
-                <!-- begin tab-pane #pr_consortium_members -->
-
-                <div class="tab-pane" id="pr_consortium_members">
-
-                    <h5>Project leader:</h5>
-                    <ul>
-                        <li>
-                            <a href="{% url organization_info project.project_leader.slug %}">
-                                {{ project.project_leader.full_name }}
-                            </a>
-                        </li>
-                    </ul>
-
-                    <br>
-
-                    {% if consortium_members %}
-                        <h5>Consortium members:</h5>
-                        <ul>
-                            {% for consortium_member in consortium_members %}
-                                <li>
-                                    <a href="{% url organization_info consortium_member.organization.slug %}">
-                                        {{ consortium_member.organization.full_name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                </div>
-
-                <!-- end tab-pane #pr_consortium_members -->
-
-                <div class="tab-pane" id="pr_publications">
-
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead>
-                            <th>Title</th>
-                            <th>Year</th>
-                            <th>Type</th>
-                        </thead>
-
-                        <tbody>
-                            {% for publication in related_publications %}
-                                <tr class="vertical-alignment">
-                                    <td class="col-md-8">
-                                        <a href="{% url publication_info publication.slug %}">
-                                            {{ publication.title }}
-                                        </a>
-                                    </td>
-
-                                    <td class="col-md-2">
-                                        {{ publication.year }}
-                                    </td>
-
-                                    <td class="col-md-2">
-                                        {{ publication.publication_type.name }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div> <!-- end tab-pane #pr_publications -->
-
-            </div>
         </div>
 
     </div>
@@ -403,92 +148,10 @@
 
 {% block scripts %}
 
-    <script src="{{ STATIC_PREFIX }}js/jquery-1.10.2.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
-    <script>
-        var donut_chart_width = $('#pr_general_info').width() / 2;
-
-        var width = donut_chart_width,
-            height = 225,
-            radius = Math.min(width, height) / 2;
-
-        var color = d3.scale.category10();
-
-        {% for funding in fundings %}
-            {% with forloop.counter as funding_loop %}
-                var forloop_counter = {{ funding_loop }};
-                var funding_id = {{ funding.id }};
-
-                drawChart(forloop_counter, funding_id);
-            {% endwith %}
-        {% endfor %}
-
-        function drawChart(forloop_counter, funding_id) {
-            var data = [];
-
-            {% for funding_amount in funding_amounts %}
-                {% with funding_amount.funding.id as current_funding_id %}
-                    var current_funding_id = {{ current_funding_id }};
-
-                    if (current_funding_id == funding_id) {
-                        data.push({year: "{{ funding_amount.year }}", amount: parseFloat({{ funding_amount.own_amount }})});
-                    }
-                {% endwith %}
-            {% endfor %}
-
-            var arc = d3.svg.arc()
-                .outerRadius(radius - 10)
-                .innerRadius(radius - 60);
-
-            var pie = d3.layout.pie()
-                .sort(null)
-                .value(function(d) { return d.amount; });
-
-            var svg = d3.select("#donut-chart_" + forloop_counter).append("svg")
-                .attr("width", width)
-                .attr("height", height +10)
-                .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-
-            var g = svg.selectAll(".arc")
-                .data(pie(data))
-                .enter().append("g")
-                    .attr("class", "arc");
-
-            g.append("path")
-                .attr("d", arc)
-                .style("fill", function(d) { return color(d.data.year); });
-
-            g.append("rect")
-                .attr("class", "label-boxes")
-                .attr("transform", function(d) {
-                    var centroid = arc.centroid(d);
-                    var x = centroid[0] - 20;
-                    var y = centroid[1] - 12;
-                    return "translate(" + x + ", " + y + ")";
-                })
-                .attr("width", 40)
-                .attr("height", 24)
-                .attr("rx", "5")
-                .attr("ry", "5")
-                .style("stroke", "none")
-                .style("fill", "#fff")
-                .style("fill-opacity", ".5")
-                .style("shape-rendering", "crispEdges")
-                g.append("text")
-                    .attr("class", "pie-chart-text")
-                    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
-                    .style("text-anchor", "middle")
-                    .text(function(d) { return d.data.year; });
-        };
-
-    </script>
-
     <script>
         $('#projects-nav').addClass('active');
     </script>
+
+    {% block project_scripts %}{% endblock %}
 
 {% endblock %}
