@@ -5,10 +5,6 @@
 
 {% block content %}
 
-    Last addition:&emsp;{{ last_created.short_name }},&emsp;{{ last_created.log_created }}
-    <br>
-    Last updated:&emsp;{{ last_modified.short_name }},&emsp;{{ last_modified.log_modified }}
-
     <div class="centered">
         {% if clean_index %}
             <h2>{{ projects_length }} project{{ projects|pluralize }}</h2>
@@ -113,6 +109,10 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <small class="pull-right">
+        <strong>Last update:</strong>&emsp;{{ last_modified.log_modified }}
+    </small>
 
 {% endblock %}
 
