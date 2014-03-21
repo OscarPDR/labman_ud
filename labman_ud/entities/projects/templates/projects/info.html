@@ -37,8 +37,9 @@
 
         <div class="col-md-3">
             {% if logo %}
-                <img class="img-responsive" src="{{ MEDIA_PREFIX }}{{ logo }}"/>
-                <br>
+                <div class="project-logo">
+                    <img class="img-responsive" src="{{ MEDIA_PREFIX }}{{ logo }}"/>
+                </div>
             {% endif %}
 
             <ul id="project-tabs" class="nav nav-pills nav-stacked">
@@ -140,119 +141,119 @@
                 <!-- begin tab-pane #pr_funding_details -->
 
                 <div class="tab-pane" id="pr_funding_details">
+                    {% for funding in fundings %}
 
-                    <div class="accordion" id="accordion">
-                        {% for funding in fundings %}
+                        <div class="panel panel-primary">
 
                             {% with forloop.counter as funding_loop %}
 
                             {% for funding_program in funding_programs %}
                                 {% if funding_program.id == funding.funding_program.id %}
 
-                                    <div class="accordion-group">
-                                        <div class="accordion-heading">
-                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#funding_{{ funding_loop }}">
-                                                {{ funding_program.full_name }}
-                                            </a>
-                                        </div>
+                                    <div class="panel-heading">
+                                        {{ funding_program.full_name }}
+                                    </div>
 
-                                        <br>
+                                    <div class="panel-body">
 
-                                        <div id="funding_{{ forloop.counter }}" class="accordion-body collapse {% if funding_loop == 1 %}in{% endif %}">
-                                            <div class="accordion-inner row">
+                                        <div class="row">
+
+                                            <div class="col-md-6">
+                                                {% if funding_program.logo %}
+                                                    <div class="funding-program-logo">
+                                                        <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
+                                                    </div>
+                                                {% endif %}
+
+                                                <h5>Supported by:</h5>
+                                                <p>
+                                                    {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
+                                                    {% if funding_program.organization.sub_organization_of %}
+                                                        ({{ funding_program.organization.sub_organization_of.full_name }})
+                                                    {% endif %}
+                                                </p>
+
+                                                <br>
+
+                                                <h5>Project code:</h5>
+                                                <p>
+                                                    {% if funding.project_code %}
+                                                        {{ funding.project_code }}
+                                                    {% else %}
+                                                        No information available
+                                                    {% endif %}
+                                                </p>
+
+                                                <br>
+
+                                                <h5>Duration:</h5>
+                                                <p>
+                                                    {% if project.start_year %}
+                                                        Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
+                                                    {% else %}
+                                                        No information available
+                                                    {% endif %}
+                                                </p>
+
+                                                <br>
+                                            </div> <!-- end .col-md-6 -->
+                                        </div> <!-- end .row -->
+
+                                        {% if funding_amounts %}
+
+                                            <br>
+
+                                            <div class="row funding-row">
 
                                                 <div class="col-md-6">
+                                                    <h5>Amounts:</h5>
 
-                                                    {% if funding_program.logo %}
-                                                        <div class="funding-program-logo">
-                                                            <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
-                                                        </div>
-                                                    {% endif %}
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Year</th>
+                                                                <th>DeustoTech</th>
+                                                            </tr>
+                                                        </thead>
 
-                                                    <h5>Supported by:</h5>
-                                                    <p>
-                                                        {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
-                                                        {% if funding_program.organization.sub_organization_of %}
-                                                            ({{ funding_program.organization.sub_organization_of.full_name }})
-                                                        {% endif %}
-                                                    </p>
+                                                        <tbody>
+                                                            {% for funding_amount in funding_amounts %}
+                                                                {% if funding_amount.funding.id = funding.id %}
 
-                                                    <br>
-
-                                                    <h5>Project code:</h5>
-                                                    <p>
-                                                        {% if funding.project_code %}
-                                                            {{ funding.project_code }}
-                                                        {% else %}
-                                                            No information available
-                                                        {% endif %}
-                                                    </p>
-
-                                                    <br>
-
-                                                    <h5>Duration:</h5>
-                                                    <p>
-                                                        {% if project.start_year %}
-                                                            Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
-                                                        {% else %}
-                                                            No information available
-                                                        {% endif %}
-                                                    </p>
-
-                                                    <br>
-
-                                                </div>
-
-                                                    {% if funding_amounts %}
-
-                                                        <div class="col-md-6">
-
-                                                            <h5>Amounts:</h5>
-
-                                                            <table class="table table-bordered table-striped">
-                                                                <thead>
                                                                     <tr>
-                                                                        <th>Year</th>
-                                                                        <th>DeustoTech</th>
+                                                                        <td>{{ funding_amount.year }}</td>
+                                                                        <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
                                                                     </tr>
-                                                                </thead>
 
-                                                                <tbody>
-                                                                    {% for funding_amount in funding_amounts %}
-                                                                        {% if funding_amount.funding.id = funding.id %}
+                                                                {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div> <!-- end .col-md-6 -->
 
-                                                                            <tr>
-                                                                                <td>{{ funding_amount.year }}</td>
-                                                                                <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
-                                                                            </tr>
+                                                <div class="col-md-6 donut-chart">
+                                                    <div id="donut-chart_{{ funding_loop }}"></div>
+                                                </div>
+                                            </div> <!-- end .row -->
 
-                                                                        {% endif %}
-                                                                {% endfor %}
-                                                                </tbody>
-                                                            </table>
-
-                                                            <br>
-
-                                                            <div id="chart_{{ funding_loop }}"></div>
-                                                        </div>
-
-                                                    {% else %}
-                                                        <p>
-                                                            No information available
-                                                        </p>
-                                                    {% endif %}
-
+                                        {% else %}
+                                            <div class="row">
+                                                <p>
+                                                    No detailed funding information available
+                                                </p>
                                             </div>
-                                        </div>
-                                    </div>
+                                        {% endif %}
+
+                                    </div> <!-- end .panel-body -->
 
                                 {% endif %} <!-- funding_program.id == funding.funding_program.id -->
                             {% endfor %} <!-- funding_program in funding_programs -->
 
                             {% endwith %}
-                        {% endfor %} <!-- funding in fundings -->
-                    </div>
 
+                        </div> <!-- end .panel .panel-primary -->
+
+                    {% endfor %} <!-- funding in fundings -->
                 </div>
 
                 <!-- end tab-pane #pr_funding_details -->
@@ -399,36 +400,88 @@
 
 {% block scripts %}
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{{ STATIC_PREFIX }}js/jquery-1.10.2.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
 
     <script>
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-            {% for funding in fundings %}
+        var donut_chart_width = $('#pr_general_info').width() / 2;
 
-                {% with forloop.counter as funding_loop %}
+        var width = donut_chart_width,
+            height = 225,
+            radius = Math.min(width, height) / 2;
 
-                var data_{{ forloop.counter }} = google.visualization.arrayToDataTable([
-                    ['Year', 'Incomes'],
-                    {% for funding_amount in funding_amounts %}
-                        {% if funding_amount.funding.id == funding.id %}
-                            ["{{ funding_amount.year }}", parseFloat({{ funding_amount.own_amount }})],
-                        {% endif %}
-                    {% endfor %}
-                ]);
+        var color = d3.scale.category10();
 
-                var options = {
-                    title: 'Income breakdown for DeustoTech Internet',
-                };
+        {% for funding in fundings %}
+            {% with forloop.counter as funding_loop %}
+                var forloop_counter = {{ funding_loop }};
+                var funding_id = {{ funding.id }};
 
-                var chart_{{ funding_loop }} = new google.visualization.PieChart(document.getElementById('chart_{{ funding_loop }}'));
-                chart_{{ funding_loop }}.draw(data_{{ funding_loop }}, options);
+                drawChart(forloop_counter, funding_id);
+            {% endwith %}
+        {% endfor %}
 
+        function drawChart(forloop_counter, funding_id) {
+            var data = [];
+
+            {% for funding_amount in funding_amounts %}
+                {% with funding_amount.funding.id as current_funding_id %}
+                    var current_funding_id = {{ current_funding_id }};
+
+                    if (current_funding_id == funding_id) {
+                        data.push({year: "{{ funding_amount.year }}", amount: parseFloat({{ funding_amount.own_amount }})});
+                    }
                 {% endwith %}
-
             {% endfor %}
-        }
+
+            var arc = d3.svg.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(radius - 60);
+
+            var pie = d3.layout.pie()
+                .sort(null)
+                .value(function(d) { return d.amount; });
+
+            var svg = d3.select("#donut-chart_" + forloop_counter).append("svg")
+                .attr("width", width)
+                .attr("height", height +10)
+                .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+            var g = svg.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                    .attr("class", "arc");
+
+            g.append("path")
+                .attr("d", arc)
+                .style("fill", function(d) { return color(d.data.year); });
+
+            g.append("rect")
+                .attr("class", "label-boxes")
+                .attr("transform", function(d) {
+                    var centroid = arc.centroid(d);
+                    var x = centroid[0] - 20;
+                    var y = centroid[1] - 12;
+                    return "translate(" + x + ", " + y + ")";
+                })
+                .attr("width", 40)
+                .attr("height", 24)
+                .attr("rx", "5")
+                .attr("ry", "5")
+                .style("stroke", "none")
+                .style("fill", "#fff")
+                .style("fill-opacity", ".5")
+                .style("shape-rendering", "crispEdges")
+                g.append("text")
+                    .attr("class", "pie-chart-text")
+                    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "middle")
+                    .text(function(d) { return d.data.year; });
+        };
+
     </script>
 
     <script>

@@ -229,13 +229,14 @@ ul.nav.nav-tabs {
 }
 
 .project-logo {
-    display: block;
     width: 100%;
     text-align: center;
+    margin-bottom: 1.5em;
 }
 
-.project-logo > img {
-    width: 40%;
+.project-logo > .img-responsive {
+    width: 90%;
+    display: inline;
 }
 
 .project-template {
@@ -526,11 +527,6 @@ footer > a {
     text-align: justify;
 }
 
-.news-img-responsive {
-    height: auto;
-    max-width: 100%;
-}
-
 .soften {
     height: 5px;
     margin: 3em 0 1.5em 0;
@@ -635,4 +631,12 @@ footer > a {
 .registered-user {
     margin-bottom: 0.75em;
     text-align: right;
+}
+
+.funding-row {
+    min-height: 225px;
+}
+
+.pie-chart-text {
+    font: normal 1em Arial;
 }
