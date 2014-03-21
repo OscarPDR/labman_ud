@@ -72,10 +72,15 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 
     publications_length = len(publications)
 
+    last_created = Publication.objects.order_by('-log_created')[0]
+    last_modified = Publication.objects.order_by('-log_modified')[0]
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'clean_index': clean_index,
         'form': form,
+        'last_created': last_created,
+        'last_modified': last_modified,
         'publication_type': publication_type,
         'publications': publications,
         'publications_length': publications_length,
