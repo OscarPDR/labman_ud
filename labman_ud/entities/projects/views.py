@@ -74,6 +74,9 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     projects_length = len(projects)
 
+    last_created = Project.objects.order_by('-log_created')[0]
+    last_modified = Project.objects.order_by('-log_modified')[0]
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'clean_index': clean_index,
@@ -84,6 +87,8 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'query_string': query_string,
         'status': status,
         'tag': tag,
+        'last_created': last_created,
+        'last_modified': last_modified,
     }
 
     return render_to_response("projects/index.html", return_dict, context_instance=RequestContext(request))
