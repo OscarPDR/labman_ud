@@ -1,0 +1,50 @@
+{% extends "projects/info.html" %}
+
+
+
+{% block project_content %}
+
+    <div class="tab-pane active" id="project-related-publications">
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Type</th>
+            </thead>
+
+            <tbody>
+                {% for publication in related_publications %}
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
+                            <a href="{% url publication_info publication.slug %}">
+                                {{ publication.title }}
+                            </a>
+                        </td>
+
+                        <td class="col-md-2">
+                            {{ publication.year }}
+                        </td>
+
+                        <td class="col-md-2">
+                            {{ publication.publication_type.name }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block project_scripts %}
+
+    <script>
+        $('.project_info').removeClass('active');
+        $('.project_related_publications').addClass('active');
+    </script>
+
+{% endblock %}

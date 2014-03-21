@@ -1,0 +1,83 @@
+{% extends "projects/info.html" %}
+
+
+
+{% block project_content %}
+
+    <div class="tab-pane active" id="project-assigned-persons">
+
+        <h5>Project manager{{ project_managers|pluralize }}</h5>
+
+        <ul>
+            {% for item in project_managers %}
+                <li>
+                    {% if item.is_active %}
+                        <a href="{% url member_info item.slug %}">
+                    {% else %}
+                        <a href="{% url person_info item.slug %}">
+                    {% endif %}
+                            {{ item.full_name }}
+                        </a>
+                    {% if item.working_period %}
+                        &emsp;{{ item.working_period }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <br>
+
+        <h5>Principal researcher{{ principal_researchers|pluralize }}</h5>
+
+        <ul>
+            {% for item in principal_researchers %}
+                <li>
+                    {% if item.is_active %}
+                        <a href="{% url member_info item.slug %}">
+                    {% else %}
+                        <a href="{% url person_info item.slug %}">
+                    {% endif %}
+                            {{ item.full_name }}
+                        </a>
+                    {% if item.working_period %}
+                        &emsp;{{ item.working_period }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <br>
+
+        <h5>Researcher{{ researchers|pluralize }}</h5>
+
+        <ul>
+            {% for item in researchers %}
+                <li>
+                    {% if item.is_active %}
+                        <a href="{% url member_info item.slug %}">
+                    {% else %}
+                        <a href="{% url person_info item.slug %}">
+                    {% endif %}
+                            {{ item.full_name }}
+                        </a>
+                    {% if item.working_period %}
+                        &emsp;{{ item.working_period }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block project_scripts %}
+
+    <script>
+        $('.project_info').removeClass('active');
+        $('.project_assigned_persons').addClass('active');
+    </script>
+
+{% endblock %}

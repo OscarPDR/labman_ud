@@ -120,6 +120,11 @@ h4 {
     text-align: justify;
 }
 
+.project-tag {
+    display: block;
+    margin: 0.25em 0;
+}
+
 #project-type {
     float: right
 }
