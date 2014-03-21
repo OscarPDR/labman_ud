@@ -159,12 +159,6 @@
                                         <div class="row">
 
                                             <div class="col-md-6">
-                                                {% if funding_program.logo %}
-                                                    <div class="funding-program-logo">
-                                                        <img src="{{ MEDIA_URL }}{{ funding_program.logo }}" />
-                                                    </div>
-                                                {% endif %}
-
                                                 <h5>Supported by:</h5>
                                                 <p>
                                                     {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
@@ -197,6 +191,15 @@
 
                                                 <br>
                                             </div> <!-- end .col-md-6 -->
+
+                                            {% if funding_program_logos %}
+                                                <div class="col-md-6 centered">
+                                                    {% for logo in funding_program_logos %}
+                                                        <img class="funding-program-logo" src="{{ MEDIA_URL }}{{ logo.logo }}" />
+                                                        <br>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div> <!-- end .row -->
 
                                         {% if funding_amounts %}
