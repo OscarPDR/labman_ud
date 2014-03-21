@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -10,7 +11,7 @@ from django.contrib.sites.models import Site
 from .forms import LoginForm
 
 admin.autodiscover()
-admin.site.unregister(Site)
+#admin.site.unregister(Site)
 
 
 urlpatterns = patterns('',
@@ -46,7 +47,7 @@ urlpatterns = patterns('',
     url(r'^redactor/', include('redactor.urls')),
 
     # Just for development purposes, serve in another way in production
-    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 urlpatterns += staticfiles_urlpatterns()

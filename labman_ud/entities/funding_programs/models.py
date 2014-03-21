@@ -11,7 +11,7 @@ from entities.core.models import BaseModel
 
 
 def funding_program_logo_path(self, filename):
-    return "%s/%s%s" % ("funding_programs", self.funding_program.slug, os.path.splitext(filename)[-1])
+    return "%s/%s_%s%s" % ("funding_programs", self.funding_program.slug, self.slug, os.path.splitext(filename)[-1])
 
 
 #########################
@@ -66,6 +66,17 @@ class FundingProgram(BaseModel):
 class FundingProgramLogo(BaseModel):
     funding_program = models.ForeignKey('FundingProgram')
 
+    name = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    slug = models.SlugField(
+        max_length=100,
+        blank=True,
+        unique=True,
+    )
+
     logo = models.ImageField(
         upload_to=funding_program_logo_path,
         blank=True,
@@ -74,3 +85,8 @@ class FundingProgramLogo(BaseModel):
 
     def __unicode__(self):
         return u'Logo for funding program: %s' % (self.funding_program.short_name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+
+        super(FundingProgramLogo, self).save(*args, **kwargs)
