@@ -144,8 +144,8 @@ h4 {
 }
 
 .funding-program-logo {
-    float: right;
-    max-height: 75px;
+    margin: 1em 0;
+    height: 75px;
 }
 
 #main-container {
