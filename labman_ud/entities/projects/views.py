@@ -203,6 +203,9 @@ def project_assigned_persons(request, project_slug):
         if start_date and not end_date:
             working_period = u'(since %s)' % (start_date)
 
+        if end_date and not start_date:
+            working_period = u'(until %s)' % (end_date)
+
         person_item = {
             'description': assigned_person.description,
             'full_name': person.full_name,
