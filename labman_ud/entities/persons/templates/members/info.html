@@ -6,6 +6,10 @@
 
     <div id="member-name">
         <h1 id="member-name">
+            <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">
+                <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+            </a>
+            &emsp;
             {% if member.title %}
                 {{ member.title }}
             {% endif %}
@@ -63,6 +67,8 @@
                 {% endif %}
             </div>
 
+            <div class="soften-limited"></div>
+
             <div id="contact-member">
                 {% if member.is_active %}
                     {% if member.email %}
@@ -84,14 +90,12 @@
                     &emsp;<i class="fa fa-globe fa-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
                     </div>
                 {% endif %}
-                <br>
-                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/><a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;RDF Description
-                </a>
-
-                <div class="soften"></div>
             </div> <!-- end #contact-member -->
+        </div> <!-- end .col-md-3 member section sidebar -->
 
-            <ul id="member-tabs" class="nav nav-pills nav-stacked">
+        <div class="col-md-9">
+
+            <ul id="member-tabs" class="nav nav-pills centered">
                 <li class="member_biography active">
                     <a href="{% url member_info member.slug %}">
                         <i class="fa fa-user fa-large"></i>&emsp;Biography
@@ -124,9 +128,7 @@
                     </a>
                 </li>
             </ul> <!-- end #member-tabs -->
-        </div> <!-- end .col-md-3 member section sidebar -->
 
-        <div class="col-md-9">
             <div id="member-tab-content" class="tab-content">
 
                 {% block member_content %}
