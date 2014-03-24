@@ -11,13 +11,9 @@
         <ul>
             {% for item in project_managers %}
                 <li>
-                    {% if item.is_active %}
-                        <a href="{% url member_info item.slug %}">
-                    {% else %}
-                        <a href="{% url person_info item.slug %}">
-                    {% endif %}
-                            {{ item.full_name }}
-                        </a>
+                    <a href="{% url determine_person_info item.slug %}">
+                        {{ item.full_name }}
+                    </a>
                     {% if item.working_period %}
                         &emsp;{{ item.working_period }}
                     {% endif %}
@@ -32,13 +28,9 @@
         <ul>
             {% for item in principal_researchers %}
                 <li>
-                    {% if item.is_active %}
-                        <a href="{% url member_info item.slug %}">
-                    {% else %}
-                        <a href="{% url person_info item.slug %}">
-                    {% endif %}
-                            {{ item.full_name }}
-                        </a>
+                    <a href="{% url determine_person_info item.slug %}">
+                        {{ item.full_name }}
+                    </a>
                     {% if item.working_period %}
                         &emsp;{{ item.working_period }}
                     {% endif %}
@@ -53,13 +45,9 @@
         <ul>
             {% for item in researchers %}
                 <li>
-                    {% if item.is_active %}
-                        <a href="{% url member_info item.slug %}">
-                    {% else %}
-                        <a href="{% url person_info item.slug %}">
-                    {% endif %}
-                            {{ item.full_name }}
-                        </a>
+                    <a href="{% url determine_person_info item.slug %}">
+                        {{ item.full_name }}
+                    </a>
                     {% if item.working_period %}
                         &emsp;{{ item.working_period }}
                     {% endif %}
