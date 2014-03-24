@@ -55,13 +55,13 @@
 
             <div id="working-period" class="centered">
                 {% if first_job.start_date %}
-                    {{ first_job.start_date|date:"F, Y" }}
+                    {{ first_job.start_date|date:"M. Y" }}
                 {% else %}
                     ?
                 {% endif %}
                 &emsp;-&emsp;
                 {% if last_job.end_date %}
-                    {{ last_job.end_date|date:"F, Y" }}
+                    {{ last_job.end_date|date:"M. Y" }}
                 {% else %}
                     Present
                 {% endif %}
