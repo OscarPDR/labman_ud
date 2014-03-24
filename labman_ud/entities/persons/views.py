@@ -124,9 +124,9 @@ def determine_person_info(request, person_slug):
     person_status = __determine_person_status(person_slug)
 
     if person_status == MEMBER:
-        return HttpResponseRedirect(reverse('member_info', kwargs={'member_slug': person_slug}))
+        return HttpResponseRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
     if person_status == FORMER_MEMBER:
-        return HttpResponseRedirect(reverse('former_member_info', kwargs={'former_member_slug': person_slug}))
+        return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
     else:
         return HttpResponseRedirect(reverse('person_info', kwargs={'person_slug': person_slug}))
 
@@ -262,22 +262,25 @@ def former_members(request, organization_slug=None):
 # View: member_info
 ###########################################################################
 
-def member_info(request, member_slug):
-    member = Person.objects.get(slug=member_slug)
 
-    try:
-        job = Job.objects.get(person_id=member.id, end_date=None)
-        position = job.position
+def member_info(request, person_slug):
+    person_status = __determine_person_status(person_slug)
 
-    except:
-        job = None
-        position = None
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
+
+    member = Person.objects.get(slug=person_slug)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'member': member,
-        'position': position,
     }
+
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
 
     return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
 
@@ -286,8 +289,16 @@ def member_info(request, member_slug):
 # View: member_projects
 ###########################################################################
 
-def member_projects(request, member_slug, role_slug=None):
-    member = Person.objects.get(slug=member_slug)
+def member_projects(request, person_slug, role_slug=None):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_projects', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_projects', kwargs={'person_slug': person_slug}))
+
+    member = Person.objects.get(slug=person_slug)
 
     projects = {}
 
@@ -315,6 +326,9 @@ def member_projects(request, member_slug, role_slug=None):
         'projects': projects,
     }
 
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
     return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
 
 
@@ -322,8 +336,16 @@ def member_projects(request, member_slug, role_slug=None):
 # View: member_publications
 ###########################################################################
 
-def member_publications(request, member_slug, publication_type_slug=None):
-    member = Person.objects.get(slug=member_slug)
+def member_publications(request, person_slug, publication_type_slug=None):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_publications', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_publications', kwargs={'person_slug': person_slug}))
+
+    member = Person.objects.get(slug=person_slug)
 
     publications = {}
 
@@ -351,6 +373,9 @@ def member_publications(request, member_slug, publication_type_slug=None):
         'has_publications': has_publications,
     }
 
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
     return render_to_response("members/publications.html", return_dict, context_instance=RequestContext(request))
 
 
@@ -358,8 +383,16 @@ def member_publications(request, member_slug, publication_type_slug=None):
 # View: member_profiles
 ###########################################################################
 
-def member_profiles(request, member_slug):
-    member = Person.objects.get(slug=member_slug)
+def member_profiles(request, person_slug):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_profiles', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_profiles', kwargs={'person_slug': person_slug}))
+
+    member = Person.objects.get(slug=person_slug)
 
     accounts = []
     account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
@@ -380,6 +413,9 @@ def member_profiles(request, member_slug):
         'accounts': accounts,
     }
 
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
     return render_to_response("members/profiles.html", return_dict, context_instance=RequestContext(request))
 
 
@@ -387,130 +423,26 @@ def member_profiles(request, member_slug):
 # View: member_graphs
 ###########################################################################
 
-def member_graphs(request, member_slug):
-    member = Person.objects.get(slug=member_slug)
+def member_graphs(request, person_slug):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_graphs', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_graphs', kwargs={'person_slug': person_slug}))
+
+    member = Person.objects.get(slug=person_slug)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'member': member,
     }
 
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
     return render_to_response("members/graphs.html", return_dict, context_instance=RequestContext(request))
-
-
-###########################################################################
-# View: former_member_info
-###########################################################################
-
-def former_member_info(request, former_member_slug):
-
-    former_member = Person.objects.get(slug=former_member_slug)
-
-    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
-
-    try:
-        job = Job.objects.filter(person_id=former_member.id, organization_id__in=organizations).order_by('-end_date')[0]
-        position = job.position
-
-    except:
-        job = None
-        position = None
-
-    projects = {}
-
-    roles = Role.objects.all()
-
-    for role in roles:
-        projects[role.name] = []
-        project_ids = AssignedPerson.objects.filter(person_id=former_member.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
-
-        for project in project_objects:
-            projects[role.name].append(project)
-
-    publications = {}
-    number_of_publications = {}
-
-    min_year = Publication.objects.aggregate(Min('year'))
-    max_year = Publication.objects.aggregate(Max('year'))
-
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
-
-    years = []
-
-    for year in range(min_year, max_year + 1):
-        years.append(year)
-
-    publication_types = PublicationType.objects.all()
-
-    for publication_type in publication_types:
-        pub_type = publication_type.name.encode('utf-8')
-        publications[pub_type] = []
-        number_of_publications[pub_type] = {}
-
-        for year in years:
-            number_of_publications[pub_type][year] = 0
-
-    publication_ids = PublicationAuthor.objects.filter(author=former_member.id).values('publication_id')
-    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
-
-    has_publications = True if _publications else False
-
-    for publication in _publications:
-        pub_type = publication.publication_type.name.encode('utf-8')
-        pub_year = publication.year
-        publications[pub_type].append(publication)
-        number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
-
-    # G = nx.Graph()
-
-    # pubs = Publication.objects.all()
-
-    # for pub in pubs:
-    #     author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
-
-    #     if author_ids:
-    #         _list = [author_id['author_id'] for author_id in author_ids]
-
-    #         for pos, author_id in enumerate(_list):
-    #             for i in range(pos+1, len(_list)):
-    #                 author = Person.objects.get(id=author_id)
-    #                 author2 = Person.objects.get(id=_list[i])
-    #                 G.add_edge(author.id, author2.id)
-
-    #                 try:
-    #                     G[author.id][author2.id]['weight'] += 1
-
-    #                 except:
-    #                     G[author.id][author2.id]['weight'] = 1
-    #                 G.node[author.id]['name'] = author.full_name
-    #                 G.node[author2.id]['name'] = author2.full_name
-
-    # try:
-    #     G = nx_graph.analyze(G)
-    #     ego_g = nx.ego_graph(G, former_member.id)
-    #     data = json_graph.node_link_data(ego_g)
-
-    # except:
-    #     data = {}
-
-    # publication_tags_per_year = __clean_publication_tags(former_member.id, min_year, max_year)
-
-    # dictionary to be returned in render_to_response()
-    return_dict = {
-        # 'publication_tags_per_year': publication_tags_per_year,
-        # 'data': json.dumps(data),
-        'former_member': former_member,
-        'has_publications': has_publications,
-        'job': job,
-        'number_of_publications': number_of_publications,
-        'position': position,
-        'projects': projects,
-        'publications': publications,
-    }
-
-    return render_to_response("former_members/info.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -518,7 +450,6 @@ def former_member_info(request, former_member_slug):
 ###########################################################################
 
 def person_info(request, person_slug):
-
     person = Person.objects.get(slug=person_slug)
 
     projects = {}
@@ -608,3 +539,33 @@ def __determine_person_status(person_slug):
             return FORMER_MEMBER
         else:
             return None
+
+
+####################################################################################################
+# __get_job_data
+####################################################################################################
+
+def __get_job_data(member):
+    company = None
+    first_job = None
+    last_job = None
+    position = None
+
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+
+    try:
+        jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
+        first_job = jobs[0]
+        last_job = jobs.reverse()[0]
+        organization = Organization.objects.get(id=last_job.organization_id)
+        company = organization.short_name
+        position = last_job.position
+    except:
+        pass
+
+    return {
+        'first_job': first_job,
+        'last_job': last_job,
+        'company': company,
+        'position': position,
+    }
