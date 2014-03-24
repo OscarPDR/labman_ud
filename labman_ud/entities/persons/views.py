@@ -1,15 +1,12 @@
 # coding: utf-8
 
 from django.core.urlresolvers import reverse
-from django.db.models import Min, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from charts.utils import nx_graph
 from collections import OrderedDict
-from networkx.readwrite import json_graph
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
@@ -18,9 +15,6 @@ from entities.organizations.models import Organization
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
-
-import json
-import networkx as nx
 
 # Create your views here.
 
@@ -184,7 +178,7 @@ def members(request, organization_slug=None):
         'organization_slug': organization_slug,
     }
 
-    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/members_index.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -255,7 +249,7 @@ def former_members(request, organization_slug=None):
         'organizations': organizations,
     }
 
-    return render_to_response("former_members/index.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/former_members_index.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
