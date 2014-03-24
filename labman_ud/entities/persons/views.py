@@ -113,6 +113,26 @@ def person_index(request, query_string=None):
 
 
 ###########################################################################
+# View: determine_person_info
+###########################################################################
+
+def determine_person_info(request, person_slug):
+    person = Person.objects.get(slug=person_slug)
+
+    if person.is_active:
+        return HttpResponseRedirect(reverse('member_info', kwargs={'member_slug': person_slug}))
+    else:
+        organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+        all_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
+        former_member_list = Person.objects.filter(id__in=all_member_ids, is_active=False)
+
+        if person in former_member_list:
+            return HttpResponseRedirect(reverse('former_member_info', kwargs={'former_member_slug': person_slug}))
+        else:
+            return HttpResponseRedirect(reverse('person_info', kwargs={'person_slug': person_slug}))
+
+
+###########################################################################
 # View: members
 ###########################################################################
 
@@ -498,9 +518,9 @@ def former_member_info(request, former_member_slug):
 # View: person_info
 ###########################################################################
 
-def person_info(request, slug):
+def person_info(request, person_slug):
 
-    person = Person.objects.get(slug=slug)
+    person = Person.objects.get(slug=person_slug)
 
     projects = {}
 
