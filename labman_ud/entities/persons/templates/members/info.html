@@ -6,6 +6,10 @@
 
     <div id="member-name">
         <h1 id="member-name">
+            <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">
+                <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+            </a>
+            &emsp;
             {% if member.title %}
                 {{ member.title }}
             {% endif %}
@@ -35,31 +39,63 @@
                 {% endif %}
             {% endif %}
 
-            <div id="contact-member">
-                {% if member.email %}
-                    &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>&emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
-                    <br>
+            <div id="member-company" class="centered">
+                {% if company == 'DeustoTech - Internet' %}
+                    <span class="label label-primary">{{ company }}</span>
                 {% endif %}
 
-                {% if member.phone_number %}
-                    <br>
-                    &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>&emsp;{{ member.phone_number }}{% if member.phone_extension %} - <strong>ext: </strong> {{ member.phone_extension }}{% endif %}
-                    <br>
+                {% if company == 'DeustoTech - Telecom' %}
+                    <span class="label label-success">{{ company }}</span>
+                {% endif %}
+
+                {% if company == 'MORElab' %}
+                    <span class="label label-default">{{ company }}</span>
+                {% endif %}
+            </div>
+
+            <div id="working-period" class="centered">
+                {% if first_job.start_date %}
+                    {{ first_job.start_date|date:"M. Y" }}
+                {% else %}
+                    ?
+                {% endif %}
+                &emsp;-&emsp;
+                {% if last_job.end_date %}
+                    {{ last_job.end_date|date:"M. Y" }}
+                {% else %}
+                    Present
+                {% endif %}
+            </div>
+
+            <div class="soften-limited"></div>
+
+            <div id="contact-member">
+                {% if member.is_active %}
+                    {% if member.email %}
+                        &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>
+                        &emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                        <br>
+                    {% endif %}
+
+                    {% if member.phone_number %}
+                        <br>
+                        &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>
+                        &emsp;{{ member.phone_number }}{% if member.phone_extension %} - <strong>ext: </strong> {{ member.phone_extension }}{% endif %}
+                        <br>
+                    {% endif %}
                 {% endif %}
 
                 {% if member.personal_website %}
-                    <br>
+                    <div class="personal-website">
                     &emsp;<i class="fa fa-globe fa-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
-                    <br>
+                    </div>
                 {% endif %}
-                <br>
-                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/><a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;RDF Description
-                </a>
-
-                <div class="soften"></div>
             </div> <!-- end #contact-member -->
+        </div> <!-- end .col-md-3 member section sidebar -->
 
-            <ul id="member-tabs" class="nav nav-pills nav-stacked">
+        <div class="col-md-9">
+
+            <ul id="member-tabs" class="nav nav-pills centered">
                 <li class="member_biography active">
                     <a href="{% url member_info member.slug %}">
                         <i class="fa fa-user fa-large"></i>&emsp;Biography
@@ -68,13 +104,15 @@
 
                 <li class="member_projects">
                     <a href="{% url member_projects member.slug %}">
-                        <i class="fa fa-gears fa-large"></i>&emsp;Projects
+                        <i class="fa fa-gears fa-large"></i>&emsp;
+                        {{ number_of_projects }} project{{ number_of_projects|pluralize }}
                     </a>
                 </li>
 
                 <li class="member_publications">
                     <a href="{% url member_publications member.slug %}">
-                        <i class="fa fa-file-text-o fa-large"></i>&emsp;Publications
+                        <i class="fa fa-file-text-o fa-large"></i>&emsp;
+                        {{ number_of_publications }} publication{{ number_of_publications|pluralize }}
                     </a>
                 </li>
 
@@ -90,9 +128,7 @@
                     </a>
                 </li>
             </ul> <!-- end #member-tabs -->
-        </div> <!-- end .col-md-3 member section sidebar -->
 
-        <div class="col-md-9">
             <div id="member-tab-content" class="tab-content">
 
                 {% block member_content %}
