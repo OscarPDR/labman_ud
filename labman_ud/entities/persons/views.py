@@ -557,9 +557,14 @@ def __get_job_data(member):
     except:
         pass
 
+    project_ids = AssignedPerson.objects.filter(person_id=member.id).values('project_id')
+    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+
     return {
         'first_job': first_job,
         'last_job': last_job,
         'company': company,
         'position': position,
+        'number_of_projects': len(project_ids),
+        'number_of_publications': len(publication_ids),
     }
