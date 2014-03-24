@@ -28,6 +28,10 @@ REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
 
 OWN_ORGANIZATION_SLUGS = ['deustotech-internet', 'deustotech-telecom', 'morelab']
 
+# Status
+MEMBER = 'member'
+FORMER_MEMBER = 'former_member'
+
 
 ###########################################################################
 # View: __get_person_data
@@ -117,19 +121,14 @@ def person_index(request, query_string=None):
 ###########################################################################
 
 def determine_person_info(request, person_slug):
-    person = Person.objects.get(slug=person_slug)
+    person_status = __determine_person_status(person_slug)
 
-    if person.is_active:
+    if person_status == MEMBER:
         return HttpResponseRedirect(reverse('member_info', kwargs={'member_slug': person_slug}))
+    if person_status == FORMER_MEMBER:
+        return HttpResponseRedirect(reverse('former_member_info', kwargs={'former_member_slug': person_slug}))
     else:
-        organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
-        all_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
-        former_member_list = Person.objects.filter(id__in=all_member_ids, is_active=False)
-
-        if person in former_member_list:
-            return HttpResponseRedirect(reverse('former_member_info', kwargs={'former_member_slug': person_slug}))
-        else:
-            return HttpResponseRedirect(reverse('person_info', kwargs={'person_slug': person_slug}))
+        return HttpResponseRedirect(reverse('person_info', kwargs={'person_slug': person_slug}))
 
 
 ###########################################################################
@@ -464,44 +463,44 @@ def former_member_info(request, former_member_slug):
         publications[pub_type].append(publication)
         number_of_publications[pub_type][pub_year] = number_of_publications[pub_type][pub_year] + 1
 
-    G = nx.Graph()
+    # G = nx.Graph()
 
-    pubs = Publication.objects.all()
+    # pubs = Publication.objects.all()
 
-    for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+    # for pub in pubs:
+    #     author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
 
-        if author_ids:
-            _list = [author_id['author_id'] for author_id in author_ids]
+    #     if author_ids:
+    #         _list = [author_id['author_id'] for author_id in author_ids]
 
-            for pos, author_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    author = Person.objects.get(id=author_id)
-                    author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id, author2.id)
+    #         for pos, author_id in enumerate(_list):
+    #             for i in range(pos+1, len(_list)):
+    #                 author = Person.objects.get(id=author_id)
+    #                 author2 = Person.objects.get(id=_list[i])
+    #                 G.add_edge(author.id, author2.id)
 
-                    try:
-                        G[author.id][author2.id]['weight'] += 1
+    #                 try:
+    #                     G[author.id][author2.id]['weight'] += 1
 
-                    except:
-                        G[author.id][author2.id]['weight'] = 1
-                    G.node[author.id]['name'] = author.full_name
-                    G.node[author2.id]['name'] = author2.full_name
+    #                 except:
+    #                     G[author.id][author2.id]['weight'] = 1
+    #                 G.node[author.id]['name'] = author.full_name
+    #                 G.node[author2.id]['name'] = author2.full_name
 
-    try:
-        G = nx_graph.analyze(G)
-        ego_g = nx.ego_graph(G, former_member.id)
-        data = json_graph.node_link_data(ego_g)
+    # try:
+    #     G = nx_graph.analyze(G)
+    #     ego_g = nx.ego_graph(G, former_member.id)
+    #     data = json_graph.node_link_data(ego_g)
 
-    except:
-        data = {}
+    # except:
+    #     data = {}
 
     # publication_tags_per_year = __clean_publication_tags(former_member.id, min_year, max_year)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'publication_tags_per_year': publication_tags_per_year,
-        'data': json.dumps(data),
+        # 'data': json.dumps(data),
         'former_member': former_member,
         'has_publications': has_publications,
         'job': job,
@@ -590,3 +589,22 @@ def __clean_publication_tags(member_id, min_year, max_year):
             pass
 
     return publication_tags_per_year
+
+
+####################################################################################################
+# __determine_person_status
+####################################################################################################
+
+def __determine_person_status(person_slug):
+    person = Person.objects.get(slug=person_slug)
+    if person.is_active:
+        return MEMBER
+    else:
+        organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+        all_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
+        former_member_list_ids = Person.objects.filter(id__in=all_member_ids, is_active=False).values_list('id', flat=True)
+
+        if person.id in former_member_list_ids:
+            return FORMER_MEMBER
+        else:
+            return None
