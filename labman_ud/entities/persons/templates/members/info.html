@@ -66,23 +66,23 @@
             <div id="contact-member">
                 {% if member.is_active %}
                     {% if member.email %}
-                        &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>&emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                        &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>
+                        &emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
                         <br>
                     {% endif %}
 
                     {% if member.phone_number %}
                         <br>
-                        &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>&emsp;{{ member.phone_number }}{% if member.phone_extension %} - <strong>ext: </strong> {{ member.phone_extension }}{% endif %}
+                        &emsp;<i class="fa fa-phone fa-large" style="color: #999;"></i>
+                        &emsp;{{ member.phone_number }}{% if member.phone_extension %} - <strong>ext: </strong> {{ member.phone_extension }}{% endif %}
                         <br>
                     {% endif %}
                 {% endif %}
 
-
-
                 {% if member.personal_website %}
                     <div class="personal-website">
                     &emsp;<i class="fa fa-globe fa-large" style="color: #999;"></i>&emsp;<a target="_blank" href="{{ member.personal_website }}">Personal website</a>
-                    <div>
+                    </div>
                 {% endif %}
                 <br>
                     <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/><a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;RDF Description
