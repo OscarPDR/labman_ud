@@ -11,6 +11,7 @@ from .models import FundingProgram, FundingProgramLogo
 class FundingProgramLogoInline(admin.StackedInline):
     model = FundingProgramLogo
     extra = 1
+    exclude = ['slug']
 
 
 #########################
