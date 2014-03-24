@@ -49,11 +49,10 @@
                         <td>
                             &emsp;
                             {% if person.is_active %}
-                                <a href="{% url member_info person.slug %}">
-                                    <i class="fa fa-user fa-large"></i>&emsp;
-                            {% else %}
-                                <a href="{% url person_info person.slug %}">
+                                <i class="fa fa-user fa-large"></i>&emsp;
                             {% endif %}
+
+                            <a href="{% url determine_person_info person.slug %}">
                                 {{ person.full_name }}
                             </a>
                         </td>
