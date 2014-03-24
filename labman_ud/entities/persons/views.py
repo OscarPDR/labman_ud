@@ -444,6 +444,14 @@ def member_graphs(request, person_slug):
 ###########################################################################
 
 def person_info(request, person_slug):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
+
     person = Person.objects.get(slug=person_slug)
 
     projects = {}

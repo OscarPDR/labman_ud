@@ -193,11 +193,11 @@ ul.nav.nav-tabs {
 
 #member-tabs {
     min-height: 0;
-    margin-bottom: 1.5em;
 }
 
 #member-tabs > li {
-    margin: 0 1em;
+    margin-right: 1.5em;
+    margin-bottom: 1.5em;
     border: 1px solid #428bca;
     border-radius: 7px;
 }
