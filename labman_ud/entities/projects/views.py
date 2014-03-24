@@ -98,9 +98,36 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 # View: project_info
 ###########################################################################
 
-def project_info(request, slug):
+def project_info(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
 
-    project = get_object_or_404(Project, slug=slug)
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'logo': project.logo if project.logo else None,
+        'project': project,
+        'tags': tags,
+    }
+
+    if project.project_type.name == 'Internal Project':
+        return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
+    else:
+        return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: project_funding_details
+###########################################################################
+
+def project_funding_details(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     fundings = Funding.objects.filter(project_id=project.id)
 
@@ -115,8 +142,32 @@ def project_info(request, slug):
 
     funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
-    related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
-    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
+    funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'funding_amounts': funding_amounts,
+        'funding_program_logos': funding_program_logos,
+        'funding_programs': funding_programs,
+        'fundings': fundings,
+        'logo': project.logo if project.logo else None,
+        'project': project,
+        'tags': tags,
+    }
+
+    return render_to_response("projects/funding_details.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: project_assigned_persons
+###########################################################################
+
+def project_assigned_persons(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     principal_researchers = []
     project_managers = []
@@ -152,6 +203,9 @@ def project_info(request, slug):
         if start_date and not end_date:
             working_period = u'(since %s)' % (start_date)
 
+        if end_date and not start_date:
+            working_period = u'(until %s)' % (end_date)
+
         person_item = {
             'description': assigned_person.description,
             'full_name': person.full_name,
@@ -169,36 +223,66 @@ def project_info(request, slug):
         if role.slug == 'researcher':
             researchers.append(person_item)
 
-    consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
-
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    # tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
-
-    logo = project.logo if project.logo else None
-
-    funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
-
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'consortium_members': consortium_members,
-        'funding_amounts': funding_amounts,
-        'funding_programs': funding_programs,
-        'funding_program_logos': funding_program_logos,
-        'fundings': fundings,
-        'logo': logo,
+        'logo': project.logo if project.logo else None,
         'principal_researchers': principal_researchers,
         'project': project,
         'project_managers': project_managers,
-        'related_publications': related_publications,
         'researchers': researchers,
         'tags': tags,
     }
 
-    if project.project_type.name == 'Internal Project':
-        return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
-    else:
-        return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: project_consortium_members
+###########################################################################
+
+def project_consortium_members(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+
+    consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'consortium_members': consortium_members,
+        'logo': project.logo if project.logo else None,
+        'project': project,
+        'tags': tags,
+    }
+
+    return render_to_response("projects/consortium_members.html", return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: project_related_publications
+###########################################################################
+
+def project_related_publications(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
+
+    related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
+    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'logo': project.logo if project.logo else None,
+        'project': project,
+        'related_publications': related_publications,
+        'tags': tags,
+    }
+
+    return render_to_response("projects/related_publications.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################

@@ -120,6 +120,11 @@ h4 {
     text-align: justify;
 }
 
+.project-tag {
+    display: block;
+    margin: 0.25em 0;
+}
+
 #project-type {
     float: right
 }
@@ -188,6 +193,13 @@ ul.nav.nav-tabs {
 
 #member-tabs {
     min-height: 0;
+}
+
+#member-tabs > li {
+    margin-right: 1.5em;
+    margin-bottom: 1.5em;
+    border: 1px solid #428bca;
+    border-radius: 7px;
 }
 
 .tab-divider {
@@ -483,12 +495,20 @@ footer > a {
     width: 85%;
     box-shadow: 2px 2px 3px black;
     margin: 0.5em;
-    margin-bottom: 2em;
+    margin-bottom: 0.75em;
     -webkit-border-top-left-radius: 50px;
     -webkit-border-bottom-right-radius: 50px;
     border-top-left-radius: 50px;
     border-bottom-right-radius: 50px;
     border: 0.5em solid #eee;
+}
+
+#member-company {
+    margin-bottom: 0.75em;
+}
+
+.personal-website {
+    margin: 1em 0;
 }
 
 #member-tab-content > .tab-pane {
