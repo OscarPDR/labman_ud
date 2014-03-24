@@ -11,18 +11,32 @@ urlpatterns = patterns('',
 
     url(r'^info/(?P<person_slug>\S+)/$', 'entities.persons.views.person_info', name='person_info'),
 
+    # members belonging to the organization(s)
     url(r'^members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='members_by_organization'),
-    url(r'^members/(?P<member_slug>\S+)/projects/(?P<role_slug>\S+)/$', 'entities.persons.views.member_projects', name='member_projects'),
-    url(r'^members/(?P<member_slug>\S+)/projects/$', 'entities.persons.views.member_projects', name='member_projects'),
-    url(r'^members/(?P<member_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='member_publications'),
-    url(r'^members/(?P<member_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='member_publications'),
-    url(r'^members/(?P<member_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='member_profiles'),
-    url(r'^members/(?P<member_slug>\S+)/graphs/$', 'entities.persons.views.member_graphs', name='member_graphs'),
-    url(r'^members/(?P<member_slug>\S+)/$', 'entities.persons.views.member_info', name='member_info'),
+    url(r'^former_members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='former_members_by_organization'),
+    # list of projects by role
+    url(r'^members/(?P<person_slug>\S+)/projects/(?P<role_slug>\S+)/$', 'entities.persons.views.member_projects', name='member_projects'),
+    url(r'^former_members/(?P<person_slug>\S+)/projects/(?P<role_slug>\S+)/$', 'entities.persons.views.member_projects', name='former_member_projects'),
+    # list of projects
+    url(r'^members/(?P<person_slug>\S+)/projects/$', 'entities.persons.views.member_projects', name='member_projects'),
+    url(r'^former_members/(?P<person_slug>\S+)/projects/$', 'entities.persons.views.member_projects', name='former_member_projects'),
+    # list of publications by type
+    url(r'^members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='member_publications'),
+    url(r'^former_members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='former_member_publications'),
+    # list of publications
+    url(r'^members/(?P<person_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='member_publications'),
+    url(r'^former_members/(?P<person_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='former_member_publications'),
+    # list of social profiles
+    url(r'^members/(?P<person_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='member_profiles'),
+    url(r'^former_members/(?P<person_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='former_member_profiles'),
+    # list of applicable graphs
+    url(r'^members/(?P<person_slug>\S+)/graphs/$', 'entities.persons.views.member_graphs', name='member_graphs'),
+    url(r'^former_members/(?P<person_slug>\S+)/graphs/$', 'entities.persons.views.member_graphs', name='former_member_graphs'),
+    # member info
+    url(r'^members/(?P<person_slug>\S+)/$', 'entities.persons.views.member_info', name='member_info'),
+    url(r'^former_members/(?P<person_slug>\S+)/$', 'entities.persons.views.member_info', name='former_member_info'),
+    # list of members
     url(r'^members/$', 'entities.persons.views.members', name='members'),
-
-    url(r'^former_members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.former_members', name='former_members_by_organization'),
-    url(r'^former_members/(?P<former_member_slug>\S+)/$', 'entities.persons.views.former_member_info', name='former_member_info'),
     url(r'^former_members/$', 'entities.persons.views.former_members', name='former_members'),
 )
 
