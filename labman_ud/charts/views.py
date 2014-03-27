@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from itertools import combinations
+from collections import defaultdict
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
@@ -286,25 +288,29 @@ def publications_number_of_publications(request):
 def publications_coauthorship(request, max_position=None):
     G = nx.Graph()
 
-    pubs = Publication.objects.all()
-    for pub in pubs:
-        if max_position > 2:
-            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
-        else:
-            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
-        if author_ids:
-            _list = [author_id['author_id'] for author_id in author_ids]
-            for pos, author_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    author = Person.objects.get(id=author_id)
-                    author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author.id, author2.id)
-                    try:
-                        G[author.id][author2.id]['weight'] += 1
-                    except:
-                        G[author.id][author2.id]['weight'] = 1
-                    G.node[author.id]['name'] = author.full_name
-                    G.node[author2.id]['name'] = author2.full_name
+    if max_position and int(max_position) > 1:
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id","author_id","author_id__full_name")
+    else:
+        pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
+
+    people = Person.objects.all().values("is_active","id")
+    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+
+    for pub_author in pub_authors:
+        entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+        authors_per_publication[pub_author['publication_id']].append(entry)
+
+    for relations in authors_per_publication.values():
+        for (author_id1, name1), (author_id2, name2) in combinations(relations, 2):
+            G.add_edge(author_id1, author_id2)
+
+            try:
+                G[author_id1][author_id2]['weight'] += 1
+            except:
+                G[author_id1][author_id2]['weight'] = 1
+            
+            G.node[author_id1]['name'] = name1
+            G.node[author_id2]['name'] = name2
 
     G = nx_graph.analyze(G)
 
@@ -324,28 +330,35 @@ def publications_coauthorship(request, max_position=None):
 
 def publications_morelab_coauthorship(request, max_position=None):
     G = nx.Graph()
+    
+    if max_position and int(max_position) > 1:
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id","author_id","author_id__full_name")
+    else:
+        pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
 
-    pubs = Publication.objects.all()
-    for pub in pubs:
-        if max_position > 2:
-            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).exclude(position__gt=max_position).values('author_id')
-        else:
-            author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+    people = Person.objects.all().values("is_active","id")
+    active_by_id = {}
+    for person in people:
+        active_by_id[person['id']] = person['is_active']
+    
+    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
 
-        if author_ids:
-            _list = [author_id['author_id'] for author_id in author_ids]
-            for pos, author_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    author = Person.objects.get(id=author_id)
-                    author2 = Person.objects.get(id=_list[i])
-                    if author.is_active and author2.is_active:
-                        G.add_edge(author.id, author2.id)
-                        try:
-                            G[author.id][author2.id]['weight'] += 1
-                        except:
-                            G[author.id][author2.id]['weight'] = 1
-                        G.node[author.id]['name'] = author.full_name
-                        G.node[author2.id]['name'] = author2.full_name
+    for pub_author in pub_authors:
+        if active_by_id[pub_author['author_id']]:
+            entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+            authors_per_publication[pub_author['publication_id']].append(entry)
+
+    for relations in authors_per_publication.values():
+        for (author_id1, name1), (author_id2, name2) in combinations(relations, 2):
+            G.add_edge(author_id1, author_id2)
+
+            try:
+                G[author_id1][author_id2]['weight'] += 1
+            except:
+                G[author_id1][author_id2]['weight'] = 1
+            
+            G.node[author_id1]['name'] = name1
+            G.node[author_id2]['name'] = name2
 
     G = nx_graph.analyze(G)
 
@@ -443,33 +456,30 @@ def publications_egonetwork(request, author_slug):
 
     G = nx.Graph()
 
-    pubs = Publication.objects.all()
+    pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
+    
+    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
 
-    for pub in pubs:
-        author_ids = PublicationAuthor.objects.filter(publication_id=pub.id).values('author_id')
+    for pub_author in pub_authors:
+        entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+        authors_per_publication[pub_author['publication_id']].append(entry)
 
-        if author_ids:
-            _list = [author_id['author_id'] for author_id in author_ids]
+    for relations in authors_per_publication.values():
+        for (author_id1, name1), (author_id2, name2) in combinations(relations, 2):
+            G.add_edge(author_id1, author_id2)
 
-            for pos, author_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    author1 = Person.objects.get(id=author_id)
-                    author2 = Person.objects.get(id=_list[i])
-                    G.add_edge(author1.id, author2.id)
-
-                    try:
-                        G[author1.id][author2.id]['weight'] += 1
-
-                    except:
-                        G[author1.id][author2.id]['weight'] = 1
-                    G.node[author1.id]['name'] = author1.full_name
-                    G.node[author2.id]['name'] = author2.full_name
+            try:
+                G[author_id1][author_id2]['weight'] += 1
+            except:
+                G[author_id1][author_id2]['weight'] = 1
+            
+            G.node[author_id1]['name'] = name1
+            G.node[author_id2]['name'] = name2
 
     try:
         G = nx_graph.analyze(G)
         ego_g = nx.ego_graph(G, author.id)
         data = json_graph.node_link_data(ego_g)
-
     except:
         data = {}
 
