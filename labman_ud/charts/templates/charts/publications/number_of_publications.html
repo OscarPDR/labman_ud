@@ -30,29 +30,53 @@
 
         var jsonObj = []
 
-        maxvalue = 0;
-
         // Adapt data to NVD3.js format
         {% for item, values in publications.items %}
             var tempjson = {};
+            var currentValues = 0;
             tempjson['key'] = '{{ item }}';
             tempjson['values'] = [];
 
             {% for year, value in values.items %}
-                if ({{ value }} > maxvalue) {
-                    maxvalue = {{ value }};
-                }
-                tempjson['values'].push([{{ year }}, [{{ value }}]]);
+                tempjson['values'].push([{{ year }}, {{ value }}]);
+                currentValues = currentValues + {{ value }};
             {% endfor %}
-            jsonObj.push(tempjson);
+            if (currentValues > 0)
+                jsonObj.push(tempjson);
         {% endfor %}
+
+        // Total
+        var tempjson = {
+            'key' : 'Total',
+            'values' : []
+        };
+        var tempvalues = {
+            // year : value
+        };
+        $(jsonObj).each(function(pos, category_data) {
+            $(category_data.values).each(function(pos, year_data) {
+                if (tempvalues[year_data[0]] == undefined) {
+                    tempvalues[year_data[0]] = year_data[1];
+                } else {
+                    tempvalues[year_data[0]] = tempvalues[year_data[0]] + year_data[1];
+                }
+            });
+        });
+
+        var max_value = 0;
+        {% for year, _ in publications.items.0.1.items %}
+        tempjson.values.push([ {{ year }}, tempvalues[{{ year }}] ]);
+        if (max_value < tempvalues[ {{ year }} ])
+            max_value = tempvalues[ {{ year }} ];
+        {% endfor %}
+        jsonObj.push(tempjson);
 
         console.log(jsonObj);
 
         nv.addGraph(function() {
             // var chart = nv.models.multiBarChart();
 
-            var chart = nv.models.multiBarChart()
+            var chart = nv.models.lineChart()
                 .x(function(d) { return d[0] })
                 .y(function(d) { return d[1] })
                 .clipEdge(true);
@@ -63,28 +87,15 @@
                 return d3.time.format("%Y")(date)
             });
 
-            chart.yAxis.tickFormat(d3.format(".0d"));
-
-            // Max limit will be the maximum value + 0.5 rounded to 1 decimal
-            var maxlimit = maxvalue + 1;
-            chart.forceY([0, maxlimit]);
+            chart.yAxis.tickFormat(d3.format(".1"));
+            // If forced, it does not auto-scale.
+            //  chart.forceY([0, max_value + 1]);
 
             d3.select("#number_of_publications svg")
                     .datum(jsonObj)
                 .transition().duration(500).call(chart);
 
             nv.utils.windowResize(chart.update);
-
-            // chart.legend.dispatch.on("legendClick.updateExamples", function() {
-            //     setTimeout(function() {
-            //         for (var i = 0; i < chartlist.length; i++)
-            //             //alert(chartlist[i]);
-            //             chartlist[i].update();
-            //     }, 100);
-            // });
-
-            // chartlist.push(chart);
-
             return chart;
         });
 
