@@ -3,9 +3,40 @@
 
 
 {% block member_content %}
+    
+   {% if has_publications %}
+   <ul id="member-tabs" class="nav nav-pills centered">
+        <li>
+            <a href="{% url member_bibtex member.slug %}"> 
+                <i class="fa fa-files-o"></i>&emsp;Global BibTeX
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url tags_by_author member.slug %}">
+                <i class="fa fa-tags"></i>&emsp;Tag cloud
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url publications_by_author member.slug %}">
+                <i class="fa fa-bar-chart-o"></i>&emsp;Number of publications
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url publications_egonetwork member.slug %}">
+                <i class="fa fa-users"></i>&emsp;Egonetwork
+            </a>
+        </li>
+    </ul> 
+
+    </ul> 
+    {% endif %}
 
     <div class="tab-pane active">
         {% if has_publications %}
+
             {% for key, value in publications.items %}
                 {% if value %}
 
@@ -26,7 +57,7 @@
                             </thead>
 
                             <tbody>
-                                {% for publication, parent_publication in value %}
+                                {% for publication, parent_publication, coauthors, event in value %}
                                     <tr>
                                         <td>
                                             <a href="{% url publication_info publication.slug %}">
@@ -34,10 +65,14 @@
                                             </a>
                                             <br>
                                             &emsp;<small>
-                                                {% if publication.presented_at %}
-                                                    {{ publication.presented_at.short_name }}
+                                                {{ coauthors }}.
+                                                {% if event %}
+                                                    <b>{{ event.short_name }}.</b>
                                                 {% elif parent_publication %}
-                                                    {{ parent_publication.title }}
+                                                    <b>{{ parent_publication.title }}.</b>
+                                                {% endif %}
+                                                {% if parent_publication.impact_factor %}
+                                                    Impact Factor: {{ parent_publication.impact_factor|floatformat:3 }}
                                                 {% endif %}
                                             </small>
                                         </td>
