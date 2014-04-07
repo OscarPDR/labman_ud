@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
@@ -15,6 +15,7 @@ from entities.organizations.models import Organization
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
+from entities.publications.views import INDICATORS_TAG_SLUGS
 
 # Create your views here.
 
@@ -340,24 +341,74 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     member = Person.objects.get(slug=person_slug)
 
-    publications = {}
+    publications = OrderedDict()
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+    # Get those tags which are indicators (ISI, JCR...)
+    tags = Tag.objects.filter(slug__in=INDICATORS_TAG_SLUGS).values('id','slug')
+    tags_by_slug = {}
+    for tag in tags:
+        tags_by_slug[tag['slug']] = tag['id']
+
+    publication_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids, tag__slug__in=INDICATORS_TAG_SLUGS).values('tag_id','publication_id')
+    indicators_per_publication = defaultdict(list)
+    for publication_tag_id in publication_tag_ids:
+        indicators_per_publication[publication_tag_id['publication_id']].append(publication_tag_id['tag_id'])
+        
+
     has_publications = True if publication_ids else False
+
+    jcr_name = 'JCR article'
+    isi_name = 'ISI article'
+    SEPARATE_ISI = False
 
     if publication_type_slug:
         publication_types = [PublicationType.objects.get(slug=publication_type_slug)]
+        publication_query = Publication.objects.filter(id__in=publication_ids, publication_type__in=publication_types).order_by('-year') 
     else:
         publication_types = PublicationType.objects.all()
 
-    for publication_type in publication_types:
-        pub_type = publication_type.name.encode('utf-8')
-        publications[pub_type] = []
+        SPECIAL_ORDER = ['phd-thesis', jcr_name, isi_name, 'journal-article', 'conference'] # The rest afterwards
+        
+        for current_key in SPECIAL_ORDER:
+    
+            found = False
 
-        _publications = Publication.objects.filter(id__in=publication_ids, publication_type=publication_type).order_by('-year')
+            for publication_type in publication_types:
+                if publication_type.slug == current_key:
+                    publications[publication_type.name.encode('utf-8')] = []
+                    found = True
+                    break
 
-        for publication in _publications:
-            publications[pub_type].append(publication)
+            # Some keys do not really exist (such as JCR). Put it in that order anyway
+
+            if not found:
+                publications[current_key] = []
+
+        publication_query = Publication.objects.filter(id__in=publication_ids).order_by('-year') 
+
+    tag_names = {
+        'q1' : jcr_name,
+        'q2' : jcr_name,
+        'q3' : jcr_name,
+        'q4' : jcr_name,
+
+    }
+
+    if SEPARATE_ISI:
+        tag_names['isi'] = isi_name
+
+    for publication in publication_query:
+        for tag_slug in tag_names:
+            if tags_by_slug.get(tag_slug, -1) in indicators_per_publication[publication.id]:
+                pub_type = tag_names[tag_slug]
+                break
+        else:
+            pub_type = publication.publication_type.name.encode('utf-8')
+
+        if pub_type not in publications:
+            publications[pub_type] = []
+        publications[pub_type].append(publication)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
