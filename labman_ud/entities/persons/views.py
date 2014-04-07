@@ -256,6 +256,21 @@ def former_members(request, organization_slug=None):
 # View: member_info
 ###########################################################################
 
+def _retrieve_accounts(member):
+    accounts = []
+    account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
+
+    for account_profile in account_profiles:
+        network = Network.objects.get(id=account_profile.network_id)
+        account_item = {
+            'base_url': network.base_url,
+            'icon_url': network.icon,
+            'network_name': network.name,
+            'profile_id': account_profile.profile_id,
+        }
+        accounts.append(account_item)
+    return accounts
+   
 
 def member_info(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -271,6 +286,7 @@ def member_info(request, person_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'member': member,
+        'accounts' : _retrieve_accounts(member),
     }
 
     data_dict = __get_job_data(member)
@@ -318,6 +334,7 @@ def member_projects(request, person_slug, role_slug=None):
         'member': member,
         'has_projects': has_projects,
         'projects': projects,
+        'accounts' : _retrieve_accounts(member),
     }
 
     data_dict = __get_job_data(member)
@@ -365,6 +382,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         'member': member,
         'publications': publications,
         'has_publications': has_publications,
+        'accounts' : _retrieve_accounts(member),
     }
 
     data_dict = __get_job_data(member)
