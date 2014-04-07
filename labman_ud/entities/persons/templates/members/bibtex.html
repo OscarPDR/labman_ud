@@ -1,0 +1,21 @@
+{% extends "members/info.html" %}
+
+{% block member_content %}
+
+<div class="centered">
+    <h4><img src="{{ STATIC_PREFIX }}img/bibtex.png" width="150" /></h4>
+    <a href="{% url member_bibtex_download member.slug %}"><img src="{{ STATIC_PREFIX }}img/document_download.png" width="30"/> Download</a>
+</div>
+<br>
+<pre>{{ bibtex }}</p>
+
+{% endblock %}
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('active');
+        $('.member_publications').addClass('active');
+    </script>
+
+{% endblock %}
