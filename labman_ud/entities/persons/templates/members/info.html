@@ -130,11 +130,6 @@
                     </a>
                 </li>
 
-                <li class="member_graphs">
-                    <a href="{% url member_graphs member.slug %}">
-                        <i class="fa fa-bar-chart-o fa-large"></i>&emsp;Graphs
-                    </a>
-                </li>
             </ul> <!-- end #member-tabs -->
 
             <div id="member-tab-content" class="tab-content">
@@ -148,6 +143,33 @@
                         {% endif %}
                     </div>
                 {% endblock %}
+                
+                {% if number_of_publications > 0 %}
+                {# To be made more fine grained once we have more graphs #}
+                <br>
+                <div class="tab-pane active">
+                    <div class="text-center"><h3>Graphs</h3></div>
+
+                    <h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
+
+                    <div class="soften-limited"></div>
+
+                    <ul>
+                        <li>
+                            <a href="{% url publications_egonetwork member.slug %}">Egonetwork</a>
+                        </li>
+
+                        <li>
+                            <a href="{% url publications_by_author member.slug %}">Number of publications</a>
+                        </li>
+
+                        <li>
+                            <a href="{% url tags_by_author member.slug %}">Tag cloud</a>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+
             </div> <!-- end #about-tab-content -->
         </div>
     </div> <!-- end .row .tabbable -->
