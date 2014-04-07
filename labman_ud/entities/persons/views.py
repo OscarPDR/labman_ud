@@ -357,18 +357,31 @@ def member_publications(request, person_slug, publication_type_slug=None):
         
 
     has_publications = True if publication_ids else False
-
+    
+    # Manage ordering
     jcr_name = 'JCR article'
     isi_name = 'ISI article'
+
+    SPECIAL_ORDER = ['phd-thesis', jcr_name, isi_name, 'journal-article', 'conference'] # The rest afterwards in random order
+
+    tag_names = {
+        'q1' : jcr_name,
+        'q2' : jcr_name,
+        'q3' : jcr_name,
+        'q4' : jcr_name,
+
+    }
+
     SEPARATE_ISI = False
+    if SEPARATE_ISI:
+        tag_names['isi'] = isi_name
+
 
     if publication_type_slug:
         publication_types = [PublicationType.objects.get(slug=publication_type_slug)]
         publication_query = Publication.objects.filter(id__in=publication_ids, publication_type__in=publication_types).order_by('-year') 
     else:
         publication_types = PublicationType.objects.all()
-
-        SPECIAL_ORDER = ['phd-thesis', jcr_name, isi_name, 'journal-article', 'conference'] # The rest afterwards
         
         for current_key in SPECIAL_ORDER:
     
@@ -385,19 +398,14 @@ def member_publications(request, person_slug, publication_type_slug=None):
             if not found:
                 publications[current_key] = []
 
-        publication_query = Publication.objects.filter(id__in=publication_ids).order_by('-year') 
+        publication_query = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
-    tag_names = {
-        'q1' : jcr_name,
-        'q2' : jcr_name,
-        'q3' : jcr_name,
-        'q4' : jcr_name,
+    parent_publications = Publication.objects.filter(has_part__in=publication_query)
+    parent_publications_by_id = {}
+    for parent_publication in parent_publications:
+        parent_publications_by_id[parent_publication.id] = parent_publication
 
-    }
-
-    if SEPARATE_ISI:
-        tag_names['isi'] = isi_name
-
+    counting = 0
     for publication in publication_query:
         for tag_slug in tag_names:
             if tags_by_slug.get(tag_slug, -1) in indicators_per_publication[publication.id]:
@@ -406,9 +414,12 @@ def member_publications(request, person_slug, publication_type_slug=None):
         else:
             pub_type = publication.publication_type.name.encode('utf-8')
 
+        parent_publication = parent_publications_by_id.get(publication.part_of_id, None)
+
         if pub_type not in publications:
             publications[pub_type] = []
-        publications[pub_type].append(publication)
+
+        publications[pub_type].append((publication, parent_publication))
 
     # dictionary to be returned in render_to_response()
     return_dict = {
