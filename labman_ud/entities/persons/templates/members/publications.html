@@ -19,6 +19,8 @@
                                 <th>Title</th>
 
                                 <th>Year</th>
+
+                                <th><i class="fa fa-download"></i></th>
                             </thead>
 
                             <tbody>
@@ -32,6 +34,14 @@
 
                                         <td>
                                             {{ item.year }}
+                                        </td>
+    
+                                        <td>
+                                            {% if item.pdf %}
+                                                <a target="_blank" href="{{ MEDIA_PREFIX }}{{ item.pdf }}">
+                                                    <i class="fa fa-file-text fa-2x"></i>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
