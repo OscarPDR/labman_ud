@@ -5,33 +5,21 @@
 {% block member_content %}
     
    {% if has_publications %}
-   <ul id="member-tabs" class="nav nav-pills centered">
-        <li>
-            <a href="{% url member_bibtex member.slug %}"> 
-                <i class="fa fa-files-o"></i>&emsp;Global BibTeX
+        <div class="row">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url member_bibtex member.slug %}"> 
+                <i class="fa fa-files-o"></i>&emsp;BibTeX
             </a>
-        </li>
-
-        <li>
-            <a href="{% url tags_by_author member.slug %}">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url tags_by_author member.slug %}">
                 <i class="fa fa-tags"></i>&emsp;Tag cloud
             </a>
-        </li>
-
-        <li>
-            <a href="{% url publications_by_author member.slug %}">
-                <i class="fa fa-bar-chart-o"></i>&emsp;Number of publications
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url publications_by_author member.slug %}">
+                <i class="fa fa-bar-chart-o"></i>&emsp;Timeline
             </a>
-        </li>
-
-        <li>
-            <a href="{% url publications_egonetwork member.slug %}">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url publications_egonetwork member.slug %}">
                 <i class="fa fa-users"></i>&emsp;Egonetwork
             </a>
-        </li>
-    </ul> 
-
-    </ul> 
+        </div>
+        <br>
     {% endif %}
 
     <div class="tab-pane active">
