@@ -5,11 +5,11 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li>Publications</li>
+        <li><a href="{% url members %}">Members</a></li>
 
-        <li>Number of publications</li>
+        <li><a href="{% url member_info author.slug %}">{{ author.full_name }}</a></li>
 
-        <li class="active">{{ author.full_name }}</li>
+        <li class="active">Number of publications</li>
     </ul>
 
     <br>
@@ -117,7 +117,7 @@
     </script>
 
     <script>
-        $('#charts-nav').addClass('active');
+        $('#members-nav').addClass('active');
     </script>
 
 {% endblock %}
