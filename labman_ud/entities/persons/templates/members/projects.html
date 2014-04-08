@@ -66,8 +66,12 @@
 {% block people_scripts %}
 
     <script>
-        $('.member_biography').removeClass('active');
-        $('.member_projects').addClass('active');
+        $('.member_biography').removeClass('btn-primary');
+        $('.member_biography').addClass('btn-default');
+
+        $('.member_projects').removeClass('btn-default');
+        $('.member_projects').addClass('btn-primary');
+
     </script>
 
 {% endblock %}
