@@ -1,63 +1,5 @@
 
 <div class="row">
-    {% if publication.doi %}
-        <div class="col-md-6">
-            <h5>DOI:</h5>
-
-            <p>
-                {{ publication.doi }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
-</div>
-
-<!--
-    journal_abbreviation
-    impact_factor?
-    series
-    series_text
-    publisher
--->
-
-
-<div class="row">
-    {% if publication.volume %}
-        <div class="col-md-4">
-            <h5>Volume:</h5>
-
-            <p>
-                {{ publication.volume }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
-
-    {% if publication.issue %}
-        <div class="col-md-4">
-            <h5>Issue:</h5>
-
-            <p>
-                {{ publication.issue }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
-    
-    {% if publication.pages %}
-        <div class="col-md-4">
-            <h5>Pages:</h5>
-
-            <p>
-                {{ publication.pages }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
 </div>
 
 <br>
@@ -67,7 +9,7 @@
         <strong>Published in:</strong>&emsp;{{ parent_publication.title }}
         {% if parent_publication.impact_factor %}
             <br>
-            <strong>&emsp;Impact factor:</strong>&emsp;{{ parent_publication.impact_factor }} ({{ parent_publication.year }})
+            <strong>&emsp;Impact factor:</strong>&emsp;{{ parent_publication.impact_factor|floatformat:3 }} ({{ parent_publication.year }})
         {% endif %}
     </div>
 
@@ -108,6 +50,56 @@
                     <br>
                 </div>
             {% endif %}
+
+            {% if publication.issue %}
+                <div class="col-md-4">
+                    <h5>Issue:</h5>
+
+                    <p>
+                        {{ publication.issue }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+            
+            {% if publication.pages %}
+                <div class="col-md-4">
+                    <h5>Pages:</h5>
+
+                    <p>
+                        {{ publication.pages }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if publication.doi %}
+                <div class="col-md-4">
+                    <h5>DOI:</h5>
+
+                    <p>
+                        {{ publication.doi }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
         </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Citation</strong>
+    </div>
+
+    <div class="panel-body">
+        <p style="font-style: italic">
+            {% for author in authors %}
+                {{ author.full_name }}{% if not forloop.last %}, {% else %}.{% endif %}
+            {% endfor %}{% if parent_publication.year %} ({{ parent_publication.year }}){% endif %} In {{ parent_publication.title }}. {% if publication.pages %}(pp. {{ publication.pages }}).{% endif %}{% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
+        </p>
     </div>
 </div>

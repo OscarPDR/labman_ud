@@ -58,12 +58,6 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="#extended_info_tab" data-toggle="tab">
-                        <i class="fa fa-list fa-large"></i>&emsp;Extended info
-                    </a>
-                </li>
-
                 {% if related_projects or related_publications %}
                     <li>
                         <a href="#related_tab" data-toggle="tab">
@@ -164,9 +158,8 @@
                         {% endif %}
                     </p>
 
-                </div> <!-- end tab-pane #overview_tab -->
-
-                <div class="tab-pane" id="extended_info_tab">
+                    <br>
+                    <br>
 
                     {% if publication.publication_type.name == 'Conference paper' %}
                         {% include 'publications/templates/conference_paper.html' %}
@@ -188,7 +181,7 @@
                         {% include 'publications/templates/magazine_article.html' %}
                     {% endif %}
 
-                </div> <!-- end tab-pane #extended_info_tab -->
+                </div> <!-- end tab-pane #overview_tab -->
 
                 <div class="tab-pane" id="related_tab">
 
