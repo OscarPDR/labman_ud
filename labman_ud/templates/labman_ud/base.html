@@ -58,6 +58,13 @@
                     </div>
 
                     <ul class="nav nav-justified">
+                        <li id="news-nav">
+                            <a href="{% url news_index %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/news_mini.png" width="24"/>
+                                News
+                            </a>
+                        </li>
+
                         <li id="projects-nav">
                             <a href="{% url project_index %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
@@ -69,13 +76,6 @@
                             <a href="{% url publication_index %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/publication_micro.png"/>
                                 Publications
-                            </a>
-                        </li>
-
-                        <li id="about-nav">
-                            <a href="{% url about %}">
-                                <img src="{{ STATIC_PREFIX }}img/index/info_micro.png"/>
-                                About
                             </a>
                         </li>
 
@@ -92,6 +92,14 @@
                                 Charts
                             </a>
                         </li>
+
+                        <li id="about-nav">
+                            <a href="{% url about %}">
+                                <img src="{{ STATIC_PREFIX }}img/index/info_micro.png"/>
+                                About
+                            </a>
+                        </li>
+
 
                         <!-- <li id="semantic-search-nav">
                             <a href="{% url semantic_search %}">
