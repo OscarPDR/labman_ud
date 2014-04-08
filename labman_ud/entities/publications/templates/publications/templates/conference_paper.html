@@ -1,31 +1,3 @@
-
-{% if publication.presented_at %}
-    <h5>Presented at:</h5>
-
-    <p>
-        {{ publication.presented_at.short_name }} ({{ publication.presented_at.year }})
-    </p>
-
-    <br>
-{% endif %}
-
-
-<div class="row">    
-    {% if publication.pages %}
-        <div class="col-md-6">
-            <h5>Pages:</h5>
-
-            <p>
-                {{ publication.pages }}
-            </p>
-
-            <br>
-        </div>
-    {% endif %}
-</div>
-
-<br>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <strong>Proceedings:</strong>&emsp;{{ parent_publication.title }}
@@ -33,6 +5,18 @@
 
     <div class="panel-body">
         <div class="row">
+            {% if publication.presented_at and publication.presented_at.short_name != parent_publication.title %}
+                <div class="col-md-12">
+                    <h5>Presented at:</h5>
+
+                    <p>
+                        {{ publication.presented_at.short_name }} ({{ publication.presented_at.year }})
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
             {% if parent_publication.isbn %}
                 <div class="col-md-4">
                     <h5>ISBN:</h5>
@@ -68,6 +52,45 @@
                     <br>
                 </div>
             {% endif %}
+
+            {% if publication.pages %}
+                <div class="col-md-4">
+                    <h5>Pages:</h5>
+
+                    <p>
+                        {{ publication.pages }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if publication.doi %}
+                <div class="col-md-4">
+                    <h5>DOI:</h5>
+
+                    <p>
+                        {{ publication.doi }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
         </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Citation</strong>
+    </div>
+
+    <div class="panel-body">
+        <p style="font-style: italic">
+            {% for author in authors %}
+                {{ author.full_name }}{% if not forloop.last %}, {% else %}.{% endif %}
+            {% endfor %}{% if parent_publication.year %} ({{ parent_publication.year }}){% endif %} In {{ parent_publication.title }}. {% if publication.pages %}(pp. {{ publication.pages }}).{% endif %}{% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
+        </p>
     </div>
 </div>
