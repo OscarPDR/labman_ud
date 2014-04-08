@@ -364,7 +364,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
     jcr_name = 'JCR article'
     isi_name = 'ISI article'
 
-    SPECIAL_ORDER = ['phd-thesis', jcr_name, isi_name, 'journal-article', 'conference'] # The rest afterwards in random order
+    SPECIAL_ORDER = [jcr_name, isi_name, 'journal-article', 'conference-paper', 'book-section', 'phd-thesis'] # The rest afterwards in random order
 
     tag_names = {
         'q1' : jcr_name,
@@ -679,6 +679,30 @@ def __get_global_bibtex(member):
     return global_bibtex
 
 ####################################################################################################
+# __group_by_key
+####################################################################################################
+
+def __group_by_key(stmt, key = 'id'):
+    """ Given a QuerySet, provide a dictionary grouped by a key. Typically:
+
+    __group_by_key( Foo.objects.all() )
+
+    returns a dictionary where the key is the 'id' field:
+
+    { 1 : FooObject(id=1), 2 : FooObject(id=2) , ... }
+
+    TODO: there is probably something similar in the Django API
+    """
+    results_by_key = {}
+    for result in stmt:
+        if isinstance(result, dict):
+            results_by_key[result[key]] = result
+        else:
+            results_by_key[getattr(result, key)] = result
+    return results_by_key
+
+
+####################################################################################################
 # __get_job_data
 ####################################################################################################
 
@@ -702,7 +726,7 @@ def __get_job_data(member):
 
     pr_role = Role.objects.get(slug='principal-researcher')
     project_ids = AssignedPerson.objects.filter(person_id=member.id).exclude(role_id=pr_role.id).values('project_id')
-    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+    publication_ids = PublicationAuthor.objects.filter(author=member.id).values_list('publication_id', flat = True)
 
     accounts = []
     account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
@@ -717,6 +741,20 @@ def __get_job_data(member):
         }
         accounts.append(account_item)
 
+    publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
+    publications_by_id = __group_by_key(Publication.objects.filter(id__in=publication_ids))
+    publication_types_by_name = defaultdict(int)
+
+    for publication_id in publication_ids:
+        publication_object = publications_by_id[publication_id]
+        publication_type_id = publication_object.publication_type_id
+        publication_type_name = publication_types_by_id[publication_type_id]['name'].encode('utf-8')
+        publication_type_slug = publication_types_by_id[publication_type_id]['slug']
+        publication_types_by_name[publication_type_name, publication_type_slug] += 1
+
+    pubtype_info = []
+    for (pubtype_name, pubtype_slug), number in publication_types_by_name.items():
+        pubtype_info.append( (pubtype_slug, pubtype_name, number) )
 
     return {
         'first_job': first_job,
@@ -726,4 +764,5 @@ def __get_job_data(member):
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'accounts' : accounts,
+        'pubtype_info' : pubtype_info,
     }
