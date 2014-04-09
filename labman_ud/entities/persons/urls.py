@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/publications/bibtex/download$', 'entities.persons.views.member_publication_bibtex_download', name='member_bibtex_download'),
     # RSS
     url(r'^members/(?P<person_slug>\S+)/feeds/news/$', LatestUserNewsFeed(), name = 'member_feeds_news'),
-    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', LatestUserPublicationFeed(), name = 'member_feeds_publicatins'),
+    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', LatestUserPublicationFeed(), name = 'member_feeds_publications'),
     url(r'^members/(?P<person_slug>\S+)/news/$', 'entities.persons.views.member_news', name = 'member_news'),
     # list of publications by type
     url(r'^members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='member_publications'),
