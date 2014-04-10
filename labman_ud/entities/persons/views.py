@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import threading
 import weakref
 
 from django.shortcuts import get_object_or_404
@@ -535,8 +536,12 @@ def member_news(request, person_slug):
 ###########################################################################
 
 class LatestUserNewsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestUserNewsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
     def get_object(self, request, person_slug):
-        self.__request = weakref.proxy(request)
+        self.__request.request = weakref.proxy(request)
         return get_object_or_404(Person, slug=person_slug)
 
     def title(self, obj):
@@ -544,7 +549,7 @@ class LatestUserNewsFeed(Feed):
 
     def link(self, obj):
         url = reverse('member_news', kwargs={ 'person_slug' : obj.slug })
-        return self.__request.build_absolute_uri(url)
+        return self.__request.request.build_absolute_uri(url)
 
     def description(self, obj):
         return "News about %s" % obj.full_name
@@ -560,16 +565,19 @@ class LatestUserNewsFeed(Feed):
 
     def item_link(self, item):
         url = reverse('view_news', args=[item.news.slug])
-        return self.__request.build_absolute_uri(url)
+        return self.__request.request.build_absolute_uri(url)
 
 ###########################################################################
 # Feed: member publications feed
 ###########################################################################
 
 class LatestUserPublicationFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestUserPublicationFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
 
     def get_object(self, request, person_slug):
-        self.__request = weakref.proxy(request)
+        self.__request.request = weakref.proxy(request)
         return get_object_or_404(Person, slug=person_slug)
 
     def title(self, obj):
@@ -577,7 +585,7 @@ class LatestUserPublicationFeed(Feed):
 
     def link(self, obj):
         url = reverse('member_publications', kwargs={ 'person_slug' : obj.slug })
-        return self.__request.build_absolute_uri(url)
+        return self.__request.request.build_absolute_uri(url)
 
     def description(self, obj):
         return "Publications where %s is coauthor" % obj.full_name
@@ -593,7 +601,7 @@ class LatestUserPublicationFeed(Feed):
 
     def item_link(self, item):
         url = reverse('publication_info', args=[item.publication.slug])
-        return self.__request.build_absolute_uri(url)
+        return self.__request.request.build_absolute_uri(url)
 
 ###########################################################################
 # View: member_profiles
