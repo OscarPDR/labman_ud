@@ -1,10 +1,14 @@
 # coding: utf-8
 
+import threading
+import weakref
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.contrib.syndication.views import Feed
 
 from .forms import PublicationSearchForm
 from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
@@ -175,3 +179,37 @@ def publication_tag_cloud(request):
     }
 
     return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# Feed: publications feeds
+###########################################################################
+
+class LatestPublicationsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestPublicationsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    title       = "MORElab publications"
+    description = "MORElab publications"
+
+    def get_object(self, request): 
+        self.__request.request = weakref.proxy(request)
+        return super(LatestPublicationsFeed, self).get_object(request)
+
+    def link(self, obj):
+        url = reverse('publication_index')
+        return self.__request.request.build_absolute_uri(url)
+
+    def items(self):
+        return Publication.objects.order_by('-log_created')[:30]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.abstract
+
+    def item_link(self, item):
+        url = reverse('publication_info', args=[item.slug or 'no-slug-found'])
+        return self.__request.request.build_absolute_uri(url)
+

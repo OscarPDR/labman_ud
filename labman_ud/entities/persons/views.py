@@ -591,7 +591,7 @@ class LatestUserPublicationFeed(Feed):
         return "Publications where %s is coauthor" % obj.full_name
 
     def items(self, obj):
-        return PublicationAuthor.objects.filter(author=obj).select_related('publication').order_by('-publication__year')[:30]
+        return PublicationAuthor.objects.filter(author=obj).select_related('publication').order_by('-publication__log_created')[:30]
 
     def item_title(self, item):
         return item.publication.title

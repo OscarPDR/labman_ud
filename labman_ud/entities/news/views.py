@@ -77,7 +77,7 @@ def view_news(request, news_slug):
     return render_to_response('news/info.html', return_dict, context_instance=RequestContext(request))
 
 ###########################################################################
-# Feed: member news feeds
+# Feed: news feeds
 ###########################################################################
 
 class LatestNewsFeed(Feed):

@@ -3,8 +3,12 @@
 from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from entities.projects.views import LatestProjectsFeed
+
 urlpatterns = patterns('',
     url(r'^$', 'entities.projects.views.project_index', name='project_index'),
+
+    url(r'^feed/$', LatestProjectsFeed(), name='project_feed'),
 
     url(r'^info/(?P<project_slug>\S+)/funding_details/$', 'entities.projects.views.project_funding_details', name='project_funding_details'),
     url(r'^info/(?P<project_slug>\S+)/assigned_persons/$', 'entities.projects.views.project_assigned_persons', name='project_assigned_persons'),
