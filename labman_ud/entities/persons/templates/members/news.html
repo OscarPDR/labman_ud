@@ -1,0 +1,44 @@
+{% extends "members/info.html" %}
+
+
+
+{% block member_content %}
+    
+    <blockquote>
+        <p><a href="{% url member_feeds_news member.slug %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
+    </blockquote>
+    
+    {% if news %}
+        {% for key, value in news.items %}
+            <blockquote>
+                <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+
+                <dl class="dl-horizontal">
+                    {% for item in value %}
+                        <dt class="day-number">{{ item.created|date:"d" }}</dt>
+                        <dd class="news-title"><a href="{% url view_news item.slug %}">{{ item.title }}</a></dd>
+                    {% endfor %}
+                </dl>
+            </blockquote>
+        {% endfor %}
+    {% else %}
+        <p>
+            {{ member.full_name }} does not have any News item yet.
+        </p>
+    {% endif %}
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('btn-primary');
+        $('.member_biography').addClass('btn-default');
+
+        $('.member_news').removeClass('btn-default');
+        $('.member_news').addClass('btn-primary');
+    </script>
+
+{% endblock %}
