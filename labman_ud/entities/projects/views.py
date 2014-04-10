@@ -1,10 +1,13 @@
-# coding: utf-8
+# coding: utf-
+import threading
+import weakref
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.contrib.syndication.views import Feed
 
 from .forms import ProjectSearchForm
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
@@ -310,3 +313,37 @@ def project_tag_cloud(request):
     }
 
     return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# Feed: projects feeds
+###########################################################################
+
+class LatestProjectsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestProjectsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    title       = "MORElab projects"
+    description = "MORElab projects"
+
+    def get_object(self, request): 
+        self.__request.request = weakref.proxy(request)
+        return super(LatestProjectsFeed, self).get_object(request)
+
+    def link(self, obj):
+        url = reverse('project_index')
+        return self.__request.request.build_absolute_uri(url)
+
+    def items(self):
+        return Project.objects.order_by('-log_created')[:30]
+
+    def item_title(self, item):
+        return item.full_name
+
+    def item_description(self, item):
+        return item.description
+
+    def item_link(self, item):
+        url = reverse('project_info', args=[item.slug or 'no-slug-found'])
+        return self.__request.request.build_absolute_uri(url)
+
