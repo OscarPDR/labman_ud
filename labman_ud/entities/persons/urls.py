@@ -3,6 +3,7 @@
 from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from labman_ud.util import FeedWrapper
 from entities.persons.views import LatestUserPublicationFeed, LatestUserNewsFeed
 
 urlpatterns = patterns('',
@@ -26,8 +27,8 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/publications/bibtex/$', 'entities.persons.views.member_publication_bibtex', name='member_bibtex'),
     url(r'^members/(?P<person_slug>\S+)/publications/bibtex/download$', 'entities.persons.views.member_publication_bibtex_download', name='member_bibtex_download'),
     # RSS
-    url(r'^members/(?P<person_slug>\S+)/feeds/news/$', LatestUserNewsFeed(), name = 'member_feeds_news'),
-    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', LatestUserPublicationFeed(), name = 'member_feeds_publications'),
+    url(r'^members/(?P<person_slug>\S+)/feeds/news/$', FeedWrapper(LatestUserNewsFeed()), name = 'member_feeds_news'),
+    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', FeedWrapper(LatestUserPublicationFeed()), name = 'member_feeds_publications'),
     url(r'^members/(?P<person_slug>\S+)/news/$', 'entities.persons.views.member_news', name = 'member_news'),
     # list of publications by type
     url(r'^members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='member_publications'),
