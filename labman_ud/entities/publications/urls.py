@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^tag/(?P<tag_slug>\S+)/$', 'entities.publications.views.publication_index', name='view_publication_tag'),
     url(r'^publication_type/(?P<publication_type_slug>\S+)/$', 'entities.publications.views.publication_index', name='view_publication_type'),
 
-    url(r'^query/(?P<query_string>\D+)/$', 'entities.publications.views.publication_index', name='view_publication_query'),
+    url(r'^query/(?P<query_string>.+)/$', 'entities.publications.views.publication_index', name='view_publication_query'),
 
     url(r'^tag_cloud/$', 'entities.publications.views.publication_tag_cloud', name='publication_tag_cloud'),
 )
