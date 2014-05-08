@@ -6,7 +6,7 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from charts.utils import nx_graph
@@ -158,7 +158,7 @@ def funding_incomes_by_project_index(request):
 #########################
 
 def funding_incomes_by_project(request, project_slug):
-    project = Project.objects.get(slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
 
     funding_ids = Funding.objects.filter(project_id=project.id).values('id')
 
@@ -452,7 +452,7 @@ def projects_morelab_collaborations(request):
 ###########################################################################
 
 def publications_egonetwork(request, author_slug):
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     G = nx.Graph()
 
@@ -501,7 +501,7 @@ def publications_by_author(request, author_slug):
     publications = {}
     publication_types = PublicationType.objects.all()
 
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids)
@@ -551,7 +551,7 @@ def publications_by_author(request, author_slug):
 def tags_by_author(request, author_slug):
     tag_dict = {}
 
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
     tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
