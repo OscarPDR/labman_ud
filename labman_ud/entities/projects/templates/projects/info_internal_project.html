@@ -55,8 +55,8 @@
                 </li>
 
                 {% if related_publications %}
-                    <li>
-                        <a href="#pr_publications" data-toggle="tab">
+                    <li class="project_related_publications">
+                        <a href="{% url project_related_publications project.slug %}">
                             <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
                         </a>
                     </li>
