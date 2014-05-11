@@ -236,7 +236,10 @@ def project_assigned_persons(request, project_slug):
         'tags': tags,
     }
 
-    return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
+    if project.project_type.name == 'Internal Project':
+        return render_to_response("projects/assigned_persons_internal_projects.html", return_dict, context_instance=RequestContext(request))
+    else:
+        return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
