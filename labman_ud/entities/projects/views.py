@@ -216,10 +216,7 @@ def project_assigned_persons(request, project_slug):
         'researchers': researchers,
     })
 
-    if project.project_type.name == 'Internal Project':
-        return render_to_response("projects/assigned_persons_internal_projects.html", return_dict, context_instance=RequestContext(request))
-    else:
-        return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -297,8 +294,11 @@ def __build_project_information(project):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
+    internal_project = project.project_type.name == 'Internal Project'
+
     # dictionary to be returned in render_to_response()
     return {
+        'is_internal' : internal_project,
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,
