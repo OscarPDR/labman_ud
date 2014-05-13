@@ -134,6 +134,18 @@ class Person(BaseModel):
     def __unicode__(self):
         return u'%s' % (self.full_name)
 
+    def email_user(self):
+        if not self.email or '@' not in self.email:
+            return self.email
+        else:
+            return self.email.split('@')[0]
+
+    def email_domain(self):
+        if not self.email or '@' not in self.email:
+            return self.email
+        else:
+            return self.email.split('@')[1]
+
     def save(self, *args, **kwargs):
         full_name = self.first_name + ' ' + self.first_surname
 
