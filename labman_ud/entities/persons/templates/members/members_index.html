@@ -155,7 +155,13 @@
 
     <script>
         $('#search_box').focus();
-        $('#search_box').keyup( function() {
+        $('#search_box').keyup( function(e) {
+            // If up or down arrows are pressed, don't disturb the konami fun :-)
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                console.log("gotcha");
+                $("#search_box").focusout();
+                $("#search_box").blur();
+            }
             var current_value = $(this).val().toLowerCase();
             if (current_value == "") {
                 $(".member").show();
