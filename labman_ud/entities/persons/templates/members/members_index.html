@@ -95,6 +95,9 @@
             <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">
                 <i class="fa fa-step-backward"></i>&emsp;Former members
             </a>
+            <div class="col-md-3 pull-right">
+                <input name="text" maxlength="50" placeholder="Member name" type="text" class="form-control" id="search_box" />
+            </div>
         </div>
     </div>
 
@@ -150,19 +153,45 @@
         $('#members-nav').addClass('active');
     </script>
 
+    <script>
+        $('#search_box').focus();
+        $('#search_box').keyup( function() {
+            var current_value = $(this).val().toLowerCase();
+            if (current_value == "") {
+                $(".member").show();
+            } else {
+                $(".member").each(function(pos, element) {
+                    var $member = $(element).find("span");
+                    var link = $member.find("a").attr("href");
+                    if (link != undefined) {
+                        link = link.split("people/")[1];
+                    } else {
+                        link = "";
+                    }
+                    var full_name = $.trim($member.text());
+                    if (link.toLowerCase().indexOf(current_value) >= 0 || full_name.toLowerCase().indexOf(current_value) >= 0) {
+                        $(element).show();
+                    } else {
+                        $(element).hide();
+                    }
+                });
+            }
+        });
+    </script>
+
     <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
 
     <script type="text/javascript">
         var success = function() {
             var images = $("img.circular").map(function () { return this; });
 
-            {% for member_konami_profile_picture in member_konami_profile_pictures %}
-                $.each(images, function(i) {
-                    if (i == {{ forloop.counter0 }}) {
-                        if ("{{ member_konami_profile_picture|safe }}" != "") {
-                            images[i].src = "{{ MEDIA_PREFIX }}/{{ member_konami_profile_picture|safe }}";
-                        }
 
+                $.each(images, function(i) {
+                    {% for member_konami_profile_picture in member_konami_profile_pictures %}
+                    if (i == {{ forloop.counter0 }}) {
+                        {% if member_konami_profile_picture|safe %}
+                        images[i].src = "{{ MEDIA_PREFIX }}/{{ member_konami_profile_picture|safe }}";
+                        {% else %}
                         if (images[i].src.indexOf("/img/female.png") >= 0) {
                             images[i].src = "{{ STATIC_PREFIX }}img/lovelace.png";
                         }
@@ -170,9 +199,11 @@
                         if (images[i].src.indexOf("/img/male.png") >= 0) {
                             images[i].src = "{{ STATIC_PREFIX }}img/einstein.png";
                         }
+                        {% endif %}
                     };
+                    {% endfor %}
                 });
-            {% endfor %}
+
 
             var positions = $(".member-position").map(function () { return this; });
 
