@@ -289,7 +289,6 @@ def project_tag_cloud(request):
 def __build_project_information(project):
     tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
     tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
