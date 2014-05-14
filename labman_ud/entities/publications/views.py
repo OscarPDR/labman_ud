@@ -99,9 +99,26 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 ###########################################################################
 
 def publication_info(request, slug):
-
     publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = 'info'
+    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
 
+def publication_related_projects(request, slug):
+    publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = 'projects'
+    return render_to_response('publications/related_projects.html', return_dict, context_instance=RequestContext(request))
+
+
+def publication_related_publications(request, slug):
+    publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = 'publications'
+    return render_to_response('publications/related_publications.html', return_dict, context_instance=RequestContext(request))
+
+
+def __build_publication_return_dict(publication):
     author_ids = PublicationAuthor.objects.filter(publication=publication.id).values('author_id').order_by('position')
     authors = []
 
@@ -140,7 +157,7 @@ def publication_info(request, slug):
     bibtex = publication.bibtex.replace(",", ",\n")
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
+    return {
         'authors': authors,
         'bibtex': bibtex,
         'indicators_list': indicators_list,
@@ -151,8 +168,6 @@ def publication_info(request, slug):
         'related_publications': related_publications,
         'tag_list': tag_list,
     }
-
-    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################

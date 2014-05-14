@@ -52,20 +52,6 @@
             {% endif %}
 
             <ul id="publication-tabs" class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#overview_tab" data-toggle="tab">
-                        <i class="fa fa-info fa-large"></i>&emsp;Overview
-                    </a>
-                </li>
-
-                {% if related_projects or related_publications %}
-                    <li>
-                        <a href="#related_tab" data-toggle="tab">
-                            <i class="fa fa-resize-horizontal"></i> Related
-                        </a>
-                    </li>
-                {% endif %}
-
                 {% if indicators_list %}
                     <br>
 
@@ -122,11 +108,30 @@
         </div>
 
         <div class="col-md-9">
+            
+            {% if related_publications or related_projects %}
+            <div class="centered">
+                <a href="{% url publication_info publication.slug %}" class="btn {% if current_tab == 'info' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-info fa-large"></i>&emsp;Overview
+                </a>
+                {% if related_publications %}
+                <a href="{% url publication_related_publications publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-file-text-o fa-large"></i>&emsp;Related publications
+                    <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publications{{ related_publications|pluralize }}
+                </a>
+                {% endif %}
+                {% if related_projects %}
+                <a href="{% url publication_related_projects publication.slug %}" class="btn {% if current_tab == 'projects' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-gears fa-large"></i>&emsp;{{ related_projects|length }} Related project{{ related_projects|pluralize }}
+                </a>
+                {% endif %}
+            </div>
+            <br>
+            {% endif %}
 
             <div id="publication-tab-content" class="tab-content publication-template">
-
-                <div class="tab-pane active" id="overview_tab">
-
+                <div class="tab-pane active">
+                {% block publication_contents %}
                     <h5>Authors:</h5>
 
                     {% for author in authors %}
@@ -180,79 +185,8 @@
                     {% if publication.publication_type.name == 'Magazine article' %}
                         {% include 'publications/templates/magazine_article.html' %}
                     {% endif %}
-
-                </div> <!-- end tab-pane #overview_tab -->
-
-                <div class="tab-pane" id="related_tab">
-
-                    {% if related_projects %}
-
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                {{ related_projects|length }} related project{{ related_projects|pluralize }}
-                            </div>
-
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <th>Title</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                </thead>
-
-                                <tbody>
-                                    {% for project in related_projects %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url project_info project.slug %}">
-                                                    <i class="fa fa-chevron-right"></i> {{ project.full_name }}
-                                                </a>
-                                            </td>
-
-                                            <td>{{ project.start_year }}</td>
-                                            <td>{{ project.end_year }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <br>
-
-                    {% endif %}
-
-                    {% if related_publications %}
-
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                {{ related_publications|length }} related publication{{ related_publications|pluralize }}
-                            </div>
-
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <th>Title</th>
-                                    <th>Year</th>
-                                </thead>
-
-                                <tbody>
-                                    {% for publication in related_publications %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url publication_info publication.slug %}">
-                                                    <i class="fa fa-chevron-right"></i> {{ publication.title }}
-                                                </a>
-                                            </td>
-
-                                            <td>{{ publication.year }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                    {% endif %}
-
-                </div> <!-- end tab-pane #related_tab -->
-
+                {% endblock %}
+                </div>
             </div>
 
         </div>
