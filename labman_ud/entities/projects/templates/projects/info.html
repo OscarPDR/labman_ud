@@ -85,9 +85,8 @@
                 <h6>Tags</h6>
 
                 {% for tag in tags %}
-                    <a class="project-tag" href="{% url view_project_tag tag.slug %}">
+                    <a href="{% url view_project_tag tag.slug %}">
                         <span class="label label-info">{{ tag.name }}</span>
-                        <br>
                     </a>
                 {% endfor %}
             </div>
