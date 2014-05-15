@@ -5,10 +5,10 @@
 {% block content %}
 
     <h2>
-        <a href="{% url person_index %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        <a href="{% url 'person_index' %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
         {{ person.full_name }}
         {% if person.external %}
-            <a href="{% url organization_info person.organization.slug%}">
+            <a href="{% url 'organization_info' person.organization.slug%}">
                 ({{ person.organization.full_name }})
             </a>
         {% endif %}
@@ -40,7 +40,7 @@
                             {% for item in value %}
                                 <tr>
                                     <td class="col-md-10">
-                                        <a href="{% url project_info item.slug %}">
+                                        <a href="{% url 'project_info' item.slug %}">
                                             &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.full_name }}
                                         </a>
                                     </td>
@@ -84,7 +84,7 @@
                             {% for item in value %}
                                 <tr>
                                     <td class="col-md-11">
-                                        <a href="{% url publication_info item.slug %}">
+                                        <a href="{% url 'publication_info' item.slug %}">
                                             &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
                                         </a>
                                     </td>

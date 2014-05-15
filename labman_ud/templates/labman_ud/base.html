@@ -49,7 +49,7 @@
                 <div class="masthead">
 
                     <div>
-                        <a href="{% url home %}">
+                        <a href="{% url 'home' %}">
                             <h1 id="principal-h1">
                                 <img src="{{ STATIC_PREFIX }}img/morelab.png" width="100"/>
                                 DeustoTech INTERNET + TELECOM units
@@ -59,42 +59,42 @@
 
                     <ul class="nav nav-justified">
                         <li id="news-nav">
-                            <a href="{% url news_index %}">
+                            <a href="{% url 'news_index' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/news_mini.png" width="24"/>
                                 News
                             </a>
                         </li>
 
                         <li id="projects-nav">
-                            <a href="{% url project_index %}">
+                            <a href="{% url 'project_index' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/project_micro.png"/>
                                 Projects
                             </a>
                         </li>
 
                         <li id="publications-nav">
-                            <a href="{% url publication_index %}">
+                            <a href="{% url 'publication_index' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/publication_micro.png"/>
                                 Publications
                             </a>
                         </li>
 
                         <li id="members-nav">
-                            <a href="{% url members %}">
+                            <a href="{% url 'members' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/person_micro.png"/>
                                 Members
                             </a>
                         </li>
 
                         <li id="charts-nav">
-                            <a href="{% url chart_index %}">
+                            <a href="{% url 'chart_index' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/chart_micro.png"/>
                                 Charts
                             </a>
                         </li>
 
                         <li id="about-nav">
-                            <a href="{% url about %}">
+                            <a href="{% url 'about' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/info_micro.png"/>
                                 About
                             </a>
@@ -102,7 +102,7 @@
 
 
                         <!-- <li id="semantic-search-nav">
-                            <a href="{% url semantic_search %}">
+                            <a href="{% url 'semantic_search' %}">
                                 <img src="{{ STATIC_PREFIX }}img/index/search_micro.png"/>
                                 Semantic search
                             </a>
@@ -122,7 +122,7 @@
                                 </strong>
                             </span>
                             &emsp;
-                            <a class="btn btn-danger btn-xs" href="{% url logout_view %}">Logout</a>
+                            <a class="btn btn-danger btn-xs" href="{% url 'logout_view' %}">Logout</a>
                         </div>
                     {% endif %}
 

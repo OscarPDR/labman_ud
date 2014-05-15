@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-9">
             <h2>
-                <a href="{% url organization_index %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+                <a href="{% url 'organization_index' %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
                 {{ organization.full_name}}
             </h2>
         </div>
@@ -51,7 +51,7 @@
                         {% for project in projects_leaded %}
                             <tr>
                                 <td class="col-md-8">
-                                    <a href="{% url project_info project.slug %}">
+                                    <a href="{% url 'project_info' project.slug %}">
                                         &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ project.full_name }}
                                     </a>
                                 </td>
@@ -91,7 +91,7 @@
                         {% for project in projects %}
                             <tr>
                                 <td class="col-md-8">
-                                    <a href="{% url project_info project.slug %}">
+                                    <a href="{% url 'project_info' project.slug %}">
                                         &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ project.full_name }}
                                     </a>
                                 </td>

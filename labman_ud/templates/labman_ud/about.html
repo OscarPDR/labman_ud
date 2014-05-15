@@ -9,34 +9,22 @@
         <div class="col-md-3">
             <ul id="about-tabs" class="nav nav-pills nav-stacked">
                 <li class="about active">
-                    <a href="{% url about %}">
+                    <a href="{% url 'about' %}">
                         <i class="fa fa-info fa-large"></i>&emsp;MORElab
                     </a>
                 </li>
 
-                <!-- <li>
-                    <a href="#contributions-tab-pane" data-toggle="tab">
-                        <i class="fa fa-cloud-upload fa-large"></i>&emsp;Contributions
-                    </a>
-                </li> -->
-
                 <li class="about_collaborations">
-                    <a href="{% url about_collaborations %}">
+                    <a href="{% url 'about_collaborations' %}">
                         <i class="fa fa-comments fa-large"></i>&emsp;Collaborations
                     </a>
                 </li>
 
                 <li class="about_prototyping">
-                    <a href="{% url about_prototyping %}">
+                    <a href="{% url 'about_prototyping' %}">
                         <i class="fa fa-cogs fa-large"></i>&emsp;Rapid prototyping services
                     </a>
                 </li>
-
-                <!-- <li>
-                    <a href="#working-at-morelab-tab-pane" data-toggle="tab">
-                        <i class="fa fa-laptop fa-large"></i>&emsp;Working at MORElab
-                    </a>
-                </li> -->
             </ul> <!-- end #about-tabs -->
         </div> <!-- end .col-md-3 about section sidebar -->
 

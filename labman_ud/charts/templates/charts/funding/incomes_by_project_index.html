@@ -5,9 +5,9 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url chart_index %}">Charts</a></li>
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
 
-        <li><a href="{% url project_index %}">Projects</a></li>
+        <li><a href="{% url 'project_index' %}">Projects</a></li>
 
         <li class="active">Total incomes by project</li>
     </ul>
@@ -23,7 +23,7 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <a href="{% url funding_incomes_by_project project.slug %}">
+                        <a href="{% url 'funding_incomes_by_project' project.slug %}">
                             <i class="fa fa-chevron-right"></i>&emsp;{{ project.full_name }}
                         </a>
                     </td>

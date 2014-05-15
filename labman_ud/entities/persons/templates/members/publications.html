@@ -3,19 +3,19 @@
 
 
 {% block member_content %}
-    
+
    {% if has_publications %}
         <div class="row">
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url member_bibtex member.slug %}"> 
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'member_bibtex' member.slug %}">
                 <i class="fa fa-files-o"></i>&emsp;BibTeX
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url tags_by_author member.slug %}">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'tags_by_author' member.slug %}">
                 <i class="fa fa-tags"></i>&emsp;Tag cloud
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url publications_by_author member.slug %}">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'publications_by_author' member.slug %}">
                 <i class="fa fa-bar-chart-o"></i>&emsp;Timeline
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url publications_egonetwork member.slug %}">
+            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'publications_egonetwork' member.slug %}">
                 <i class="fa fa-users"></i>&emsp;Egonetwork
             </a>
         </div>
@@ -38,7 +38,7 @@
                                 <th>Title</th>
 
                                 <th>Year</th>
-                                
+
                                 <th>Cite</th>
 
                                 <th><i class="fa fa-download"></i></th>
@@ -48,7 +48,7 @@
                                 {% for publication, parent_publication, coauthors, event in value %}
                                     <tr>
                                         <td>
-                                            <a href="{% url publication_info publication.slug %}">
+                                            <a href="{% url 'publication_info' publication.slug %}">
                                                 &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ publication.title }}
                                             </a>
                                             <br>
@@ -68,8 +68,8 @@
                                         <td>
                                             {{ publication.year }}
                                         </td>
-                                        
-                                        <td> 
+
+                                        <td>
                                             {% if publication.bibtex %}
                                                 <a data-toggle="modal" href="#myModal_{{ forloop.counter }}">
                                                     <i class="fa fa-paperclip fa-2x"></i>
@@ -95,7 +95,7 @@
                                                 </div><!-- /.modal -->
                                             {% endif %}
                                         </td>
- 
+
                                         <td>
                                             {% if publication.pdf %}
                                                 <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">

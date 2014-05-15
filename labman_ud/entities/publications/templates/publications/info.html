@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-9">
                 <h3>
-                    <a href="{% url publication_index %}{{ from_page }}">
+                    <a href="{% url 'publication_index' %}{{ from_page }}">
                         <img width="32" src="{{ STATIC_PREFIX }}img/back.png" />
                     </a>
 
@@ -27,7 +27,7 @@
 
                 <blockquote id="publication-type" class="pull-left">
                     <p>
-                        <a href="{% url view_publication_type publication.publication_type.slug %}">
+                        <a href="{% url 'view_publication_type' publication.publication_type.slug %}">
                             {{ publication.publication_type.name }}
                         </a>
                     </p>
@@ -112,7 +112,7 @@
                     <h6>Tags</h6>
 
                     {% for tag in tag_list %}
-                        <a href="{% url view_publication_tag tag.slug %}">
+                        <a href="{% url 'view_publication_tag' tag.slug %}">
                             <span class="label label-info">{{ tag.name }}</span>
                         </a>
                     {% endfor %}
@@ -131,11 +131,11 @@
 
                     {% for author in authors %}
                         {% if author.is_active %}
-                            <a href="{% url member_info author.slug %}">
+                            <a href="{% url 'member_info' author.slug %}">
                                 {{ author.full_name }}
                             </a>
                         {% else %}
-                            <a href="{% url person_info author.slug %}">
+                            <a href="{% url 'person_info' author.slug %}">
                                 {{ author.full_name }}
                             </a>
                         {% endif %}
@@ -203,7 +203,7 @@
                                     {% for project in related_projects %}
                                         <tr>
                                             <td>
-                                                <a href="{% url project_info project.slug %}">
+                                                <a href="{% url 'project_info' project.slug %}">
                                                     <i class="fa fa-chevron-right"></i> {{ project.full_name }}
                                                 </a>
                                             </td>
@@ -237,7 +237,7 @@
                                     {% for publication in related_publications %}
                                         <tr>
                                             <td>
-                                                <a href="{% url publication_info publication.slug %}">
+                                                <a href="{% url 'publication_info' publication.slug %}">
                                                     <i class="fa fa-chevron-right"></i> {{ publication.title }}
                                                 </a>
                                             </td>
