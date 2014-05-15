@@ -1,0 +1,112 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li><a href="{% url chart_index %}">Charts</a></li>
+
+        <li><a href="{% url project_index %}">Projects</a></li>
+
+        <li class="active">Number of projects</li>
+    </ul>
+
+    <br>
+    <div class="chartdiv" id="number_of_projects">
+      <svg></svg>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="{{ STATIC_PREFIX }}js/d3.v2.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_PREFIX }}js/nv.d3.min.js" type="text/javascript"></script>
+
+    <script>
+
+        var jsonObj = []
+
+        // Adapt data to NVD3.js format
+        {% for item, values in projects.items %}
+            var tempjson = {};
+            var currentValues = 0;
+            tempjson['key'] = '{{ item }}';
+            tempjson['values'] = [];
+
+            {% for year, value in values.items %}
+                tempjson['values'].push([{{ year }}, {{ value }}]);
+                currentValues = currentValues + {{ value }};
+            {% endfor %}
+            if (currentValues > 0)
+                jsonObj.push(tempjson);
+        {% endfor %}
+
+        // Total
+        var tempjson = {
+            'key' : 'Total',
+            'values' : []
+        };
+        var tempvalues = {
+            // year : value
+        };
+        $(jsonObj).each(function(pos, category_data) {
+            $(category_data.values).each(function(pos, year_data) {
+                if (tempvalues[year_data[0]] == undefined) {
+                    tempvalues[year_data[0]] = year_data[1];
+                } else {
+                    tempvalues[year_data[0]] = tempvalues[year_data[0]] + year_data[1];
+                }
+            });
+        });
+
+        var max_value = 0;
+        {% for year, _ in projects.items.0.1.items %}
+        tempjson.values.push([ {{ year }}, tempvalues[{{ year }}] ]);
+        if (max_value < tempvalues[ {{ year }} ])
+            max_value = tempvalues[ {{ year }} ];
+        {% endfor %}
+        jsonObj.push(tempjson);
+
+        console.log(jsonObj);
+
+        nv.addGraph(function() {
+            // var chart = nv.models.multiBarChart();
+
+            var chart = nv.models.lineChart()
+                .x(function(d) { return d[0] })
+                .y(function(d) { return d[1] })
+                .clipEdge(true);
+
+            chart.xAxis.tickFormat(function(d) {
+                var date = new Date();
+                date.setYear(parseInt(d));
+                return d3.time.format("%Y")(date)
+            });
+
+            chart.yAxis.tickFormat(d3.format(".1"));
+            // If forced, it does not auto-scale.
+            //  chart.forceY([0, max_value + 1]);
+
+            d3.select("#number_of_projects svg")
+                    .datum(jsonObj)
+                .transition().duration(500).call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
+
+        function projectsData() {
+        }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}
