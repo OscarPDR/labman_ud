@@ -177,6 +177,7 @@ def members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'Members',
         'head_of_internet': head_of_internet,
         'head_of_telecom': head_of_telecom,
         'member_konami_positions': member_konami_positions,
@@ -250,6 +251,7 @@ def former_members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'Former members',
         'former_member_konami_positions': former_member_konami_positions,
         'former_member_konami_profile_pictures': former_member_konami_profile_pictures,
         'former_members': former_members,
@@ -277,6 +279,7 @@ def member_info(request, person_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : member.full_name,
         'member': member,
     }
 
@@ -322,6 +325,7 @@ def member_projects(request, person_slug, role_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Projects' % member.full_name,
         'member': member,
         'has_projects': has_projects,
         'projects': projects,
@@ -466,6 +470,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Publications' % member.full_name,
         'member': member,
         'publications': publications,
         'has_publications': has_publications,
@@ -485,6 +490,7 @@ def member_publication_bibtex(request, person_slug):
     global_bibtex = __get_global_bibtex(member)
 
     return_dict = {
+        'web_title' : u'%s - Publications bibtex' % member.full_name,
         'member' : member,
         'bibtex' :  global_bibtex,
     }
@@ -523,6 +529,7 @@ def member_news(request, person_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - News' % member.full_name,
         'member' : member,
         'news': news,
     }
@@ -711,6 +718,7 @@ def person_info(request, person_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : member.full_name,
         'person': person,
         'projects': projects,
         'publications': publications,
