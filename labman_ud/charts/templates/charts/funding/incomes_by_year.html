@@ -6,12 +6,12 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url chart_index %}">Charts</a></li>
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
 
-        <li><a href="{% url project_index %}">Projects</a></li>
+        <li><a href="{% url 'project_index' %}">Projects</a></li>
 
         <li>
-            <a href="{% url funding_total_incomes %}">Total incomes</a>
+            <a href="{% url 'funding_total_incomes' %}">Total incomes</a>
         </li>
 
         <li class="active">{{ year }}</li>

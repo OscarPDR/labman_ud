@@ -11,7 +11,7 @@
         <ul>
             {% for item in project_managers %}
                 <li>
-                    <a href="{% url determine_person_info item.slug %}">
+                    <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
                     {% if item.working_period %}
@@ -28,7 +28,7 @@
         <ul>
             {% for item in principal_researchers %}
                 <li>
-                    <a href="{% url determine_person_info item.slug %}">
+                    <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
                     {% if item.working_period %}
@@ -45,7 +45,7 @@
         <ul>
             {% for item in researchers %}
                 <li>
-                    <a href="{% url determine_person_info item.slug %}">
+                    <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
                     {% if item.working_period %}

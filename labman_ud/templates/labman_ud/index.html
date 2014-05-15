@@ -21,7 +21,7 @@
             <h2>
                 <img src="{{ STATIC_PREFIX }}img/index/news_mini.png" height="42" width="42">
                 Latest news
-                <a class="pull-right" href="{% url news_index %}"><small>All news</small></a>
+                <a class="pull-right" href="{% url 'news_index' %}"><small>All news</small></a>
             </h2>
 
             <div class="soften-limited"></div>
@@ -36,7 +36,7 @@
                         {{ news.created|date:"l, d F Y" }}
                     </p>
 
-                    <a class="btn btn-primary" href="{% url view_news news.slug %}">
+                    <a class="btn btn-primary" href="{% url 'view_news' news.slug %}">
                         Read more
                     </a>
                 </div>

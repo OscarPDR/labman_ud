@@ -5,19 +5,19 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url chart_index %}">Charts</a></li>
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
 
-        <li><a href="{% url project_index %}">Projects</a></li>
+        <li><a href="{% url 'project_index' %}">Projects</a></li>
 
         <li>
-            <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+            <a href="{% url 'funding_incomes_by_project_index' %}">Total incomes by project</a>
         </li>
 
         <li class="active">{{ project.short_name }}</li>
     </ul>
 
     <div id="chart-div" class="centered">
-        <h4>Income breakdown for: <a target="_blank" href="{% url project_info project.slug %}">{{ project.short_name }}</a></h4>
+        <h4>Income breakdown for: <a target="_blank" href="{% url 'project_info' project.slug %}">{{ project.short_name }}</a></h4>
         <br>
         <div id="chart_div" style="width: 900px; height: 500px;"></div>
     </div>

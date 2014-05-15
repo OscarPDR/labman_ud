@@ -28,12 +28,12 @@
     <script>
         var word_array = [
             {% for key, value in tag_dict.items %}
-             {text: "{{ key }}", weight: "{{ value }}", link:"{% url view_publication_tag key|slugify %}"},
+             {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_publication_tag' key|slugify %}"},
             {% endfor %}
         ];
 
         $(function() {
-            // When DOM is ready, select the container element and call the jQCloud method, 
+            // When DOM is ready, select the container element and call the jQCloud method,
             // passing the array of words as the first argument.
             $("#publication_tag_cloud").jQCloud(word_array);
         });
