@@ -22,4 +22,4 @@ class FundingProgramSearchForm(forms.Form):
 class FundingProgramForm(forms.ModelForm):
     class Meta:
         model = FundingProgram
-        exclude = ('slug')
+        exclude = ('slug',)
