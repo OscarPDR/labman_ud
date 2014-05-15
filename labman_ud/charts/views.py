@@ -30,7 +30,7 @@ import networkx as nx
 ###########################################################################
 
 def chart_index(request):
-    return render_to_response('charts/index.html')
+    return render_to_response('charts/index.html', { 'web_title' : 'Charts' })
 
 
 ###########################################################################
@@ -57,6 +57,7 @@ def funding_total_incomes(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes',
         'incomes': incomes,
     }
 
@@ -85,6 +86,7 @@ def funding_incomes_by_year(request, year):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by year',
         'incomes': incomes,
         'year': year,
     }
@@ -130,6 +132,7 @@ def funding_incomes_by_year_and_scope(request, year, scope):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by year and scope',
         'project_incomes': project_incomes,
         'scope': scope,
         'year': year,
@@ -147,6 +150,7 @@ def funding_incomes_by_project_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by project index',
         'projects': projects,
     }
 
@@ -166,6 +170,7 @@ def funding_incomes_by_project(request, project_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by project',
         'project': project,
         'project_incomes': project_incomes,
     }
@@ -227,6 +232,7 @@ def funding_total_incomes_by_scope(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by scope',
         'incomes': incomes,
         'total_incomes': total_incomes,
         'year': year,
@@ -273,6 +279,7 @@ def publications_number_of_publications(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Number of publications',
         'publication_types': publication_types,
         'publications': publications,
         'years': years,
@@ -318,6 +325,7 @@ def publications_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -366,6 +374,7 @@ def publications_morelab_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Group publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -403,6 +412,7 @@ def projects_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Collaborations',
         'data': json.dumps(data),
     }
 
@@ -441,6 +451,7 @@ def projects_morelab_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Group collaborations',
         'data': json.dumps(data),
     }
 
@@ -486,6 +497,7 @@ def publications_egonetwork(request, author_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'publication_tags_per_year': publication_tags_per_year,
+        'web_title' : u'%s - Egonetwork' % author.full_name,
         'data': json.dumps(data),
         'author': author,
     }
@@ -535,6 +547,7 @@ def publications_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Number of publications' % author.full_name,
         'author': author,
         'publication_types': publication_types,
         'publications': publications,
@@ -565,6 +578,7 @@ def tags_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Tag cloud' % author.full_name,
         'author': author,
         'tag_dict': tag_dict,
     }

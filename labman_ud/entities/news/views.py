@@ -36,6 +36,7 @@ def news_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'News',
         'news': news,
     }
 
@@ -67,6 +68,7 @@ def view_news(request, news_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'tags': tags,
+        'web_title' : news.title,
         'news': news,
         'related': related,
         'related_persons': related_persons,
