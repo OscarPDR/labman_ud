@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from itertools import combinations
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
@@ -286,6 +286,58 @@ def publications_number_of_publications(request):
     }
 
     return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# View: projects_number_of_projects
+###########################################################################
+
+def projects_number_of_projects(request):
+    geographical_scopes = GeographicalScope.objects.all()
+    geographical_scopes_by_id = {}
+    for geographical_scope in geographical_scopes:
+        geographical_scopes_by_id[geographical_scope.id] = geographical_scope.name
+
+    fundings = Funding.objects.all().select_related('project', 'funding_program')
+    projects_data = defaultdict(lambda : defaultdict(set)) # {
+    #    year : {
+    #        project_id : [ scope1, scope2, scope3 ]
+    #    }
+    #}
+
+    scopes = set()
+
+    for funding in fundings:
+        for year in range(funding.project.start_year, funding.project.end_year + 1):
+            projects_data[year][funding.project_id].add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
+            scopes.add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
+
+    years = sorted(projects_data.keys())
+
+    projects = {
+        # scope : {
+            # year : number
+        # }
+    }
+
+    for scope in scopes:
+        projects[scope] = OrderedDict()
+        for year in years:
+            projects[scope][year] = 0
+
+    for year in years:
+        for project_id in projects_data.get(year, []):
+            for scope in projects_data[year][project_id]:
+                projects[scope][year] += 1
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title' : u'Number of projects',
+        'projects': projects,
+        'years': years,
+    }
+
+    return render_to_response("charts/projects/number_of_projects.html", return_dict, context_instance=RequestContext(request))
+    # return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
