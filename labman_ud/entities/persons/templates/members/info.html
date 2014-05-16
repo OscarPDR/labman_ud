@@ -73,7 +73,7 @@
                 {% if member.is_active %}
                     {% if member.email %}
                         &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>
-                        &emsp;<a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                        &emsp;<span class="emailuser">{{ member.email_user }}</span> <span class="emaildomain">[at] {{ member.email_domain }}</span>
                         <br>
                     {% endif %}
 
@@ -134,6 +134,11 @@
                         {% endfor %}
                       </ul>
                     </div>
+
+                        <a href="{% url member_news member.slug %}" class="btn btn-default general-member-button member_news">
+                            <i class="fa fa-calendar fa-large"></i>&emsp;News
+                        </a>
+
             </div> <!-- end #member-tabs -->
             <br>
 
@@ -187,6 +192,14 @@
 
     <script>
         $('#members-nav').addClass('active');
+
+        $(".emailuser").each(function(index) {
+            var addr = $(this).text().replace(/\n/g,"").replace(/ /g,"");
+            $(this).html('<a href="mailto:'+addr+'@deusto.es" >'+ addr +'@deusto.es</a>');
+        });
+        $(".emaildomain").each(function(index) {
+            $(this).hide();
+        }); 
     </script>
 
     <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>

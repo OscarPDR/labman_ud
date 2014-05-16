@@ -6,6 +6,7 @@
 
     <div class="tab-pane active" id="project-assigned-persons">
 
+        {% if project_managers %}
         <h5>Project manager{{ project_managers|pluralize }}</h5>
 
         <ul>
@@ -22,7 +23,9 @@
         </ul>
 
         <br>
-
+        {% endif %}
+        
+        {% if principal_researchers %}
         <h5>Principal researcher{{ principal_researchers|pluralize }}</h5>
 
         <ul>
@@ -39,7 +42,9 @@
         </ul>
 
         <br>
+        {% endif %}
 
+        {% if researchers %}
         <h5>Researcher{{ researchers|pluralize }}</h5>
 
         <ul>
@@ -54,7 +59,7 @@
                 </li>
             {% endfor %}
         </ul>
-
+        {% endif %}
     </div>
 
 {% endblock %}

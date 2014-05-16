@@ -1,22 +1,33 @@
 {% extends "members/info.html" %}
 
+{% block header_css %}
 
+    <link rel='alternate' type='application/atom+xml' title='Atom feed' href='{% url member_feeds_publications member.slug %}'>
+
+{% endblock %}
 
 {% block member_content %}
 
    {% if has_publications %}
         <div class="row">
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'member_bibtex' member.slug %}">
+            <a class="col-md-2 col-md-offset-1 btn btn-default btn-sm" href="{% url member_bibtex member.slug %}">
                 <i class="fa fa-files-o"></i>&emsp;BibTeX
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'tags_by_author' member.slug %}">
+
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url tags_by_author member.slug %}">
                 <i class="fa fa-tags"></i>&emsp;Tag cloud
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'publications_by_author' member.slug %}">
+
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url publications_by_author member.slug %}">
                 <i class="fa fa-bar-chart-o"></i>&emsp;Timeline
             </a>
-            <a class="col-md-3 btn btn-default btn-sm" href="{% url 'publications_egonetwork' member.slug %}">
+
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url publications_egonetwork member.slug %}">
                 <i class="fa fa-users"></i>&emsp;Egonetwork
+            </a>
+
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url member_feeds_publications member.slug %}">
+                <i class="fa fa-rss"></i>&emsp;Subscribe
             </a>
         </div>
         <br>
@@ -71,11 +82,11 @@
 
                                         <td>
                                             {% if publication.bibtex %}
-                                                <a data-toggle="modal" href="#myModal_{{ forloop.counter }}">
+                                                <a data-toggle="modal" href="#myModal_{{ key|slugify }}_{{ forloop.counter }}">
                                                     <i class="fa fa-paperclip fa-2x"></i>
                                                 </a>
 
-                                                <div class="modal fade" id="myModal_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="myModal_{{ key|slugify }}_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                         <div class="modal-header">

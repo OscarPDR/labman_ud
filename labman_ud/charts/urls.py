@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     # /projects
     url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
     url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
+    url(r'^projects/total_number/$', 'charts.views.projects_number_of_projects', name='projects_number_of_projects'),
 
 )
 

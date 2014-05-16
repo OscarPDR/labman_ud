@@ -48,23 +48,27 @@
                     </a>
                 </li>
 
+                {% if not is_internal %}
                 <li class="project_funding_details">
                     <a href="{% url 'project_funding_details' project.slug %}">
                         <i class="fa fa-money fa-large"></i>&emsp;Funding details
                     </a>
                 </li>
+                {% endif %}
 
                 <li class="project_assigned_persons">
                     <a href="{% url 'project_assigned_persons' project.slug %}">
-                        <i class="fa fa-group fa-large"></i>&emsp;Employees
+                        <i class="fa fa-group fa-large"></i>&emsp;{% if is_internal %}Developers{% else %}Employees{% endif %}
                     </a>
                 </li>
 
+                {% if not is_internal %}
                 <li class="project_consortium_members">
                     <a href="{% url 'project_consortium_members' project.slug %}">
                         <i class="fa fa-sitemap fa-large"></i>&emsp;Consortium members
                     </a>
                 </li>
+                {% endif %}
 
                 {% if related_publications %}
                     <li class="project_related_publications">
@@ -81,9 +85,8 @@
                 <h6>Tags</h6>
 
                 {% for tag in tags %}
-                    <a class="project-tag" href="{% url 'view_project_tag' tag.slug %}">
+                    <a href="{% url 'view_project_tag' tag.slug %}">
                         <span class="label label-info">{{ tag.name }}</span>
-                        <br>
                     </a>
                 {% endfor %}
             </div>

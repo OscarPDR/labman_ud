@@ -1,10 +1,13 @@
-# coding: utf-8
+# coding: utf-
+import threading
+import weakref
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.contrib.syndication.views import Feed
 
 from .forms import ProjectSearchForm
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
@@ -79,6 +82,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Projects',
         'clean_index': clean_index,
         'form': form,
         'last_created': last_created,
@@ -101,16 +105,9 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 def project_info(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
 
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
-
     # dictionary to be returned in render_to_response()
-    return_dict = {
-        'logo': project.logo if project.logo else None,
-        'project': project,
-        'tags': tags,
-    }
+    return_dict = __build_project_information(project)
+    return_dict['web_title'] = project.full_name
 
     if project.project_type.name == 'Internal Project':
         return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
@@ -124,10 +121,6 @@ def project_info(request, project_slug):
 
 def project_funding_details(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     fundings = Funding.objects.filter(project_id=project.id)
 
@@ -145,15 +138,14 @@ def project_funding_details(request, project_slug):
     funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
+    return_dict = __build_project_information(project)
+    return_dict.update({
+        'web_title' : u'%s - Funding details' % project.full_name,
         'funding_amounts': funding_amounts,
         'funding_program_logos': funding_program_logos,
         'funding_programs': funding_programs,
         'fundings': fundings,
-        'logo': project.logo if project.logo else None,
-        'project': project,
-        'tags': tags,
-    }
+    })
 
     return render_to_response("projects/funding_details.html", return_dict, context_instance=RequestContext(request))
 
@@ -164,10 +156,6 @@ def project_funding_details(request, project_slug):
 
 def project_assigned_persons(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
 
     principal_researchers = []
     project_managers = []
@@ -224,14 +212,13 @@ def project_assigned_persons(request, project_slug):
             researchers.append(person_item)
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
-        'logo': project.logo if project.logo else None,
+    return_dict = __build_project_information(project)
+    return_dict.update({
+        'web_title' : u'%s - Assigned persons' % project.full_name,
         'principal_researchers': principal_researchers,
-        'project': project,
         'project_managers': project_managers,
         'researchers': researchers,
-        'tags': tags,
-    }
+    })
 
     return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
 
@@ -243,19 +230,14 @@ def project_assigned_persons(request, project_slug):
 def project_consortium_members(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
 
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
-
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
+    return_dict = __build_project_information(project)
+    return_dict.update({
+        'web_title' : u'%s - Consortium members' % project.full_name,
         'consortium_members': consortium_members,
-        'logo': project.logo if project.logo else None,
-        'project': project,
-        'tags': tags,
-    }
+    })
 
     return render_to_response("projects/consortium_members.html", return_dict, context_instance=RequestContext(request))
 
@@ -267,20 +249,15 @@ def project_consortium_members(request, project_slug):
 def project_related_publications(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
 
-    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
-    tags = tags.extra(select={'length': 'Length(name)'}).order_by('length')
-
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
-        'logo': project.logo if project.logo else None,
-        'project': project,
+    return_dict = __build_project_information(project)
+    return_dict.update({
+        'web_title' : u'%s - Related publications' % project.full_name,
         'related_publications': related_publications,
-        'tags': tags,
-    }
+    })
 
     return render_to_response("projects/related_publications.html", return_dict, context_instance=RequestContext(request))
 
@@ -306,7 +283,65 @@ def project_tag_cloud(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Tag cloud' % project.full_name,
         'tag_dict': tag_dict,
     }
 
     return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+
+############################################################################
+# Function: __build_project_information
+############################################################################
+
+def __build_project_information(project):
+    tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
+    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+
+    related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
+    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
+
+    internal_project = project.project_type.name == 'Internal Project'
+
+    # dictionary to be returned in render_to_response()
+    return {
+        'is_internal' : internal_project,
+        'logo': project.logo if project.logo else None,
+        'project': project,
+        'related_publications': related_publications,
+        'tags': tags,
+    }
+
+
+###########################################################################
+# Feed: projects feeds
+###########################################################################
+
+class LatestProjectsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestProjectsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    title       = "MORElab projects"
+    description = "MORElab projects"
+
+    def get_object(self, request): 
+        self.__request.request = weakref.proxy(request)
+        return super(LatestProjectsFeed, self).get_object(request)
+
+    def link(self, obj):
+        url = reverse('project_index')
+        return self.__request.request.build_absolute_uri(url)
+
+    def items(self):
+        return Project.objects.order_by('-log_created')[:30]
+
+    def item_title(self, item):
+        return item.full_name
+
+    def item_description(self, item):
+        return item.description
+
+    def item_link(self, item):
+        url = reverse('project_info', args=[item.slug or 'no-slug-found'])
+        return self.__request.request.build_absolute_uri(url)
+

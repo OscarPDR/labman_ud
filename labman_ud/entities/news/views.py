@@ -1,9 +1,13 @@
 # coding: utf-8
 
+import threading
+import weakref
 from collections import OrderedDict
 
-from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.contrib.syndication.views import Feed
 
 from .models import News, PersonRelatedToNews, ProjectRelatedToNews, PublicationRelatedToNews
 
@@ -32,6 +36,7 @@ def news_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'News',
         'news': news,
     }
 
@@ -63,6 +68,7 @@ def view_news(request, news_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'tags': tags,
+        'web_title' : news.title,
         'news': news,
         'related': related,
         'related_persons': related_persons,
@@ -71,3 +77,37 @@ def view_news(request, news_slug):
     }
 
     return render_to_response('news/info.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# Feed: news feeds
+###########################################################################
+
+class LatestNewsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestNewsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    title       = "MORElab news"
+    description = "MORElab news"
+
+    def get_object(self, request): 
+        self.__request.request = weakref.proxy(request)
+        return super(LatestNewsFeed, self).get_object(request)
+
+    def link(self, obj):
+        url = reverse('news_index')
+        return self.__request.request.build_absolute_uri(url)
+
+    def items(self):
+        return News.objects.order_by('-created')[:30]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.content
+
+    def item_link(self, item):
+        url = reverse('view_news', args=[item.slug])
+        return self.__request.request.build_absolute_uri(url)
+
