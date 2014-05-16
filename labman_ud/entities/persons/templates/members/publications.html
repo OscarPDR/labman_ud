@@ -2,7 +2,7 @@
 
 {% block header_css %}
 
-    <link rel='alternate' type='application/atom+xml' title='Atom feed' href='{% url member_feeds_publications member.slug %}'>
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="{% url 'member_feeds_publications' member.slug %}">
 
 {% endblock %}
 
@@ -10,23 +10,23 @@
 
    {% if has_publications %}
         <div class="row">
-            <a class="col-md-2 col-md-offset-1 btn btn-default btn-sm" href="{% url member_bibtex member.slug %}">
+            <a class="col-md-2 col-md-offset-1 btn btn-default btn-sm" href="{% url 'member_bibtex' member.slug %}">
                 <i class="fa fa-files-o"></i>&emsp;BibTeX
             </a>
 
-            <a class="col-md-2 btn btn-default btn-sm" href="{% url tags_by_author member.slug %}">
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url 'tags_by_author' member.slug %}">
                 <i class="fa fa-tags"></i>&emsp;Tag cloud
             </a>
 
-            <a class="col-md-2 btn btn-default btn-sm" href="{% url publications_by_author member.slug %}">
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url 'publications_by_author' member.slug %}">
                 <i class="fa fa-bar-chart-o"></i>&emsp;Timeline
             </a>
 
-            <a class="col-md-2 btn btn-default btn-sm" href="{% url publications_egonetwork member.slug %}">
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url 'publications_egonetwork' member.slug %}">
                 <i class="fa fa-users"></i>&emsp;Egonetwork
             </a>
 
-            <a class="col-md-2 btn btn-default btn-sm" href="{% url member_feeds_publications member.slug %}">
+            <a class="col-md-2 btn btn-default btn-sm" href="{% url 'member_feeds_publications' member.slug %}">
                 <i class="fa fa-rss"></i>&emsp;Subscribe
             </a>
         </div>
