@@ -82,7 +82,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Projects',
+        'web_title': u'Projects',
         'clean_index': clean_index,
         'form': form,
         'last_created': last_created,
@@ -140,7 +140,7 @@ def project_funding_details(request, project_slug):
     # dictionary to be returned in render_to_response()
     return_dict = __build_project_information(project)
     return_dict.update({
-        'web_title' : u'%s - Funding details' % project.full_name,
+        'web_title': u'%s - Funding details' % project.full_name,
         'funding_amounts': funding_amounts,
         'funding_program_logos': funding_program_logos,
         'funding_programs': funding_programs,
@@ -214,7 +214,7 @@ def project_assigned_persons(request, project_slug):
     # dictionary to be returned in render_to_response()
     return_dict = __build_project_information(project)
     return_dict.update({
-        'web_title' : u'%s - Assigned persons' % project.full_name,
+        'web_title': u'%s - Assigned persons' % project.full_name,
         'principal_researchers': principal_researchers,
         'project_managers': project_managers,
         'researchers': researchers,
@@ -235,7 +235,7 @@ def project_consortium_members(request, project_slug):
     # dictionary to be returned in render_to_response()
     return_dict = __build_project_information(project)
     return_dict.update({
-        'web_title' : u'%s - Consortium members' % project.full_name,
+        'web_title': u'%s - Consortium members' % project.full_name,
         'consortium_members': consortium_members,
     })
 
@@ -255,7 +255,7 @@ def project_related_publications(request, project_slug):
     # dictionary to be returned in render_to_response()
     return_dict = __build_project_information(project)
     return_dict.update({
-        'web_title' : u'%s - Related publications' % project.full_name,
+        'web_title': u'%s - Related publications' % project.full_name,
         'related_publications': related_publications,
     })
 
@@ -267,7 +267,6 @@ def project_related_publications(request, project_slug):
 ###########################################################################
 
 def project_tag_cloud(request):
-
     tag_dict = {}
 
     tags = ProjectTag.objects.all()
@@ -283,11 +282,12 @@ def project_tag_cloud(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'%s - Tag cloud' % project.full_name,
+        'web_title': u'Projects tag cloud',
         'tag_dict': tag_dict,
     }
 
     return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+
 
 ############################################################################
 # Function: __build_project_information
@@ -304,7 +304,7 @@ def __build_project_information(project):
 
     # dictionary to be returned in render_to_response()
     return {
-        'is_internal' : internal_project,
+        'is_internal': internal_project,
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,
@@ -321,10 +321,10 @@ class LatestProjectsFeed(Feed):
         super(LatestProjectsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title       = "MORElab projects"
+    title = "MORElab projects"
     description = "MORElab projects"
 
-    def get_object(self, request): 
+    def get_object(self, request):
         self.__request.request = weakref.proxy(request)
         return super(LatestProjectsFeed, self).get_object(request)
 
@@ -344,4 +344,3 @@ class LatestProjectsFeed(Feed):
     def item_link(self, item):
         url = reverse('project_info', args=[item.slug or 'no-slug-found'])
         return self.__request.request.build_absolute_uri(url)
-
