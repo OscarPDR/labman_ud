@@ -1,16 +1,22 @@
 # coding: utf-8
 
+import threading
+import weakref
+
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.contrib.syndication.views import Feed
 
 from collections import OrderedDict, defaultdict
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
 
+from entities.news.models import PersonRelatedToNews
 from entities.events.models import Event
 from entities.organizations.models import Organization
 from entities.projects.models import Project, AssignedPerson
@@ -171,6 +177,7 @@ def members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'Members',
         'head_of_internet': head_of_internet,
         'head_of_telecom': head_of_telecom,
         'member_konami_positions': member_konami_positions,
@@ -244,6 +251,7 @@ def former_members(request, organization_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : 'Former members',
         'former_member_konami_positions': former_member_konami_positions,
         'former_member_konami_profile_pictures': former_member_konami_profile_pictures,
         'former_members': former_members,
@@ -271,6 +279,7 @@ def member_info(request, person_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : member.full_name,
         'member': member,
     }
 
@@ -316,6 +325,7 @@ def member_projects(request, person_slug, role_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Projects' % member.full_name,
         'member': member,
         'has_projects': has_projects,
         'projects': projects,
@@ -460,6 +470,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Publications' % member.full_name,
         'member': member,
         'publications': publications,
         'has_publications': has_publications,
@@ -479,6 +490,7 @@ def member_publication_bibtex(request, person_slug):
     global_bibtex = __get_global_bibtex(member)
 
     return_dict = {
+        'web_title' : u'%s - Publications bibtex' % member.full_name,
         'member' : member,
         'bibtex' :  global_bibtex,
     }
@@ -498,6 +510,105 @@ def member_publication_bibtex_download(request, person_slug):
     response = HttpResponse(global_bibtex, content_type = 'text/plain')
     response['Content-Disposition'] = 'attachment; filename="%s.bib"' % member.slug
     return response
+
+###########################################################################
+# View: member_news
+###########################################################################
+
+def member_news(request, person_slug):
+    member = Person.objects.get(slug=person_slug)
+    person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__created')
+    news = OrderedDict()
+
+    for news_person in person_news:
+        news_piece = news_person.news
+        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
+        if not year_month in news:
+            news[year_month] = []
+        news[year_month].append(news_piece)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title' : u'%s - News' % member.full_name,
+        'member' : member,
+        'news': news,
+    }
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render_to_response('members/news.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# Feed: member news feeds
+###########################################################################
+
+class LatestUserNewsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestUserNewsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    def get_object(self, request, person_slug):
+        self.__request.request = weakref.proxy(request)
+        return get_object_or_404(Person, slug=person_slug)
+
+    def title(self, obj):
+        return "%s news" % obj.full_name
+
+    def link(self, obj):
+        url = reverse('member_news', kwargs={ 'person_slug' : obj.slug })
+        return self.__request.request.build_absolute_uri(url)
+
+    def description(self, obj):
+        return "News about %s" % obj.full_name
+
+    def items(self, obj):
+        return PersonRelatedToNews.objects.filter(person=obj).select_related('news').order_by('-news__created')[:30]
+
+    def item_title(self, item):
+        return item.news.title
+
+    def item_description(self, item):
+        return item.news.content
+
+    def item_link(self, item):
+        url = reverse('view_news', args=[item.news.slug])
+        return self.__request.request.build_absolute_uri(url)
+
+###########################################################################
+# Feed: member publications feed
+###########################################################################
+
+class LatestUserPublicationFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestUserPublicationFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    def get_object(self, request, person_slug):
+        self.__request.request = weakref.proxy(request)
+        return get_object_or_404(Person, slug=person_slug)
+
+    def title(self, obj):
+        return "%s publications" % obj.full_name
+
+    def link(self, obj):
+        url = reverse('member_publications', kwargs={ 'person_slug' : obj.slug })
+        return self.__request.request.build_absolute_uri(url)
+
+    def description(self, obj):
+        return "Publications where %s is coauthor" % obj.full_name
+
+    def items(self, obj):
+        return PublicationAuthor.objects.filter(author=obj).select_related('publication').order_by('-publication__log_created')[:30]
+
+    def item_title(self, item):
+        return item.publication.title
+
+    def item_description(self, item):
+        return "New publication: %s " % item.publication.title
+
+    def item_link(self, item):
+        url = reverse('publication_info', args=[item.publication.slug])
+        return self.__request.request.build_absolute_uri(url)
 
 ###########################################################################
 # View: member_profiles
@@ -607,6 +718,7 @@ def person_info(request, person_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : member.full_name,
         'person': person,
         'projects': projects,
         'publications': publications,

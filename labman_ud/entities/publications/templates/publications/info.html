@@ -52,20 +52,6 @@
             {% endif %}
 
             <ul id="publication-tabs" class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#overview_tab" data-toggle="tab">
-                        <i class="fa fa-info fa-large"></i>&emsp;Overview
-                    </a>
-                </li>
-
-                {% if related_projects or related_publications %}
-                    <li>
-                        <a href="#related_tab" data-toggle="tab">
-                            <i class="fa fa-resize-horizontal"></i> Related
-                        </a>
-                    </li>
-                {% endif %}
-
                 {% if indicators_list %}
                     <br>
 
@@ -123,26 +109,41 @@
 
         <div class="col-md-9">
 
+            {% if related_publications or related_projects %}
+            <div class="centered">
+                <a href="{% url publication_info publication.slug %}" class="btn {% if current_tab == 'info' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-info fa-large"></i>&emsp;Overview
+                </a>
+                {% if related_publications %}
+                <a href="{% url publication_related_publications publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publications{{ related_publications|pluralize }}
+                </a>
+                {% endif %}
+                {% if related_projects %}
+                <a href="{% url publication_related_projects publication.slug %}" class="btn {% if current_tab == 'projects' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                    <i class="fa fa-gears fa-large"></i>&emsp;{{ related_projects|length }} Related project{{ related_projects|pluralize }}
+                </a>
+                {% endif %}
+            </div>
+            <br>
+            {% endif %}
+
             <div id="publication-tab-content" class="tab-content publication-template">
-
-                <div class="tab-pane active" id="overview_tab">
-
+                <div class="tab-pane active">
+                {% block publication_contents %}
                     <h5>Authors:</h5>
 
                     {% for author in authors %}
                         {% if author.is_active %}
                             <a href="{% url 'member_info' author.slug %}">
-                                {{ author.full_name }}
+                                {{ author.full_name }}{% if not forloop.last %},{% endif %}
                             </a>
                         {% else %}
                             <a href="{% url 'person_info' author.slug %}">
-                                {{ author.full_name }}
+                                {{ author.full_name }}{% if not forloop.last %},{% endif %}
                             </a>
                         {% endif %}
-
-                        {% if not forloop.last %}
-                            ,&emsp;
-                        {% endif %}
+                        &emsp;
                     {% endfor %}
 
                     <br>
@@ -253,6 +254,8 @@
 
                 </div> <!-- end tab-pane #related_tab -->
 
+                {% endblock %}
+                </div>
             </div>
 
         </div>

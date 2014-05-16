@@ -1,10 +1,14 @@
 # coding: utf-8
 
+import threading
+import weakref
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
+from django.contrib.syndication.views import Feed
 
 from .forms import PublicationSearchForm
 from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
@@ -48,7 +52,6 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
         form = PublicationSearchForm(request.POST)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-
             return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
 
     else:
@@ -77,6 +80,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Publications',
         'clean_index': clean_index,
         'form': form,
         'last_created': last_created,
@@ -96,9 +100,29 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 ###########################################################################
 
 def publication_info(request, slug):
-
     publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = u'info'
+    return_dict['web_title'] = publication.title
+    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
 
+def publication_related_projects(request, slug):
+    publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = 'projects'
+    return_dict['web_title'] = u'%s - Related projects' % publication.title
+    return render_to_response('publications/related_projects.html', return_dict, context_instance=RequestContext(request))
+
+
+def publication_related_publications(request, slug):
+    publication = get_object_or_404(Publication, slug=slug)
+    return_dict = __build_publication_return_dict(publication)
+    return_dict['current_tab'] = 'publications'
+    return_dict['web_title'] = u'%s - Related publications' % publication.title
+    return render_to_response('publications/related_publications.html', return_dict, context_instance=RequestContext(request))
+
+
+def __build_publication_return_dict(publication):
     author_ids = PublicationAuthor.objects.filter(publication=publication.id).values('author_id').order_by('position')
     authors = []
 
@@ -137,7 +161,7 @@ def publication_info(request, slug):
     bibtex = publication.bibtex.replace(",", ",\n")
 
     # dictionary to be returned in render_to_response()
-    return_dict = {
+    return {
         'authors': authors,
         'bibtex': bibtex,
         'indicators_list': indicators_list,
@@ -148,8 +172,6 @@ def publication_info(request, slug):
         'related_publications': related_publications,
         'tag_list': tag_list,
     }
-
-    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -175,3 +197,37 @@ def publication_tag_cloud(request):
     }
 
     return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# Feed: publications feeds
+###########################################################################
+
+class LatestPublicationsFeed(Feed):
+    def __init__(self, *args, **kwargs):
+        super(LatestPublicationsFeed, self).__init__(*args, **kwargs)
+        self.__request = threading.local()
+
+    title       = "MORElab publications"
+    description = "MORElab publications"
+
+    def get_object(self, request): 
+        self.__request.request = weakref.proxy(request)
+        return super(LatestPublicationsFeed, self).get_object(request)
+
+    def link(self, obj):
+        url = reverse('publication_index')
+        return self.__request.request.build_absolute_uri(url)
+
+    def items(self):
+        return Publication.objects.order_by('-log_created')[:30]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.abstract
+
+    def item_link(self, item):
+        url = reverse('publication_info', args=[item.slug or 'no-slug-found'])
+        return self.__request.request.build_absolute_uri(url)
+

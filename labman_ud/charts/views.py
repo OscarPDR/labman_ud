@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from itertools import combinations
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from charts.utils import nx_graph
@@ -30,7 +30,7 @@ import networkx as nx
 ###########################################################################
 
 def chart_index(request):
-    return render_to_response('charts/index.html')
+    return render_to_response('charts/index.html', { 'web_title' : 'Charts' })
 
 
 ###########################################################################
@@ -57,6 +57,7 @@ def funding_total_incomes(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes',
         'incomes': incomes,
     }
 
@@ -85,6 +86,7 @@ def funding_incomes_by_year(request, year):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by year',
         'incomes': incomes,
         'year': year,
     }
@@ -130,6 +132,7 @@ def funding_incomes_by_year_and_scope(request, year, scope):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by year and scope',
         'project_incomes': project_incomes,
         'scope': scope,
         'year': year,
@@ -147,6 +150,7 @@ def funding_incomes_by_project_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by project index',
         'projects': projects,
     }
 
@@ -158,7 +162,7 @@ def funding_incomes_by_project_index(request):
 #########################
 
 def funding_incomes_by_project(request, project_slug):
-    project = Project.objects.get(slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
 
     funding_ids = Funding.objects.filter(project_id=project.id).values('id')
 
@@ -166,6 +170,7 @@ def funding_incomes_by_project(request, project_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by project',
         'project': project,
         'project_incomes': project_incomes,
     }
@@ -227,6 +232,7 @@ def funding_total_incomes_by_scope(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Total incomes by scope',
         'incomes': incomes,
         'total_incomes': total_incomes,
         'year': year,
@@ -273,12 +279,65 @@ def publications_number_of_publications(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Number of publications',
         'publication_types': publication_types,
         'publications': publications,
         'years': years,
     }
 
     return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# View: projects_number_of_projects
+###########################################################################
+
+def projects_number_of_projects(request):
+    geographical_scopes = GeographicalScope.objects.all()
+    geographical_scopes_by_id = {}
+    for geographical_scope in geographical_scopes:
+        geographical_scopes_by_id[geographical_scope.id] = geographical_scope.name
+
+    fundings = Funding.objects.all().select_related('project', 'funding_program')
+    projects_data = defaultdict(lambda : defaultdict(set)) # {
+    #    year : {
+    #        project_id : [ scope1, scope2, scope3 ]
+    #    }
+    #}
+
+    scopes = set()
+
+    for funding in fundings:
+        for year in range(funding.project.start_year, funding.project.end_year + 1):
+            projects_data[year][funding.project_id].add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
+            scopes.add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
+
+    years = sorted(projects_data.keys())
+
+    projects = {
+        # scope : {
+            # year : number
+        # }
+    }
+
+    for scope in scopes:
+        projects[scope] = OrderedDict()
+        for year in years:
+            projects[scope][year] = 0
+
+    for year in years:
+        for project_id in projects_data.get(year, []):
+            for scope in projects_data[year][project_id]:
+                projects[scope][year] += 1
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title' : u'Number of projects',
+        'projects': projects,
+        'years': years,
+    }
+
+    return render_to_response("charts/projects/number_of_projects.html", return_dict, context_instance=RequestContext(request))
+    # return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -318,6 +377,7 @@ def publications_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -366,6 +426,7 @@ def publications_morelab_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Group publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -403,6 +464,7 @@ def projects_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Collaborations',
         'data': json.dumps(data),
     }
 
@@ -441,6 +503,7 @@ def projects_morelab_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'Group collaborations',
         'data': json.dumps(data),
     }
 
@@ -452,7 +515,7 @@ def projects_morelab_collaborations(request):
 ###########################################################################
 
 def publications_egonetwork(request, author_slug):
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     G = nx.Graph()
 
@@ -486,6 +549,7 @@ def publications_egonetwork(request, author_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'publication_tags_per_year': publication_tags_per_year,
+        'web_title' : u'%s - Egonetwork' % author.full_name,
         'data': json.dumps(data),
         'author': author,
     }
@@ -501,7 +565,7 @@ def publications_by_author(request, author_slug):
     publications = {}
     publication_types = PublicationType.objects.all()
 
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
     _publications = Publication.objects.filter(id__in=publication_ids)
@@ -509,8 +573,12 @@ def publications_by_author(request, author_slug):
     min_year = _publications.aggregate(Min('year'))
     max_year = _publications.aggregate(Max('year'))
 
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
+    max_year = date.today().year
+    # At least 7 years must be provided (even if they're 0) to 
+    # have a nice graph in nvd3. Otherwise, years are repeated in
+    # people who published lately
+    min_year = min(max_year - 7, min_year.get('year__min'))
+
 
     years = []
 
@@ -531,6 +599,7 @@ def publications_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Number of publications' % author.full_name,
         'author': author,
         'publication_types': publication_types,
         'publications': publications,
@@ -547,7 +616,7 @@ def publications_by_author(request, author_slug):
 def tags_by_author(request, author_slug):
     tag_dict = {}
 
-    author = Person.objects.get(slug=author_slug)
+    author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
     tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
@@ -561,6 +630,7 @@ def tags_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
+        'web_title' : u'%s - Tag cloud' % author.full_name,
         'author': author,
         'tag_dict': tag_dict,
     }

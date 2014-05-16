@@ -1,8 +1,14 @@
 {% extends "labman_ud/base.html" %}
 
-
+{% block header_css %}
+    <link rel='alternate' type='application/atom+xml' title='Atom feed' href='{% url news_feed %}'>
+{% endblock %}
 
 {% block content %}
+
+    <blockquote>
+        <p><a href="{% url news_feed %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
+    </blockquote>
 
     {% for key, value in news.items %}
         <blockquote>
