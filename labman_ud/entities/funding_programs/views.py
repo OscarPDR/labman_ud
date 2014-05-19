@@ -40,9 +40,10 @@ def funding_program_index(request):
 
     return render_to_response("funding_programs/index.html", {
             'funding_programs': funding_programs,
+            'funding_programs_length': len(funding_programs),
             'form': form,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))
 
 
 def funding_program_info(request, slug):
@@ -86,4 +87,4 @@ def funding_program_info(request, slug):
             'min_year': min_year,
             'max_year': max_year,
         },
-        context_instance = RequestContext(request))
+        context_instance=RequestContext(request))

@@ -1,64 +1,52 @@
 {% extends "labman_ud/base.html" %}
+{% load pagination_tags %}
 
 
 
 {% block content %}
 
-    <form class="form-search" action="" method="post">
-        {% csrf_token %}
-        <div class="input-append">
-            {{ form.text }}
-            <a class="close" href="{% url 'funding_program_index' %}">&times;</a>
-            <button type="submit" class="btn">Search</button>
-        </div>
-    <form>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if funding_programs.has_previous %}
-                <a href="?page={{ funding_programs.previous_page_number }}"><< previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ funding_programs.number }} of {{ funding_programs.paginator.num_pages }}
-            </span>
-
-            {% if funding_programs.has_next %}
-                <a href="?page={{ funding_programs.next_page_number }}">next >></a>
-            {% endif %}
-        </span>
+    <div class="centered">
+        <h2>{{ funding_programs_length }} funding program{{ funding_programs|pluralize }}</h2>
     </div>
 
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th class="span4">Short name</th>
-                <th class="span8">Funded by</th>
-            </tr>
-        </thead>
+    <br>
 
-        <tbody>
-            {% for funding_program in funding_programs %}
+    <div class="row">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
                 <tr>
-                    <td class="span4">
-                        <a href="{% url 'funding_program_info' funding_program.slug %}" data-toggle="tooltip" data-placement="bottom" title="{{ funding_program.full_name }}">
-                            {{ funding_program.short_name }}
-                        </a>
-                    </td>
-
-                    <td class="span8">
-                        <a href="{% url 'organization_info' funding_program.organization.slug %}">
-                            {{ funding_program.organization.full_name }}
-
-                            {% if funding_program.organization.sub_organization_of %}
-                                ({{ funding_program.organization.sub_organization_of.full_name }})
-                            {% endif %}
-                        </a>
-                    </td>
+                    <th class="col-md-6">Short name</th>
+                    <th class="col-md-6">Funded by</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                {% for funding_program in funding_programs %}
+                    <tr>
+                        <td class="col-md-6">
+                            <a href="{% url 'funding_program_info' funding_program.slug %}" data-toggle="tooltip" data-placement="bottom" title="{{ funding_program.full_name }}">
+                                {{ funding_program.short_name }}
+                            </a>
+                            {% if funding_program.short_name != funding_program.full_name %}
+                                <br>
+                                &emsp;<small class="text-muted">{{ funding_program.full_name }}</small>
+                            {% endif %}
+                        </td>
+
+                        <td class="col-md-6">
+                            <a href="{% url 'organization_info' funding_program.organization.slug %}">
+                                {{ funding_program.organization.full_name }}
+
+                                {% if funding_program.organization.sub_organization_of %}
+                                    ({{ funding_program.organization.sub_organization_of.full_name }})
+                                {% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
 
