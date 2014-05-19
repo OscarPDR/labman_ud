@@ -742,7 +742,6 @@ def group_timeline(request):
         jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
         first_job = jobs[0]
         if first_job.start_date is None:
-            print "Skipping", member.full_name
             continue
 
         record = {
