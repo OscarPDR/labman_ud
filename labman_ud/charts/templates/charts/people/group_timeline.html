@@ -45,7 +45,25 @@
             {% endfor %}
           ]);
 
-          chart.draw(dataTable);
+          var all_colors = ["#428bca", "#5cb85c", "#999"];
+          var units = [];
+          {% for unit in distinct_units %}
+            units.push("{{ unit }}");
+          {% endfor %}
+          var color_per_unit = {}
+          $(units).each(function(pos, unit) {
+            color_per_unit[unit] = all_colors[pos];
+          });
+
+          var options = {
+            colors : [
+            {% for member_info in members %}
+                color_per_unit["{{ member_info.organization }}"]{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            ]
+          };
+
+          chart.draw(dataTable, options);
         }
     </script>
 
