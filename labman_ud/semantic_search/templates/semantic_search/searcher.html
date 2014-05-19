@@ -128,7 +128,7 @@
                                     <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                                 </a>
 
-                                <a target="_blank" href="{% url project_info project.slug %}">{{ project.full_name }}</a>
+                                <a target="_blank" href="{% url 'project_info' project.slug %}">{{ project.full_name }}</a>
                             </td>
                         </tr>
                     {% empty %}
