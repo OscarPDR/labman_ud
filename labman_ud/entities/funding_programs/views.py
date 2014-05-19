@@ -46,14 +46,6 @@ def funding_program_index(request):
 
 
 def funding_program_info(request, slug):
-    from_page = ''
-
-    http_referer = request.META['HTTP_REFERER']
-
-    if '?page=' in http_referer:
-        from_page = http_referer[http_referer.rfind('/')+1:]
-
-
     funding_program = get_object_or_404(FundingProgram, slug=slug)
 
     fundings = Funding.objects.filter(funding_program_id=funding_program.id)
@@ -93,6 +85,5 @@ def funding_program_info(request, slug):
             'datum': datum,
             'min_year': min_year,
             'max_year': max_year,
-            'from_page': from_page,
         },
         context_instance = RequestContext(request))

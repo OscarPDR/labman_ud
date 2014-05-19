@@ -111,16 +111,16 @@
 
             {% if related_publications or related_projects %}
             <div class="centered">
-                <a href="{% url publication_info publication.slug %}" class="btn {% if current_tab == 'info' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                <a href="{% url 'publication_info' publication.slug %}" class="btn {% if current_tab == 'info' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
                     <i class="fa fa-info fa-large"></i>&emsp;Overview
                 </a>
                 {% if related_publications %}
-                <a href="{% url publication_related_publications publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                <a href="{% url 'publication_related_publications' publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
                     <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publications{{ related_publications|pluralize }}
                 </a>
                 {% endif %}
                 {% if related_projects %}
-                <a href="{% url publication_related_projects publication.slug %}" class="btn {% if current_tab == 'projects' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
+                <a href="{% url 'publication_related_projects' publication.slug %}" class="btn {% if current_tab == 'projects' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
                     <i class="fa fa-gears fa-large"></i>&emsp;{{ related_projects|length }} Related project{{ related_projects|pluralize }}
                 </a>
                 {% endif %}

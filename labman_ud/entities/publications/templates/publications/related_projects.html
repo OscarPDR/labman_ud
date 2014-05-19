@@ -17,7 +17,7 @@
                 {% for project in related_projects %}
                     <tr>
                         <td>
-                            <a href="{% url project_info project.slug %}">
+                            <a href="{% url 'project_info' project.slug %}">
                                 <i class="fa fa-chevron-right"></i> {{ project.full_name }}
                             </a>
                         </td>
