@@ -24,6 +24,9 @@
                     <li>
                         <a href="{% url 'organization_info' consortium_member.organization.slug %}">
                             {{ consortium_member.organization.full_name }}
+                            {% if consortium_member.organization.short_name and consortium_member.organization.short_name != consortium_member.organization.full_name %}
+                                ({{consortium_member.organization.short_name }})
+                            {% endif %}
                         </a>
                     </li>
                 {% endfor %}
