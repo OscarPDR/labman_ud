@@ -16,7 +16,7 @@
                 {% for publication in related_publications %}
                     <tr>
                         <td>
-                            <a href="{% url publication_info publication.slug %}">
+                            <a href="{% url 'publication_info' publication.slug %}">
                                 <i class="fa fa-chevron-right"></i> {{ publication.title }}
                             </a>
                         </td>
