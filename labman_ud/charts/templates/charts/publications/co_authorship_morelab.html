@@ -5,15 +5,15 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url chart_index %}">Charts</a></li>
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
 
-        <li><a href="{% url publication_index %}">Publications</a></li>
+        <li><a href="{% url 'publication_index' %}">Publications</a></li>
 
         <li class="active">Co-authorships within MORElab</li>
     </ul>
 
     <br>
-    
+
     <div id="co-authorship-graph"></div>
 
     <br>
@@ -25,7 +25,7 @@
 {% block scripts %}
 
     <script src="{{ STATIC_PREFIX }}js/d3.v3.min.js"></script>
-    
+
     <script>
         var graph = {{ data|safe }};
 
@@ -69,7 +69,7 @@
                 // .on("mouseover", function);
                 // .on("mouseover", fade(0.1))
                 // .on("mouseout", fade(1));
-        
+
             function neighboring(a, b) {
                 return graph.links.some(function(l) {
                     if (a == b)
@@ -112,7 +112,7 @@
 
             var publications = link.append("title")
                 .text(function(d) { return 'Share ' + d.weight + ' publications.'; });
-        
+
             force.on("tick", function() {
                 link
                     .attr("x1", function(d) { return d.source.x; })
@@ -120,14 +120,14 @@
                     .attr("x2", function(d) { return d.target.x; })
                     .attr("y2", function(d) { return d.target.y; });
 
-                gnodes.attr("transform", function(d) { 
-                    return 'translate(' + [d.x, d.y] + ')'; 
+                gnodes.attr("transform", function(d) {
+                    return 'translate(' + [d.x, d.y] + ')';
                 });
 
-                labels.attr("transform", function(d) { 
-                    return 'translate(' + [16, 3] + ')'; 
+                labels.attr("transform", function(d) {
+                    return 'translate(' + [16, 3] + ')';
                 });
-          
+
             });
         };
 

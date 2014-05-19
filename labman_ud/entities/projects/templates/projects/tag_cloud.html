@@ -28,7 +28,7 @@
     <script>
         var word_array = [
             {% for key, value in tag_dict.items %}
-             {text: "{{ key }}", weight: "{{ value }}", link:"{% url view_project_tag key|slugify %}"},
+             {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_project_tag' key|slugify %}"},
             {% endfor %}
         ];
 

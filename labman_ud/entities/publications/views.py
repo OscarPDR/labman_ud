@@ -80,7 +80,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Publications',
+        'web_title': u'Publications',
         'clean_index': clean_index,
         'form': form,
         'last_created': last_created,
@@ -105,6 +105,7 @@ def publication_info(request, slug):
     return_dict['current_tab'] = u'info'
     return_dict['web_title'] = publication.title
     return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
+
 
 def publication_related_projects(request, slug):
     publication = get_object_or_404(Publication, slug=slug)
@@ -198,6 +199,7 @@ def publication_tag_cloud(request):
 
     return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
 
+
 ###########################################################################
 # Feed: publications feeds
 ###########################################################################
@@ -207,10 +209,10 @@ class LatestPublicationsFeed(Feed):
         super(LatestPublicationsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title       = "MORElab publications"
+    title = "MORElab publications"
     description = "MORElab publications"
 
-    def get_object(self, request): 
+    def get_object(self, request):
         self.__request.request = weakref.proxy(request)
         return super(LatestPublicationsFeed, self).get_object(request)
 
@@ -230,4 +232,3 @@ class LatestPublicationsFeed(Feed):
     def item_link(self, item):
         url = reverse('publication_info', args=[item.slug or 'no-slug-found'])
         return self.__request.request.build_absolute_uri(url)
-

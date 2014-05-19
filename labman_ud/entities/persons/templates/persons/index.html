@@ -10,7 +10,7 @@
             <h2>{{ persons_length }} person{{ persons|pluralize }}</h2>
         {% elif query_string %}
             <h2>{{ persons_length }} person{{ persons|pluralize }} found for <em>'{{ query_string }}'</em>
-            &emsp;<small><a id="clean-filters" href="{% url person_index %}">Clean filters</a></small></h2>
+            &emsp;<small><a id="clean-filters" href="{% url 'person_index' %}">Clean filters</a></small></h2>
         {% endif %}
     </div>
 
@@ -52,7 +52,7 @@
                                 <i class="fa fa-user fa-large"></i>&emsp;
                             {% endif %}
 
-                            <a href="{% url determine_person_info person.slug %}">
+                            <a href="{% url 'determine_person_info' person.slug %}">
                                 {{ person.full_name }}
                             </a>
                         </td>

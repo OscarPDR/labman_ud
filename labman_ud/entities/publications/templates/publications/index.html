@@ -16,7 +16,7 @@
             {% elif query_string %}
                 <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
             {% endif %}
-            &emsp;<small><a id="clean-filters" href="{% url publication_index %}">Clean filters</a></small></h2>
+            &emsp;<small><a id="clean-filters" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
         {% endif %}
     </div>
 
@@ -35,13 +35,13 @@
         <form>
 
         <div class="col-md-2 pull-right">
-            <a href="{% url publication_feed %}" class="btn btn-info">
+            <a href="{% url 'publication_feed' %}" class="btn btn-info">
                 <i class="fa fa-rss"></i>&emsp;Subscribe
             </a>
         </div>
 
         <div class="col-md-2 pull-right">
-            <a href="{% url publication_tag_cloud %}" class="btn btn-info">
+            <a href="{% url 'publication_tag_cloud' %}" class="btn btn-info">
                 <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
             </a>
         </div>
@@ -72,7 +72,7 @@
                             <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
                                 <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                             </a>
-                            <a href="{% url publication_info publication.slug %}">
+                            <a href="{% url 'publication_info' publication.slug %}">
                                 {{ publication.title }}
                             </a>
 
@@ -92,7 +92,7 @@
                         </td>
 
                         <td class="col-md-2">
-                            <a href="{% url view_publication_type publication.publication_type.slug %}">
+                            <a href="{% url 'view_publication_type' publication.publication_type.slug %}">
                                 {{ publication.publication_type.name }}
                             </a>
                         </td>

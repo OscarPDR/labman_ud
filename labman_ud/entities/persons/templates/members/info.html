@@ -110,36 +110,42 @@
         <div class="col-md-9">
 
             <div class="centered">
-                        <a href="{% url member_info member.slug %}" class="btn btn-primary general-member-button member_biography">
-                            <i class="fa fa-user fa-large"></i>&emsp;Biography
-                        </a>
+                <a href="{% url 'member_info' member.slug %}" class="btn btn-primary general-member-button member_biography">
+                    <i class="fa fa-user fa-large"></i>&emsp;Biography
+                </a>
 
-                        <a href="{% url member_projects member.slug %}" class="btn btn-default general-member-button member_projects">
-                            <i class="fa fa-gears fa-large"></i>&emsp;
-                            {{ number_of_projects }} project{{ number_of_projects|pluralize }}
-                        </a>
+                <a href="{% url 'member_projects' member.slug %}" class="btn btn-default general-member-button member_projects">
+                    <i class="fa fa-gears fa-large"></i>&emsp;
+                    {{ number_of_projects }} project{{ number_of_projects|pluralize }}
+                </a>
 
-                    <div class="btn-group">
-                        <a href="{% url member_publications member.slug %}" class="btn btn-default general-member-button member_publications">
-                            <i class="fa fa-file-text-o fa-large"></i>
-                            &emsp;{{ number_of_publications }} publication{{ number_of_publications|pluralize }}
-                        </a>
-                      <button type="button" class="btn btn-default dropdown-toggle general-member-button member_publications" data-toggle="dropdown">
+                <div class="btn-group">
+                    <a href="{% url 'member_publications' member.slug %}" class="btn btn-default general-member-button member_publications">
+                        <i class="fa fa-file-text-o fa-large"></i>
+                        &emsp;{{ number_of_publications }} publication{{ number_of_publications|pluralize }}
+                    </a>
+
+                    <button type="button" class="btn btn-default dropdown-toggle general-member-button member_publications" data-toggle="dropdown">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
                         {% for pubtype_slug, pubtype_name, number in pubtype_info %}
-                            <li><a href="{% url member_publications member.slug pubtype_slug %}">{{ number }} {{ pubtype_name }}{{ number|pluralize }}</a></li>
+                            <li style="text-align: left;">
+                                <a href="{% url 'member_publications' member.slug pubtype_slug %}">
+                                    {{ number }} {{ pubtype_name }}{{ number|pluralize }}
+                                </a>
+                            </li>
                         {% endfor %}
-                      </ul>
-                    </div>
+                    </ul>
+                </div>
 
-                        <a href="{% url member_news member.slug %}" class="btn btn-default general-member-button member_news">
-                            <i class="fa fa-calendar fa-large"></i>&emsp;News
-                        </a>
-
+                <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
+                    <i class="fa fa-calendar fa-large"></i>&emsp;News
+                </a>
             </div> <!-- end #member-tabs -->
+
             <br>
 
             <div id="member-tab-content" class="tab-content">
@@ -165,15 +171,15 @@
 
                         <ul>
                             <li>
-                                <a href="{% url publications_egonetwork member.slug %}">Egonetwork</a>
+                                <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
                             </li>
 
                             <li>
-                                <a href="{% url publications_by_author member.slug %}">Number of publications</a>
+                                <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
                             </li>
 
                             <li>
-                                <a href="{% url tags_by_author member.slug %}">Tag cloud</a>
+                                <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
                             </li>
                         </ul>
                     </div>
@@ -199,7 +205,7 @@
         });
         $(".emaildomain").each(function(index) {
             $(this).hide();
-        }); 
+        });
     </script>
 
     <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>

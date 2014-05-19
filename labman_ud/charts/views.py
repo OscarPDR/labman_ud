@@ -4,7 +4,7 @@ from itertools import combinations
 from collections import defaultdict, OrderedDict
 from datetime import date
 
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -30,7 +30,7 @@ import networkx as nx
 ###########################################################################
 
 def chart_index(request):
-    return render_to_response('charts/index.html', { 'web_title' : 'Charts' })
+    return render_to_response('charts/index.html', {'web_title': 'Charts'})
 
 
 ###########################################################################
@@ -57,7 +57,7 @@ def funding_total_incomes(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes',
+        'web_title': u'Total incomes',
         'incomes': incomes,
     }
 
@@ -86,7 +86,7 @@ def funding_incomes_by_year(request, year):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes by year',
+        'web_title': u'Total incomes by year',
         'incomes': incomes,
         'year': year,
     }
@@ -132,7 +132,7 @@ def funding_incomes_by_year_and_scope(request, year, scope):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes by year and scope',
+        'web_title': u'Total incomes by year and scope',
         'project_incomes': project_incomes,
         'scope': scope,
         'year': year,
@@ -150,7 +150,7 @@ def funding_incomes_by_project_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes by project index',
+        'web_title': u'Total incomes by project index',
         'projects': projects,
     }
 
@@ -170,7 +170,7 @@ def funding_incomes_by_project(request, project_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes by project',
+        'web_title': u'Total incomes by project',
         'project': project,
         'project_incomes': project_incomes,
     }
@@ -232,7 +232,7 @@ def funding_total_incomes_by_scope(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Total incomes by scope',
+        'web_title': u'Total incomes by scope',
         'incomes': incomes,
         'total_incomes': total_incomes,
         'year': year,
@@ -279,13 +279,14 @@ def publications_number_of_publications(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Number of publications',
+        'web_title': u'Number of publications',
         'publication_types': publication_types,
         'publications': publications,
         'years': years,
     }
 
     return render_to_response("charts/publications/number_of_publications.html", return_dict, context_instance=RequestContext(request))
+
 
 ###########################################################################
 # View: projects_number_of_projects
@@ -298,7 +299,8 @@ def projects_number_of_projects(request):
         geographical_scopes_by_id[geographical_scope.id] = geographical_scope.name
 
     fundings = Funding.objects.all().select_related('project', 'funding_program')
-    projects_data = defaultdict(lambda : defaultdict(set)) # {
+    projects_data = defaultdict(lambda: defaultdict(set))
+    # {
     #    year : {
     #        project_id : [ scope1, scope2, scope3 ]
     #    }
@@ -313,11 +315,7 @@ def projects_number_of_projects(request):
 
     years = sorted(projects_data.keys())
 
-    projects = {
-        # scope : {
-            # year : number
-        # }
-    }
+    projects = {}
 
     for scope in scopes:
         projects[scope] = OrderedDict()
@@ -331,7 +329,7 @@ def projects_number_of_projects(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Number of projects',
+        'web_title': u'Number of projects',
         'projects': projects,
         'years': years,
     }
@@ -348,15 +346,14 @@ def publications_coauthorship(request, max_position=None):
     G = nx.Graph()
 
     if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id","author_id","author_id__full_name")
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
     else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
+        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
 
-    people = Person.objects.all().values("is_active","id")
-    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
-        entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+        entry = (pub_author['author_id'], pub_author['author_id__full_name'])
         authors_per_publication[pub_author['publication_id']].append(entry)
 
     for relations in authors_per_publication.values():
@@ -367,7 +364,7 @@ def publications_coauthorship(request, max_position=None):
                 G[author_id1][author_id2]['weight'] += 1
             except:
                 G[author_id1][author_id2]['weight'] = 1
-            
+
             G.node[author_id1]['name'] = name1
             G.node[author_id2]['name'] = name2
 
@@ -377,7 +374,7 @@ def publications_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Publications co-authorship',
+        'web_title': u'Publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -390,22 +387,22 @@ def publications_coauthorship(request, max_position=None):
 
 def publications_morelab_coauthorship(request, max_position=None):
     G = nx.Graph()
-    
-    if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id","author_id","author_id__full_name")
-    else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
 
-    people = Person.objects.all().values("is_active","id")
+    if max_position and int(max_position) > 1:
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
+    else:
+        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
+
+    people = Person.objects.all().values("is_active", "id")
     active_by_id = {}
     for person in people:
         active_by_id[person['id']] = person['is_active']
-    
-    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+
+    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
         if active_by_id[pub_author['author_id']]:
-            entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+            entry = (pub_author['author_id'], pub_author['author_id__full_name'])
             authors_per_publication[pub_author['publication_id']].append(entry)
 
     for relations in authors_per_publication.values():
@@ -416,7 +413,7 @@ def publications_morelab_coauthorship(request, max_position=None):
                 G[author_id1][author_id2]['weight'] += 1
             except:
                 G[author_id1][author_id2]['weight'] = 1
-            
+
             G.node[author_id1]['name'] = name1
             G.node[author_id2]['name'] = name2
 
@@ -426,7 +423,7 @@ def publications_morelab_coauthorship(request, max_position=None):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Group publications co-authorship',
+        'web_title': u'Group publications co-authorship',
         'data': json.dumps(data),
     }
 
@@ -464,7 +461,7 @@ def projects_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Collaborations',
+        'web_title': u'Collaborations',
         'data': json.dumps(data),
     }
 
@@ -503,7 +500,7 @@ def projects_morelab_collaborations(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'Group collaborations',
+        'web_title': u'Group collaborations',
         'data': json.dumps(data),
     }
 
@@ -519,12 +516,12 @@ def publications_egonetwork(request, author_slug):
 
     G = nx.Graph()
 
-    pub_authors = PublicationAuthor.objects.all().values("publication_id","author_id","author_id__full_name")
-    
-    authors_per_publication = defaultdict(list) # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+    pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
+
+    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
-        entry = (pub_author['author_id'], pub_author['author_id__full_name'] )
+        entry = (pub_author['author_id'], pub_author['author_id__full_name'])
         authors_per_publication[pub_author['publication_id']].append(entry)
 
     for relations in authors_per_publication.values():
@@ -535,7 +532,7 @@ def publications_egonetwork(request, author_slug):
                 G[author_id1][author_id2]['weight'] += 1
             except:
                 G[author_id1][author_id2]['weight'] = 1
-            
+
             G.node[author_id1]['name'] = name1
             G.node[author_id2]['name'] = name2
 
@@ -549,7 +546,7 @@ def publications_egonetwork(request, author_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'publication_tags_per_year': publication_tags_per_year,
-        'web_title' : u'%s - Egonetwork' % author.full_name,
+        'web_title': u'%s - Egonetwork' % author.full_name,
         'data': json.dumps(data),
         'author': author,
     }
@@ -574,11 +571,10 @@ def publications_by_author(request, author_slug):
     max_year = _publications.aggregate(Max('year'))
 
     max_year = date.today().year
-    # At least 7 years must be provided (even if they're 0) to 
+    # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
     # people who published lately
     min_year = min(max_year - 7, min_year.get('year__min'))
-
 
     years = []
 
@@ -599,7 +595,7 @@ def publications_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'%s - Number of publications' % author.full_name,
+        'web_title': u'%s - Number of publications' % author.full_name,
         'author': author,
         'publication_types': publication_types,
         'publications': publications,
@@ -630,7 +626,7 @@ def tags_by_author(request, author_slug):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : u'%s - Tag cloud' % author.full_name,
+        'web_title': u'%s - Tag cloud' % author.full_name,
         'author': author,
         'tag_dict': tag_dict,
     }
