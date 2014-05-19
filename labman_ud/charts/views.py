@@ -13,7 +13,8 @@ from charts.utils import nx_graph
 from networkx.readwrite import json_graph
 
 from entities.funding_programs.models import FundingProgram
-from entities.persons.models import Person
+from entities.organizations.models import Organization
+from entities.persons.models import Person, Job
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import GeographicalScope, Role
@@ -21,6 +22,7 @@ from entities.utils.models import GeographicalScope, Role
 import json
 import networkx as nx
 
+from entities.persons.views import OWN_ORGANIZATION_SLUGS
 
 # Create your views here.
 
@@ -632,3 +634,165 @@ def tags_by_author(request, author_slug):
     }
 
     return render_to_response('charts/publications/tags_by_author.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# View: group_timeline
+###########################################################################
+
+def cmp_members_by_start_date(member1, member2):
+    for field in 'start_year', 'start_month', 'end_year', 'end_month':
+        if member1[field] != member2[field]:
+            return cmp(member1[field], member2[field])
+
+    return 0
+
+def cmp_members_by_current_date(member1, member2):
+    for field in 'end_year', 'end_month':
+        if member1[field] != member2[field]:
+            return cmp(member2[field], member1[field])
+
+    for field in 'start_year', 'start_month':
+        if member1[field] != member2[field]:
+            return cmp(member1[field], member2[field])
+
+
+    return 0
+
+def cmp_members_by_length_current_first(member1, member2):
+    if member1['current'] != member2['current']:
+        if member1['current']:
+            return -1
+        else:
+            return 1
+    
+    return cmp(member2['length'], member1['length'])
+
+def recursively(result, time_together_per_member, already_processed, member):
+    for current_element, days in time_together_per_member[member]:
+        if current_element not in already_processed:
+            result.append(current_element)
+            already_processed.add(current_element)
+            recursively(result, time_together_per_member, already_processed, current_element)
+
+def sort_members_by_together_time(members):
+    members_by_member = {}
+    max_length = 0
+    max_member = None
+    for member in members:
+        members_by_member[member['member']] = member
+        if member['length'].days > max_length:
+            max_length = member['length'].days
+            max_member = member['member']
+
+    # Build dictionary such as
+    time_together_per_member = OrderedDict()
+        # member1 : [ (member2, 15), (member3, 10) ...] # Sorted by days_together
+    
+    sorted_member_info = sorted(members, lambda m1, m2 : cmp(m2['length'], m1['length']))
+    sorted_members = map(lambda x : x['member'], sorted_member_info)
+
+    members_per_day_together = defaultdict(list)
+        # 315 : [('a','b'), ('a','c'), ('d','e')],
+
+    for member1 in sorted_member_info:
+        time_together_per_member[member1['member']] = []
+
+        for member2 in members:
+            if member1 == member2:
+                continue
+
+            max_start = max(member1['start'], member2['start'])
+            min_end = min(member1['end'], member2['end'])
+            if max_start > min_end:
+                days_together = 0
+            else:
+                days_together = (min_end - max_start).days
+            
+            if days_together:
+                time_together_per_member[member1['member']].append( (member2['member'], days_together ))
+                members_per_day_together[days_together].append( (member1['member'], member2['member']))
+
+        time_together_per_member[member1['member']].sort(lambda (m1, d1), (m2, d2) : cmp(d2, d1))
+    
+    already_processed = set([max_member])
+
+    sorted_list = [max_member]
+    recursively(sorted_list, time_together_per_member, already_processed, max_member)
+
+    if False:
+        for key in sorted(members_per_day_together, reverse = True):
+            for member1, member2 in members_per_day_together[key]:
+                if member1 not in already_processed:
+                    sorted_list.append(member1)
+                    already_processed.add(member1)
+
+                if member2 not in already_processed:
+                    sorted_list.append(member2)
+                    already_processed.add(member2)
+
+    return map(lambda x : members_by_member[x], sorted_list)
+
+
+def group_timeline(request):
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+    member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
+    member_list = Person.objects.filter(id__in=member_ids).select_related('jobs')
+    members = []
+    for member in member_list:
+        jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
+        first_job = jobs[0]
+        if first_job.start_date is None:
+            print "Skipping", member.full_name
+            continue
+
+        record = {
+            'member' : member, 
+            'start_year' : first_job.start_date.year, 
+            'start_month' : first_job.start_date.month,
+            'start' : first_job.start_date,
+        }
+        last_job = jobs.reverse()[0]
+
+        if last_job.end_date is not None:
+            record.update({
+                'end_year' : last_job.end_date.year, 
+                'end_month' : last_job.end_date.month,
+                'end' : last_job.end_date,
+                'length' : last_job.end_date - first_job.start_date,
+                'current' : False,
+            })
+        else:
+            today = date.today()
+            record.update({
+                'end_year' : today.year, 
+                'end_month' : today.month,
+                'end' : today,
+                'length' : today - first_job.start_date,
+                'current' : True,
+            })
+        members.append(record)
+
+    algorithms = {
+        0 : cmp_members_by_start_date,
+        1 : cmp_members_by_current_date,
+        2 : cmp_members_by_length_current_first,
+        3 : sort_members_by_together_time
+    }
+    sort_algorithm = request.GET.get('sort', 0)
+    try:
+        sort_algorithm_number = int(sort_algorithm)
+        if sort_algorithm_number >= len(algorithms):
+            sort_algorithm_number = 0
+    except:
+        sort_algorithm_number = 0
+    
+    if sort_algorithm_number in [3]:
+        members = algorithms[sort_algorithm_number](members)
+    else:
+        members.sort(algorithms[sort_algorithm_number])
+
+    return_dict = {
+        'members' : members,
+        'chart_height' : len(members) * 50,
+    }
+    return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))

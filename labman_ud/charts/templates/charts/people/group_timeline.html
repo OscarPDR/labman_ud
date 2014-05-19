@@ -1,0 +1,56 @@
+{% extends "labman_ud/base.html" %}
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
+
+        <li><a href="{% url 'members' %}">Members</a></li>
+
+        <li class="active">Timeline</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4>Group timeline</h4>
+
+        <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
+    <script>
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+          var container = document.getElementById('chart_div');
+
+          var chart = new google.visualization.Timeline(container);
+
+          var dataTable = new google.visualization.DataTable();
+
+          dataTable.addColumn({ type: 'string', id: 'Member' });
+          dataTable.addColumn({ type: 'date', id: 'Start' });
+          dataTable.addColumn({ type: 'date', id: 'End' });
+
+          dataTable.addRows([
+            {% for member_info in members %}
+                [ "{{ member_info.member }}", new Date({{ member_info.start_year }}, {{ member_info.start_month }}, 1), new Date({{ member_info.end_year }}, {{ member_info.end_month }}, 1) ],
+            {% endfor %}
+          ]);
+
+          chart.draw(dataTable);
+        }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

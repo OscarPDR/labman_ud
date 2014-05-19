@@ -29,6 +29,8 @@ urlpatterns = patterns('',
     url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
     url(r'^projects/total_number/$', 'charts.views.projects_number_of_projects', name='projects_number_of_projects'),
 
+    # /people
+    url(r'^people/timeline/$', 'charts.views.group_timeline', name='group_timeline'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
