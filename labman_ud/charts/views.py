@@ -52,7 +52,7 @@ def funding_total_incomes(request):
         income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
         if income['value'] is None:
             income['value'] = 0
-        certainty = False if (year > current_year) else True
+        certainty = False if (year >= current_year) else True
         incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
 
     # dictionary to be returned in render_to_response()
@@ -219,7 +219,7 @@ def funding_total_incomes_by_scope(request):
         euskadi = int(incomes[year]['Euskadi'])
         spain = int(incomes[year]['Spain'])
         europe = int(incomes[year]['Europe'])
-        certainty = False if (year > current_year) else True
+        certainty = False if (year >= current_year) else True
         # total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe), certainty])
         total_incomes.append({
             'year': year,
