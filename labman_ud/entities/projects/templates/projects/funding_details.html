@@ -26,7 +26,7 @@
                             <div class="col-md-6">
                                 <h5>Supported by:</h5>
                                 <p>
-                                    {{ funding_program.short_name }} - {{ funding_program.organization.full_name }}
+                                    <a href="{% url 'funding_program_info' funding_program.slug %}">{{ funding_program.short_name }}</a> - {{ funding_program.organization.full_name }}
                                     {% if funding_program.organization.sub_organization_of %}
                                         ({{ funding_program.organization.sub_organization_of.full_name }})
                                     {% endif %}
