@@ -8,7 +8,7 @@
         {% csrf_token %}
         <div class="input-append">
             {{ form.text }}
-            <a class="close" href="{% url funding_program_index %}">&times;</a>
+            <a class="close" href="{% url 'funding_program_index' %}">&times;</a>
             <button type="submit" class="btn">Search</button>
         </div>
     <form>
@@ -41,13 +41,13 @@
             {% for funding_program in funding_programs %}
                 <tr>
                     <td class="span4">
-                        <a href="{% url funding_program_info funding_program.slug %}" data-toggle="tooltip" data-placement="bottom" title="{{ funding_program.full_name }}">
+                        <a href="{% url 'funding_program_info' funding_program.slug %}" data-toggle="tooltip" data-placement="bottom" title="{{ funding_program.full_name }}">
                             {{ funding_program.short_name }}
                         </a>
                     </td>
 
                     <td class="span8">
-                        <a href="{% url organization_info funding_program.organization.slug %}">
+                        <a href="{% url 'organization_info' funding_program.organization.slug %}">
                             {{ funding_program.organization.full_name }}
 
                             {% if funding_program.organization.sub_organization_of %}

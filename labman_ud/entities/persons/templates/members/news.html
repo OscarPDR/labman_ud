@@ -3,11 +3,11 @@
 
 
 {% block member_content %}
-    
+
     <blockquote>
-        <p><a href="{% url member_feeds_news member.slug %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
+        <p><a href="{% url 'member_feeds_news' member.slug %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
     </blockquote>
-    
+
     {% if news %}
         {% for key, value in news.items %}
             <blockquote>
@@ -16,7 +16,7 @@
                 <dl class="dl-horizontal">
                     {% for item in value %}
                         <dt class="day-number">{{ item.created|date:"d" }}</dt>
-                        <dd class="news-title"><a href="{% url view_news item.slug %}">{{ item.title }}</a></dd>
+                        <dd class="news-title"><a href="{% url 'view_news' item.slug %}">{{ item.title }}</a></dd>
                     {% endfor %}
                 </dl>
             </blockquote>

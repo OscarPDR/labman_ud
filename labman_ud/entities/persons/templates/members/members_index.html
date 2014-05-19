@@ -6,11 +6,11 @@
 
     <div class="pull-right">
         Filters:&emsp;
-        <a href="{% url members_by_organization 'deustotech-internet' %}">
+        <a href="{% url 'members_by_organization' 'deustotech-internet' %}">
             <span class="label label-primary">DeustoTech - Internet</span>
         </a>
         &emsp;
-        <a href="{% url members_by_organization 'deustotech-telecom' %}">
+        <a href="{% url 'members_by_organization' 'deustotech-telecom' %}">
             <span class="label label-success">DeustoTech - Telecom</span>
         </a>
     </div>
@@ -36,7 +36,7 @@
         {% if not organization_slug or organization_slug == 'deustotech-internet' %}
             <div id="head_of_internet" class="col-md-3 member">
                 <div class="centered">
-                    <a href="{% url member_info head_of_internet.slug %}">
+                    <a href="{% url 'member_info' head_of_internet.slug %}">
                         {% if head_of_internet.profile_picture_url %}
                             <img class="head-internet-image" src="{{ MEDIA_PREFIX }}{{ head_of_internet.profile_picture_url }}"/>
                         {% else %}
@@ -65,7 +65,7 @@
         {% if not organization_slug or organization_slug == 'deustotech-telecom' %}
             <div id="head_of_telecom" class="col-md-3 member">
                 <div class="centered">
-                    <a href="{% url member_info head_of_telecom.slug %}">
+                    <a href="{% url 'member_info' head_of_telecom.slug %}">
                         {% if head_of_telecom.profile_picture_url %}
                             <img class="head-telecom-image" src="{{ MEDIA_PREFIX }}{{ head_of_telecom.profile_picture_url }}"/>
                         {% else %}
@@ -92,7 +92,7 @@
         {% endif %}
 
         <div>
-            <a class="btn btn-large btn-primary pull-right" href="{% url former_members %}">
+            <a class="btn btn-large btn-primary pull-right" href="{% url 'former_members' %}">
                 <i class="fa fa-step-backward"></i>&emsp;Former members
             </a>
             <div class="col-md-3 pull-right">
@@ -110,7 +110,7 @@
 
                 <div class="col-md-3 member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
                     <div class="centered">
-                        <a href="{% url member_info member.slug %}">
+                        <a href="{% url 'member_info' member.slug %}">
                             {% if member.profile_picture_url %}
                                 <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
                             {% else %}

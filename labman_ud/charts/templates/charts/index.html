@@ -13,15 +13,15 @@
 
                 <ul>
                     <li>
-                        <a href="{% url funding_total_incomes %}">Total incomes</a>
+                        <a href="{% url 'funding_total_incomes' %}">Total incomes</a>
                     </li>
 
                     <li>
-                        <a href="{% url funding_total_incomes_by_scope %}">Total incomes by scope</a>
+                        <a href="{% url 'funding_total_incomes_by_scope' %}">Total incomes by scope</a>
                     </li>
 
                     <li>
-                        <a href="{% url funding_incomes_by_project_index %}">Total incomes by project</a>
+                        <a href="{% url 'funding_incomes_by_project_index' %}">Total incomes by project</a>
                     </li>
                 </ul>
             </div>
@@ -35,12 +35,12 @@
 
                 <ul>
                     <li>
-                        <a href="{% url projects_collaborations %}">Collaborations</a>
+                        <a href="{% url 'projects_collaborations' %}">Collaborations</a>
                     </li>
 
                     <ul>
                         <li>
-                            <a href="{% url projects_morelab_collaborations %}">Collaborations within MORElab</a>
+                            <a href="{% url 'projects_morelab_collaborations' %}">Collaborations within MORElab</a>
                         </li>
                     </ul>
                 </ul>
@@ -55,16 +55,16 @@
 
                 <ul>
                     <li>
-                        <a href="{% url publications_number_of_publications %}">Number of publications</a>
+                        <a href="{% url 'publications_number_of_publications' %}">Number of publications</a>
                     </li>
 
                     <li>
-                        <a href="{% url publications_coauthorship %}">Co-authorship</a>
+                        <a href="{% url 'publications_coauthorship' %}">Co-authorship</a>
                     </li>
 
                     <ul>
                         <li>
-                            <a href="{% url publications_morelab_coauthorship %}">Co-authorship within MORElab</a>
+                            <a href="{% url 'publications_morelab_coauthorship' %}">Co-authorship within MORElab</a>
                         </li>
                     </ul>
                 </ul>

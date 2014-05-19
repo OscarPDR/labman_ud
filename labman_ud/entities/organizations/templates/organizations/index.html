@@ -14,7 +14,7 @@
             {% elif query_string %}
                 <h2>{{ organizations_length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
             {% endif %}
-            &emsp;<small><a id="clean-filters" href="{% url organization_index %}">Clean filters</a></small></h2>
+            &emsp;<small><a id="clean-filters" href="{% url 'organization_index' %}">Clean filters</a></small></h2>
         {% endif %}
     </div>
 
@@ -56,7 +56,7 @@
                         <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
                             <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
                         </a>&emsp;
-                        <a href="{% url organization_info organization.slug %}">
+                        <a href="{% url 'organization_info' organization.slug %}">
                             {{ organization.full_name }}
                             {% if organization.short_name != organization.short_name %}
                             : {{ organization.full_name }}
@@ -71,7 +71,7 @@
                     </td>
 
                     <td class="col-md-3">
-                        <a href="{% url view_organization_type organization.organization_type.slug %}">
+                        <a href="{% url 'view_organization_type' organization.organization_type.slug %}">
                             {{ organization.organization_type.name }}
                         </a>
                     </td>

@@ -42,4 +42,4 @@ class OrganizationForm(forms.ModelForm):
         widgets = {
             'homepage': URLInput(attrs={'placeholder': 'http://'}),
         }
-        exclude = ('slug')
+        exclude = ('slug',)
