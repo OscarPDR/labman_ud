@@ -738,19 +738,22 @@ def group_timeline(request):
     member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
     member_list = Person.objects.filter(id__in=member_ids).select_related('jobs')
     members = []
+    members_by_id = {}
     for member in member_list:
         jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
         first_job = jobs[0]
         if first_job.start_date is None:
             continue
 
+        last_job = jobs.reverse()[0]
         record = {
-            'member' : member, 
+            'member' : member.full_name, 
+            'organization' : last_job.organization,
             'start_year' : first_job.start_date.year, 
             'start_month' : first_job.start_date.month,
             'start' : first_job.start_date,
         }
-        last_job = jobs.reverse()[0]
+
 
         if last_job.end_date is not None:
             record.update({
@@ -770,6 +773,7 @@ def group_timeline(request):
                 'current' : True,
             })
         members.append(record)
+        members_by_id[record['member']] = record
 
     algorithms = {
         0 : cmp_members_by_start_date,
@@ -790,8 +794,14 @@ def group_timeline(request):
     else:
         members.sort(algorithms[sort_algorithm_number])
 
+    units = []
+    for member in members:
+        units.append(member['organization'].short_name)
+
     return_dict = {
         'members' : members,
         'chart_height' : len(members) * 50,
+        'units' : units,
+        'distinct_units' : sorted(set(units)),
     }
     return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))
