@@ -15,16 +15,13 @@
                     <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
-                    {% if item.working_period %}
-                        &emsp;{{ item.working_period }}
-                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
 
         <br>
         {% endif %}
-        
+
         {% if principal_researchers %}
         <h5>Principal researcher{{ principal_researchers|pluralize }}</h5>
 
@@ -34,9 +31,6 @@
                     <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
-                    {% if item.working_period %}
-                        &emsp;{{ item.working_period }}
-                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
@@ -53,13 +47,15 @@
                     <a href="{% url 'determine_person_info' item.slug %}">
                         {{ item.full_name }}
                     </a>
-                    {% if item.working_period %}
-                        &emsp;{{ item.working_period }}
-                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
         {% endif %}
+
+        <br>
+        <br>
+
+        <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
     </div>
 
 {% endblock %}
@@ -67,6 +63,81 @@
 
 
 {% block project_scripts %}
+
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
+
+    <script>
+        var item_width = $("#project-assigned-persons").width();
+        $("#chart_div").width(item_width)
+
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var container = document.getElementById('chart_div');
+
+            var chart = new google.visualization.Timeline(container);
+
+            var dataTable = new google.visualization.DataTable();
+
+            dataTable.addColumn({ type: 'string', id: 'Member' });
+            dataTable.addColumn({ type: 'date', id: 'Start' });
+            dataTable.addColumn({ type: 'date', id: 'End' });
+
+            var timeline = [];
+
+            {% for person in project_managers %}
+                var start_year = {{ person.start_date|date:"Y" }};
+                var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var start_day = {{ person.start_date|date:"d" }};
+
+                var start_date = new Date(start_year, start_month, start_day);
+
+                var end_year = {{ person.end_date|date:"Y" }};
+                var end_month = {{ person.end_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var end_day = {{ person.end_date|date:"d" }};
+
+                var end_date = new Date(end_year, end_month, end_day);
+
+                timeline.push(["{{ person.full_name }}", start_date, end_date]);
+            {% endfor %}
+
+            {% for person in researchers %}
+                {% if person.start_date %}
+                    var start_year = {{ person.start_date|date:"Y" }};
+                    var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
+                    var start_day = {{ person.start_date|date:"d" }};
+
+                    var start_date = new Date(start_year, start_month, start_day);
+                {% else %}
+                    var start_year = {{ project.start_year }};
+                    var start_month = {{ project.start_month }} - 1;    // JS date object starts months in 0
+                    var start_day = 1;
+                {% endif %}
+
+                var start_date = new Date(start_year, start_month, start_day);
+
+                console.log(start_date);
+
+                {% if person.end_date %}
+                    var end_year = {{ person.end_date|date:"Y" }};
+                    var end_month = {{ person.end_date|date:"m" }} - 1;    // JS date object starts months in 0
+                    var end_day = {{ person.end_date|date:"d" }};
+                {% else %}
+                    var end_year = new Date().getFullYear();
+                    var end_month = new Date().getMonth();
+                    var end_day = new Date().getDate();
+                {% endif %}
+
+                var end_date = new Date(end_year, end_month, end_day);
+
+                timeline.push(["{{ person.full_name }}", start_date, end_date]);
+            {% endfor %}
+
+            dataTable.addRows(timeline);
+
+            chart.draw(dataTable);
+        }
+    </script>
 
     <script>
         $('.project_info').removeClass('active');

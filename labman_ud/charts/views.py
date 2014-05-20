@@ -790,7 +790,7 @@ def group_timeline(request):
     sort_algorithm = request.GET.get('sort', algorithms.keys()[0])
     if sort_algorithm not in algorithms:
         sort_algorithm = algorithms.keys()[0]
-    
+
     if sort_algorithm in ['Colleagues']:
         members = algorithms[sort_algorithm](members)
     else:
@@ -868,3 +868,72 @@ def person_timeline(request, person_slug):
     }
 
     return render_to_response('charts/people/person_timeline.html', return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: projects_timeline
+###########################################################################
+
+def projects_timeline(request, person_slug):
+    person = Person.objects.get(slug=person_slug)
+
+    timeline = []
+
+    assigned_persons = AssignedPerson.objects.filter(person_id=person.id).order_by('project__start_year', 'project__start_month', 'project__end_year', 'project__end_month')
+
+    for assigned_person in assigned_persons:
+        role_name = assigned_person.role.name
+        if role_name.lower() != 'principal researcher':
+            project = Project.objects.get(id=assigned_person.project_id)
+
+            timeline_item = {
+                'project_full_name': project.full_name,
+                'project_short_name': project.short_name,
+                'project_slug': project.slug,
+            }
+
+            person_start_date = assigned_person.start_date
+            first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
+            person_first_job = first_job.start_date
+            project_start_date = date(int(project.start_year), int(project.start_month), 1)
+
+            start_dates = []
+
+            if person_start_date:
+                start_dates.append(person_start_date)
+            if person_first_job:
+                start_dates.append(person_first_job)
+            if project_start_date:
+                start_dates.append(project_start_date)
+
+            timeline_item['start_date'] = max(start_dates)
+
+            person_end_date = assigned_person.end_date
+            last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
+            person_last_job = last_job.end_date
+            project_end_date = date(int(project.end_year), int(project.end_month), 1)
+            today = date.today()
+
+            end_dates = []
+
+            if person_end_date:
+                end_dates.append(person_end_date)
+            if person_last_job:
+                end_dates.append(person_last_job)
+            if project_end_date:
+                end_dates.append(project_end_date)
+            if today:
+                end_dates.append(today)
+
+            timeline_item['end_date'] = min(end_dates)
+
+            if timeline_item['end_date'] > timeline_item['start_date']:
+                timeline.append(timeline_item)
+
+    return_dict = {
+        'person': person,
+        'timeline': timeline,
+        'chart_height': (len(timeline) + 1) * 50,
+    }
+
+    return render_to_response('charts/people/projects_timeline.html', return_dict, context_instance=RequestContext(request))
