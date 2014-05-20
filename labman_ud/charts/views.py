@@ -664,7 +664,7 @@ def cmp_members_by_length_current_first(member1, member2):
             return -1
         else:
             return 1
-    
+
     return cmp(member2['length'], member1['length'])
 
 def recursively(result, time_together_per_member, already_processed, member):
@@ -687,7 +687,7 @@ def sort_members_by_together_time(members):
     # Build dictionary such as
     time_together_per_member = OrderedDict()
         # member1 : [ (member2, 15), (member3, 10) ...] # Sorted by days_together
-    
+
     sorted_member_info = sorted(members, lambda m1, m2 : cmp(m2['length'], m1['length']))
     sorted_members = map(lambda x : x['member'], sorted_member_info)
 
@@ -707,13 +707,13 @@ def sort_members_by_together_time(members):
                 days_together = 0
             else:
                 days_together = (min_end - max_start).days
-            
+
             if days_together:
                 time_together_per_member[member1['member']].append( (member2['member'], days_together ))
                 members_per_day_together[days_together].append( (member1['member'], member2['member']))
 
         time_together_per_member[member1['member']].sort(lambda (m1, d1), (m2, d2) : cmp(d2, d1))
-    
+
     already_processed = set([max_member])
 
     sorted_list = [max_member]
@@ -754,9 +754,9 @@ def group_timeline(request):
 
         last_job = jobs[-1]
         record = {
-            'member' : member.full_name, 
+            'member' : member.full_name,
             'organization' : last_job.organization,
-            'start_year' : first_job.start_date.year, 
+            'start_year' : first_job.start_date.year,
             'start_month' : first_job.start_date.month - 1,
             'start' : first_job.start_date,
         }
@@ -764,7 +764,7 @@ def group_timeline(request):
 
         if last_job.end_date is not None:
             record.update({
-                'end_year' : last_job.end_date.year, 
+                'end_year' : last_job.end_date.year,
                 'end_month' : last_job.end_date.month - 1,
                 'end' : last_job.end_date,
                 'length' : last_job.end_date - first_job.start_date,
@@ -773,7 +773,7 @@ def group_timeline(request):
         else:
             today = date.today()
             record.update({
-                'end_year' : today.year, 
+                'end_year' : today.year,
                 'end_month' : today.month - 1,
                 'end' : today,
                 'length' : today - first_job.start_date,
@@ -802,10 +802,28 @@ def group_timeline(request):
 
     return_dict = {
         'members' : members,
-        'chart_height' : len(members) * 50,
+        'chart_height' : (len(members) + 1) * 50,
         'units' : units,
         'distinct_units' : sorted(set(units)),
         'algorithms' : algorithms.keys(),
         'current_algorithm' : sort_algorithm,
     }
     return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: person_timeline
+###########################################################################
+
+def person_timeline(request, person_slug):
+    person = Person.objects.get(slug=person_slug)
+
+    jobs = Job.objects.filter(person=person).order_by('start_date')
+
+    return_dict = {
+        'person': person,
+        'jobs': jobs,
+        'chart_height': (len(jobs) + 1) * 50,
+    }
+
+    return render_to_response('charts/people/person_timeline.html', return_dict, context_instance=RequestContext(request))
