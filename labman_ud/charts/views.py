@@ -800,7 +800,7 @@ def group_timeline(request):
 
     return_dict = {
         'members' : members,
-        'chart_height' : len(members) * 50,
+        'chart_height' : (len(members) + 1) * 50,
         'units' : units,
         'distinct_units' : sorted(set(units)),
     }
