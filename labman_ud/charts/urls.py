@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^people/timeline/(?P<person_slug>\S+)$', 'charts.views.person_timeline', name='person_timeline'),
     url(r'^people/projects_timeline/(?P<person_slug>\S+)$', 'charts.views.projects_timeline', name='projects_timeline'),
     url(r'^people/timeline/$', 'charts.views.group_timeline', name='group_timeline'),
+    url(r'^people/position_pie/$', 'charts.views.members_position_pie', name='position_pie'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
