@@ -817,8 +817,9 @@ def person_timeline(request, person_slug):
     jobs = Job.objects.filter(person=person).order_by('start_date')
 
     return_dict = {
-        'person' : person,
-        'jobs' : jobs,
+        'person': person,
+        'jobs': jobs,
+        'chart_height': len(jobs) * 50,
     }
 
     return render_to_response('charts/people/person_timeline.html', return_dict, context_instance=RequestContext(request))
