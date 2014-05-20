@@ -1,7 +1,6 @@
 {% extends "labman_ud/base.html" %}
 
 {% block content %}
-
     <ul class="breadcrumb">
         <li><a href="{% url 'chart_index' %}">Charts</a></li>
 
@@ -9,6 +8,12 @@
 
         <li class="active">Timeline</li>
     </ul>
+
+    <div class="text-center">
+        {% for algorithm in algorithms %}
+            <a href="{% url 'group_timeline' %}?sort={{ algorithm }}" class="btn {% if algorithm == current_algorithm %}btn-primary{% else %}btn-default{% endif %}">{{ algorithm }}</a>
+        {% endfor %}
+    </div>
 
     <div id="chart-div" class="centered">
         <h4>Group timeline</h4>

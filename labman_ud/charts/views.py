@@ -732,20 +732,27 @@ def sort_members_by_together_time(members):
 
     return map(lambda x : members_by_member[x], sorted_list)
 
+VERY_NEW_DATE = date(2100,1,1)
 
 def group_timeline(request):
     organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
-    member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
-    member_list = Person.objects.filter(id__in=member_ids).select_related('jobs')
+    member_jobs = Job.objects.filter(organization__in=organizations).select_related('person','organization')
+    jobs_by_member = defaultdict(list)
+    for member_job in member_jobs:
+        jobs_by_member[member_job.person].append(member_job)
+
+    for member in jobs_by_member:
+        jobs_by_member[member].sort(lambda j1, j2 : cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
+
     members = []
     members_by_id = {}
-    for member in member_list:
-        jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
+    for member, jobs in jobs_by_member.iteritems():
+        # jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
         first_job = jobs[0]
         if first_job.start_date is None:
             continue
 
-        last_job = jobs.reverse()[0]
+        last_job = jobs[-1]
         record = {
             'member' : member.full_name, 
             'organization' : last_job.organization,
@@ -775,24 +782,19 @@ def group_timeline(request):
         members.append(record)
         members_by_id[record['member']] = record
 
-    algorithms = {
-        0 : cmp_members_by_start_date,
-        1 : cmp_members_by_current_date,
-        2 : cmp_members_by_length_current_first,
-        3 : sort_members_by_together_time
-    }
-    sort_algorithm = request.GET.get('sort', 0)
-    try:
-        sort_algorithm_number = int(sort_algorithm)
-        if sort_algorithm_number >= len(algorithms):
-            sort_algorithm_number = 0
-    except:
-        sort_algorithm_number = 0
+    algorithms = OrderedDict()
+    algorithms['Last out, active first'] = cmp_members_by_current_date
+    algorithms['Chronological'] = cmp_members_by_start_date
+    algorithms['Duration, active first'] = cmp_members_by_length_current_first
+    algorithms['Colleagues'] = sort_members_by_together_time
+    sort_algorithm = request.GET.get('sort', algorithms.keys()[0])
+    if sort_algorithm not in algorithms:
+        sort_algorithm = algorithms.keys()[0]
     
-    if sort_algorithm_number in [3]:
-        members = algorithms[sort_algorithm_number](members)
+    if sort_algorithm in ['Colleagues']:
+        members = algorithms[sort_algorithm](members)
     else:
-        members.sort(algorithms[sort_algorithm_number])
+        members.sort(algorithms[sort_algorithm])
 
     units = []
     for member in members:
@@ -803,5 +805,7 @@ def group_timeline(request):
         'chart_height' : len(members) * 50,
         'units' : units,
         'distinct_units' : sorted(set(units)),
+        'algorithms' : algorithms.keys(),
+        'current_algorithm' : sort_algorithm,
     }
     return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))
