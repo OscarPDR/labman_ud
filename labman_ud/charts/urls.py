@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^projects/total_number/$', 'charts.views.projects_number_of_projects', name='projects_number_of_projects'),
 
     # /people
+    url(r'^people/timeline/(?P<person_slug>\S+)$', 'charts.views.person_timeline', name='person_timeline'),
     url(r'^people/timeline/$', 'charts.views.group_timeline', name='group_timeline'),
 )
 
