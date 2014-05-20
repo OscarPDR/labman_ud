@@ -810,6 +810,47 @@ def group_timeline(request):
     }
     return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))
 
+###########################################################################
+# View: members_position_pie
+###########################################################################
+
+def members_position_pie(request):
+    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+    member_jobs = Job.objects.filter(organization__in=organizations, person__is_active=True).select_related('person','organization')
+    
+    jobs_by_member = defaultdict(list)
+    for member_job in member_jobs:
+        if member_job.person.is_active:
+            jobs_by_member[member_job.person].append(member_job)
+
+    positions = {}
+    positions_per_organization = {}
+    for member in jobs_by_member:
+        jobs_by_member[member].sort(lambda j1, j2 : cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
+        last_organization = jobs_by_member[member][-1].organization.short_name
+        last_position = jobs_by_member[member][-1].position.lower().title()
+        if last_position not in positions:
+            positions[last_position] = 1
+        else:
+            positions[last_position] += 1
+
+        if last_organization not in positions_per_organization:
+            positions_per_organization[last_organization] = {}
+        if last_position not in positions_per_organization[last_organization]:
+            positions_per_organization[last_organization][last_position] = 1
+        else:
+            positions_per_organization[last_organization][last_position] += 1
+
+    return_dict = {
+        'multiple_organizations' : len(positions_per_organization) > 1,
+        'positions_per_organization' : positions_per_organization,
+        'positions' : positions,
+    }
+
+    import pprint
+    pprint.pprint(positions_per_organization)
+    return render_to_response('charts/people/pie.html', return_dict, context_instance=RequestContext(request))
+
 
 ###########################################################################
 # View: person_timeline
