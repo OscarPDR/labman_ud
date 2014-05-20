@@ -163,25 +163,7 @@
                     {# To be made more fine grained once we have more graphs #}
                     <br>
                     <div class="tab-pane active">
-                        <div class="text-center"><h3><i class="fa fa-bar-chart-o"></i>&emsp;Charts</h3></div>
-
-                        <h4><i class="fa fa-file-text-o  fa-2"></i> Publications</h4>
-
-                        <div class="soften-limited"></div>
-
-                        <ul>
-                            <li>
-                                <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
-                            </li>
-
-                            <li>
-                                <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
-                            </li>
-
-                            <li>
-                                <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
-                            </li>
-                        </ul>
+                        {% include "members/graphs.html" %}
                     </div>
                     {% endif %}
 
