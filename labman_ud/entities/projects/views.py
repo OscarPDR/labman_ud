@@ -1,6 +1,7 @@
 # coding: utf-
 import threading
 import weakref
+from datetime import date
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -13,7 +14,7 @@ from .forms import ProjectSearchForm
 from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
 
 from entities.funding_programs.models import FundingProgram, FundingProgramLogo
-from entities.persons.models import Person
+from entities.persons.models import Person, Job
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
@@ -167,40 +168,53 @@ def project_assigned_persons(request, project_slug):
         role = Role.objects.get(id=assigned_person.role.id)
         person = Person.objects.get(id=assigned_person.person_id)
 
-        try:
-            start_month = assigned_person.start_date.strftime('%B')
-            start_year = assigned_person.start_date.year
-            start_date = u'%s %s' % (start_month, start_year)
-
-        except:
-            start_date = None
-
-        try:
-            end_month = assigned_person.end_date.strftime('%B')
-            end_year = assigned_person.end_date.year
-            end_date = u'%s %s' % (end_month, end_year)
-
-        except:
-            end_date = None
-
-        working_period = None
-
-        if start_date and end_date:
-            working_period = u'(from %s to %s)' % (start_date, end_date)
-
-        if start_date and not end_date:
-            working_period = u'(since %s)' % (start_date)
-
-        if end_date and not start_date:
-            working_period = u'(until %s)' % (end_date)
-
         person_item = {
             'description': assigned_person.description,
             'full_name': person.full_name,
             'is_active': person.is_active,
             'slug': person.slug,
-            'working_period': working_period,
         }
+
+        person_start_date = assigned_person.start_date
+        try:
+            first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
+            person_first_job = first_job.start_date
+        except:
+            person_first_job = None
+        project_start_date = date(int(project.start_year), int(project.start_month), 1)
+
+        start_dates = []
+
+        if person_start_date:
+            start_dates.append(person_start_date)
+        if person_first_job:
+            start_dates.append(person_first_job)
+        if project_start_date:
+            start_dates.append(project_start_date)
+
+        person_item['start_date'] = max(start_dates)
+
+        person_end_date = assigned_person.end_date
+        try:
+            last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
+            person_last_job = last_job.end_date
+        except:
+            person_last_job = None
+        project_end_date = date(int(project.end_year), int(project.end_month), 1)
+        today = date.today()
+
+        end_dates = []
+
+        if person_end_date:
+            end_dates.append(person_end_date)
+        if person_last_job:
+            end_dates.append(person_last_job)
+        if project_end_date:
+            end_dates.append(project_end_date)
+        if today:
+            end_dates.append(today)
+
+        person_item['end_date'] = min(end_dates)
 
         if role.slug == 'principal-researcher':
             principal_researchers.append(person_item)
@@ -218,6 +232,8 @@ def project_assigned_persons(request, project_slug):
         'principal_researchers': principal_researchers,
         'project_managers': project_managers,
         'researchers': researchers,
+        'project': project,
+        'chart_height': (len(project_managers) + len(researchers) + 1) * 45,
     })
 
     return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
