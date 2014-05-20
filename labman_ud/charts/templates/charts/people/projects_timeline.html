@@ -1,0 +1,79 @@
+{% extends "labman_ud/base.html" %}
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
+
+        <li><a href="{% url 'members' %}">Members</a></li>
+
+        <li class="active">Projects timeline</li>
+    </ul>
+
+    <div id="chart-div" class="centered">
+        <h4><a href="{% url 'determine_person_info' person.slug %}">{{ person.full_name }}</a>'s projects timeline</h4>
+
+        <br>
+
+        <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
+
+    <script>
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var container = document.getElementById('chart_div');
+
+            var chart = new google.visualization.Timeline(container);
+
+            var dataTable = new google.visualization.DataTable();
+
+            dataTable.addColumn({ type: 'string', id: 'Member' });
+            dataTable.addColumn({ type: 'date', id: 'Start' });
+            dataTable.addColumn({ type: 'date', id: 'End' });
+
+            var timeline = [];
+
+            {% for item in timeline %}
+                var start_year = {{ item.start_date|date:"Y" }};
+                var start_month = {{ item.start_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var start_day = {{ item.start_date|date:"d" }};
+
+                var start_date = new Date(start_year, start_month, start_day);
+
+                {% if item.end_date %}
+                    var end_year = {{ item.end_date|date:"Y" }};
+                    var end_month = {{ item.end_date|date:"m" }} - 1;    // JS date object starts months in 0
+                    var end_day = {{ item.end_date|date:"d" }};
+                {% else %}
+                    var end_year = new Date().getFullYear();
+                    var end_month = new Date().getMonth();
+                    var end_day = new Date().getDate();
+                {% endif %}
+
+                var end_date = new Date(end_year, end_month, end_day);
+
+                timeline.push(["{{ item.project_short_name }}", start_date, end_date]);
+            {% endfor %}
+
+            dataTable.addRows(timeline);
+
+            chart.draw(dataTable);
+        }
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

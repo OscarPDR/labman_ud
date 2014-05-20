@@ -176,8 +176,11 @@ def project_assigned_persons(request, project_slug):
         }
 
         person_start_date = assigned_person.start_date
-        first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
-        person_first_job = first_job.start_date
+        try:
+            first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
+            person_first_job = first_job.start_date
+        except:
+            person_first_job = None
         project_start_date = date(int(project.start_year), int(project.start_month), 1)
 
         start_dates = []
@@ -192,8 +195,11 @@ def project_assigned_persons(request, project_slug):
         person_item['start_date'] = max(start_dates)
 
         person_end_date = assigned_person.end_date
-        last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
-        person_last_job = last_job.end_date
+        try:
+            last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
+            person_last_job = last_job.end_date
+        except:
+            person_last_job = None
         project_end_date = date(int(project.end_year), int(project.end_month), 1)
         today = date.today()
 
