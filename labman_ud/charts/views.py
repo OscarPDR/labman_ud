@@ -750,7 +750,7 @@ def group_timeline(request):
             'member' : member.full_name,
             'organization' : last_job.organization,
             'start_year' : first_job.start_date.year,
-            'start_month' : first_job.start_date.month,
+            'start_month' : first_job.start_date.month - 1,
             'start' : first_job.start_date,
         }
 
@@ -758,7 +758,7 @@ def group_timeline(request):
         if last_job.end_date is not None:
             record.update({
                 'end_year' : last_job.end_date.year,
-                'end_month' : last_job.end_date.month,
+                'end_month' : last_job.end_date.month - 1,
                 'end' : last_job.end_date,
                 'length' : last_job.end_date - first_job.start_date,
                 'current' : False,
@@ -767,7 +767,7 @@ def group_timeline(request):
             today = date.today()
             record.update({
                 'end_year' : today.year,
-                'end_month' : today.month,
+                'end_month' : today.month - 1,
                 'end' : today,
                 'length' : today - first_job.start_date,
                 'current' : True,
