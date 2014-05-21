@@ -4,7 +4,7 @@ from django.core.management.base import NoArgsCommand
 from generators.zotero_labman.models import ZoteroLog
 from django.db.models import Q
 
-from generators.zotero_labman.utils import get_last_zotero_version, parse_last_items, sync_deleted_items, correct_nicks, check_for_similar_names
+from generators.zotero_labman.utils import *
 
 
 class Command(NoArgsCommand):
@@ -31,3 +31,9 @@ class Command(NoArgsCommand):
 
         # Check for similar names
         check_for_similar_names(0.75)
+
+        # Checks for members which are no longer active
+        check_for_non_active_members()
+
+        # Checks for projects which start/end dates is not completed
+        check_incomplete_project_dates_info
