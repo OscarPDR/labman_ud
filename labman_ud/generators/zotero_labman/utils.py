@@ -16,7 +16,7 @@ from entities.news.models import PublicationRelatedToNews, NewsTag
 
 from pyzotero import zotero
 from dateutil import parser
-from datetime import datetime
+from datetime import datetime, date
 
 from sets import Set
 
@@ -812,3 +812,51 @@ def check_for_similar_names(threshold_ratio):
 
         if (ratio > threshold_ratio):
             logger.info('%f\t%s\t\t\tcould be\t\t\t%s' % (ratio, test_name, testing_name))
+
+
+###########################################################################
+# def: check_for_non_active_members()
+###########################################################################
+
+def check_for_non_active_members():
+    logger.info('')
+    logger.info('Checking for non active members...')
+    logger.info('#' * 75)
+
+    today = date.today()
+
+    persons = Person.objects.filter(is_active=True)
+
+    for person in persons:
+        last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
+        if (last_job.end_date) and (last_job.end_date < today):
+            logger.info('\t\t%s is no longer active' % person.full_name)
+            person.is_active = False
+            person.save()
+            logger.info('\t\t%s\'s status changed to non-active' % person.full_name)
+
+
+###########################################################################
+# def: check_incomplete_project_dates_info()
+###########################################################################
+
+def check_incomplete_project_dates_info():
+    logger.info('')
+    logger.info('Checking for incomplete project dates info...')
+    logger.info('#' * 75)
+
+    projects_without_start_month = Project.objects.filter(start_month='')
+
+    for project in projects_without_start_month:
+        logger.info('\t\t%s has no start_month' % project.short_name)
+        project.start_month = 1
+        logger.info('\t\t%s\'s start_month set to 1 by default' % project.short_name)
+        project.save()
+
+    projects_without_end_month = Project.objects.filter(end_month='')
+
+    for project in projects_without_end_month:
+        logger.info('\t\t%s has no end_month' % project.short_name)
+        project.end_month = 12
+        logger.info('\t\t%s\'s end_month set to 12 by default' % project.short_name)
+        project.save()
