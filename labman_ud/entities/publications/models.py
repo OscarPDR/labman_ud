@@ -233,6 +233,37 @@ class Publication(BaseModel):
         self.slug = slugify(str(self.title.encode('utf-8')))
         super(Publication, self).save(*args, **kwargs)
 
+    def display_all_fields(self):
+        all_fields = [
+            self.title,
+            self.short_title,
+            self.slug,
+            self.abstract,
+            self.doi,
+            self.journal_abbreviation,
+            unicode(self.published or ''), 
+            unicode(self.year or ''),
+            self.volume,
+            self.pages,
+            self.issn,
+            self.isbn,
+            unicode(self.impact_factor or ''),
+            unicode(self.series_number or ''),
+            self.edition,
+            self.book_title,
+            self.publisher,
+            self.issue,
+            self.series_text,
+            self.bibtex,
+        ]
+        for author in self.authors.all():
+            all_fields.append(author.full_name)
+
+        for tag in self.tags.all():
+            all_fields.append(tag.name)
+
+        return u' '.join([ field for field in all_fields if field ])
+
 
 ###########################################################################
 # Model: PublicationTag
