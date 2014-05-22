@@ -19,3 +19,15 @@ def sync_zotero():
         logger.error(traceback.format_exc())
         # Send email?
         raise
+
+
+@periodic_task(
+    run_every=crontab(hour='12', minute='25')
+)
+def greet_birthday():
+    try:
+        call_command('greet_birthday')
+    except:
+        logger.error(traceback.format_exc())
+        # Send email?
+        raise
