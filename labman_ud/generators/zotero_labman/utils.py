@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 
 from django.conf import settings
 from django.utils.timezone import utc
+from django.core.mail import send_mail
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
@@ -880,3 +881,13 @@ def greet_birthday():
 
             if (birth_date.day == today.day) and (birth_date.month == today.month):
                 logger.info('\t\tToday is %s\'s birthday!' % member.full_name)
+                try:
+                    send_mail(
+                        'Happy B-day %s... ;^)' % member.full_name,     # Subject
+                        '¡Felicidades! Zorionak! Happy birthday!',      # Message
+                        'labman_greeter@deusto.es',
+                        ['oscar.pena@deusto.es'],
+                        fail_silently=False
+                    )
+                except:
+                    logger.info('\t\tUnable to send e-mail')
