@@ -860,3 +860,23 @@ def check_incomplete_project_dates_info():
         project.end_month = 12
         logger.info('\t\t%s\'s end_month set to 12 by default' % project.short_name)
         project.save()
+
+
+###########################################################################
+# def: greet_birthday()
+###########################################################################
+
+def greet_birthday():
+    logger.info('')
+    logger.info('Checking for members birthdays...')
+    logger.info('#' * 75)
+
+    members = Person.objects.filter(is_active=True)
+
+    for member in members:
+        birth_date = member.birth_date
+        if birth_date:
+            today = date.today()
+
+            if (birth_date.day == today.day) and (birth_date.month == today.month):
+                logger.info('\t\tToday is %s\'s birthday!' % member.full_name)
