@@ -22,7 +22,7 @@ def sync_zotero():
 
 
 @periodic_task(
-    run_every=crontab(hour='12', minute='33')
+    run_every=crontab(hour='9', minute='30')
 )
 def greet_birthday():
     try:
