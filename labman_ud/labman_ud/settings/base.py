@@ -5,6 +5,7 @@
 from unipath import Path
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 from celery.task.schedules import crontab
+import djcelery
 
 PROJECT_DIR = Path(__file__).ancestor(3)
 
@@ -188,6 +189,9 @@ INSTALLED_APPS = (
 
     'django_cleanup',
 
+    # Celery: background task queueing system
+    'djcelery',
+
     'pagination_bootstrap',
 )
 
@@ -297,8 +301,11 @@ ZOTERO_LIBRARY_ID = ''
 ZOTERO_LIBRARY_TYPE = ''
 ZOTERO_CRONTAB = crontab(hour='*/2')
 
-# BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# Celery config
+djcelery.setup_loader()
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 KARMACRACY_URL = ''
 NEWS_DETAIL_BASE_URL = ''
