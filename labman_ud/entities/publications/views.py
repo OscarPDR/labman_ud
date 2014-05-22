@@ -60,7 +60,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
     if query_string:
         query = slugify(query_string)
 
-        pubs = []
+        pubs = set()
 
         person_ids = Person.objects.filter(slug__contains=query).values('id')
         publication_ids = PublicationAuthor.objects.filter(author_id__in=person_ids).values('publication_id')
@@ -68,9 +68,15 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 
         for publication in publications:
             if (query in slugify(publication.title)) or (publication.id in publication_ids):
-                pubs.append(publication)
+                pubs.add(publication)
 
-        publications = pubs
+            try:
+                if int(query) == publication.year:
+                    pubs.add(publication)
+            except:
+                pass
+
+        publications = list(pubs)
         clean_index = False
 
     publications_length = len(publications)
