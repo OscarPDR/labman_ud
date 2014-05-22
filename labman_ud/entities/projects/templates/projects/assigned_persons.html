@@ -98,39 +98,27 @@
 
                 var end_date = new Date(end_year, end_month, end_day);
 
-                timeline.push(["{{ person.full_name }}", start_date, end_date]);
+                if (end_date > start_date) {
+                    timeline.push(["{{ person.full_name }}", start_date, end_date]);
+                }
             {% endfor %}
 
             {% for person in researchers %}
-                {% if person.start_date %}
-                    var start_year = {{ person.start_date|date:"Y" }};
-                    var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
-                    var start_day = {{ person.start_date|date:"d" }};
-
-                    var start_date = new Date(start_year, start_month, start_day);
-                {% else %}
-                    var start_year = {{ project.start_year }};
-                    var start_month = {{ project.start_month }} - 1;    // JS date object starts months in 0
-                    var start_day = 1;
-                {% endif %}
+                var start_year = {{ person.start_date|date:"Y" }};
+                var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var start_day = {{ person.start_date|date:"d" }};
 
                 var start_date = new Date(start_year, start_month, start_day);
 
-                console.log(start_date);
-
-                {% if person.end_date %}
-                    var end_year = {{ person.end_date|date:"Y" }};
-                    var end_month = {{ person.end_date|date:"m" }} - 1;    // JS date object starts months in 0
-                    var end_day = {{ person.end_date|date:"d" }};
-                {% else %}
-                    var end_year = new Date().getFullYear();
-                    var end_month = new Date().getMonth();
-                    var end_day = new Date().getDate();
-                {% endif %}
+                var end_year = {{ person.end_date|date:"Y" }};
+                var end_month = {{ person.end_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var end_day = {{ person.end_date|date:"d" }};
 
                 var end_date = new Date(end_year, end_month, end_day);
 
-                timeline.push(["{{ person.full_name }}", start_date, end_date]);
+                if (end_date > start_date) {
+                    timeline.push(["{{ person.full_name }}", start_date, end_date]);
+                }
             {% endfor %}
 
             dataTable.addRows(timeline);
