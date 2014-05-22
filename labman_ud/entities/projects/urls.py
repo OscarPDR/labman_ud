@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^status/(?P<status_slug>\S+)/$', 'entities.projects.views.project_index', name='view_project_status'),
     url(r'^project_type/(?P<project_type_slug>\S+)/$', 'entities.projects.views.project_index', name='view_project_type'),
 
-    url(r'^query/(?P<query_string>\D+)/$', 'entities.projects.views.project_index', name='view_project_query'),
+    url(r'^query/(?P<query_string>.+)/$', 'entities.projects.views.project_index', name='view_project_query'),
 
     url(r'^tag_cloud/$', 'entities.projects.views.project_tag_cloud', name='project_tag_cloud'),
 )
