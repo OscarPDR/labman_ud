@@ -3,6 +3,7 @@
 import threading
 import weakref
 
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -27,6 +28,23 @@ INDICATORS_TAG_SLUGS = ['isi', 'corea', 'coreb', 'corec', 'q1', 'q2', 'q3', 'q4'
 # View: publication_index
 ###########################################################################
 
+def _validate_term(token, name, numeric = False):
+    if not token.startswith(name):
+        return False
+
+    remainder = token[len(name):]
+    if not remainder:
+        return False
+    
+    if numeric:
+        try:
+            int(remainder)
+        except:
+            return False
+
+    return True
+        
+
 def publication_index(request, tag_slug=None, publication_type_slug=None, query_string=None):
     tag = None
     publication_type = None
@@ -36,15 +54,15 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
     if tag_slug:
         tag = Tag.objects.get(slug=tag_slug)
         publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
-        publications = Publication.objects.filter(id__in=publication_ids)
+        publications = Publication.objects.filter(id__in=publication_ids).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if publication_type_slug:
         publication_type = PublicationType.objects.get(slug=publication_type_slug)
-        publications = Publication.objects.filter(publication_type=publication_type.id)
+        publications = Publication.objects.filter(publication_type=publication_type.id).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if not tag_slug and not publication_type_slug:
         clean_index = True
-        publications = Publication.objects.all()
+        publications = Publication.objects.all().select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     publications = publications.order_by('-year', '-title').exclude(authors=None)
 
@@ -58,25 +76,97 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
         form = PublicationSearchForm()
 
     if query_string:
-        query = slugify(query_string)
+        # Given a query_string such as: author:"Oscar Pena" my "title word"; split in ['author:"Oscar Peña"','my','"title word"']
+        initial_tokens = query_string.lower().split()
+        tokens = []
+        quotes_open = False
+        current_token = ""
+        for token in initial_tokens:
+            if token.count('"') % 2 != 0:
+                if quotes_open:
+                    # Close quotes
+                    current_token += " " + token
+                    tokens.append(current_token)
+                    quotes_open = False
+                else:
+                    current_token += token
+                    quotes_open = True
+            else:
+                if quotes_open:
+                    current_token += " " + token
+                else:
+                    tokens.append(token)
+        if current_token:
+            tokens.append(current_token)
 
-        pubs = set()
+        # Create filters that reduce the query size
+        NUMERIC_FILTERS = {
+            'year:' : []
+        }
+        FILTERS = {
+            'author:' : [],
+            'tag:' : [],
+            'title:' : [],
+        }
+        special_tokens = []
+        new_tokens = [] # E.g. 'author:"Aitor Almeida"' is converted to 'Aitor Almeida'
+        for token in tokens:
+            validated = False
+            for word in FILTERS:
+                if _validate_term(token, word):
+                    special_tokens.append(token)
+                    new_token = token[len(word):]
+                    if new_token.startswith('"') and new_token.endswith('"'):
+                        new_token = new_token[1:-1]
+                    FILTERS[word].append(new_token)
+                    new_tokens.append(new_token)
+                    validated = True
+                    break
 
-        person_ids = Person.objects.filter(slug__contains=query).values('id')
-        publication_ids = PublicationAuthor.objects.filter(author_id__in=person_ids).values('publication_id')
-        publication_ids = set([x['publication_id'] for x in publication_ids])
+            if not validated:
+                for word in NUMERIC_FILTERS:
+                    if _validate_term(token, word):
+                        new_token = token[len(word):]
+                        if new_token.startswith('"') and new_token.endswith('"'):
+                            new_token = new_token[1:-1]
+                        new_tokens.append(new_token)
+                        NUMERIC_FILTERS[word].append(new_token)
+                        special_tokens.append(token)
+                        break
+                    
+        search_terms = [ token for token in tokens if token not in special_tokens ] + new_tokens
+        
+        # Filter by publication
+        if special_tokens:
+            sql_query = Publication.objects.all()
+            for year in NUMERIC_FILTERS['year:']:
+                sql_query = sql_query.filter(year = int(year))
+            for title in FILTERS['title:']:
+                sql_query = sql_query.filter(title__icontains = title)
+            if FILTERS['tag:']:
+                for tag in FILTERS['tag:']:
+                    tag_ids = PublicationTag.objects.filter(tag__name__icontains = tag).select_related('tag').values('tag__id')
+                    sql_query = sql_query.filter(tags__id__in=tag_ids)
+            if FILTERS['author:']:
+                for author in FILTERS['author:']:
+                    author_ids = PublicationAuthor.objects.filter(author__full_name__icontains = author).select_related('author').values('author__id')
+                    sql_query = sql_query.filter(authors__id__in=author_ids)
+        else:
+            sql_query = Publication.objects.all()
 
-        for publication in publications:
-            if (query in slugify(publication.title)) or (publication.id in publication_ids):
-                pubs.add(publication)
+        sql_query = sql_query.select_related('publication_type', 'authors__author', 'tags__tag').prefetch_related('authors', 'tags','publicationauthor_set','publicationauthor_set__author')
+        publication_strings = [ (publication, publication.display_all_fields().lower()) for publication in sql_query ]
+        
+        publications = []
+        for publication, publication_string in publication_strings:
+            matches = True
+            for search_term in search_terms:
+                if search_term not in publication_string:
+                    matches = False
+                    break
+            if matches:
+                publications.append(publication)
 
-            try:
-                if int(query) == publication.year:
-                    pubs.add(publication)
-            except:
-                pass
-
-        publications = list(pubs)
         clean_index = False
 
     publications_length = len(publications)
