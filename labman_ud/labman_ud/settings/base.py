@@ -322,3 +322,5 @@ D2R_MAPPING_PATH = ''
 VIRTUOSO_ODBC = ''
 VIRTUOSO_GRAPH = RDF_URI
 
+EMAIL_SENDER_ADDRESS = 'deustotechmorelab@gmail.com'
+GENERAL_NOTIFICATIONS_ADDRESSES = ['morelab@listas.deusto.es']
