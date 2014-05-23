@@ -885,8 +885,8 @@ def greet_birthday():
                     send_mail(
                         'Happy B-day %s... ;^)' % member.full_name,     # Subject
                         '¡Felicidades!\nZorionak!\nHappy birthday!',      # Message
-                        'labman_greeter@deusto.es',	# From
-                        ['morelab@listas.deusto.es'],	# To
+                        getattr(settings, 'EMAIL_SENDER_ADDRESS', ''),  # From
+                        getattr(settings, 'GENERAL_NOTIFICATIONS_ADDRESSES', []),   # To
                         fail_silently=False
                     )
                 except:
