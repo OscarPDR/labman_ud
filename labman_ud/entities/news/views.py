@@ -36,7 +36,7 @@ def news_index(request):
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'web_title' : 'News',
+        'web_title': 'News',
         'news': news,
     }
 
@@ -48,7 +48,7 @@ def news_index(request):
 ###########################################################################
 
 def view_news(request, news_slug):
-    news = News.objects.get(slug=news_slug)
+    news = get_object_or_404(News, slug=news_slug)
     # tags = news.tags.all()
 
     related_persons_ids = PersonRelatedToNews.objects.filter(news=news.id).values('person_id')
@@ -68,7 +68,7 @@ def view_news(request, news_slug):
     # dictionary to be returned in render_to_response()
     return_dict = {
         # 'tags': tags,
-        'web_title' : news.title,
+        'web_title': news.title,
         'news': news,
         'related': related,
         'related_persons': related_persons,
@@ -90,7 +90,7 @@ class LatestNewsFeed(Feed):
     title       = "MORElab news"
     description = "MORElab news"
 
-    def get_object(self, request): 
+    def get_object(self, request):
         self.__request.request = weakref.proxy(request)
         return super(LatestNewsFeed, self).get_object(request)
 
