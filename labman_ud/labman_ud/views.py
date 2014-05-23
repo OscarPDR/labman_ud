@@ -39,7 +39,7 @@ def logout_view(request):
 #########################
 
 def about(request):
-    return render_to_response('labman_ud/about.html', { 'web_title' : 'About' })
+    return render_to_response('labman_ud/about.html', {'web_title': 'About'})
 
 
 #########################
@@ -47,7 +47,7 @@ def about(request):
 #########################
 
 def about_collaborations(request):
-    return render_to_response('labman_ud/about/collaborations.html', { 'web_title' : 'Collaborations' })
+    return render_to_response('labman_ud/about/collaborations.html', {'web_title': 'Collaborations'})
 
 
 #########################
@@ -55,7 +55,7 @@ def about_collaborations(request):
 #########################
 
 def about_prototyping(request):
-    return render_to_response('labman_ud/about/prototyping.html', { 'web_title' : 'Prototyping' })
+    return render_to_response('labman_ud/about/prototyping.html', {'web_title': 'Prototyping'})
 
 
 #########################
