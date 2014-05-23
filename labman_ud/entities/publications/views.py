@@ -35,7 +35,7 @@ def _validate_term(token, name, numeric = False):
     remainder = token[len(name):]
     if not remainder:
         return False
-    
+
     if numeric:
         try:
             int(remainder)
@@ -43,7 +43,7 @@ def _validate_term(token, name, numeric = False):
             return False
 
     return True
-        
+
 
 def publication_index(request, tag_slug=None, publication_type_slug=None, query_string=None):
     tag = None
@@ -133,9 +133,9 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
                         NUMERIC_FILTERS[word].append(new_token)
                         special_tokens.append(token)
                         break
-                    
+
         search_terms = [ token for token in tokens if token not in special_tokens ] + new_tokens
-        
+
         # Filter by publication
         if special_tokens:
             sql_query = Publication.objects.all()
@@ -156,7 +156,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
 
         sql_query = sql_query.select_related('publication_type', 'authors__author', 'tags__tag').prefetch_related('authors', 'tags','publicationauthor_set','publicationauthor_set__author')
         publication_strings = [ (publication, publication.display_all_fields().lower()) for publication in sql_query ]
-        
+
         publications = []
         for publication, publication_string in publication_strings:
             matches = True
@@ -255,7 +255,10 @@ def __build_publication_return_dict(publication):
     except:
         parent_publication = None
 
-    bibtex = publication.bibtex.replace(",", ",\n")
+    if publication.bibtex:
+        bibtex = publication.bibtex.replace(",", ",\n")
+    else:
+        bibtex = None
 
     # dictionary to be returned in render_to_response()
     return {
