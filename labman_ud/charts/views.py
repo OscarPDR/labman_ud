@@ -576,7 +576,10 @@ def publications_by_author(request, author_slug):
     # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
     # people who published lately
-    min_year = min(max_year - 7, min_year.get('year__min'))
+    if min_year:
+        min_year = min(max_year - 7, min_year.get('year__min'))
+    else:
+        min_year = max_year - 7
 
     years = []
 
@@ -817,7 +820,7 @@ def group_timeline(request):
 def members_position_pie(request):
     organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
     member_jobs = Job.objects.filter(organization__in=organizations, person__is_active=True).select_related('person','organization')
-    
+
     jobs_by_member = defaultdict(list)
     for member_job in member_jobs:
         if member_job.person.is_active:
