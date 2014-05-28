@@ -573,15 +573,18 @@ def publications_by_author(request, author_slug):
     max_year = _publications.aggregate(Max('year'))
 
     max_year = date.today().year
+    min_year = min_year.get('year__min')
     # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
     # people who published lately
     if min_year:
-        min_year = min(max_year - 7, min_year.get('year__min'))
+        min_year = min(max_year - 7, min_year)
     else:
         min_year = max_year - 7
 
     years = []
+
+    print min_year, max_year
 
     for year in range(min_year, max_year + 1):
         years.append(year)
