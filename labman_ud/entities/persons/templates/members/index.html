@@ -1,4 +1,5 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
 
 
 
@@ -82,19 +83,19 @@
                     <div class="centered">
                         <a href="{% url 'member_info' member.slug %}">
                             {% if member.profile_picture_url %}
-                                <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
+                                <img class="circular" src="{{ MEDIA_URL }}{{ member.profile_picture_url }}"/>
                             {% else %}
                                 {% if member.gender == 'Female' %}
-                                    <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                    <img class="circular" src="{% static 'img/female.png' %}"/>
                                 {% else %}
-                                    <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                    <img class="circular" src="{% static 'img/male.png' %}"/>
                                 {% endif %}
                             {% endif %}
                         </a>
                         <br>
                         <span class="member-name">
                             <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
-                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{% static 'img/rdf.png' %}"/>
                             </a>
                             {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
                         </span>
@@ -157,7 +158,7 @@
         });
     </script>
 
-    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+    <script type="text/javascript" src="{% static 'js/konami.js' %}"></script>
 
     <script type="text/javascript">
         var success = function() {
@@ -167,14 +168,14 @@
                 {% for konami_profile_picture in konami_profile_pictures %}
                 if (i == {{ forloop.counter0 }}) {
                     {% if konami_profile_picture|safe %}
-                    images[i].src = "{{ MEDIA_PREFIX }}/{{ konami_profile_picture|safe }}";
+                    images[i].src = "{{ MEDIA_URL }}/{{ konami_profile_picture|safe }}";
                     {% else %}
                     if (images[i].src.indexOf("/img/female.png") >= 0) {
-                        images[i].src = "{{ STATIC_PREFIX }}img/lovelace.png";
+                        images[i].src = "{% static 'img/lovelace.png' %}";
                     }
 
                     if (images[i].src.indexOf("/img/male.png") >= 0) {
-                        images[i].src = "{{ STATIC_PREFIX }}img/einstein.png";
+                        images[i].src = "{% static 'img/einstein.png' %}";
                     }
                     {% endif %}
                 };

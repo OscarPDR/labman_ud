@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags %}
+{% load pagination_tags staticfiles %}
 
 
 
@@ -54,7 +54,7 @@
                 <tr>
                     <td class="col-md-6">
                         <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
-                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
                         </a>&emsp;
                         <a href="{% url 'organization_info' organization.slug %}">
                             {{ organization.full_name }}
@@ -95,7 +95,7 @@
 {% block scripts %}
 
     {% if query_string %}
-        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+        <script src="{% static 'js/jquery.highlight-4.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');

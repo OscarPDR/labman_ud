@@ -1,5 +1,5 @@
 {% extends "projects/info.html" %}
-{% load humanize %}
+{% load humanize staticfiles %}
 
 
 
@@ -130,7 +130,7 @@
 
 {% block project_scripts %}
 
-    <script src="{{ STATIC_PREFIX }}js/jquery-1.10.2.min.js"></script>
+    <script src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
 
     <script>

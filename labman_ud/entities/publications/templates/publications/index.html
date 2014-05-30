@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags %}
+{% load pagination_tags staticfiles %}
 
 
 
@@ -70,7 +70,7 @@
                     <tr>
                         <td class="col-md-7">
                             <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
-                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
                             </a>
                             <a href="{% url 'publication_info' publication.slug %}">
                                 {{ publication.title }}
@@ -108,7 +108,7 @@
                                         <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title"><img src="{{ STATIC_PREFIX }}img/bibtex.png" width="150" /></h4>
+                                            <h4 class="modal-title"><img src="{% static 'img/bibtex.png' %}" width="150" /></h4>
                                         </div>
 
                                         <div class="modal-body">
@@ -128,7 +128,7 @@
 
                         <td class="col-md-1 centered">
                             {% if publication.pdf %}
-                                <a target="_blank" href="{{ MEDIA_PREFIX }}{{ publication.pdf }}">
+                                <a target="_blank" href="{{ MEDIA_URL }}{{ publication.pdf }}">
                                     <i class="fa fa-file-text fa-2x"></i>
                                 </a>
                             {% endif %}
@@ -154,7 +154,7 @@
     </script>
 
     {% if query_string %}
-        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+        <script src="{% static 'js/jquery.highlight-4.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');

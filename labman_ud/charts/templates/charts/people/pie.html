@@ -1,4 +1,7 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
 
 {% block content %}
     <ul class="breadcrumb">
@@ -33,7 +36,7 @@
 
 {% block scripts %}
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    
+
     {% if multiple_organizations %}
         {% for organization in positions_per_organization %}
             <script>
@@ -101,7 +104,7 @@
                             .style("fill", function(d) { return color(d.data.label); })
                             .attr("class", "slice");
 
-                        slice       
+                        slice
                             .transition().duration(1000)
                             .attrTween("d", function(d) {
                                 this._current = this._current || d;
@@ -126,7 +129,7 @@
                             .text(function(d) {
                                 return d.data.label;
                             });
-                        
+
                         function midAngle(d){
                             return d.startAngle + (d.endAngle - d.startAngle)/2;
                         }
@@ -160,7 +163,7 @@
 
                         var polyline = svg.select(".lines").selectAll("polyline")
                             .data(pie(data), key);
-                        
+
                         polyline.enter()
                             .append("polyline");
 
@@ -174,9 +177,9 @@
                                     var pos = outerArc.centroid(d2);
                                     pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
                                     return [arc.centroid(d2), outerArc.centroid(d2), pos];
-                                };          
+                                };
                             });
-                        
+
                         polyline.exit()
                             .remove();
                     };

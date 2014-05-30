@@ -1,4 +1,7 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
 
 {% block content %}
 
@@ -6,7 +9,7 @@
         <div class="row">
             <div class="col-md-9">
                 <h3>
-                    <a href="{% url 'project_index' %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+                    <a href="{% url 'project_index' %}"><img width="32" src="{% static 'img/back.png' %}" /></a>
                     {{ project.full_name }}
                 </h3>
             </div> <!-- end .col-md-9 -->
@@ -14,7 +17,7 @@
             <div class="col-md-3">
                 <div class="centered">
                     <a target="_blank" href="{{ RDF_URI }}projects/{{ project.slug }}">
-                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{% static 'img/rdf.png' %}"/>
                     </a>
                 </div>
 
@@ -37,7 +40,7 @@
         <div class="col-md-3">
             {% if logo %}
                 <div class="project-logo">
-                    <img class="img-responsive" src="{{ MEDIA_PREFIX }}{{ logo }}"/>
+                    <img class="img-responsive" src="{{ MEDIA_URL }}{{ logo }}"/>
                 </div>
             {% endif %}
 

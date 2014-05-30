@@ -1,11 +1,12 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
 
 
 
 {% block content %}
 
     <h2>
-        <a href="{% url 'person_index' %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        <a href="{% url 'person_index' %}{{ from_page }}"><img width="32" src="{% static 'img/back.png' %}" /></a>
         {{ person.full_name }}
         {% if person.external %}
             <a href="{% url 'organization_info' person.organization.slug%}">

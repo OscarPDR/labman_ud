@@ -1,10 +1,11 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
 
 
 
 {% block header_css %}
 
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/jqcloud.css"/>
+    <link rel="stylesheet" href="{% static 'css/jqcloud.css' %}"/>
 
 {% endblock %}
 
@@ -23,7 +24,7 @@
 
 {% block scripts %}
 
-    <script src="{{ STATIC_PREFIX }}js/jqcloud-1.0.4.min.js"></script>
+    <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
 
     <script>
         var word_array = [
