@@ -15,8 +15,8 @@ urlpatterns = patterns('',
     url(r'^info/(?P<person_slug>\S+)/$', 'entities.persons.views.person_info', name='person_info'),
 
     # members belonging to the organization(s)
-    url(r'^members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='members_by_organization'),
-    url(r'^former_members/org/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='former_members_by_organization'),
+    url(r'^members/unit/(?P<organization_slug>\S+)/$', 'entities.persons.views.members', name='members_by_organization'),
+    url(r'^former_members/unit/(?P<organization_slug>\S+)/$', 'entities.persons.views.former_members', name='former_members_by_organization'),
     # list of projects by role
     url(r'^members/(?P<person_slug>\S+)/projects/(?P<role_slug>\S+)/$', 'entities.persons.views.member_projects', name='member_projects'),
     url(r'^former_members/(?P<person_slug>\S+)/projects/(?P<role_slug>\S+)/$', 'entities.persons.views.member_projects', name='former_member_projects'),
@@ -27,9 +27,9 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/publications/bibtex/$', 'entities.persons.views.member_publication_bibtex', name='member_bibtex'),
     url(r'^members/(?P<person_slug>\S+)/publications/bibtex/download$', 'entities.persons.views.member_publication_bibtex_download', name='member_bibtex_download'),
     # RSS
-    url(r'^members/(?P<person_slug>\S+)/feeds/news/$', FeedWrapper(LatestUserNewsFeed()), name = 'member_feeds_news'),
-    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', FeedWrapper(LatestUserPublicationFeed()), name = 'member_feeds_publications'),
-    url(r'^members/(?P<person_slug>\S+)/news/$', 'entities.persons.views.member_news', name = 'member_news'),
+    url(r'^members/(?P<person_slug>\S+)/feeds/news/$', FeedWrapper(LatestUserNewsFeed()), name='member_feeds_news'),
+    url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', FeedWrapper(LatestUserPublicationFeed()), name='member_feeds_publications'),
+    url(r'^members/(?P<person_slug>\S+)/news/$', 'entities.persons.views.member_news', name='member_news'),
     # list of publications by type
     url(r'^members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='member_publications'),
     url(r'^former_members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', 'entities.persons.views.member_publications', name='former_member_publications'),

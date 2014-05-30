@@ -104,3 +104,26 @@ class Organization(BaseModel):
 
         self.slug = slugify(self.short_name.encode('utf-8'))
         super(Organization, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: Unit
+###########################################################################
+
+class Unit(BaseModel):
+    organization = models.ForeignKey('Organization')
+
+    head = models.ForeignKey('persons.Person', null=True, blank=True)
+
+    order = models.PositiveSmallIntegerField(
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ['order']
+
+    def __unicode__(self):
+        return u'%s' % (self.organization.full_name)
+
+    def save(self, *args, **kwargs):
+        super(Unit, self).save(*args, **kwargs)

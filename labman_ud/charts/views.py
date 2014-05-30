@@ -13,7 +13,7 @@ from charts.utils import nx_graph
 from networkx.readwrite import json_graph
 
 from entities.funding_programs.models import FundingProgram
-from entities.organizations.models import Organization
+from entities.organizations.models import Organization, Unit
 from entities.persons.models import Person, Job
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
@@ -22,9 +22,9 @@ from entities.utils.models import GeographicalScope, Role
 import json
 import networkx as nx
 
-from entities.persons.views import OWN_ORGANIZATION_SLUGS
-
 # Create your views here.
+
+UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
 
 ###########################################################################
@@ -352,7 +352,7 @@ def publications_coauthorship(request, max_position=None):
     else:
         pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
 
-    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
         entry = (pub_author['author_id'], pub_author['author_id__full_name'])
@@ -400,7 +400,7 @@ def publications_morelab_coauthorship(request, max_position=None):
     for person in people:
         active_by_id[person['id']] = person['is_active']
 
-    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
         if active_by_id[pub_author['author_id']]:
@@ -520,7 +520,7 @@ def publications_egonetwork(request, author_slug):
 
     pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
 
-    authors_per_publication = defaultdict(list)  # 'publication_id' : [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
 
     for pub_author in pub_authors:
         entry = (pub_author['author_id'], pub_author['author_id__full_name'])
@@ -641,6 +641,7 @@ def tags_by_author(request, author_slug):
 
     return render_to_response('charts/publications/tags_by_author.html', return_dict, context_instance=RequestContext(request))
 
+
 ###########################################################################
 # View: group_timeline
 ###########################################################################
@@ -652,6 +653,7 @@ def cmp_members_by_start_date(member1, member2):
 
     return 0
 
+
 def cmp_members_by_current_date(member1, member2):
     for field in 'end_year', 'end_month':
         if member1[field] != member2[field]:
@@ -661,8 +663,8 @@ def cmp_members_by_current_date(member1, member2):
         if member1[field] != member2[field]:
             return cmp(member1[field], member2[field])
 
-
     return 0
+
 
 def cmp_members_by_length_current_first(member1, member2):
     if member1['current'] != member2['current']:
@@ -673,12 +675,14 @@ def cmp_members_by_length_current_first(member1, member2):
 
     return cmp(member2['length'], member1['length'])
 
+
 def recursively(result, time_together_per_member, already_processed, member):
     for current_element, days in time_together_per_member[member]:
         if current_element not in already_processed:
             result.append(current_element)
             already_processed.add(current_element)
             recursively(result, time_together_per_member, already_processed, current_element)
+
 
 def sort_members_by_together_time(members):
     members_by_member = {}
@@ -694,8 +698,8 @@ def sort_members_by_together_time(members):
     time_together_per_member = OrderedDict()
         # member1 : [ (member2, 15), (member3, 10) ...] # Sorted by days_together
 
-    sorted_member_info = sorted(members, lambda m1, m2 : cmp(m2['length'], m1['length']))
-    sorted_members = map(lambda x : x['member'], sorted_member_info)
+    sorted_member_info = sorted(members, lambda m1, m2: cmp(m2['length'], m1['length']))
+    # sorted_members = map(lambda x: x['member'], sorted_member_info)
 
     members_per_day_together = defaultdict(list)
         # 315 : [('a','b'), ('a','c'), ('d','e')],
@@ -715,10 +719,10 @@ def sort_members_by_together_time(members):
                 days_together = (min_end - max_start).days
 
             if days_together:
-                time_together_per_member[member1['member']].append( (member2['member'], days_together ))
-                members_per_day_together[days_together].append( (member1['member'], member2['member']))
+                time_together_per_member[member1['member']].append((member2['member'], days_together))
+                members_per_day_together[days_together].append((member1['member'], member2['member']))
 
-        time_together_per_member[member1['member']].sort(lambda (m1, d1), (m2, d2) : cmp(d2, d1))
+        time_together_per_member[member1['member']].sort(lambda (m1, d1), (m2, d2): cmp(d2, d1))
 
     already_processed = set([max_member])
 
@@ -726,7 +730,7 @@ def sort_members_by_together_time(members):
     recursively(sorted_list, time_together_per_member, already_processed, max_member)
 
     if False:
-        for key in sorted(members_per_day_together, reverse = True):
+        for key in sorted(members_per_day_together, reverse=True):
             for member1, member2 in members_per_day_together[key]:
                 if member1 not in already_processed:
                     sorted_list.append(member1)
@@ -736,19 +740,20 @@ def sort_members_by_together_time(members):
                     sorted_list.append(member2)
                     already_processed.add(member2)
 
-    return map(lambda x : members_by_member[x], sorted_list)
+    return map(lambda x: members_by_member[x], sorted_list)
 
-VERY_NEW_DATE = date(2100,1,1)
+VERY_NEW_DATE = date(2100, 1, 1)
+
 
 def group_timeline(request):
-    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
-    member_jobs = Job.objects.filter(organization__in=organizations).select_related('person','organization')
+    organizations = Organization.objects.filter(slug__in=UNIT_ORGANIZATION_IDS)
+    member_jobs = Job.objects.filter(organization__in=organizations).select_related('person', 'organization')
     jobs_by_member = defaultdict(list)
     for member_job in member_jobs:
         jobs_by_member[member_job.person].append(member_job)
 
     for member in jobs_by_member:
-        jobs_by_member[member].sort(lambda j1, j2 : cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
+        jobs_by_member[member].sort(lambda j1, j2: cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
 
     members = []
     members_by_id = {}
@@ -760,30 +765,29 @@ def group_timeline(request):
 
         last_job = jobs[-1]
         record = {
-            'member' : member.full_name,
-            'organization' : last_job.organization,
-            'start_year' : first_job.start_date.year,
-            'start_month' : first_job.start_date.month - 1,
-            'start' : first_job.start_date,
+            'member': member.full_name,
+            'organization': last_job.organization,
+            'start_year': first_job.start_date.year,
+            'start_month': first_job.start_date.month - 1,
+            'start': first_job.start_date,
         }
-
 
         if last_job.end_date is not None:
             record.update({
-                'end_year' : last_job.end_date.year,
-                'end_month' : last_job.end_date.month - 1,
-                'end' : last_job.end_date,
-                'length' : last_job.end_date - first_job.start_date,
-                'current' : False,
+                'end_year': last_job.end_date.year,
+                'end_month': last_job.end_date.month - 1,
+                'end': last_job.end_date,
+                'length': last_job.end_date - first_job.start_date,
+                'current': False,
             })
         else:
             today = date.today()
             record.update({
-                'end_year' : today.year,
-                'end_month' : today.month - 1,
-                'end' : today,
-                'length' : today - first_job.start_date,
-                'current' : True,
+                'end_year': today.year,
+                'end_month': today.month - 1,
+                'end': today,
+                'length': today - first_job.start_date,
+                'current': True,
             })
         members.append(record)
         members_by_id[record['member']] = record
@@ -807,22 +811,23 @@ def group_timeline(request):
         units.append(member['organization'].short_name)
 
     return_dict = {
-        'members' : members,
-        'chart_height' : (len(members) + 1) * 50,
-        'units' : units,
-        'distinct_units' : sorted(set(units)),
-        'algorithms' : algorithms.keys(),
-        'current_algorithm' : sort_algorithm,
+        'members': members,
+        'chart_height': (len(members) + 1) * 50,
+        'units': units,
+        'distinct_units': sorted(set(units)),
+        'algorithms': algorithms.keys(),
+        'current_algorithm': sort_algorithm,
     }
     return render_to_response('charts/people/group_timeline.html', return_dict, context_instance=RequestContext(request))
+
 
 ###########################################################################
 # View: members_position_pie
 ###########################################################################
 
 def members_position_pie(request):
-    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
-    member_jobs = Job.objects.filter(organization__in=organizations, person__is_active=True).select_related('person','organization')
+    organizations = Organization.objects.filter(slug__in=UNIT_ORGANIZATION_IDS)
+    member_jobs = Job.objects.filter(organization__in=organizations, person__is_active=True).select_related('person', 'organization')
 
     jobs_by_member = defaultdict(list)
     for member_job in member_jobs:
@@ -832,7 +837,7 @@ def members_position_pie(request):
     positions = {}
     positions_per_organization = {}
     for member in jobs_by_member:
-        jobs_by_member[member].sort(lambda j1, j2 : cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
+        jobs_by_member[member].sort(lambda j1, j2: cmp(j1.end_date or VERY_NEW_DATE, j2.end_date or VERY_NEW_DATE))
         last_organization = jobs_by_member[member][-1].organization.short_name
         last_position = jobs_by_member[member][-1].position.lower().title()
         if last_position not in positions:
@@ -848,9 +853,9 @@ def members_position_pie(request):
             positions_per_organization[last_organization][last_position] += 1
 
     return_dict = {
-        'multiple_organizations' : len(positions_per_organization) > 1,
-        'positions_per_organization' : positions_per_organization,
-        'positions' : positions,
+        'multiple_organizations': len(positions_per_organization) > 1,
+        'positions_per_organization': positions_per_organization,
+        'positions': positions,
     }
 
     import pprint

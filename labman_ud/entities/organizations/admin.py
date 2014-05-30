@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Organization, OrganizationType
+from .models import Organization, OrganizationType, Unit
 
 
 ###########################################################################
@@ -30,6 +30,16 @@ class OrganizationTypeAdmin(admin.ModelAdmin):
 
 
 ###########################################################################
+# Class: OrganizationTypeAdmin
+###########################################################################
+
+class UnitAdmin(admin.ModelAdmin):
+    model = Unit
+
+    list_display = ['organization', 'head', 'order']
+
+
+###########################################################################
 ###########################################################################
 # Register classes
 ###########################################################################
@@ -37,3 +47,4 @@ class OrganizationTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(OrganizationType, OrganizationTypeAdmin)
+admin.site.register(Unit, UnitAdmin)
