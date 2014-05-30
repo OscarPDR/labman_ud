@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 import os
 
@@ -241,7 +241,7 @@ class Publication(BaseModel):
             self.abstract,
             self.doi,
             self.journal_abbreviation,
-            unicode(self.published or ''), 
+            unicode(self.published or ''),
             unicode(self.year or ''),
             self.volume,
             self.pages,

@@ -47,16 +47,12 @@ h5, h6 {
 #principal-h1 {
     font-family: 'Open Sans', cursive;
     color: #999;
+    margin-top: 0;
 }
 
 #principal-h1 > img {
     margin: 0.5em;
 }
-
-/*#main-index {
-    background: url('../img/morelab.png') no-repeat fixed center;
-    background-size: 20%;
-}*/
 
 #wrap {
     min-height: 100%;
@@ -444,7 +440,7 @@ footer > a {
     padding: 0 1.5em;
 }
 
-.circular, .head-internet-image, .head-telecom-image {
+.circular {
     width: 200px;
     height: 200px;
     border-radius: 100px;
@@ -453,8 +449,41 @@ footer > a {
     margin-bottom: 1em;
 }
 
-.circular:hover, .head-internet-image:hover, .head-telecom-image:hover {
+.circular:hover {
     border: 2px solid #222;
+}
+
+.label.deustotech-internet {
+    background-color: #449284;
+}
+
+.label.deustotech-telecom {
+    background-color: #9168a1;
+}
+
+.label.morelab {
+    background-color: #1f3459;
+}
+
+.circle-deustotech-internet {
+    color: #449284;
+}
+
+.circle-deustotech-telecom {
+    color: #9168a1;
+}
+
+.circle-morelab {
+    color: #1f3459;
+}
+
+#member-count {
+    margin: 0;
+}
+
+#unit-selector {
+    padding: 0;
+    padding-left: 0.75em;
 }
 
 #team-image {
@@ -476,11 +505,11 @@ footer > a {
     max-height: 300px;
 }
 
-.member-name, .head-internet-name, .head-telecom-name {
+.member-name {
     font-weight: bold;
 }
 
-.member-position, .head-internet-position, .head-telecom-position {
+.member-position {
     font-style: italic;
     color: #999;
 }
@@ -653,7 +682,6 @@ footer > a {
 }
 
 .registered-user {
-    margin-bottom: 0.75em;
     text-align: right;
 }
 
