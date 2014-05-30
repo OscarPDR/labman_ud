@@ -1,4 +1,5 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
 
 
 
@@ -7,7 +8,7 @@
     <div class="row">
         <div class="col-md-9">
             <h2>
-                <a href="{% url 'organization_index' %}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+                <a href="{% url 'organization_index' %}"><img width="32" src="{% static 'img/back.png' %}" /></a>
                 {{ organization.full_name}}
             </h2>
         </div>

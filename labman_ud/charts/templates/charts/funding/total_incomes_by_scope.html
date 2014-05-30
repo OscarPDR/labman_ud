@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load humanize %}
+{% load humanize staticfiles %}
 
 
 
@@ -94,7 +94,7 @@
                             '<table class="medals-layout">' +
                             '<tr>' +
                                 '<td>' +
-                                    '<img src="{{ STATIC_PREFIX }}img/euskadi.png" width="32" style="padding:5px;"/>' +
+                                    '<img src="{% static 'img/euskadi.png' %}" width="32" style="padding:5px;"/>' +
                                 '</td>' +
                                 '<td class="funding-amount">' +
                                     euskadi +
@@ -102,7 +102,7 @@
                             '</tr>' +
                             '<tr>' +
                                 '<td>' +
-                                    '<img src="{{ STATIC_PREFIX }}img/spain.png" width="32" style="padding:5px;"/>' +
+                                    '<img src="{% static 'img/spain.png' %}" width="32" style="padding:5px;"/>' +
                                 '</td>' +
                                 '<td class="funding-amount">' +
                                     spain +
@@ -110,7 +110,7 @@
                             '</tr>' +
                             '<tr>' +
                                 '<td>' +
-                                    '<img src="{{ STATIC_PREFIX }}img/europe.png" width="32" style="padding:5px;"/>' +
+                                    '<img src="{% static 'img/europe.png' %}" width="32" style="padding:5px;"/>' +
                                 '</td>' +
                                 '<td class="funding-amount">' +
                                     europe +

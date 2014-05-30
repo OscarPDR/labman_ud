@@ -1,11 +1,12 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles %}
 
 
 
 {% block content %}
 
     <h2>
-        <a href="{% url 'funding_program_index' %}{{ from_page }}"><img width="32" src="{{ STATIC_PREFIX }}img/back.png" /></a>
+        <a href="{% url 'funding_program_index' %}{{ from_page }}"><img width="32" src="{% static 'img/back.png' %}" /></a>
         {{ funding_program.short_name}}
 
         {% if funding_program.logo %}

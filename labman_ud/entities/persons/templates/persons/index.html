@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags %}
+{% load pagination_tags staticfiles %}
 
 
 
@@ -69,7 +69,7 @@
 {% block scripts %}
 
     {% if query_string %}
-        <script src="{{ STATIC_PREFIX }}js/jquery.highlight-4.js"></script>
+        <script src="{% static 'js/jquery.highlight-4.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');
