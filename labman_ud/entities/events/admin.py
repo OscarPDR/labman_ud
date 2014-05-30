@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 from django.contrib import admin
 from .models import Event, EventType, Viva, VivaPanel

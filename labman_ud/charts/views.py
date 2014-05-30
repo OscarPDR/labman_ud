@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 from itertools import combinations
 from collections import defaultdict, OrderedDict
