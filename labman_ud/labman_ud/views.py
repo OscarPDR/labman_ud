@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse

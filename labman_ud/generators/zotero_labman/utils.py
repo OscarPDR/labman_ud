@@ -19,8 +19,6 @@ from pyzotero import zotero
 from dateutil import parser
 from datetime import datetime, date
 
-from sets import Set
-
 import requests
 import os
 import re
@@ -51,78 +49,80 @@ SUPPORTED_ITEM_TYPES = {
 
 # Dict used for tag dissambiguation
 tag_nicks = {
-        'AAL' : 'Ambient Assisted Living',
-        'ambient assisted living environments' : 'Ambient Assisted Living',
-        'assisted living' : 'Ambient Assisted Living',
-        'assistive' : 'Ambient Assisted Living',
-        'ambient assisted citizens' : 'ambient assisted cities',
-        'Artificial Intelligence (incl. Robotics)' : 'Artificial Intelligence',
-        'Computational Intelligence' : 'Artificial Intelligence',
-        'Computation by Abstract Devices' : 'Artificial Intelligence',
-        'bayesian network' : 'Bayesian Networks',
-        'client-server system' : 'client-server systems',
-        'content creation; user centered design contextual design' : 'Content Creation',
-        'context-aware' : 'Context-Aware Computing',
-        'context-aware development toolkits' : 'Context-Aware Computing',
-        'context-awareness'  : 'Context-Aware Computing',
-        'context-aware services development' : 'Context-Aware Computing',
-        'context-aware system development' : 'Context-Aware Computing',
-        'context-aware systems' : 'Context-Aware Computing',
-        'context data management' : 'Context-Aware Computing',
-        'context data sources' : 'Context-Aware Computing',
-        'context management' : 'Context-Aware Computing',
-        'Context modeling': 'context modelling',
-        'contextual design' : 'Context-Aware Computing',
-        'data handling' : 'Data Management',
-        'dispositivos móviles' : 'Mobile Devices',
-        'domain expert' : 'domain experts',
-        'Domotic' : 'Domotics',
-        'domotics' : 'Domotics',
-        'Educational programs' : 'Educational Technologies',
-        'educational technology' : 'Educational Technologies',
-        'elderly' : 'Elderly People',
-        'Elders': 'Elderly People',
-        'Embedded' : 'Embedded Devices',
-        'emergency detection' : 'Emergency Management',
-        'evaluación' : 'Evaluation',
-        'experiencia del usuario' : 'User Experience',
-        'first-order didactic resource' : 'Educational Technologies',
-        'Fuzzy' : 'Fuzzy Logic',
-        'gestión de energía' : 'Energy Management',
-        'Grid Services' : 'Grid',
-        'hci' : 'Human Computer Interaction',
-        'Information Systems Applications (incl.Internet)' : 'Information Systems Applications',
-        'Information Systems Applications (incl. Internet)' : 'Information Systems Applications',
-        'inference' : 'inference mechanisms',
-        'IoT' : 'Internet of Things',
-        'learning' : 'Educational Technologies',
-        'Opinion Minning' : 'opinion mining',
-        'Persuasive Technologies' : 'persuasive technology',
-        'reasoners' : 'Reasoning Engines',
-        'Recomendation Systems' : 'Recommendation Systems',
-        'seguridad' : 'Security',
-        'semantic' : 'Semantic Technologies',
-        'Semantic reasoners' : 'Semantic Inference',
-        'semantic reasoning' : 'Semantic Inference',
-        'Semantics' : 'Semantic Technologies',
-        'servicios móviles' : 'Mobile Services',
-        'Smart everyday objects' : 'Smart Everyday Object',
-        'smart phones' : 'smartphones',
-        'social content sharing' : 'Social Data Mining',
-        'software design' : 'Software Engineering',
-        'triple space' : 'triple space computing',
-        'triple space computing paradigm' : 'triple space computing',
-        'triplespaces' : 'triple space computing',
-        'ubiquitous' : 'ubiquitous computing',
-        'uncertainty' : 'Uncertainty Reasoning',
-        'wearable computers' : 'Wearable Computing'
+    'AAL': 'Ambient Assisted Living',
+    'ambient assisted living environments': 'Ambient Assisted Living',
+    'assisted living': 'Ambient Assisted Living',
+    'assistive': 'Ambient Assisted Living',
+    'ambient assisted citizens': 'ambient assisted cities',
+    'Artificial Intelligence (incl. Robotics)': 'Artificial Intelligence',
+    'Computational Intelligence': 'Artificial Intelligence',
+    'Computation by Abstract Devices': 'Artificial Intelligence',
+    'bayesian network': 'Bayesian Networks',
+    'client-server system': 'client-server systems',
+    'content creation; user centered design contextual design': 'Content Creation',
+    'context-aware': 'Context-Aware Computing',
+    'context-aware development toolkits': 'Context-Aware Computing',
+    'context-awareness': 'Context-Aware Computing',
+    'context-aware services development': 'Context-Aware Computing',
+    'context-aware system development': 'Context-Aware Computing',
+    'context-aware systems': 'Context-Aware Computing',
+    'context data management': 'Context-Aware Computing',
+    'context data sources': 'Context-Aware Computing',
+    'context management': 'Context-Aware Computing',
+    'Context modeling': 'context modelling',
+    'contextual design': 'Context-Aware Computing',
+    'data handling': 'Data Management',
+    'dispositivos móviles': 'Mobile Devices',
+    'domain expert': 'domain experts',
+    'Domotic': 'Domotics',
+    'domotics': 'Domotics',
+    'Educational programs': 'Educational Technologies',
+    'educational technology': 'Educational Technologies',
+    'elderly': 'Elderly People',
+    'Elders': 'Elderly People',
+    'Embedded': 'Embedded Devices',
+    'emergency detection': 'Emergency Management',
+    'evaluación': 'Evaluation',
+    'experiencia del usuario': 'User Experience',
+    'first-order didactic resource': 'Educational Technologies',
+    'Fuzzy': 'Fuzzy Logic',
+    'gestión de energía': 'Energy Management',
+    'Grid Services': 'Grid',
+    'hci': 'Human Computer Interaction',
+    'Information Systems Applications (incl.Internet)': 'Information Systems Applications',
+    'Information Systems Applications (incl. Internet)': 'Information Systems Applications',
+    'inference': 'inference mechanisms',
+    'IoT': 'Internet of Things',
+    'learning': 'Educational Technologies',
+    'Opinion Minning': 'opinion mining',
+    'Persuasive Technologies': 'persuasive technology',
+    'reasoners': 'Reasoning Engines',
+    'Recomendation Systems': 'Recommendation Systems',
+    'seguridad': 'Security',
+    'semantic': 'Semantic Technologies',
+    'Semantic reasoners': 'Semantic Inference',
+    'semantic reasoning': 'Semantic Inference',
+    'Semantics': 'Semantic Technologies',
+    'servicios móviles': 'Mobile Services',
+    'Smart everyday objects': 'Smart Everyday Object',
+    'smart phones': 'smartphones',
+    'social content sharing': 'Social Data Mining',
+    'software design': 'Software Engineering',
+    'triple space': 'triple space computing',
+    'triple space computing paradigm': 'triple space computing',
+    'triplespaces': 'triple space computing',
+    'ubiquitous': 'ubiquitous computing',
+    'uncertainty': 'Uncertainty Reasoning',
+    'wearable computers': 'Wearable Computing'
 }
+
 
 def dissambiguate(tag):
     correct_tag = tag
     if tag in tag_nicks.keys():
         correct_tag = tag_nicks[tag]
     return correct_tag
+
 
 def get_zotero_variables():
     # TODO: Check variables
@@ -137,7 +137,7 @@ def get_zotero_variables():
 def get_last_zotero_version():
     api_key, library_id, library_type, api_limit = get_zotero_variables()
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
+    r = requests.get('https://api.zotero.org/' + library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
     if len(r.json()):
         max_items = max(r.json().items(), key=operator.itemgetter(1))[1]
     else:
@@ -150,7 +150,7 @@ def get_last_zotero_version():
     # r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&order=libraryCatalog&sort=desc&limit=1&key=' + api_key)
     # max_trash = r.json().items()[0][1]
 
-    r = requests.get('https://api.zotero.org/'+  library_type + 's/' + library_id + '/items/trash?format=versions&key=' + api_key)
+    r = requests.get('https://api.zotero.org/' + library_type + 's/' + library_id + '/items/trash?format=versions&key=' + api_key)
     if len(r.json()):
         max_trash = max(r.json().items(), key=operator.itemgetter(1))[1]
     else:
@@ -272,7 +272,7 @@ def check_what_is_missing(last_version, prefix='[CHECK_MISSING]'):
     gen = zot.makeiter(zot.items(limit=api_limit, order='dateModified', sort='desc', newer=0))
 
     lastitems = []
-    item_set = Set()
+    item_set = set()
 
     moreitems = True
     while moreitems:
@@ -381,7 +381,7 @@ def get_publication_details(item):
     except:
         year = re.findall(r'\d{4}', item['date'])
         if year:
-            pub.published = datetime(int(year[0]),1,1)
+            pub.published = datetime(int(year[0]), 1, 1)
             pub.year = year[0]
         else:
             pub.published = None
@@ -441,7 +441,7 @@ def get_publication_details(item):
         pub_subpub_attributes['publication_type'] = pub_type_proceedings
 
         proceedings, created = Publication.objects.get_or_create(
-            slug = slugify(str(proceedings_title.encode('utf-8'))),
+            slug=slugify(str(proceedings_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
 
@@ -486,7 +486,7 @@ def get_publication_details(item):
         pub_subpub_attributes['publication_type'] = parentpub_type
 
         parentpub, created = Publication.objects.get_or_create(
-            slug = slugify(str(parentpub_title.encode('utf-8'))),
+            slug=slugify(str(parentpub_title.encode('utf-8'))),
             defaults=pub_subpub_attributes
         )
 
@@ -551,9 +551,9 @@ def get_publication_details(item):
                 except:
                     # If there is no reference to that person in the DB, create a new one
                     a = Person(
-                       first_name=first_name,
-                       first_surname=first_surname
-                       )
+                        first_name=first_name,
+                        first_surname=first_surname
+                    )
                     a.save()
                     # TODO: Send email to admins notifying the creation of new person
             authors.append(a)
@@ -611,7 +611,7 @@ def get_attached_pdf(item_key, path):
         if child['itemType'] == 'attachment' and child['contentType'] == 'application/pdf':
             logger.info('Getting attachment: ' + child['filename'] + '...')
 
-            r = requests.get('https://api.zotero.org/'+  library_type + 's/'+ library_id + '/items/'+ child['key'] + '/file?key=' + api_key)
+            r = requests.get('https://api.zotero.org/' + library_type + 's/' + library_id + '/items/' + child['key'] + '/file?key=' + api_key)
 
             # If the directory doesn't exist, create it
             pdf_dir = getattr(settings, 'MEDIA_ROOT', None) + '/' + os.path.dirname(path)
@@ -643,14 +643,14 @@ def delete_publication(pub):
     except IndexError:
         zot_key = None
 
-    publ_proj = Set()
+    publ_proj = set()
     if pub.projects.all():
         for proj in pub.projects.all():
             publ_proj.add(proj)
 
     # I don't understand why publ_news = pub.news.all() doesn't work as expected: the ret_dict is
     # generated correctly -with a list of news-, but when returned the list appears empty :-?
-    publ_news = Set()
+    publ_news = set()
     if pub.news.all():
         for nw in pub.news.all():
             publ_news.add(nw)
@@ -731,7 +731,7 @@ def restore_news(backup_dataset):
 ###########################################################################
 
 def remove_unrelated_persons():
-    unused_person_ids = Set()
+    unused_person_ids = set()
     organization_slugs = ['morelab', 'deustotech-internet', 'deustotech-telecom']
 
     all_persons = Person.objects.all()
@@ -745,7 +745,7 @@ def remove_unrelated_persons():
 
     unused_persons = Person.objects.filter(id__in=unused_person_ids, is_active=False)
 
-    persons_to_remove = Set()
+    persons_to_remove = set()
 
     removed_objects = 0
 
@@ -770,7 +770,7 @@ def load_tag_nicks(path='tag_nicks.json'):
 ###########################################################################
 
 def remove_unrelated_tags():
-    used_tag_ids = Set()
+    used_tag_ids = set()
 
     for item in PublicationTag.objects.all():
         used_tag_ids.add(item.tag.id)

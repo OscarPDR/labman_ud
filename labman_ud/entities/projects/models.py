@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 import os
 
@@ -109,7 +109,6 @@ class Project(BaseModel):
         max_length=25,
         choices=MONTHS,
         default='01',
-        blank=True,
     )
 
     start_year = models.IntegerField(
@@ -120,7 +119,6 @@ class Project(BaseModel):
         max_length=25,
         choices=MONTHS,
         default='12',
-        blank=True,
     )
 
     end_year = models.IntegerField(
