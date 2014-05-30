@@ -117,7 +117,7 @@
                             {{ project.start_year }} - {{ project.end_year }}
                             &emsp;
                             {% ifequal project.status 'Not started' %}
-                                <span class="label">{{ project.status }}</span>
+                                <span class="label label-default">{{ project.status }}</span>
                             {% endifequal %}
                             {% ifequal project.status 'Ongoing' %}
                                 <span class="label label-info">{{ project.status }}</span>
