@@ -262,7 +262,7 @@ class Publication(BaseModel):
         for tag in self.tags.all():
             all_fields.append(tag.name)
 
-        return u' '.join([ field for field in all_fields if field ])
+        return u' '.join([field for field in all_fields if field])
 
 
 ###########################################################################
