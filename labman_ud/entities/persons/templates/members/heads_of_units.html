@@ -1,0 +1,33 @@
+
+<div class="row">
+    {% for head in heads_of_unit %}
+        <div class="col-md-3 member">
+            <div class="centered">
+                <a href="{% url 'member_info' head.slug %}">
+                    {% if head.profile_picture_url %}
+                        <img class="circular" src="{{ MEDIA_PREFIX }}{{ head.profile_picture_url }}"/>
+                    {% else %}
+                        {% if head.gender == 'Female' %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                        {% else %}
+                            <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                        {% endif %}
+                    {% endif %}
+                </a>
+                <br>
+                <span class="member-name">
+                    <a target="_blank" href="{{ RDF_URI }}people/{{ head.slug }}">&emsp;
+                        <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                    </a>
+                    {% if head.title %}{{ head.title }} {% endif %}{{ head.full_name }}
+                </span>
+                <br>
+                <span class="member-position">{{ head.position }}</span>
+                <br>
+                <span class="label {{ head.organization_slug }}">{{ head.organization }}</span>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<br>
