@@ -17,12 +17,12 @@ from entities.news.models import News
 #########################
 
 def home(request):
-    last_news = News.objects.order_by('-created')[:3]
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'latest_news': News.objects.order_by('-created')[:3]
+    }
 
-    return render_to_response('labman_ud/index.html', {
-            'last_news': last_news,
-        },
-        context_instance=RequestContext(request))
+    return render_to_response('labman_ud/index.html', return_dict, context_instance=RequestContext(request))
 
 
 #########################
