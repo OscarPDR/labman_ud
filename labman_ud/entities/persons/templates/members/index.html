@@ -1,0 +1,200 @@
+{% extends "labman_ud/base.html" %}
+
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2 id="member-count">
+                {% if is_active_members %}
+                    {{ members_length }} member{{ members_length|pluralize }}
+                {% else %}
+                    {{ members_length }} former member{{ members_length|pluralize }}
+                {% endif %}
+                {% if organization %}
+                    <small>&emsp;<em>'{{ organization.short_name }}'</em></small>
+                {% endif %}
+            </h2>
+        </div>
+
+        <div class="col-md-3">
+            <input name="text" maxlength="50" placeholder="Search by name" type="text" class="form-control" id="search_box" />
+        </div>
+
+        {% if units|length > 1 %}
+            <div id="unit-selector" class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Unit&emsp;<span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    {% for unit in units %}
+                        <li>
+                            {% if is_active_members %}
+                                <a href="{% url 'members_by_organization' unit.organization.slug %}">
+                            {% else %}
+                                <a href="{% url 'former_members_by_organization' unit.organization.slug %}">
+                            {% endif %}
+                                <i class="fa fa-circle circle-{{ unit.organization.slug }}"></i>&emsp;
+                                {{ unit.organization.full_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    <li class="divider"></li>
+
+                    <li>
+                        {% if is_active_members %}
+                            <a href="{% url 'members' %}">All</a>
+                        {% else %}
+                            <a href="{% url 'former_members' %}">All</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if is_active_members %}
+            <a class="btn btn-primary col-md-2" href="{% url 'former_members' %}">
+                <i class="fa fa-step-backward"></i>&emsp;Former members
+            </a>
+        {% else %}
+            <a class="btn btn-primary col-md-2" href="{% url 'members' %}">
+                Active members
+            </a>
+        {% endif %}
+    </div>
+
+    <br>
+    <br>
+
+    {% if is_active_members %}
+        {% include 'members/heads_of_units.html' %}
+    {% endif %}
+
+    <div class="row">
+        {% for member in members %}
+
+            {% if forloop.counter0|divisibleby:4 %}{% endif %}
+
+                <div class="col-md-3 member" {% if forloop.counter0|divisibleby:4 %}style="margin-left:0;"{% endif %}>
+                    <div class="centered">
+                        <a href="{% url 'member_info' member.slug %}">
+                            {% if member.profile_picture_url %}
+                                <img class="circular" src="{{ MEDIA_PREFIX }}{{ member.profile_picture_url }}"/>
+                            {% else %}
+                                {% if member.gender == 'Female' %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/female.png"/>
+                                {% else %}
+                                    <img class="circular" src="{{ STATIC_PREFIX }}img/male.png"/>
+                                {% endif %}
+                            {% endif %}
+                        </a>
+                        <br>
+                        <span class="member-name">
+                            <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{{ STATIC_PREFIX }}img/rdf.png"/>
+                            </a>
+                            {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
+                        </span>
+                        <br>
+                        <span class="member-position">{{ member.position }}</span>
+                        <br>
+                        <span class="label {{ member.organization_slug }}">{{ member.organization }}</span>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#members-nav').addClass('active');
+    </script>
+
+    <script>
+        // If activated, in mobile phones it scrolls down, which is kind of weird
+        // $('#search_box').focus();
+        $('#search_box').keyup( function(e) {
+            // If up or down arrows are pressed, don't disturb the konami fun :-)
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                $("#search_box").focusout();
+                $("#search_box").blur();
+            }
+
+            var current_value = $(this).val().toLowerCase();
+
+            if (current_value == "") {
+                $(".member").show();
+            }
+            else {
+                $(".member").each(function(pos, element) {
+                    var $member = $(element).find("span");
+                    var link = $member.find("a").attr("href");
+
+                    if (link != undefined) {
+                        link = link.split("people/")[1];
+                    }
+                    else {
+                        link = "";
+                    }
+
+                    var full_name = $.trim($member.text());
+
+                    if (link.toLowerCase().indexOf(current_value) >= 0 || full_name.toLowerCase().indexOf(current_value) >= 0) {
+                        $(element).show();
+                    }
+                    else {
+                        $(element).hide();
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script type="text/javascript" src="{{ STATIC_PREFIX }}js/konami.js"></script>
+
+    <script type="text/javascript">
+        var success = function() {
+            var images = $("img.circular").map(function () { return this; });
+
+            $.each(images, function(i) {
+                {% for konami_profile_picture in konami_profile_pictures %}
+                if (i == {{ forloop.counter0 }}) {
+                    {% if konami_profile_picture|safe %}
+                    images[i].src = "{{ MEDIA_PREFIX }}/{{ konami_profile_picture|safe }}";
+                    {% else %}
+                    if (images[i].src.indexOf("/img/female.png") >= 0) {
+                        images[i].src = "{{ STATIC_PREFIX }}img/lovelace.png";
+                    }
+
+                    if (images[i].src.indexOf("/img/male.png") >= 0) {
+                        images[i].src = "{{ STATIC_PREFIX }}img/einstein.png";
+                    }
+                    {% endif %}
+                };
+                {% endfor %}
+            });
+
+            var positions = $(".member-position").map(function () { return this; });
+
+            {% for konami_position in konami_positions %}
+                $.each(positions, function(i) {
+                    if (i == {{ forloop.counter0 }}) {
+                        if ("{{ konami_position|safe }}" != "") {
+                            positions[i].innerHTML = "{{ konami_position|safe }}";
+                        }
+                    };
+                });
+            {% endfor %}
+        };
+
+        var konami = new Konami(success);
+    </script>
+
+{% endblock %}
