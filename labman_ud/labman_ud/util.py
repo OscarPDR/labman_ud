@@ -1,3 +1,6 @@
+# coding: utf-8
+
+
 class FeedWrapper(object):
     def __init__(self, feed_instance):
         self.feed_instance = feed_instance

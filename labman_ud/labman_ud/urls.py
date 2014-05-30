@@ -6,7 +6,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from django.contrib.sites.models import Site
 
 from .forms import LoginForm
 
@@ -28,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Login & Logout views
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html', 'authentication_form': LoginForm}),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html', 'authentication_form': LoginForm}, name='login_view'),
     url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
     # Entities urls

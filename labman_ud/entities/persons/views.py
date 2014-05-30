@@ -18,7 +18,7 @@ from .models import Person, Job, AccountProfile
 
 from entities.news.models import PersonRelatedToNews
 from entities.events.models import Event
-from entities.organizations.models import Organization
+from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
@@ -27,8 +27,7 @@ from entities.publications.views import INDICATORS_TAG_SLUGS
 # Create your views here.
 
 REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
-
-OWN_ORGANIZATION_SLUGS = ['deustotech-internet', 'deustotech-telecom', 'morelab']
+UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
 # Status
 MEMBER = 'member'
@@ -64,7 +63,8 @@ def __get_head_data(head):
     data = __get_person_data(head)
 
     return {
-        'company': str(data['organization'].short_name),
+        'organization': str(data['organization'].short_name),
+        'organization_slug': str(data['organization'].slug),
         'full_name': str((head.full_name).encode('utf-8')),
         'gender': str(head.gender),
         'position': str(data['position']),
@@ -138,27 +138,41 @@ def determine_person_info(request, person_slug):
 ###########################################################################
 
 def members(request, organization_slug=None):
-    member_konami_positions = []
-    member_konami_profile_pictures = []
+    konami_positions = []
+    konami_profile_pictures = []
     members = []
 
-    # MORElab only
-    pr_internet = Person.objects.get(full_name='Diego López-de-Ipiña')
-    head_of_internet = __get_head_data(pr_internet)
+    organization = None
+    units = Unit.objects.all()
 
-    pr_telecom = Person.objects.get(first_name='Jon', first_surname='Legarda')
-    head_of_telecom = __get_head_data(pr_telecom)
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+        filtered_units = Unit.objects.filter(organization=organization)
+    else:
+        filtered_units = units
 
-    member_list = Person.objects.filter(is_active=True).exclude(id__in=[pr_internet.id, pr_telecom.id])
+    unit_head_person_ids = filtered_units.values_list('head', flat=True).order_by('order')
+    unit_head_person_ids = [_id for _id in unit_head_person_ids if _id is not None]
+
+    heads_of_unit = []
+
+    for head_id in unit_head_person_ids:
+        head = Person.objects.get(id=head_id)
+        heads_of_unit.append(__get_head_data(head))
+        konami_positions.append(head.konami_code_position)
+        konami_profile_pictures.append(head.profile_konami_code_picture)
+
+    member_list = Person.objects.filter(is_active=True).exclude(id__in=unit_head_person_ids)
+
     member_list = member_list.order_by('first_surname', 'second_surname', 'first_name')
-    # End of MORElab only
 
     for member in member_list:
         member_data = __get_person_data(member)
 
         if not organization_slug or (organization_slug == member_data['organization'].slug):
             members.append({
-                'company': member_data['organization'].short_name,
+                'organization': member_data['organization'].short_name,
+                'organization_slug': member_data['organization'].slug,
                 'full_name': member.full_name,
                 'gender': member.gender,
                 'position': member_data['position'],
@@ -167,27 +181,23 @@ def members(request, organization_slug=None):
                 'title': member.title,
             })
 
-            member_konami_positions.append(member.konami_code_position)
-            member_konami_profile_pictures.append(member.profile_konami_code_picture)
-
-    if organization_slug:
-        organization = Organization.objects.get(slug=organization_slug)
-    else:
-        organization = None
+            konami_positions.append(member.konami_code_position)
+            konami_profile_pictures.append(member.profile_konami_code_picture)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': 'Members',
-        'head_of_internet': head_of_internet,
-        'head_of_telecom': head_of_telecom,
-        'member_konami_positions': member_konami_positions,
-        'member_konami_profile_pictures': member_konami_profile_pictures,
+        'heads_of_unit': heads_of_unit,
+        'konami_positions': konami_positions,
+        'konami_profile_pictures': konami_profile_pictures,
         'members': members,
+        'members_length': len(members) + len(heads_of_unit),
+        'units': units,
         'organization': organization,
-        'organization_slug': organization_slug,
+        'is_active_members': True,
     }
 
-    return render_to_response("members/members_index.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -195,12 +205,22 @@ def members(request, organization_slug=None):
 ###########################################################################
 
 def former_members(request, organization_slug=None):
-
-    former_member_konami_positions = []
-    former_member_konami_profile_pictures = []
+    konami_positions = []
+    konami_profile_pictures = []
     former_members = []
 
-    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+    organization = None
+    units = Unit.objects.all()
+
+    if organization_slug:
+        organization = Organization.objects.get(slug=organization_slug)
+        filtered_units = Unit.objects.filter(organization=organization)
+    else:
+        filtered_units = units
+
+    organization_ids = filtered_units.values_list('organization', flat=True)
+
+    organizations = Organization.objects.filter(id__in=organization_ids)
 
     former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
 
@@ -227,39 +247,36 @@ def former_members(request, organization_slug=None):
             former_member_list.append(item)
 
     for former_member in former_member_list:
-        job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
-        organization = Organization.objects.get(id=job.organization_id)
+        former_member_data = __get_person_data(former_member)
 
-        if not organization_slug or (organization_slug == organization.slug):
+        if not organization_slug or (organization_slug == former_member_data['organization'].slug):
             former_members.append({
-                'company': organization.short_name,
+                'organization': former_member_data['organization'].short_name,
+                'organization_slug': former_member_data['organization'].slug,
                 'full_name': former_member.full_name,
                 'gender': former_member.gender,
-                'position': job.position,
+                'position': former_member_data['position'],
                 'profile_picture_url': former_member.profile_picture,
                 'slug': former_member.slug,
                 'title': former_member.title,
             })
 
-            former_member_konami_positions.append(former_member.konami_code_position)
-            former_member_konami_profile_pictures.append(former_member.profile_konami_code_picture)
-
-    if organization_slug:
-        organization = Organization.objects.get(slug=organization_slug)
-    else:
-        organization = None
+            konami_positions.append(former_member.konami_code_position)
+            konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': 'Former members',
-        'former_member_konami_positions': former_member_konami_positions,
-        'former_member_konami_profile_pictures': former_member_konami_profile_pictures,
-        'former_members': former_members,
+        'konami_positions': konami_positions,
+        'konami_profile_pictures': konami_profile_pictures,
+        'members': former_members,
+        'members_length': len(former_members),
+        'units': units,
         'organization': organization,
-        'organizations': organizations,
+        'is_active_members': False,
     }
 
-    return render_to_response("members/former_members_index.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
@@ -775,7 +792,7 @@ def __determine_person_status(person_slug):
     if person.is_active:
         return MEMBER
     else:
-        organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+        organizations = Organization.objects.filter(id__in=UNIT_ORGANIZATION_IDS)
         all_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
         former_member_list_ids = Person.objects.filter(id__in=all_member_ids, is_active=False).values_list('id', flat=True)
 
@@ -830,7 +847,7 @@ def __get_job_data(member):
     last_job = None
     position = None
 
-    organizations = Organization.objects.filter(slug__in=OWN_ORGANIZATION_SLUGS)
+    organizations = Organization.objects.filter(id__in=UNIT_ORGANIZATION_IDS)
 
     try:
         jobs = Job.objects.filter(person_id=member.id, organization_id__in=organizations).order_by('end_date')
