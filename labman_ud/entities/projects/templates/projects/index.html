@@ -83,7 +83,7 @@
                     <td class="col-md-1 centered">
                         {% ifequal project.status 'Not started' %}
                             <a href="{% url 'view_project_status' project.status|slugify %}">
-                                <span class="label">{{ project.status }}</span>
+                                <span class="label label-default">{{ project.status }}</span>
                             </a>
                         {% endifequal %}
                         {% ifequal project.status 'Ongoing' %}
