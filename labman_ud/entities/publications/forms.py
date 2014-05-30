@@ -6,9 +6,9 @@ from django import forms
 # Create your forms here.
 
 
-#########################
+###########################################################################
 # Class: PublicationSearchForm
-#########################
+###########################################################################
 
 class PublicationSearchForm(forms.Form):
     text = forms.CharField(

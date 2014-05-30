@@ -31,9 +31,9 @@ TITLES = (
 )
 
 
-#########################
+###########################################################################
 # Model: Person
-#########################
+###########################################################################
 
 class Person(BaseModel):
     first_name = models.CharField(
@@ -166,9 +166,9 @@ class Person(BaseModel):
         super(Person, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: AccountProfile
-#########################
+###########################################################################
 
 class AccountProfile(BaseModel):
     person = models.ForeignKey('Person')
@@ -183,9 +183,9 @@ class AccountProfile(BaseModel):
         return u'%s\'s %s account profile: %s' % (self.person.full_name, self.network.name, self.profile_id)
 
 
-#########################
+###########################################################################
 # Model: Nickname
-#########################
+###########################################################################
 
 class Nickname(BaseModel):
     person = models.ForeignKey('Person', related_name='nicknames')
@@ -211,9 +211,9 @@ class Nickname(BaseModel):
         super(Nickname, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: Job
-#########################
+###########################################################################
 
 class Job(BaseModel):
     person = models.ForeignKey('Person')
@@ -244,18 +244,18 @@ class Job(BaseModel):
         return u'%s worked as %s at %s' % (self.person.full_name, self.position, self.organization.short_name)
 
 
-#########################
+###########################################################################
 # Model: PhDProgramFollowedByPerson
-#########################
+###########################################################################
 
 class PhDProgramFollowedByPerson(BaseModel):
     person = models.ForeignKey('Person')
     phd_program = models.ForeignKey('utils.PhDProgram')
 
 
-#########################
+###########################################################################
 # Model: ThesisRegisteredByPerson
-#########################
+###########################################################################
 
 class ThesisRegisteredByPerson(BaseModel):
     person = models.ForeignKey('Person')

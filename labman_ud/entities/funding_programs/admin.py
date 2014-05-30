@@ -4,9 +4,9 @@ from django.contrib import admin
 from .models import FundingProgram, FundingProgramLogo
 
 
-#########################
+###########################################################################
 # Class: FundingProgramLogoInline
-#########################
+###########################################################################
 
 class FundingProgramLogoInline(admin.StackedInline):
     model = FundingProgramLogo
@@ -14,9 +14,9 @@ class FundingProgramLogoInline(admin.StackedInline):
     exclude = ['slug']
 
 
-#########################
+###########################################################################
 # Class: FundingProgramAdmin
-#########################
+###########################################################################
 
 class FundingProgramAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'short_name']

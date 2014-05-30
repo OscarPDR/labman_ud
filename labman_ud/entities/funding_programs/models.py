@@ -14,9 +14,9 @@ def funding_program_logo_path(self, filename):
     return "%s/%s_%s%s" % ("funding_programs", self.funding_program.slug, self.slug, os.path.splitext(filename)[-1])
 
 
-#########################
+###########################################################################
 # Model: FundingProgram
-#########################
+###########################################################################
 
 class FundingProgram(BaseModel):
     organization = models.ForeignKey('organizations.Organization')
@@ -59,9 +59,9 @@ class FundingProgram(BaseModel):
         super(FundingProgram, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: FundingProgramLogo
-#########################
+###########################################################################
 
 class FundingProgramLogo(BaseModel):
     funding_program = models.ForeignKey('FundingProgram')

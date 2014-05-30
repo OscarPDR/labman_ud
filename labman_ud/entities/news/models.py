@@ -45,9 +45,9 @@ def post_tweet(title, slug):
         print "Oops, something went wrong! Twitter returned error #%i and said: %s" % (err.code, err.description)
 
 
-#########################
+###########################################################################
 # Model: New
-#########################
+###########################################################################
 
 class News(BaseModel):
     title = models.CharField(
@@ -81,9 +81,9 @@ class News(BaseModel):
         super(News, self).save(*args, **kwargs)
 
 
-#########################
+###########################################################################
 # Model: NewsTag
-#########################
+###########################################################################
 
 class NewsTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
@@ -93,9 +93,9 @@ class NewsTag(BaseModel):
         return u'%s tagged as: %s' % (self.news.title, self.tag.name)
 
 
-#########################
+###########################################################################
 # Model: ProjectRelatedToNews
-#########################
+###########################################################################
 
 class ProjectRelatedToNews(BaseModel):
     project = models.ForeignKey('projects.Project')
@@ -105,9 +105,9 @@ class ProjectRelatedToNews(BaseModel):
         return u'%s refers to project: %s' % (self.news.title, self.project.short_name)
 
 
-#########################
+###########################################################################
 # Model: PublicationRelatedToNews
-#########################
+###########################################################################
 
 class PublicationRelatedToNews(BaseModel):
     publication = models.ForeignKey('publications.Publication')
@@ -117,9 +117,9 @@ class PublicationRelatedToNews(BaseModel):
         return u'%s refers to project: %s' % (self.news.title, self.publication.title)
 
 
-#########################
+###########################################################################
 # Model: PersonRelatedToNews
-#########################
+###########################################################################
 
 class PersonRelatedToNews(BaseModel):
     person = models.ForeignKey('persons.Person')
