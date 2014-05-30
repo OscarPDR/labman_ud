@@ -893,8 +893,7 @@ def projects_timeline(request, person_slug):
     assigned_persons = AssignedPerson.objects.filter(person_id=person.id).order_by('project__start_year', 'project__start_month', 'project__end_year', 'project__end_month')
 
     for assigned_person in assigned_persons:
-        role_name = assigned_person.role.name
-        if role_name.lower() != 'principal researcher':
+        if assigned_person.role.slug != 'principal-researcher':
             project = Project.objects.get(id=assigned_person.project_id)
 
             timeline_item = {
