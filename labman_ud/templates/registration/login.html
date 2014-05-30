@@ -5,23 +5,32 @@
 
 {% block content %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 well">
-                {% if form.errors %}
-                    <p>Your username and password didn't match. Please try again.</p>
-                {% endif %}
-
-                <form class="form-signin col-md-4" method="post" action="{% url 'django.contrib.auth.views.login' %}">
-                {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 well">
+            <form class="form-inline center" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+            {% csrf_token %}
+                <div class="form-group">
+                    <label class="sr-only" for="id_username">Username</label>
                     {{ form.username }}
+                </div>
+
+                <div class="form-group">
+                    <label class="sr-only" for="id_password">Password</label>
                     {{ form.password }}
-                    <br>
-                    <input class="btn btn-primary" type="submit" value="login" />
-                    <input type="hidden" name="next" value="/" />
-                </form>
+                </div>
+
+                <button type="submit" class="btn btn-primary" value="login">Sign in</button>
+                <input type="hidden" name="next" value="/" />
+            </form>
+        </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger col-md-6 col-md-offset-3">
+                <p class="center">
+                    Your username and password didn't match. Please try again.
+                </p>
             </div>
-        </div> <!-- end .row -->
-    </div> <!-- end .container -->
+        {% endif %}
+    </div>
 
 {% endblock %}
