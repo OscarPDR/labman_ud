@@ -19,9 +19,9 @@ from entities.utils.models import GeographicalScope
 # Create your views here.
 
 
-#########################
+###########################################################################
 # View: semantic_search
-#########################
+###########################################################################
 
 def semantic_search(request):
     active = False

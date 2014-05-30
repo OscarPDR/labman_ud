@@ -14,9 +14,9 @@ from entities.projects.models import Project, Funding, FundingAmount
 # Create your views here.
 
 
-#########################
+###########################################################################
 # View: funding_program_index
-#########################
+###########################################################################
 
 def funding_program_index(request):
     funding_programs = FundingProgram.objects.all().order_by('short_name')

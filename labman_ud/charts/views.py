@@ -159,9 +159,9 @@ def funding_incomes_by_project_index(request):
     return render_to_response("charts/funding/incomes_by_project_index.html", return_dict, context_instance=RequestContext(request))
 
 
-#########################
+###########################################################################
 # View: funding_incomes_by_project
-#########################
+###########################################################################
 
 def funding_incomes_by_project(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)

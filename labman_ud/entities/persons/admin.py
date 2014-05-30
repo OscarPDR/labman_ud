@@ -4,18 +4,18 @@ from django.contrib import admin
 from .models import Person, AccountProfile, Nickname, Job
 
 
-#########################
+###########################################################################
 # Class: AccountProfileInline
-#########################
+###########################################################################
 
 class AccountProfileInline(admin.TabularInline):
     model = AccountProfile
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: NicknameInline
-#########################
+###########################################################################
 
 class NicknameInline(admin.TabularInline):
     model = Nickname
@@ -24,18 +24,18 @@ class NicknameInline(admin.TabularInline):
     exclude = ['slug']
 
 
-#########################
+###########################################################################
 # Class: JobInline
-#########################
+###########################################################################
 
 class JobInline(admin.StackedInline):
     model = Job
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: PersonAdmin
-#########################
+###########################################################################
 
 class PersonAdmin(admin.ModelAdmin):
     model = Person
@@ -54,17 +54,17 @@ class PersonAdmin(admin.ModelAdmin):
     ]
 
 
-#########################
+###########################################################################
 # Class: AccountProfileAdmin
-#########################
+###########################################################################
 
 class AccountProfileAdmin(admin.ModelAdmin):
     model = AccountProfile
 
 
-#########################
+###########################################################################
 # Class: NicknameAdmin
-#########################
+###########################################################################
 
 class NicknameAdmin(admin.ModelAdmin):
     model = Nickname

@@ -33,9 +33,9 @@ from entities.funding_programs.models import FundingProgram
 PAGINATION_NUMBER = settings.EVENTS_PAGINATION
 
 
-#########################
+###########################################################################
 # View: event_index
-#########################
+###########################################################################
 
 def event_index(request):
     events = Event.objects.all()

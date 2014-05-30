@@ -5,45 +5,45 @@ from django.contrib import admin
 from .models import *
 
 
-#########################
+###########################################################################
 # Class: PublicationTagAdmin
-#########################
+###########################################################################
 
 class PublicationTagInline(admin.StackedInline):
     model = PublicationTag
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: PublicationAuthorInline
-#########################
+###########################################################################
 
 class PublicationAuthorInline(admin.TabularInline):
     model = PublicationAuthor
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: ThesisAbstractInline
-#########################
+###########################################################################
 
 class ThesisAbstractInline(admin.TabularInline):
     model = ThesisAbstract
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: CoAdvisorInline
-#########################
+###########################################################################
 
 class CoAdvisorInline(admin.TabularInline):
     model = CoAdvisor
     extra = 1
 
 
-#########################
+###########################################################################
 # Class: PublicationAdmin
-#########################
+###########################################################################
 
 class PublicationAdmin(admin.ModelAdmin):
     model = Publication
@@ -58,9 +58,9 @@ class PublicationAdmin(admin.ModelAdmin):
     ]
 
 
-#########################
+###########################################################################
 # Class: ThesisAdmin
-#########################
+###########################################################################
 
 class ThesisAdmin(admin.ModelAdmin):
     model = Thesis
@@ -74,18 +74,18 @@ class ThesisAdmin(admin.ModelAdmin):
     ]
 
 
-#########################
+###########################################################################
 # Class: PublicationTypeAdmin
-#########################
+###########################################################################
 
 class PublicationTypeAdmin(admin.ModelAdmin):
     model = PublicationType
     list_display = ['name', 'description']
 
 
-#########################
+###########################################################################
 # Class: PublicationAuthorAdmin
-#########################
+###########################################################################
 
 class PublicationAuthorAdmin(admin.ModelAdmin):
     model = PublicationAuthor
@@ -95,9 +95,9 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
     list_filter = ['author__full_name']
 
 
-#########################
+###########################################################################
 # Class: PublicationTagAdmin
-#########################
+###########################################################################
 
 class PublicationTagAdmin(admin.ModelAdmin):
     model = PublicationTag
@@ -107,17 +107,17 @@ class PublicationTagAdmin(admin.ModelAdmin):
     list_filter = ['tag__name']
 
 
-#########################
+###########################################################################
 # Class: ThesisAbstractAdmin
-#########################
+###########################################################################
 
 class ThesisAbstractAdmin(admin.ModelAdmin):
     model = ThesisAbstract
 
 
-#########################
+###########################################################################
 # Class: CoAdvisorAdmin
-#########################
+###########################################################################
 
 class CoAdvisorAdmin(admin.ModelAdmin):
     model = CoAdvisor

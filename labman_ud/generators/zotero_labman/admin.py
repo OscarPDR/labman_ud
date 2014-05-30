@@ -4,9 +4,9 @@ from django.contrib import admin
 
 from .models import ZoteroLog
 
-#########################
+###########################################################################
 # Class: ZoteroLogAdmin
-#########################
+###########################################################################
 
 class ZoteroLogAdmin(admin.ModelAdmin):
     model = ZoteroLog
