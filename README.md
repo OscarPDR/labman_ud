@@ -10,7 +10,7 @@ This project is designed to help research centers organize and expose their info
 
 # Documentation
 
-All project-related information can be found on the [wiki](www.google.es).
+All project-related information can be found on the [wiki](https://github.com/OscarPDR/labman_ud/wiki).
 
 # Installation
 
