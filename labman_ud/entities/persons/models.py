@@ -156,13 +156,13 @@ class Person(BaseModel):
 
         self.slug = slugify(self.full_name)
 
-        if self.biography:
+        try:
             safe_biography = strip_tags(self.biography)
             safe_biography = safe_biography.replace("&lsquo;", "'")
             safe_biography = safe_biography.replace("&rsquo;", "'")
             safe_biography = safe_biography.replace("&ldquo;", "\"")
             safe_biography = safe_biography.replace("&rdquo;", "\"")
-        else:
+        except:
             safe_biography = None
 
         self.safe_biography = safe_biography
