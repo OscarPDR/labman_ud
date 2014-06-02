@@ -14,7 +14,7 @@ All project-related information can be found on the [wiki](www.google.es).
 
 # Installation
 
-Installation advices can be found on the related [wiki page](www.google.es).
+Installation advices can be found on the related [wiki page](https://github.com/OscarPDR/labman_ud/wiki/Installation).
 
 # Contact
 
