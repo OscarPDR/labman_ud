@@ -1,52 +1,23 @@
-LabMan UD
-================
+# Introduction
 
-Web app to manage data within the MORElab research group at DeustoTech Internet.
+This project is designed to help research centers organize and expose their information in an understandable and simple way. It also allows to easily publish this information as Linked Open Data, using some well known vocabularies to allow other researchers query the data through a SPARQL Endpoint.
 
-In order to have the application fully running all the features correctly, the following parameters need to be filled:
+**labman_ud** is developed using [django](https://www.djangoproject.com/), a MVT (Model-View-Template) Python Web Framework that encourages rapid development and clean, pragmatic design.
 
-    > labman_ud/settings.py
+A whole example can be consulted at [MORElab's homepage](http://www.morelab.deusto.es/), a research group within [Deustotech](http://www.deustotech.deusto.es/), [Deusto](http://www.deusto.es/) Institute of Technology, where this project was initially designed and developed in the spare time of some of its components.
 
-    { ... }
+# License
 
-    HOST_URL = ''
+**labman_ud** is [Open Source](http://opensource.org/osd) and [Free Software](http://www.gnu.org/philosophy/free-sw.html). It is distributed under the [GNU GPLv3](http://www.gnu.org/copyleft/gpl.html) license.
 
-    { ... }
+# Documentation
 
-    DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-      }
-    }
+All project-related information can be found on the [wiki](https://github.com/OscarPDR/labman_ud/wiki).
 
-    { ... }
+# Installation
 
-    EMPLOYEES_PAGINATION = 10
-    FUNDING_PROGRAMS_PAGINATION = 10
-    ORGANIZATIONS_PAGINATION = 10
-    PROJECTS_PAGINATION = 10
+Installation advices can be found on the related [wiki page](https://github.com/OscarPDR/labman_ud/wiki/Installation).
 
-    { ... }
+# Contact
 
-    # Email settings to allow mail sending from a gmail account
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
-    DEFAULT_FROM_EMAIL = ''
-    SERVER_EMAIL = ''
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-
-    PROJECTS_RECEPTOR_EMAILS = ['']
-    PROJECTS_SENDER_EMAIL = ''
-
-# Database initialization
-
-There are some fixtures existing inside each app. They can be uploaded when the database its created/updated by the following command from the root folder of the project:
-
-    python manage.py syncdb
+Should you be interested in powering your research unit's webpage using **labman_ud**, ask any doubt or collaborate with the project in any way, don't hesitate to contact us at [oscar.pena@deusto.es](mailto:oscar.pena@deusto.es)
