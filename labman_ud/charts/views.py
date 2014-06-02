@@ -746,7 +746,7 @@ VERY_NEW_DATE = date(2100, 1, 1)
 
 
 def group_timeline(request):
-    organizations = Organization.objects.filter(slug__in=UNIT_ORGANIZATION_IDS)
+    organizations = Organization.objects.filter(id__in=UNIT_ORGANIZATION_IDS)
     member_jobs = Job.objects.filter(organization__in=organizations).select_related('person', 'organization')
     jobs_by_member = defaultdict(list)
     for member_job in member_jobs:
