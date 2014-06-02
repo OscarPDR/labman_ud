@@ -33,7 +33,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     clean_index = False
 
     if tag_slug:
-        tag = Tag.objects.get(slug=tag_slug)
+        tag = get_object_or_404(Tag, slug=tag_slug)
         project_ids = ProjectTag.objects.filter(tag=tag).values('project_id')
         projects = Project.objects.filter(id__in=project_ids)
 
@@ -42,7 +42,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         projects = Project.objects.filter(status=status)
 
     if project_type_slug:
-        project_type = ProjectType.objects.get(slug=project_type_slug)
+        project_type = get_object_or_404(ProjectType, slug=project_type_slug)
         projects = Project.objects.filter(project_type=project_type.id)
 
     if not tag_slug and not status_slug and not project_type_slug:

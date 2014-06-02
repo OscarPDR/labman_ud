@@ -51,12 +51,12 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
     clean_index = False
 
     if tag_slug:
-        tag = Tag.objects.get(slug=tag_slug)
+        tag = get_object_or_404(Tag, slug=tag_slug)
         publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
         publications = Publication.objects.filter(id__in=publication_ids).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if publication_type_slug:
-        publication_type = PublicationType.objects.get(slug=publication_type_slug)
+        publication_type = get_object_or_404(PublicationType, slug=publication_type_slug)
         publications = Publication.objects.filter(publication_type=publication_type.id).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if not tag_slug and not publication_type_slug:

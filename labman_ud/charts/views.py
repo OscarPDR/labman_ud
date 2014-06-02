@@ -868,7 +868,7 @@ def members_position_pie(request):
 ###########################################################################
 
 def person_timeline(request, person_slug):
-    person = Person.objects.get(slug=person_slug)
+    person = get_object_or_404(Person, slug=person_slug)
 
     jobs = Job.objects.filter(person=person).order_by('start_date')
 
@@ -886,7 +886,7 @@ def person_timeline(request, person_slug):
 ###########################################################################
 
 def projects_timeline(request, person_slug):
-    person = Person.objects.get(slug=person_slug)
+    person = get_object_or_404(Person, slug=person_slug)
 
     timeline = []
 
