@@ -4,6 +4,8 @@ This project is designed to help research centers organize and expose their info
 
 **labman_ud** is developed using [django](https://www.djangoproject.com/), a MVT (Model-View-Template) Python Web Framework that encourages rapid development and clean, pragmatic design.
 
+A whole example can be consulted at [MORElab's homepage](http://www.morelab.deusto.es/), a research group within [Deustotech](http://www.deustotech.deusto.es/), [Deusto](http://www.deusto.es/) Institute of Technology, where this project was initially designed and developed in the spare time of some of its components.
+
 # License
 
 **labman_ud** is [Open Source](http://opensource.org/osd) and [Free Software](http://www.gnu.org/philosophy/free-sw.html). It is distributed under the [GNU GPLv3](http://www.gnu.org/copyleft/gpl.html) license.
