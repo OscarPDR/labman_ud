@@ -156,11 +156,15 @@ class Person(BaseModel):
 
         self.slug = slugify(self.full_name)
 
-        safe_biography = strip_tags(self.biography)
-        safe_biography = safe_biography.replace("&lsquo;", "'")
-        safe_biography = safe_biography.replace("&rsquo;", "'")
-        safe_biography = safe_biography.replace("&ldquo;", "\"")
-        safe_biography = safe_biography.replace("&rdquo;", "\"")
+        if self.biography:
+            safe_biography = strip_tags(self.biography)
+            safe_biography = safe_biography.replace("&lsquo;", "'")
+            safe_biography = safe_biography.replace("&rsquo;", "'")
+            safe_biography = safe_biography.replace("&ldquo;", "\"")
+            safe_biography = safe_biography.replace("&rdquo;", "\"")
+        else:
+            safe_biography = None
+
         self.safe_biography = safe_biography
 
         super(Person, self).save(*args, **kwargs)
