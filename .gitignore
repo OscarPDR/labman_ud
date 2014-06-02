@@ -4,36 +4,32 @@
 
 *.swp
 
-*.DS_Store
-
-labman_ud/settings.py
-
-labman_ud/media/*
-labman_ud/media
-
-labman_ud/static_prod/*
-
-labman_ud.sublime-project
-labman_ud.sublime-workspace
-
-*.db
-
-*.json
-
-migrations/
-
-labman_ud/labman_ud/settings/dev.py
-labman_ud/labman_ud/settings/prod.py
-labman_ud/labman_ud/settings/local.py
-
-labman_ud/labman_ud/wsgi.py
-
-labman_ud/collected_static/
-
 .htaccess
 .htpasswd
 
+labman_ud/labman_ud/wsgi.py
+
+# Mac OS
+*.DS_Store
+
+# Settings
+labman_ud/labman_ud/settings
+
+# Media and static files
+labman_ud/media
+labman_ud/collected_static/
+
+# Database and JSON
+*.db
+*.json
+
+# South migrations and database fixtures
+migrations/
+fixtures/
+
+# Sublime Text project configuration
 *.sublime-project
 *.sublime-workspace
 
+# Zotero logs
 labman_ud/zotero_labman.log.*
