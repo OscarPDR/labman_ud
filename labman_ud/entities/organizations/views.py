@@ -2,7 +2,7 @@
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
@@ -25,7 +25,7 @@ def organization_index(request, organization_type_slug=None, query_string=None):
     clean_index = False
 
     if organization_type_slug:
-        organization_type = OrganizationType.objects.get(slug=organization_type_slug)
+        organization_type = get_object_or_404(OrganizationType, slug=organization_type_slug)
         organizations = Organization.objects.filter(organization_type=organization_type.id)
 
     else:
@@ -77,7 +77,7 @@ def organization_index(request, organization_type_slug=None, query_string=None):
 ###########################################################################
 
 def organization_info(request, slug):
-    organization = Organization.objects.get(slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     logo = organization.logo if organization.logo else None
 

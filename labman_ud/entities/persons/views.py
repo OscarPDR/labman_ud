@@ -146,7 +146,7 @@ def members(request, organization_slug=None):
     units = Unit.objects.all()
 
     if organization_slug:
-        organization = Organization.objects.get(slug=organization_slug)
+        organization = get_object_or_404(Organization, slug=organization_slug)
         filtered_units = Unit.objects.filter(organization=organization)
     else:
         filtered_units = units
@@ -213,7 +213,7 @@ def former_members(request, organization_slug=None):
     units = Unit.objects.all()
 
     if organization_slug:
-        organization = Organization.objects.get(slug=organization_slug)
+        organization = get_object_or_404(Organization, slug=organization_slug)
         filtered_units = Unit.objects.filter(organization=organization)
     else:
         filtered_units = units
@@ -292,7 +292,7 @@ def member_info(request, person_slug):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
 
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
@@ -319,14 +319,14 @@ def member_projects(request, person_slug, role_slug=None):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_projects', kwargs={'person_slug': person_slug}))
 
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
 
     projects = {}
 
     has_projects = False
 
     if role_slug:
-        roles = [Role.objects.get(slug=role_slug)]
+        roles = [get_object_or_404(Role, slug=role_slug)]
     else:
         roles = Role.objects.all()
 
@@ -367,7 +367,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_publications', kwargs={'person_slug': person_slug}))
 
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
 
     publications = OrderedDict()
 
@@ -405,7 +405,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         tag_names['isi'] = isi_name
 
     if publication_type_slug:
-        publication_types = [PublicationType.objects.get(slug=publication_type_slug)]
+        publication_types = [get_object_or_404(PublicationType, slug=publication_type_slug)]
         publication_query = Publication.objects.filter(id__in=publication_ids, publication_type__in=publication_types).order_by('-year')
     else:
         publication_types = PublicationType.objects.all()
@@ -502,7 +502,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
 ###########################################################################
 
 def member_publication_bibtex(request, person_slug):
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
     global_bibtex = __get_global_bibtex(member)
 
     return_dict = {
@@ -522,7 +522,7 @@ def member_publication_bibtex(request, person_slug):
 ###########################################################################
 
 def member_publication_bibtex_download(request, person_slug):
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
     global_bibtex = __get_global_bibtex(member)
     response = HttpResponse(global_bibtex, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="%s.bib"' % member.slug
@@ -534,7 +534,7 @@ def member_publication_bibtex_download(request, person_slug):
 ###########################################################################
 
 def member_news(request, person_slug):
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
     person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__created')
     news = OrderedDict()
 
@@ -644,7 +644,7 @@ def member_profiles(request, person_slug):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_profiles', kwargs={'person_slug': person_slug}))
 
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
 
     accounts = []
     account_profiles = AccountProfile.objects.filter(person_id=member.id).order_by('network__name')
@@ -684,7 +684,7 @@ def member_graphs(request, person_slug):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_graphs', kwargs={'person_slug': person_slug}))
 
-    member = Person.objects.get(slug=person_slug)
+    member = get_object_or_404(Person, slug=person_slug)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
@@ -710,7 +710,7 @@ def person_info(request, person_slug):
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
         return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
 
-    person = Person.objects.get(slug=person_slug)
+    person = get_object_or_404(Person, slug=person_slug)
 
     projects = {}
 
@@ -788,7 +788,8 @@ def __clean_publication_tags(member_id, min_year, max_year):
 ####################################################################################################
 
 def __determine_person_status(person_slug):
-    person = Person.objects.get(slug=person_slug)
+    person = get_object_or_404(Person, slug=person_slug)
+
     if person.is_active:
         return MEMBER
     else:
