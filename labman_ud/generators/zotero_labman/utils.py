@@ -568,7 +568,7 @@ def get_publication_details(item):
     for tag in item['tags']:
         try:
             tag_str = str(tag['tag'].encode('utf-8'))
-            tag_str = dissambiguate(tag_str)
+            tag_str = dissambiguate(tag_str).lower()
             tag_slug = slugify(tag_str)
 
             # Check if the publication has the 'jcrX.XXX' tag including the impact factor of the publication
