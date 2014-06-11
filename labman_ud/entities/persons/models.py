@@ -163,7 +163,7 @@ class Person(BaseModel):
             safe_biography = safe_biography.replace("&ldquo;", "\"")
             safe_biography = safe_biography.replace("&rdquo;", "\"")
         except:
-            safe_biography = None
+            safe_biography = ''
 
         self.safe_biography = safe_biography
 
