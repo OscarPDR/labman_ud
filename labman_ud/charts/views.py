@@ -960,6 +960,61 @@ def projects_timeline(request, person_slug):
 ###########################################################################
 
 def related_persons(request, person_slug):
+    
+    publication_tags = defaultdict(list)
+        # pub_id : tags
+    # }    
+    
+    persons_dict = {
+        # person__full_name : {
+        #      'tag_name' : N # number of times for this person
+        # }
+    }
+
+    for pub_tag in PublicationTag.objects.all().select_related('tag__name').values('publication', 'tag__name'):
+        publication_tags[pub_tag['publication']].append(pub_tag['tag__name'])
+        
+    for pub_author in PublicationAuthor.objects.all().select_related('author__full_name').values('author__full_name', 'publication'):
+        name = pub_author['author__full_name']
+        if name not in persons_dict:
+            persons_dict[name] = {}
+            
+        cur_dict = persons_dict[name]
+            
+        for tag in publication_tags.get(pub_author['publication'], []):
+            if tag in cur_dict:
+                cur_dict[tag] += 1
+            else:
+                cur_dict[tag] = 1
+    
+    import pprint
+    pprint.pprint(persons_dict[u'Pablo Orduña'])
+            
+#    people = Person.objects.all()
+#    
+#    for person in people:
+#        print person.slug 
+#        tag_dict ={}
+#        
+#        author_slug = person.slug          
+#        
+#        author = get_object_or_404(Person, slug=author_slug)
+#    
+#        publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
+#        tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
+#    
+#        for tag in tags:
+#            t = tag.tag.name
+#            if t in tag_dict.keys():
+#                tag_dict[t] = tag_dict[t] + 1
+#            else:
+#                tag_dict[t] = 1   
+#                
+#        persons_dict[person.slug] = tag_dict          
+#     print persons_dict
+    
+    
+    
     people = Person.objects.filter(first_name__icontains='Aitor')
     
     related_persons = [
