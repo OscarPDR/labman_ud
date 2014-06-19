@@ -953,3 +953,29 @@ def projects_timeline(request, person_slug):
     }
 
     return render_to_response('charts/people/projects_timeline.html', return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: related_persons
+###########################################################################
+
+def related_persons(request, person_slug):
+    people = Person.objects.filter(first_name__icontains='Aitor')
+    
+    related_persons = [
+        {
+            'full_name': 'Aitor Almeida',        
+        },
+        {
+            'full_name': 'Pablo Orduña',        
+        },
+        {
+            'full_name': 'Oscar Peña',        
+        },
+    ]
+
+    return_dict = {
+        'related_persons': people,
+    }
+
+    return render_to_response("charts/people/related_persons.html", return_dict, context_instance=RequestContext(request))
