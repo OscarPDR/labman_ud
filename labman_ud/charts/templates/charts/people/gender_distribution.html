@@ -1,0 +1,107 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
+
+        <li><a href="{% url 'members' %}">Members</a></li>
+
+        <li class="active">Group's gender distribution</li>
+    </ul>
+
+    {% if units|length > 1 %}
+        <div class="row">
+            <div class="col-md-3 col-md-offset-9">
+                <div id="unit-selector" class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Unit&emsp;<span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        {% for unit in units %}
+                            <li>
+                                <a href="{% url 'gender_distribution' unit.organization.slug %}">
+                                    <i class="fa fa-circle circle-{{ unit.organization.slug }}"></i>&emsp;
+                                    {{ unit.organization.full_name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="{% url 'gender_distribution' %}">All</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="chart-div" class="centered">
+        <div id="chart_div" style="width: 1000px; height: 500px;"></div>
+    </div>
+
+    <br>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1', 'packages':['timeline']}]}"></script>
+
+    <script>
+        {% if organization %}
+            var chartTitle = '{{ organization.full_name }}\'s gender distribution';
+        {% else %}
+            var chartTitle = 'Gender distribution';
+        {% endif %}
+
+
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Female', 'Male'],
+                {% for key, value in gender_distribution.items %}
+                ['{{ key }}', {{ value.female }}, {{ value.male }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: chartTitle,
+                hAxis: {
+                    title: 'Year',
+                    titleTextStyle: {
+                        color: '#333'
+                    }
+                },
+                vAxis: {
+                    title: 'Persons',
+                    minValue: 0,
+                    maxValue: {{ max_persons }} + 1,
+                    format: '#'
+                },
+                isStacked: true,
+                animation: {
+                    duration: 500,
+                    easing: 'out'
+                },
+                colors: ['#fe8dc6', '#7890f5']
+            };
+
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        };
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

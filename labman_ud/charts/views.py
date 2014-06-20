@@ -953,3 +953,64 @@ def projects_timeline(request, person_slug):
     }
 
     return render_to_response('charts/people/projects_timeline.html', return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: gender_distribution
+###########################################################################
+
+def gender_distribution(request, organization_slug=None):
+
+    gender_distribution = {}
+    gender_distribution_sets = {}
+
+    min_year = 2005
+    actual_year = date.today().year
+
+    for year in range(min_year, actual_year + 1):
+        gender_distribution[year] = {
+            'female': 0,
+            'male': 0,
+        }
+        gender_distribution_sets[year] = {
+            'male': set(),
+            'female': set(),
+        }
+
+    units = Unit.objects.all()
+    organization = None
+
+    if organization_slug:
+        organization = get_object_or_404(Organization, slug=organization_slug)
+        jobs = Job.objects.filter(organization=organization)
+    else:
+        jobs = Job.objects.all()
+
+    for job in jobs:
+        start_year = job.start_date.year
+
+        if start_year >= min_year:
+            end_year = job.end_date.year if job.end_date else actual_year
+
+            gender = job.person.gender.lower() if job.person.gender else 'male'
+
+            for year in range(start_year, end_year + 1):
+                gender_distribution_sets[year][gender].add(job.person.full_name)
+
+    max_persons = 0
+
+    for year in range(min_year, actual_year + 1):
+        gender_distribution[year]['female'] = len(gender_distribution_sets[year]['female'])
+        gender_distribution[year]['male'] = len(gender_distribution_sets[year]['male'])
+        total_year = gender_distribution[year]['female'] + gender_distribution[year]['male']
+        if (total_year > max_persons):
+            max_persons = total_year
+
+    return_dict = {
+        'gender_distribution': gender_distribution,
+        'max_persons': max_persons,
+        'units': units,
+        'organization': organization,
+    }
+
+    return render_to_response('charts/people/gender_distribution.html', return_dict, context_instance=RequestContext(request))
