@@ -1107,6 +1107,7 @@ def related_persons(request, person_slug, top):
         'chart_height': (len(sorted_relations) + 1) * 32,
         'top': top,
         'person_slug': person_slug,
+        'person_name': current_person.full_name,
     }
 
     return render_to_response("charts/people/related_persons.html", return_dict, context_instance=RequestContext(request))
