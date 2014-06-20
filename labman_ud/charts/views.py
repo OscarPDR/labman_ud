@@ -1034,7 +1034,7 @@ def _calculate_relation_coefficient(s1, s2):
     return coef
 
 
-def related_persons(request, person_slug):
+def related_persons(request, person_slug, top):
 
     publication_tags = defaultdict(list)
         # pub_id : tags
@@ -1078,7 +1078,10 @@ def related_persons(request, person_slug):
             persons_dict[person] = significant_tags
 
     current_person = Person.objects.filter(slug=person_slug)[0]
-    current_tags = persons_dict[current_person.full_name]
+    try:
+        current_tags = persons_dict[current_person.full_name]
+    except:
+        current_tags = []
 
     relations = {}
     coef_values = []
@@ -1095,8 +1098,15 @@ def related_persons(request, person_slug):
     sorted_relations = sorted(relations.iteritems(), key=operator.itemgetter(1), reverse=True)[:50]
     sorted_relations = filter(lambda (name, coef): coef > 0.075, sorted_relations)
 
+    if top:
+        sorted_relations = sorted_relations[:5]
+
     return_dict = {
         'related_persons': sorted_relations,
+        'length': len(sorted_relations),
+        'chart_height': (len(sorted_relations) + 1) * 32,
+        'top': top,
+        'person_slug': person_slug,
     }
 
     return render_to_response("charts/people/related_persons.html", return_dict, context_instance=RequestContext(request))

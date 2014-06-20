@@ -692,3 +692,28 @@ footer > a {
 .pie-chart-text {
     font: normal 1em Arial;
 }
+
+.donut-label {
+    margin-top: 2.5em;
+    margin-bottom: 0.75em;
+    text-align: center;
+    font-style: italic;
+    color: #666;
+}
+
+.donut-chart-percentage {
+    font-family: "RamaGothicM-Heavy",Impact,Haettenschweiler,"Franklin Gothic Bold",Charcoal,"Helvetica Inserat","Bitstream Vera Sans Bold","Arial Black",sans-serif;
+    font-size: 5rem;
+    font-weight: 400;
+    line-height: 12rem;
+    fill: black;
+}
+
+path.color0 {
+    /*fill: #1072b8;*/
+    fill: #428bca;
+}
+
+path.color1 {
+    fill: #ccc;
+}

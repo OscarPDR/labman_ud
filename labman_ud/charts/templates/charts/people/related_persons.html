@@ -4,17 +4,160 @@
 
 
 {% block content %}
-  <div>
-    <ul>
-      {%for person in related_persons %}
-        <li>{{ person }}</li>
-      {% endfor %}
+
+    <ul class="breadcrumb">
+        <li><a href="{% url 'chart_index' %}">Charts</a></li>
+
+        <li><a href="{% url 'members' %}">Members</a></li>
+
+        <li class="active">Similarity index</li>
     </ul>
-  </div>
+
+    <div class="row centered">
+        <a href="{% url 'related_persons' person_slug %}" class="btn {% if top %}btn-default{% else %}btn-primary{% endif %}">
+            All similar persons
+        </a>
+
+        <a href="{% url 'related_persons_top' person_slug %}" class="btn {% if top %}btn-primary{% else %}btn-default{% endif %}">
+            Top 5
+        </a>
+    </div>
+
+    {% if top %}
+
+        <div class="row">
+            <div class="col-md-1"></div>
+            {%for key, value in related_persons %}
+                <div>
+                    <div id="donut-{{ forloop.counter }}" class="col-md-2 centered" data-donut="{% widthratio value 1 100 %}">
+                        <p class="donut-label">
+                            {{ key }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div id="chart-div" class="centered">
+            <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
+        </div>
+
+    {% endif %}
+
+    <br>
+
 {% endblock %}
 
 
 
 {% block scripts %}
+
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1', 'packages':['timeline']}]}"></script>
+
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Similarity'],
+                {% for key, value in related_persons %}
+                    ['{{ key }}', {{ value }}*100],
+                  {% endfor %}
+            ]);
+
+            var options = {
+                hAxis: {
+                    minValue: 0,
+                    maxValue: 100
+                },
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <script>
+        var duration = 2500;
+        var page_width = $(".col-md-2").width();
+
+        var diameter = page_width - 15;
+
+        for(var i=0; i < {{ length }} + 1; i++) {
+            drawDonutChart(
+                '#donut-' + i,
+                $('#donut-' + i).data('donut'),
+                diameter,
+                ".35em"
+            );
+        };
+
+        function drawDonutChart(element, percent, diameter, text_y) {
+            text_y = typeof text_y !== 'undefined' ? text_y : "-.10em";
+
+            var dataset = {
+                lower: calcPercent(0),
+                upper: calcPercent(percent)
+            },
+            radius = diameter / 2,
+            pie = d3.layout.pie().sort(null),
+            format = d3.format(".0%");
+
+            var arc = d3.svg.arc()
+                .innerRadius(radius - 20)
+                .outerRadius(radius);
+
+            var svg = d3.select(element).append("svg")
+                .attr("width", diameter)
+                .attr("height", diameter)
+                .append("g")
+                .attr("transform", "translate(" + radius + "," + radius + ")");
+
+            var path = svg.selectAll("path")
+                .data(pie(dataset.lower))
+                .enter().append("path")
+                .attr("class", function(d, i) { return "color" + i })
+                .attr("d", arc)
+                .each(function(d) { this._current = d; }); // store the initial values
+
+            var text = svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("class", "donut-chart-percentage")
+                .attr("dy", text_y);
+
+            if (typeof(percent) === "string") {
+                text.text(percent);
+            }
+            else {
+                var progress = 0;
+                var timeout = setTimeout(function () {
+                clearTimeout(timeout);
+                    path = path.data(pie(dataset.upper)); // update the data
+                    path.transition().duration(duration).attrTween("d", function (a) {
+                        // Store the displayed angles in _current.
+                        // Then, interpolate from _current to the new angles.
+                        // During the transition, _current is updated in-place by d3.interpolate.
+                        var i  = d3.interpolate(this._current, a);
+                        var i2 = d3.interpolate(progress, percent)
+                        this._current = i(0);
+
+                        return function(t) {
+                            text.text( format(i2(t) / 100) );
+                            return arc(i(t));
+                        };
+                    }); // redraw the arcs
+                }, 200);
+            }
+        };
+
+        function calcPercent(percent) {
+            return [percent, 100-percent];
+        };
+    </script>
 
 {% endblock %}
