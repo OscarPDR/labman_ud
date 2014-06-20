@@ -1022,8 +1022,8 @@ def related_persons(request, person_slug):
     
     coef_values = sorted(coef_values)
     
-    sorted_relations = sorted(relations.iteritems(), key=operator.itemgetter(1), reverse = True)[:10]
-    
+    sorted_relations = sorted(relations.iteritems(), key=operator.itemgetter(1), reverse = True)[:50]
+    sorted_relations = filter(lambda (name, coef) : coef > 0.075, sorted_relations)
 
     return_dict = {
         'related_persons': sorted_relations,
@@ -1035,6 +1035,9 @@ def calculate_relation_coefficient(s1, s2):
     inter_len = float(len(s1.intersection(s2)))
     current_len = len(s1)
     
-    coef = inter_len / current_len
+    if current_len > 0:
+        coef = inter_len / current_len
+    else:
+        coef = 0
     
     return coef
