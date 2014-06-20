@@ -693,6 +693,10 @@ footer > a {
     font: normal 1em Arial;
 }
 
+.similarity-buttons {
+    padding-top: 20px;
+}
+
 .donut-label {
     margin-top: 2.5em;
     margin-bottom: 0.75em;

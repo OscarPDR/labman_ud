@@ -13,17 +13,23 @@
         <li class="active">Similarity index</li>
     </ul>
 
-    <div class="row centered">
-        <a href="{% url 'related_persons' person_slug %}" class="btn {% if top %}btn-default{% else %}btn-primary{% endif %}">
-            All similar persons
-        </a>
+    <div class="row">
+        <h2 class="col-md-4">{{ person_name }}</h2>
 
-        <a href="{% url 'related_persons_top' person_slug %}" class="btn {% if top %}btn-primary{% else %}btn-default{% endif %}">
-            Top 5
-        </a>
+        <div class="col-md-8 centered similarity-buttons">
+            <a href="{% url 'related_persons' person_slug %}" class="btn {% if top %}btn-default{% else %}btn-primary{% endif %}">
+                All similar persons
+            </a>
+
+            <a href="{% url 'related_persons_top' person_slug %}" class="btn {% if top %}btn-primary{% else %}btn-default{% endif %}">
+                Top 5
+            </a>
+        </div>
     </div>
 
     {% if top %}
+
+        <br>
 
         <div class="row">
             <div class="col-md-1"></div>
