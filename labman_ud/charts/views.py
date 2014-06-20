@@ -3,6 +3,7 @@
 from itertools import combinations
 from collections import defaultdict, OrderedDict
 from datetime import date
+import operator
 
 # from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
@@ -21,6 +22,7 @@ from entities.utils.models import GeographicalScope, Role
 
 import json
 import networkx as nx
+import numpy as np
 
 # Create your views here.
 
@@ -980,57 +982,59 @@ def related_persons(request, person_slug):
             persons_dict[name] = {}
             
         cur_dict = persons_dict[name]
+        
             
         for tag in publication_tags.get(pub_author['publication'], []):
             if tag in cur_dict:
                 cur_dict[tag] += 1
             else:
                 cur_dict[tag] = 1
-    
-    import pprint
-    pprint.pprint(persons_dict[u'Pablo Orduña'])
+                
+    for person in persons_dict:
+        cur_dict = persons_dict[person]
+        
+        # We only take into account the 50% most significant tags      
+        # It can happen that someone doesn't have any significant tags ([1, 1, 1, 1])
+        values = [cur_dict[e] for e in cur_dict]
+        if values:
+            limit = np.percentile(values, 50) 
+                
+            significant_tags = {}
+            for tag in cur_dict:
+                if cur_dict[tag] > limit:
+                    significant_tags[tag] = cur_dict[tag]
+            persons_dict[person] = significant_tags
             
-#    people = Person.objects.all()
-#    
-#    for person in people:
-#        print person.slug 
-#        tag_dict ={}
-#        
-#        author_slug = person.slug          
-#        
-#        author = get_object_or_404(Person, slug=author_slug)
-#    
-#        publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-#        tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
-#    
-#        for tag in tags:
-#            t = tag.tag.name
-#            if t in tag_dict.keys():
-#                tag_dict[t] = tag_dict[t] + 1
-#            else:
-#                tag_dict[t] = 1   
-#                
-#        persons_dict[person.slug] = tag_dict          
-#     print persons_dict
+
+            
+    current_person = Person.objects.filter(slug=person_slug)[0]
+    current_tags = persons_dict[current_person.full_name]
     
+    relations = {}
+    coef_values = []
+    for person in persons_dict:
+        if person != current_person.full_name:
+            s1 = set([e for e in current_tags])
+            s2 = set([e for e in persons_dict[person]])
+            coef = calculate_relation_coefficient(s1, s2)
+            coef_values.append(coef)
+            relations[person] = coef
     
+    coef_values = sorted(coef_values)
     
-    people = Person.objects.filter(first_name__icontains='Aitor')
+    sorted_relations = sorted(relations.iteritems(), key=operator.itemgetter(1), reverse = True)[:10]
     
-    related_persons = [
-        {
-            'full_name': 'Aitor Almeida',        
-        },
-        {
-            'full_name': 'Pablo Orduña',        
-        },
-        {
-            'full_name': 'Oscar Peña',        
-        },
-    ]
 
     return_dict = {
-        'related_persons': people,
+        'related_persons': sorted_relations,
     }
 
     return render_to_response("charts/people/related_persons.html", return_dict, context_instance=RequestContext(request))
+    
+def calculate_relation_coefficient(s1, s2):
+    inter_len = float(len(s1.intersection(s2)))
+    current_len = len(s1)
+    
+    coef = inter_len / current_len
+    
+    return coef

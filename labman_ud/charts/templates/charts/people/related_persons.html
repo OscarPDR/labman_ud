@@ -1,0 +1,20 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+  <div>
+    <ul>
+      {%for person in related_persons %}
+        <li>{{ person }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
+
+
+
+{% block scripts %}
+
+{% endblock %}
