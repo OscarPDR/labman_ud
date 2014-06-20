@@ -743,7 +743,9 @@ def person_info(request, person_slug):
         'person': person,
         'projects': projects,
         'publications': publications,
-    }
+    }###########################################################################
+# View: member_profiles
+###########################################################################
 
     return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
 
