@@ -38,6 +38,8 @@ urlpatterns = patterns('',
     url(r'^people/related/(?P<person_slug>\S+)/$', 'charts.views.related_persons', {'top': False}, name='related_persons'),
     url(r'^people/gender_distribution/(?P<organization_slug>\S+)/$', 'charts.views.gender_distribution', name='gender_distribution'),
     url(r'^people/gender_distribution/$', 'charts.views.gender_distribution', name='gender_distribution'),
+    url(r'^people/position_distribution/(?P<organization_slug>\S+)/$', 'charts.views.position_distribution', name='position_distribution'),
+    url(r'^people/position_distribution/$', 'charts.views.position_distribution', name='position_distribution'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

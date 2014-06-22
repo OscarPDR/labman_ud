@@ -9,6 +9,7 @@ import operator
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 
 from charts.utils import nx_graph
 from networkx.readwrite import json_graph
@@ -1016,6 +1017,98 @@ def gender_distribution(request, organization_slug=None):
     }
 
     return render_to_response('charts/people/gender_distribution.html', return_dict, context_instance=RequestContext(request))
+
+
+###########################################################################
+# View: position_distribution
+###########################################################################
+
+def position_distribution(request, organization_slug=None):
+
+    position_distribution = {}
+    position_distribution_sets = {}
+
+    units = Unit.objects.all()
+    organization = None
+
+    if organization_slug:
+        organization = get_object_or_404(Organization, slug=organization_slug)
+        jobs = Job.objects.filter(organization=organization)
+    else:
+        jobs = Job.objects.all()
+
+    position_list = jobs.values_list('position', flat=True)
+    position_set = set()
+
+    for position in position_list:
+        position_set.add(position.capitalize())
+
+    position_list = list(position_set)
+
+    if '' in position_list:
+        position_list.remove('')
+
+    min_year = 2005
+    actual_year = date.today().year
+
+    for year in range(min_year, actual_year + 1):
+        position_distribution[year] = {}
+        position_distribution_sets[year] = {}
+
+        for position in position_list:
+            position_slug = slugify(position)
+            position_distribution[year][position_slug] = 0
+            position_distribution_sets[year][position_slug] = set()
+
+    for job in jobs:
+        start_year = job.start_date.year
+
+        if start_year >= min_year:
+            end_year = job.end_date.year if job.end_date else actual_year
+
+            position_slug = slugify(job.position)
+
+            if position_slug != '':
+                for year in range(start_year, end_year + 1):
+                    position_distribution_sets[year][position_slug].add(job.person.full_name)
+
+    max_persons = 0
+
+    for year in range(min_year, actual_year + 1):
+        total_year = 0
+
+        for position in position_list:
+            position_slug = slugify(position)
+            total_year = total_year + len(position_distribution_sets[year][position_slug])
+            position_distribution[year][position_slug] = len(position_distribution_sets[year][position_slug])
+
+        if (total_year > max_persons):
+            max_persons = total_year
+
+    position_distribution_array = []
+
+    position_distribution_array.append(['Year'])
+
+    for position in position_list:
+        position_distribution_array[0].append(str(position))
+
+    for year in range(min_year, actual_year + 1):
+        array_row = [str(year)]
+        for position in position_list:
+            array_row.append(position_distribution[year][slugify(position)])
+
+        position_distribution_array.append(array_row)
+
+    print position_distribution_array
+
+    return_dict = {
+        'position_distribution_array': position_distribution_array,
+        'max_persons': max_persons,
+        'units': units,
+        'organization': organization,
+    }
+
+    return render_to_response('charts/people/position_distribution.html', return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
