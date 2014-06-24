@@ -889,18 +889,39 @@ def clean_tags():
             else:
                 tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
             
-            # Delete the old tag-pub association
+            # Delete the old news-pub association
             logger.info('Deleted: %s, %s' % (item.tag.name, item.project.full_name))                
             item.delete()
            
-            # Create new tag-pub association
+            # Create new news-pub association
             pt = ProjectTag(tag = tag, project = project)
             pt.save()
 
     #************* NEWS ***************
     logger.info('Checking news...')
     for item in NewsTag.objects.all():
-        pass
+        curr_tag = item.tag.name
+        diss_tag = dissambiguate(curr_tag)
+        # Tag needs to be dissambiguated
+        if curr_tag != diss_tag:
+            tag = item.tag
+            news = item.news
+            # Dissambiguated tag does not exists
+            if not diss_tag in tag_names:
+                t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                t.save()
+                tag = t
+                logger.info('Created new tag: %s' % (diss_tag))
+            else:
+                tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+            
+            # Delete the old news-pub association
+            logger.info('Deleted: %s, %s' % (item.tag.name, item.news.title))                
+            item.delete()
+           
+            # Create new news-pub association
+            pt = NewsTag(tag = tag, news = news)
+            pt.save()
     
     logger.info('Done')
 
