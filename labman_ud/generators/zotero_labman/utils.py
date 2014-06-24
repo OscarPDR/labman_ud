@@ -853,7 +853,7 @@ def clean_tags():
         curr_tag = item.tag.name
         
         # Delete the metadata tags
-        if curr_tag.lower() in metadata_tags or curr_tag.lower().startswith('jcr'):
+        if (curr_tag.lower() in metadata_tags) or (curr_tag.lower().startswith('jcr')):
             logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
             item.delete()
         else:
@@ -864,12 +864,15 @@ def clean_tags():
                 publication = item.publication
                 # Dissambiguated tag does not exists
                 if not diss_tag in tag_names:
-                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
-                    t.save()
-                    tag = t
-                    logger.info('Created new tag: %s' % (diss_tag))
+                    try:
+                        t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                        t.save()
+                        tag = t
+                        logger.info('Created new tag: %s' % (diss_tag))
+                    except:
+                        tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]                    
                 else:
-                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
                 
                 # Delete the old tag-pub association
                 logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
@@ -890,10 +893,13 @@ def clean_tags():
             project = item.project
             # Dissambiguated tag does not exists
             if not diss_tag in tag_names:
-                t = Tag(name = diss_tag, slug = slugify(diss_tag))
-                t.save()
-                tag = t
-                logger.info('Created new tag: %s' % (diss_tag))
+                try:
+                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                    t.save()
+                    tag = t
+                    logger.info('Created new tag: %s' % (diss_tag))
+                except:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]  
             else:
                 tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
             
@@ -916,10 +922,13 @@ def clean_tags():
             news = item.news
             # Dissambiguated tag does not exists
             if not diss_tag in tag_names:
-                t = Tag(name = diss_tag, slug = slugify(diss_tag))
-                t.save()
-                tag = t
-                logger.info('Created new tag: %s' % (diss_tag))
+                try:
+                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                    t.save()
+                    tag = t
+                    logger.info('Created new tag: %s' % (diss_tag))
+                except:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]  
             else:
                 tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
             
@@ -932,6 +941,9 @@ def clean_tags():
             pt.save()
     
     logger.info('Done')
+    
+    
+
 
     
 
