@@ -839,6 +839,8 @@ def greet_birthday():
 # def: clean_tags()
 ###########################################################################
 def clean_tags():
+    # This tags are only used for metadata, they should not be added to the paper tags
+    metadata_tags = ['isi', 'dblp', 'q1', 'q2', 'q3', 'q4', 'corea', 'coreb', 'corec','iwaal']
     logger.info('')
     logger.info('Cleanning tags...')
     logger.info('#' * 75)
@@ -849,27 +851,33 @@ def clean_tags():
     logger.info('Checking publications...')
     for item in PublicationTag.objects.all():
         curr_tag = item.tag.name
-        diss_tag = dissambiguate(curr_tag)
-        # Tag needs to be dissambiguated
-        if curr_tag != diss_tag:
-            tag = item.tag
-            publication = item.publication
-            # Dissambiguated tag does not exists
-            if not diss_tag in tag_names:
-                t = Tag(name = diss_tag, slug = slugify(diss_tag))
-                t.save()
-                tag = t
-                logger.info('Created new tag: %s' % (diss_tag))
-            else:
-                tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
-            
-            # Delete the old tag-pub association
+        
+        # Delete the metadata tags
+        if curr_tag.lower() in metadata_tags or curr_tag.lower().startswith('jcr'):
             logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
             item.delete()
-           
-            # Create new tag-pub association
-            pt = PublicationTag(tag = tag, publication = publication)
-            pt.save()
+        else:
+            diss_tag = dissambiguate(curr_tag)
+            # Tag needs to be dissambiguated
+            if curr_tag != diss_tag:
+                tag = item.tag
+                publication = item.publication
+                # Dissambiguated tag does not exists
+                if not diss_tag in tag_names:
+                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                    t.save()
+                    tag = t
+                    logger.info('Created new tag: %s' % (diss_tag))
+                else:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+                
+                # Delete the old tag-pub association
+                logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
+                item.delete()
+               
+                # Create new tag-pub association
+                pt = PublicationTag(tag = tag, publication = publication)
+                pt.save()
 
     #************* PROJECTS ***************
     logger.info('Checking projects...')
