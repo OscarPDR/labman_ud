@@ -839,8 +839,47 @@ def greet_birthday():
 # def: clean_tags()
 ###########################################################################
 def clean_tags():
+    logger.info('')
+    logger.info('Cleanning tags...')
+    logger.info('#' * 75)
+    tags = Tag.objects.all()
+    tag_names = [t.name for t in tags]    
     
-    tags = Tag.objects.all()    
+
+    logger.info('Checking publications...')
+    for item in PublicationTag.objects.all():
+        curr_tag = item.tag.name
+        diss_tag = dissambiguate(curr_tag)
+        # Tag needs to be dissambiguated
+        if curr_tag != diss_tag:
+            tag = item.tag
+            publication = item.publication
+            # Dissambiguated tag does not exists
+            if not diss_tag in tag_names:
+                t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                t.save()
+                tag = t
+                logger.info('Created new tag: %s' % (diss_tag))
+            else:
+                tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+            
+            # Delete the old tag-pub association
+            logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
+            item.delete()
+           
+            # Create new tag-pub association
+            pt = PublicationTag(tag = tag, publication = publication)
+            pt.save()
+
+    logger.info('Checking projects...')
+    for item in ProjectTag.objects.all():
+        pass
+
+    logger.info('Checking news...')
+    for item in NewsTag.objects.all():
+        pass
     
+    logger.info('Done')
+
     
 
