@@ -870,7 +870,9 @@ def clean_tags():
                         tag = t
                         logger.info('Created new tag: %s' % (diss_tag))
                     except:
-                        tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]                    
+                        tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                        tag.name = diss_tag
+                        tag.save()                   
                 else:
                     tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
                 
@@ -899,7 +901,9 @@ def clean_tags():
                     tag = t
                     logger.info('Created new tag: %s' % (diss_tag))
                 except:
-                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]  
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                    tag.name = diss_tag
+                    tag.save()
             else:
                 tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
             
@@ -928,7 +932,9 @@ def clean_tags():
                     tag = t
                     logger.info('Created new tag: %s' % (diss_tag))
                 except:
-                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]  
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                    tag.name = diss_tag
+                    tag.save()  
             else:
                 tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
             
