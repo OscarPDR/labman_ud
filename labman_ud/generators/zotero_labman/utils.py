@@ -64,7 +64,7 @@ def dissambiguate(tag):
     correct_tag = tag
     if tag in tag_nicks.keys():
         correct_tag = tag_nicks[tag]
-    return correct_tag
+    return correct_tag.title()
 
 
 def get_zotero_variables():
