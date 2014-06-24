@@ -31,6 +31,8 @@ import itertools
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+TAGS_FILEPATH = './files/tag_nicks.json'
+
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
     'bookSection': 'Book section',
@@ -46,75 +48,16 @@ SUPPORTED_ITEM_TYPES = {
     'conferencePaper': 'Conference paper',
 }
 
-
-# Dict used for tag dissambiguation
-tag_nicks = {
-    'AAL': 'Ambient Assisted Living',
-    'ambient assisted living environments': 'Ambient Assisted Living',
-    'assisted living': 'Ambient Assisted Living',
-    'assistive': 'Ambient Assisted Living',
-    'ambient assisted citizens': 'ambient assisted cities',
-    'Artificial Intelligence (incl. Robotics)': 'Artificial Intelligence',
-    'Computational Intelligence': 'Artificial Intelligence',
-    'Computation by Abstract Devices': 'Artificial Intelligence',
-    'bayesian network': 'Bayesian Networks',
-    'client-server system': 'client-server systems',
-    'content creation; user centered design contextual design': 'Content Creation',
-    'context-aware': 'Context-Aware Computing',
-    'context-aware development toolkits': 'Context-Aware Computing',
-    'context-awareness': 'Context-Aware Computing',
-    'context-aware services development': 'Context-Aware Computing',
-    'context-aware system development': 'Context-Aware Computing',
-    'context-aware systems': 'Context-Aware Computing',
-    'context data management': 'Context-Aware Computing',
-    'context data sources': 'Context-Aware Computing',
-    'context management': 'Context-Aware Computing',
-    'Context modeling': 'context modelling',
-    'contextual design': 'Context-Aware Computing',
-    'data handling': 'Data Management',
-    'dispositivos móviles': 'Mobile Devices',
-    'domain expert': 'domain experts',
-    'Domotic': 'Domotics',
-    'domotics': 'Domotics',
-    'Educational programs': 'Educational Technologies',
-    'educational technology': 'Educational Technologies',
-    'elderly': 'Elderly People',
-    'Elders': 'Elderly People',
-    'Embedded': 'Embedded Devices',
-    'emergency detection': 'Emergency Management',
-    'evaluación': 'Evaluation',
-    'experiencia del usuario': 'User Experience',
-    'first-order didactic resource': 'Educational Technologies',
-    'Fuzzy': 'Fuzzy Logic',
-    'gestión de energía': 'Energy Management',
-    'Grid Services': 'Grid',
-    'hci': 'Human Computer Interaction',
-    'Information Systems Applications (incl.Internet)': 'Information Systems Applications',
-    'Information Systems Applications (incl. Internet)': 'Information Systems Applications',
-    'inference': 'inference mechanisms',
-    'IoT': 'Internet of Things',
-    'learning': 'Educational Technologies',
-    'Opinion Minning': 'opinion mining',
-    'Persuasive Technologies': 'persuasive technology',
-    'reasoners': 'Reasoning Engines',
-    'Recomendation Systems': 'Recommendation Systems',
-    'seguridad': 'Security',
-    'semantic': 'Semantic Technologies',
-    'Semantic reasoners': 'Semantic Inference',
-    'semantic reasoning': 'Semantic Inference',
-    'Semantics': 'Semantic Technologies',
-    'servicios móviles': 'Mobile Services',
-    'Smart everyday objects': 'Smart Everyday Object',
-    'smart phones': 'smartphones',
-    'social content sharing': 'Social Data Mining',
-    'software design': 'Software Engineering',
-    'triple space': 'triple space computing',
-    'triple space computing paradigm': 'triple space computing',
-    'triplespaces': 'triple space computing',
-    'ubiquitous': 'ubiquitous computing',
-    'uncertainty': 'Uncertainty Reasoning',
-    'wearable computers': 'Wearable Computing'
-}
+def load_tags(path = TAGS_FILEPATH):
+    try:
+        tags = json.load(open(path, 'r'))
+    except ValueError as e:
+        logger.error('Error while loading tag nicks %s' % (TAGS_FILEPATH))
+    return tags
+    
+# Used to normalize the tags of the papers
+# The tag taxonomy is in tag_nicks.json
+tag_nicks = load_tags()
 
 
 def dissambiguate(tag):
@@ -891,3 +834,13 @@ def greet_birthday():
                     )
                 except:
                     logger.info('\t\tUnable to send e-mail')
+                    
+###########################################################################
+# def: clean_tags()
+###########################################################################
+def clean_tags():
+    
+    tags = Tag.objects.all()    
+    
+    
+
