@@ -840,7 +840,7 @@ def greet_birthday():
 ###########################################################################
 def clean_tags():
     # This tags are only used for metadata, they should not be added to the paper tags
-    metadata_tags = ['isi', 'dblp', 'q1', 'q2', 'q3', 'q4', 'corea', 'coreb', 'corec','iwaal']
+    metadata_tags = ['isi', 'dblp', 'q1', 'q2', 'q3', 'q4', 'corea', 'coreb', 'corec','iwaal', 'phd', 'ucami 2012']
     logger.info('')
     logger.info('Cleanning tags...')
     logger.info('#' * 75)
