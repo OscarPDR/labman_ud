@@ -7,7 +7,10 @@ from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 from django.utils.html import strip_tags
 
+from .linked_data import save_person_as_rdf, delete_person_rdf, save_job_as_rdf, delete_job_rdf, update_person_object_triples
+
 from redactor.fields import RedactorField
+
 
 # Create your models here.
 
@@ -147,6 +150,9 @@ class Person(BaseModel):
             return self.email.split('@')[1]
 
     def save(self, *args, **kwargs):
+
+        delete_person_rdf(self)
+
         full_name = self.first_name + ' ' + self.first_surname
 
         if self.second_surname:
@@ -167,7 +173,12 @@ class Person(BaseModel):
 
         self.safe_biography = safe_biography
 
+        old_slug = self.slug
+
         super(Person, self).save(*args, **kwargs)
+
+        save_person_as_rdf(self)
+        update_person_object_triples(old_slug, self.slug)
 
 
 ###########################################################################
@@ -246,6 +257,13 @@ class Job(BaseModel):
 
     def __unicode__(self):
         return u'%s worked as %s at %s' % (self.person.full_name, self.position, self.organization.short_name)
+
+    def save(self, *args, **kwargs):
+        delete_job_rdf(self)
+
+        save_job_as_rdf(self)
+
+        super(Job, self).save(*args, **kwargs)
 
 
 ###########################################################################
