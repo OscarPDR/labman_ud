@@ -2,7 +2,6 @@
 
 
 from rdflib import Literal
-from rdflib.namespace import FOAF, RDF, RDFS, DC, XSD
 
 from django.conf import settings
 
