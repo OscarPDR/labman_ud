@@ -6,6 +6,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from .linked_data import *
 
 # Create your models here.
 
@@ -45,11 +46,16 @@ class Country(BaseModel):
         return u'%s' % (self.full_name)
 
     def save(self, *args, **kwargs):
+        delete_country_rdf(self)
+
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
 
         self.slug = slugify(self.short_name)
+
         super(Country, self).save(*args, **kwargs)
+
+        save_country_as_rdf(self)
 
 
 ###########################################################################
@@ -79,8 +85,12 @@ class GeographicalScope(BaseModel):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
+        delete_geographical_scope_rdf(self)
+
         self.slug = slugify(str(self.name))
         super(GeographicalScope, self).save(*args, **kwargs)
+
+        save_geographical_scope_as_rdf(self)
 
 
 ###########################################################################
@@ -145,8 +155,12 @@ class Tag(BaseModel):
         return u'%s' % (name)
 
     def save(self, *args, **kwargs):
+        delete_tag_rdf(self)
+
         self.slug = slugify(str(self.name.encode('utf-8')))
         super(Tag, self).save(*args, **kwargs)
+
+        save_tag_as_rdf(self)
 
 
 ###########################################################################
