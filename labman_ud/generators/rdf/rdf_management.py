@@ -5,20 +5,28 @@ import urllib
 import urllib2
 
 from rdflib import Graph
-from rdflib.namespace import Namespace, FOAF, DC, XSD
+from rdflib.namespace import Namespace, FOAF, DC, XSD, RDF, RDFS
 
 from django.conf import settings
 
+GEONAMES = Namespace('http://www.geonames.org/ontology#')
+MUTO = Namespace('http://purl.org/muto/core#')
+PLACES = Namespace('http://purl.org/ontology/places#')
 SWRCFE = Namespace('http://www.morelab.deusto.es/ontologies/swrcfe#')
 
 
 def create_namespaced_graph():
     graph = Graph()
 
-    graph.bind("foaf", FOAF)
-    graph.bind("dc", DC)
-    graph.bind("xsd", XSD)
-    graph.bind("swrcfe", SWRCFE)
+    graph.bind('dc', DC)
+    graph.bind('foaf', FOAF)
+    graph.bind('geonames', GEONAMES)
+    graph.bind('muto', MUTO)
+    graph.bind('places', PLACES)
+    graph.bind('rdf', RDF)
+    graph.bind('rdfs', RDFS)
+    graph.bind('swrcfe', SWRCFE)
+    graph.bind('xsd', XSD)
 
     return graph
 
