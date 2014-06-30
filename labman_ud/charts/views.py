@@ -18,7 +18,7 @@ from entities.funding_programs.models import FundingProgram
 from entities.organizations.models import Organization, Unit
 from entities.persons.models import Person, Job
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationAuthor, PublicationTag
 from entities.utils.models import GeographicalScope, Role
 
 import json
@@ -253,7 +253,8 @@ def funding_total_incomes_by_scope(request):
 def publications_number_of_publications(request):
     publications = {}
 
-    publication_types = PublicationType.objects.all()
+    # publication_types = PublicationType.objects.all()
+    publication_types = None
 
     # min_year = Publication.objects.aggregate(Min('published'))
     max_year = Publication.objects.aggregate(Max('published'))
@@ -565,7 +566,8 @@ def publications_egonetwork(request, author_slug):
 
 def publications_by_author(request, author_slug):
     publications = {}
-    publication_types = PublicationType.objects.all()
+    # publication_types = PublicationType.objects.all()
+    publication_types = None
 
     author = get_object_or_404(Person, slug=author_slug)
 

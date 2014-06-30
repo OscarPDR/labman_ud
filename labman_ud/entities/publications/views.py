@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from .forms import PublicationSearchForm
-from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
+from .models import Publication, PublicationAuthor, PublicationTag
 
 from entities.persons.models import Person
 from entities.projects.models import Project, RelatedPublication
@@ -56,7 +56,8 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
         publications = Publication.objects.filter(id__in=publication_ids).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if publication_type_slug:
-        publication_type = get_object_or_404(PublicationType, slug=publication_type_slug)
+        # publication_type = get_object_or_404(PublicationType, slug=publication_type_slug)
+        publication_type = None
         publications = Publication.objects.filter(publication_type=publication_type.id).select_related('publication_type', 'authors__author').prefetch_related('authors')
 
     if not tag_slug and not publication_type_slug:

@@ -20,7 +20,7 @@ from entities.news.models import PersonRelatedToNews
 from entities.events.models import Event
 from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
 from entities.publications.views import INDICATORS_TAG_SLUGS
 
@@ -405,10 +405,12 @@ def member_publications(request, person_slug, publication_type_slug=None):
         tag_names['isi'] = isi_name
 
     if publication_type_slug:
-        publication_types = [get_object_or_404(PublicationType, slug=publication_type_slug)]
+        # publication_types = [get_object_or_404(PublicationType, slug=publication_type_slug)]
+        publication_types = None
         publication_query = Publication.objects.filter(id__in=publication_ids, publication_type__in=publication_types).order_by('-year')
     else:
-        publication_types = PublicationType.objects.all()
+        # publication_types = PublicationType.objects.all()
+        publication_types = None
 
         for current_key in SPECIAL_ORDER:
 
@@ -729,7 +731,8 @@ def person_info(request, person_slug):
 
     publications = {}
 
-    for publication_type in PublicationType.objects.all():
+    # for publication_type in PublicationType.objects.all():
+    for publication_type in None:
         pub_type = publication_type.name.encode('utf-8')
         publications[pub_type] = []
 
@@ -743,9 +746,7 @@ def person_info(request, person_slug):
         'person': person,
         'projects': projects,
         'publications': publications,
-    }###########################################################################
-# View: member_profiles
-###########################################################################
+    }
 
     return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
 
@@ -879,7 +880,8 @@ def __get_job_data(member):
         }
         accounts.append(account_item)
 
-    publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
+    # publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
+    publication_types_by_id = None
     publications_by_id = __group_by_key(Publication.objects.filter(id__in=publication_ids))
     publication_types_by_name = defaultdict(int)
 
