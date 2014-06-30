@@ -13,12 +13,14 @@ GEONAMES = Namespace('http://www.geonames.org/ontology#')
 MUTO = Namespace('http://purl.org/muto/core#')
 PLACES = Namespace('http://purl.org/ontology/places#')
 SWRCFE = Namespace('http://www.morelab.deusto.es/ontologies/swrcfe#')
+DCTERMS = Namespace('http://purl.org/dc/terms/')
 
 
 def create_namespaced_graph():
     graph = Graph()
 
     graph.bind('dc', DC)
+    graph.bind('dcterms', DCTERMS)
     graph.bind('foaf', FOAF)
     graph.bind('geonames', GEONAMES)
     graph.bind('muto', MUTO)
