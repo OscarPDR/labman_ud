@@ -31,6 +31,8 @@ import itertools
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+TAGS_FILEPATH = './files/tag_nicks.json'
+
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
     'bookSection': 'Book section',
@@ -46,82 +48,23 @@ SUPPORTED_ITEM_TYPES = {
     'conferencePaper': 'Conference paper',
 }
 
-
-# Dict used for tag dissambiguation
-tag_nicks = {
-    'AAL': 'Ambient Assisted Living',
-    'ambient assisted living environments': 'Ambient Assisted Living',
-    'assisted living': 'Ambient Assisted Living',
-    'assistive': 'Ambient Assisted Living',
-    'ambient assisted citizens': 'ambient assisted cities',
-    'Artificial Intelligence (incl. Robotics)': 'Artificial Intelligence',
-    'Computational Intelligence': 'Artificial Intelligence',
-    'Computation by Abstract Devices': 'Artificial Intelligence',
-    'bayesian network': 'Bayesian Networks',
-    'client-server system': 'client-server systems',
-    'content creation; user centered design contextual design': 'Content Creation',
-    'context-aware': 'Context-Aware Computing',
-    'context-aware development toolkits': 'Context-Aware Computing',
-    'context-awareness': 'Context-Aware Computing',
-    'context-aware services development': 'Context-Aware Computing',
-    'context-aware system development': 'Context-Aware Computing',
-    'context-aware systems': 'Context-Aware Computing',
-    'context data management': 'Context-Aware Computing',
-    'context data sources': 'Context-Aware Computing',
-    'context management': 'Context-Aware Computing',
-    'Context modeling': 'context modelling',
-    'contextual design': 'Context-Aware Computing',
-    'data handling': 'Data Management',
-    'dispositivos móviles': 'Mobile Devices',
-    'domain expert': 'domain experts',
-    'Domotic': 'Domotics',
-    'domotics': 'Domotics',
-    'Educational programs': 'Educational Technologies',
-    'educational technology': 'Educational Technologies',
-    'elderly': 'Elderly People',
-    'Elders': 'Elderly People',
-    'Embedded': 'Embedded Devices',
-    'emergency detection': 'Emergency Management',
-    'evaluación': 'Evaluation',
-    'experiencia del usuario': 'User Experience',
-    'first-order didactic resource': 'Educational Technologies',
-    'Fuzzy': 'Fuzzy Logic',
-    'gestión de energía': 'Energy Management',
-    'Grid Services': 'Grid',
-    'hci': 'Human Computer Interaction',
-    'Information Systems Applications (incl.Internet)': 'Information Systems Applications',
-    'Information Systems Applications (incl. Internet)': 'Information Systems Applications',
-    'inference': 'inference mechanisms',
-    'IoT': 'Internet of Things',
-    'learning': 'Educational Technologies',
-    'Opinion Minning': 'opinion mining',
-    'Persuasive Technologies': 'persuasive technology',
-    'reasoners': 'Reasoning Engines',
-    'Recomendation Systems': 'Recommendation Systems',
-    'seguridad': 'Security',
-    'semantic': 'Semantic Technologies',
-    'Semantic reasoners': 'Semantic Inference',
-    'semantic reasoning': 'Semantic Inference',
-    'Semantics': 'Semantic Technologies',
-    'servicios móviles': 'Mobile Services',
-    'Smart everyday objects': 'Smart Everyday Object',
-    'smart phones': 'smartphones',
-    'social content sharing': 'Social Data Mining',
-    'software design': 'Software Engineering',
-    'triple space': 'triple space computing',
-    'triple space computing paradigm': 'triple space computing',
-    'triplespaces': 'triple space computing',
-    'ubiquitous': 'ubiquitous computing',
-    'uncertainty': 'Uncertainty Reasoning',
-    'wearable computers': 'Wearable Computing'
-}
+def load_tags(path = TAGS_FILEPATH):
+    try:
+        tags = json.load(open(path, 'r'))
+    except ValueError as e:
+        logger.error('Error while loading tag nicks %s' % (TAGS_FILEPATH))
+    return tags
+    
+# Used to normalize the tags of the papers
+# The tag taxonomy is in tag_nicks.json
+tag_nicks = load_tags()
 
 
 def dissambiguate(tag):
     correct_tag = tag
     if tag in tag_nicks.keys():
         correct_tag = tag_nicks[tag]
-    return correct_tag
+    return correct_tag.title()
 
 
 def get_zotero_variables():
@@ -891,3 +834,124 @@ def greet_birthday():
                     )
                 except:
                     logger.info('\t\tUnable to send e-mail')
+                    
+###########################################################################
+# def: clean_tags()
+###########################################################################
+def clean_tags():
+    # This tags are only used for metadata, they should not be added to the paper tags
+    # We are not using this until we redo the model to include this metadata
+    #metadata_tags = ['isi', 'dblp', 'q1', 'q2', 'q3', 'q4', 'corea', 'coreb', 'corec','iwaal', 'phd', 'ucami 2012']
+    metadata_tags = ['iwaal', 'phd', 'ucami 2012']
+    logger.info('')
+    logger.info('Cleanning tags...')
+    logger.info('#' * 75)
+    tags = Tag.objects.all()
+    tag_names = [t.name for t in tags]    
+    
+    #************* PUBLICATIONS ***************
+    logger.info('Checking publications...')
+    for item in PublicationTag.objects.all():
+        curr_tag = item.tag.name
+        
+        # Delete the metadata tags
+        if (curr_tag.lower() in metadata_tags) or (curr_tag.lower().startswith('jcr')):
+            logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
+            item.delete()
+        else:
+            diss_tag = dissambiguate(curr_tag)
+            # Tag needs to be dissambiguated
+            if curr_tag != diss_tag:
+                tag = item.tag
+                publication = item.publication
+                # Dissambiguated tag does not exists
+                if not diss_tag in tag_names:
+                    try:
+                        t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                        t.save()
+                        tag = t
+                        logger.info('Created new tag: %s' % (diss_tag))
+                    except:
+                        tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                        tag.name = diss_tag
+                        tag.save()                   
+                else:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                
+                # Delete the old tag-pub association
+                logger.info('Deleted: %s, %s' % (item.tag.name, item.publication.title))                
+                item.delete()
+               
+                # Create new tag-pub association
+                pt = PublicationTag(tag = tag, publication = publication)
+                pt.save()
+
+    #************* PROJECTS ***************
+    logger.info('Checking projects...')
+    for item in ProjectTag.objects.all():
+        curr_tag = item.tag.name
+        diss_tag = dissambiguate(curr_tag)
+        # Tag needs to be dissambiguated
+        if curr_tag != diss_tag:
+            tag = item.tag
+            project = item.project
+            # Dissambiguated tag does not exists
+            if not diss_tag in tag_names:
+                try:
+                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                    t.save()
+                    tag = t
+                    logger.info('Created new tag: %s' % (diss_tag))
+                except:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                    tag.name = diss_tag
+                    tag.save()
+            else:
+                tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+            
+            # Delete the old news-pub association
+            logger.info('Deleted: %s, %s' % (item.tag.name, item.project.full_name))                
+            item.delete()
+           
+            # Create new news-pub association
+            pt = ProjectTag(tag = tag, project = project)
+            pt.save()
+
+    #************* NEWS ***************
+    logger.info('Checking news...')
+    for item in NewsTag.objects.all():
+        curr_tag = item.tag.name
+        diss_tag = dissambiguate(curr_tag)
+        # Tag needs to be dissambiguated
+        if curr_tag != diss_tag:
+            tag = item.tag
+            news = item.news
+            # Dissambiguated tag does not exists
+            if not diss_tag in tag_names:
+                try:
+                    t = Tag(name = diss_tag, slug = slugify(diss_tag))
+                    t.save()
+                    tag = t
+                    logger.info('Created new tag: %s' % (diss_tag))
+                except:
+                    tag = Tag.objects.filter(slug__exact = slugify(diss_tag))[0]
+                    tag.name = diss_tag
+                    tag.save()  
+            else:
+                tag = Tag.objects.filter(slug__exact = slugify(diss_tag))
+            
+            # Delete the old news-pub association
+            logger.info('Deleted: %s, %s' % (item.tag.name, item.news.title))                
+            item.delete()
+           
+            # Create new news-pub association
+            pt = NewsTag(tag = tag, news = news)
+            pt.save()
+    
+    logger.info('Done')
+    
+    
+
+
+    
+
