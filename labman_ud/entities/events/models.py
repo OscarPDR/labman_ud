@@ -24,6 +24,15 @@ VIVA_RESULTS = (
     ('Cum Laude by unanimity', 'Cum Laude by unanimity'),
 )
 
+VIVA_PANEL_ROLES = (
+    ('Chair', 'Chair'),
+    ('Secretary', 'Secretary'),
+    ('Co-chair', 'Co-chair'),
+    ('First co-chair', 'First co-chair'),
+    ('Second co-chair', 'Second co-chair'),
+    ('Third co-chair', 'Third co-chair'),
+)
+
 
 ###########################################################################
 # Model: EventType
@@ -165,52 +174,11 @@ class Viva(BaseModel):
 ###########################################################################
 
 class VivaPanel(BaseModel):
-    chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_chair',
-    )
+    viva = models.ForeignKey('Viva')
 
-    chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_chairs_organization',
-    )
+    person = models.ForeignKey('persons.Person')
 
-    first_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_first_co_chair',
-    )
-
-    first_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_first_co_chairs_organization',
-    )
-
-    second_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_second_co_chair',
-    )
-
-    second_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_second_co_chairs_organization',
-    )
-
-    third_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_third_co_chair',
-    )
-
-    third_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_third_co_chairs_organization',
-    )
-
-    secretary = models.ForeignKey(
-        'persons.Person',
-        related_name='is_secretary',
-    )
-
-    secretarys_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_secretarys_organization',
+    role = models.CharField(
+        max_length=150,
+        choices=VIVA_PANEL_ROLES,
     )
