@@ -134,7 +134,7 @@ class Event(BaseModel):
         null=True,
     )
 
-    proceedings = models.ForeignKey('publications.Publication', blank=True, null=True, related_name='conference')
+    proceedings = models.ForeignKey('publications.Proceedings', blank=True, null=True, related_name='conference')
 
     class Meta:
         ordering = ['slug']
@@ -165,8 +165,6 @@ class Viva(BaseModel):
     )
 
     held_at_university = models.ForeignKey('organizations.Organization')
-
-    panel = models.ForeignKey('VivaPanel')
 
 
 ###########################################################################
