@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationAuthor, PublicationTag
 from entities.organizations.models import Organization, OrganizationType
 from entities.utils.models import Language, Tag
 from entities.persons.models import Person, Nickname, Job
@@ -363,7 +363,8 @@ def get_publication_details(item):
     observations = ''
 
     # Publicaton type
-    pub.publication_type, created = PublicationType.objects.get_or_create(name=SUPPORTED_ITEM_TYPES[item['itemType']])
+    # pub.publication_type, created = PublicationType.objects.get_or_create(name=SUPPORTED_ITEM_TYPES[item['itemType']])
+    pub.publication_type, created = None
 
     # Publication language
     if 'language' in item and item['language']:
@@ -434,7 +435,8 @@ def get_publication_details(item):
 
         proceedings_title = item['proceedingsTitle'] if item['proceedingsTitle'] else 'Proceedings of ' + conf_name
 
-        pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
+        # pub_type_proceedings, created = PublicationType.objects.get_or_create(name='Proceedings')
+        pub_type_proceedings, created = None
 
         pub_subpub_attributes['abstract'] = proceedings_title
         pub_subpub_attributes['title'] = proceedings_title
@@ -467,18 +469,22 @@ def get_publication_details(item):
     # If journal, magazine or newspaper article or book section, create parent publication
     elif item['itemType'] in ['bookSection', 'journalArticle', 'magazineArticle', 'newspaperArticle']:
         if item['itemType'] == 'bookSection':
-            parentpub_type, created = PublicationType.objects.get_or_create(name='Book')
+            # parentpub_type, created = PublicationType.objects.get_or_create(name='Book')
+            parentpub_type, created = None
             parentpub_title = item['bookTitle'] if 'bookTitle' in item and item['bookTitle'] else 'Book ?'
         elif item['itemType'] == 'journalArticle':
-            parentpub_type, created = PublicationType.objects.get_or_create(name='Journal')
+            # parentpub_type, created = PublicationType.objects.get_or_create(name='Journal')
+            parentpub_type, created = None
             parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else None
             if not parentpub_title:
                 parentpub_title = item['journal_abbreviation'] if 'journalAbbrevation' in item and item['journalAbbrevation'] else 'Journal ?'
         elif item['itemType'] == 'magazineArticle':
-            parentpub_type, created = PublicationType.objects.get_or_create(name='Magazine')
+            # parentpub_type, created = PublicationType.objects.get_or_create(name='Magazine')
+            parentpub_type, created = None
             parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else 'Magazine ?'
         elif item['itemType'] == 'newspaperArticle':
-            parentpub_type, created = PublicationType.objects.get_or_create(name='Newspaper')
+            # parentpub_type, created = PublicationType.objects.get_or_create(name='Newspaper')
+            parentpub_type, created = None
             parentpub_title = item['publicationTitle'] if 'publicationTitle' in item and item['publicationTitle'] else 'Newspaper ?'
 
         pub_subpub_attributes['abstract'] = ' '
