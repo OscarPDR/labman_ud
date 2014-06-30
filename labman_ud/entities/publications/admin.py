@@ -74,13 +74,13 @@ class ThesisAdmin(admin.ModelAdmin):
     ]
 
 
-###########################################################################
-# Class: PublicationTypeAdmin
-###########################################################################
+# ###########################################################################
+# # Class: PublicationTypeAdmin
+# ###########################################################################
 
-class PublicationTypeAdmin(admin.ModelAdmin):
-    model = PublicationType
-    list_display = ['name', 'description']
+# class PublicationTypeAdmin(admin.ModelAdmin):
+#     model = PublicationType
+#     list_display = ['name', 'description']
 
 
 ###########################################################################
@@ -108,6 +108,70 @@ class PublicationTagAdmin(admin.ModelAdmin):
 
 
 ###########################################################################
+# Class: BookAdmin
+###########################################################################
+
+class BookAdmin(admin.ModelAdmin):
+    model = Book
+
+
+###########################################################################
+# Class: BookSectionAdmin
+###########################################################################
+
+class BookSectionAdmin(admin.ModelAdmin):
+    model = BookSection
+
+
+###########################################################################
+# Class: ProceedingsAdmin
+###########################################################################
+
+class ProceedingsAdmin(admin.ModelAdmin):
+    model = Proceedings
+
+
+###########################################################################
+# Class: ConferencePaperAdmin
+###########################################################################
+
+class ConferencePaperAdmin(admin.ModelAdmin):
+    model = ConferencePaper
+
+
+###########################################################################
+# Class: JournalAdmin
+###########################################################################
+
+class JournalAdmin(admin.ModelAdmin):
+    model = Journal
+
+
+###########################################################################
+# Class: JournalArticleAdmin
+###########################################################################
+
+class JournalArticleAdmin(admin.ModelAdmin):
+    model = JournalArticle
+
+
+###########################################################################
+# Class: MagazineAdmin
+###########################################################################
+
+class MagazineAdmin(admin.ModelAdmin):
+    model = Magazine
+
+
+###########################################################################
+# Class: MagazineArticleAdmin
+###########################################################################
+
+class MagazineArticleAdmin(admin.ModelAdmin):
+    model = MagazineArticle
+
+
+###########################################################################
 # Class: ThesisAbstractAdmin
 ###########################################################################
 
@@ -130,9 +194,18 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 ####################################################################################################
 
 admin.site.register(CoAdvisor, CoAdvisorAdmin)
-admin.site.register(Publication, PublicationAdmin)
+# admin.site.register(Publication, PublicationAdmin)
+admin.site.register(Book, BookAdmin)
+admin.site.register(BookSection, BookSectionAdmin)
+admin.site.register(Proceedings, ProceedingsAdmin)
+admin.site.register(ConferencePaper, ConferencePaperAdmin)
+admin.site.register(Journal, JournalAdmin)
+admin.site.register(JournalArticle, JournalArticleAdmin)
+admin.site.register(Magazine, MagazineAdmin)
+admin.site.register(MagazineArticle, MagazineArticleAdmin)
+
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationTag, PublicationTagAdmin)
-admin.site.register(PublicationType, PublicationTypeAdmin)
+# admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(Thesis, ThesisAdmin)
 admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
