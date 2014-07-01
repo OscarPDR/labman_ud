@@ -32,6 +32,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TAGS_FILEPATH = './files/tag_nicks.json'
+METADATA_TAGS_FILEPATH = './files/metadata_tag.json'
 
 # Dict with supported Zotero itemTypes, translated to LabMan's PublicationTypes
 SUPPORTED_ITEM_TYPES = {
@@ -58,6 +59,7 @@ def load_tags(path = TAGS_FILEPATH):
 # Used to normalize the tags of the papers
 # The tag taxonomy is in tag_nicks.json
 tag_nicks = load_tags()
+metadata_tags = load_tags(METADATA_TAGS_FILEPATH)
 
 
 def dissambiguate(tag):
@@ -842,7 +844,6 @@ def clean_tags():
     # This tags are only used for metadata, they should not be added to the paper tags
     # We are not using this until we redo the model to include this metadata
     #metadata_tags = ['isi', 'dblp', 'q1', 'q2', 'q3', 'q4', 'corea', 'coreb', 'corec','iwaal', 'phd', 'ucami 2012', 'Icost', 'Vitoria-Gasteiz']
-    metadata_tags = ['iwaal', 'phd', 'ucami 2012', 'Icost', 'Vitoria-Gasteiz']
     logger.info('')
     logger.info('Cleanning tags...')
     logger.info('#' * 75)
