@@ -8,9 +8,9 @@ from django.core.mail import send_mail
 
 from generators.zotero_labman.models import ZoteroLog
 from entities.events.models import Event, EventType
-from entities.publications.models import Publication, PublicationAuthor, PublicationTag
+from entities.publications.models import *
 from entities.organizations.models import Organization, OrganizationType
-from entities.utils.models import Language, Tag
+from entities.utils.models import Language, Tag, Country
 from entities.persons.models import Person, Nickname, Job
 from entities.projects.models import Project, RelatedPublication, ProjectTag
 from entities.news.models import PublicationRelatedToNews, NewsTag
@@ -27,6 +27,9 @@ import json
 import operator
 import difflib
 import itertools
+from xml.dom import minidom
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -94,7 +97,7 @@ tag_nicks = {
     'inference': 'inference mechanisms',
     'IoT': 'Internet of Things',
     'learning': 'Educational Technologies',
-    'Opinion Minning': 'opinion mining',
+    'Opinion Minning': 'opINFOinion mining',
     'Persuasive Technologies': 'persuasive technology',
     'reasoners': 'Reasoning Engines',
     'Recomendation Systems': 'Recommendation Systems',
@@ -125,17 +128,16 @@ def dissambiguate(tag):
 
 
 def get_zotero_variables():
-    # TODO: Check variables
+    base_url = getattr(settings, 'ZOTERO_API_BASE_URL', None)
     api_key = getattr(settings, 'ZOTERO_API_KEY', None)
     library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
     library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
-    api_limit = 10
 
-    return api_key, library_id, library_type, api_limit
+    return base_url, api_key, library_id, library_type
 
 
 def get_last_zotero_version():
-    api_key, library_id, library_type, api_limit = get_zotero_variables()
+    api_key, library_id, library_type = get_zotero_variables()
 
     r = requests.get('https://api.zotero.org/' + library_type + 's/' + library_id + '/items?format=versions&key=' + api_key)
     if len(r.json()):
@@ -897,3 +899,568 @@ def greet_birthday():
                     )
                 except:
                     logger.info('\t\tUnable to send e-mail')
+
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+
+###########################################################################
+# def: try_new_zotero()
+###########################################################################
+
+def _get_last_zotero_version():
+    base_url, api_key, library_id, library_type = get_zotero_variables()
+
+    url = '%s/%ss/%s/items' % (base_url, library_type, library_id)
+
+    headers = {'Zotero-API-Version': 2}
+
+    params = {
+        'key': api_key,
+        'format': 'versions',
+    }
+
+    r = requests.get(url, headers=headers, params=params)
+
+    if len(r.json()):
+        latest_version_number = max(r.json().items(), key=operator.itemgetter(1))[1]
+    else:
+        latest_version_number = 0
+
+    return latest_version_number
+
+
+###########################################################################
+# def: get_last_synchronized_zotero_version()
+###########################################################################
+
+def get_last_synchronized_zotero_version():
+    return 0
+
+
+###########################################################################
+# def: get_item_keys_since_last_synchronized_version()
+###########################################################################
+
+def get_item_keys_since_last_synchronized_version():
+    last_zotero_version = _get_last_zotero_version()
+    last_synchronized_zotero_version = get_last_synchronized_zotero_version()
+
+    if last_synchronized_zotero_version == last_zotero_version:
+        logger.info('Labman is updated to the last version in Zotero (%d)' % (last_zotero_version))
+
+    else:
+        if last_synchronized_zotero_version > last_zotero_version:
+            # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
+            logger.info('Labman version number (%i) is higher than Zotero\'s one (%i)...' % (version, last_version))
+            last_synchronized_zotero_version = last_zotero_version - 1
+            logger.info('Error solved')
+
+        logger.info('Getting items since version %i' % (last_synchronized_zotero_version))
+        logger.info('Last version in Zotero is %i' % (last_zotero_version))
+
+    base_url, api_key, library_id, library_type = get_zotero_variables()
+
+    url = '%s/%ss/%s/items' % (base_url, library_type, library_id)
+
+    headers = {'Zotero-API-Version': 2}
+
+    params = {
+        'key': api_key,
+        'format': 'keys',
+        'order': 'dateModified',
+        'sort': 'desc',
+        'newer': get_last_synchronized_zotero_version(),
+        'limit': 10000,
+    }
+
+    r = requests.get(url, headers=headers, params=params)
+    print r.url
+
+    item_key_list = r.text.split('\n')
+
+    if '' in item_key_list:
+        item_key_list.remove('')
+
+    return item_key_list
+
+
+###########################################################################
+# def: try_new_zotero()
+###########################################################################
+
+def try_new_zotero():
+    Event.objects.all().delete()
+    EventType.objects.all().delete()
+    Publication.objects.all().delete()
+    PublicationAuthor.objects.all().delete()
+    PublicationEditor.objects.all().delete()
+    PublicationTag.objects.all().delete()
+
+    item_key_list = get_item_keys_since_last_synchronized_version()
+
+    print
+    print '*' * 50
+    print '+' * 75
+    print '%d number of items' % len(item_key_list)
+    print '+' * 75
+    print '*' * 50
+    print
+
+    # generate_publication_from_zotero('VRPQ657W')
+
+    for item_key in item_key_list:
+        try:
+            generate_publication_from_zotero(item_key)
+
+        except:
+            print 'Error retrieving information from Zotero API about item: %s' % item_key
+
+
+def generate_publication_from_zotero(item_key):
+    base_url, api_key, library_id, library_type = get_zotero_variables()
+
+    url = '%s/%ss/%s/items/%s' % (base_url, library_type, library_id, item_key)
+
+    headers = {'Zotero-API-Version': 2}
+
+    params = {
+        'key': api_key,
+        'content': 'json',
+    }
+
+    r = requests.get(url, headers=headers, params=params)
+    print r.url
+
+    xmldoc = minidom.parseString(r.text.encode('utf-8').replace("'", ""))
+    content = xmldoc.getElementsByTagName('content')[0].firstChild.nodeValue
+    content_json = json.loads(content)
+
+    publication_type = content_json['itemType']
+
+    print
+    pp.pprint(content_json)
+    print
+
+    if publication_type == 'conferencePaper':
+        parse_conference_paper(content_json)
+    elif publication_type == 'bookSection':
+        parse_book_section(content_json)
+    elif publication_type == 'book':
+        parse_authored_book(content_json)
+    elif publication_type == 'journalArticle':
+        parse_journal_article(content_json)
+    elif publication_type == 'magazineArticle':
+        parse_magazine_article(content_json)
+    else:
+        print
+        print '*' * 50
+        print 'Publication type: %s' % publication_type
+        print '*' * 50
+        print
+        pp.pprint(content_json)
+        print
+    # elif publication_type == 'thesis':
+    #     pass
+
+
+def parse_conference_paper(json_item):
+    try:
+        conference_paper = ConferencePaper.objects.get(slug=slugify(json_item['title']))
+    except:
+        conference_paper = ConferencePaper()
+
+    conference_paper.title = json_item['title']
+    conference_paper.short_title = _extract_short_title(json_item)
+
+    conference_paper.abstract = _assign_if_exists(json_item, 'abstractNote')
+    conference_paper.pages = _assign_if_exists(json_item, 'pages')
+    conference_paper.doi = _extract_doi(json_item)
+
+    conference_paper.parent_proceedings = parse_proceedings(json_item)
+    conference_paper.presented_at = parse_conference(json_item)
+
+    conference_paper.published = _parse_date(json_item['date'])
+    conference_paper.year = conference_paper.published.year
+
+    conference_paper.save()
+
+    _extract_authors(json_item, conference_paper)
+    _extract_tags(json_item, conference_paper)
+
+
+def parse_proceedings(json_item):
+    try:
+        proceedings = Proceedings.objects.get(slug=slugify(json_item['proceedingsTitle']))
+    except:
+        proceedings = Proceedings()
+
+    proceedings.title = json_item['proceedingsTitle']
+
+    proceedings.isbn = _assign_if_exists(json_item, 'ISBN')
+    proceedings.volume = _assign_if_exists(json_item, 'volume')
+    proceedings.series = _assign_if_exists(json_item, 'series')
+    proceedings.publisher = _assign_if_exists(json_item, 'publisher')
+    proceedings.place = _assign_if_exists(json_item, 'place')
+
+    proceedings.published = _parse_date(json_item['date'])
+    proceedings.year = proceedings.published.year
+
+    proceedings.save()
+
+    return proceedings
+
+
+def parse_conference(json_item):
+    try:
+        event = Event.objects.get(slug=slugify(json_item['conferenceName']))
+    except:
+        event = Event()
+
+    try:
+        event_type = EventType.objects.get(slug=slugify('Academic event'))
+    except:
+        event_type = EventType()
+        event_type.name = 'Academic event'
+        event_type.save()
+
+    event.event_type = event_type
+
+    event.full_name = json_item['conferenceName']
+
+    if 'place' in json_item.keys() and json_item['place'] != '':
+        places_list = json_item['place'].split(', ')
+
+        if len(places_list) == 2:
+            city_name = places_list[0]
+            country_name = places_list[1]
+
+            country, created = Country.objects.get_or_create(slug=slugify(country_name))
+
+            if created:
+                country.save()
+
+            event.host_city = city_name
+            event.host_country = country
+
+            event.location = '%s (%s)' % (city_name, country_name)
+
+    event.published = _parse_date(json_item['date'])
+    event.year = event.published.year
+
+    event.save()
+
+    return event
+
+
+def parse_book_section(json_item):
+    try:
+        book_section = BookSection.objects.get(slug=slugify(json_item['title']))
+    except:
+        book_section = BookSection()
+
+    book_section.title = json_item['title']
+    book_section.short_title = _extract_short_title(json_item)
+
+    book_section.abstract = _assign_if_exists(json_item, 'abstractNote')
+    book_section.pages = _assign_if_exists(json_item, 'pages')
+    book_section.doi = _extract_doi(json_item)
+
+    book_section.parent_book = parse_book(json_item)
+
+    book_section.published = _parse_date(json_item['date'])
+    book_section.year = book_section.published.year
+
+    book_section.save()
+
+    _extract_authors(json_item, book_section)
+    _extract_tags(json_item, book_section)
+
+
+def parse_book(json_item):
+    try:
+        book = Book.objects.get(slug=slugify(json_item['bookTitle']))
+    except:
+        book = Book()
+
+    book.title = json_item['bookTitle']
+
+    book.isbn = _assign_if_exists(json_item, 'ISBN')
+    book.volume = _assign_if_exists(json_item, 'volume')
+    book.series = _assign_if_exists(json_item, 'series')
+    book.publisher = _assign_if_exists(json_item, 'publisher')
+    book.place = _assign_if_exists(json_item, 'place')
+
+    book.published = _parse_date(json_item['date'])
+    book.year = book.published.year
+
+    book.save()
+
+    _extract_editors(json_item, book)
+
+    return book
+
+
+def parse_authored_book(json_item):
+    try:
+        book = Book.objects.get(slug=slugify(json_item['title']))
+    except:
+        book = Book()
+
+    book.title = json_item['title']
+    book.short_title = _extract_short_title(json_item)
+
+    book.abstract = _assign_if_exists(json_item, 'abstractNote')
+    book.number_of_pages = _assign_if_exists(json_item, 'numPages')
+    book.edition = _assign_if_exists(json_item, 'edition')
+    book.doi = _extract_doi(json_item)
+
+    book.isbn = _assign_if_exists(json_item, 'ISBN')
+    book.volume = _assign_if_exists(json_item, 'volume')
+    book.number_of_volumes = _assign_if_exists(json_item, 'numberOfVolumes')
+    book.series = _assign_if_exists(json_item, 'series')
+    book.series_number = _assign_if_exists(json_item, 'seriesNumber')
+    book.publisher = _assign_if_exists(json_item, 'publisher')
+    book.place = _assign_if_exists(json_item, 'place')
+
+    book.published = _parse_date(json_item['date'])
+    book.year = book.published.year
+
+    book.save()
+
+    _extract_authors(json_item, book)
+    _extract_tags(json_item, book)
+
+
+def parse_journal_article(json_item):
+    try:
+        journal_article = JournalArticle.objects.get(slug=slugify(json_item['title']))
+    except:
+        journal_article = JournalArticle()
+
+    journal_article.title = json_item['title']
+    journal_article.short_title = _extract_short_title(json_item)
+
+    journal_article.abstract = _assign_if_exists(json_item, 'abstractNote')
+    journal_article.pages = _assign_if_exists(json_item, 'pages')
+    journal_article.doi = _extract_doi(json_item)
+
+    journal_article.parent_journal = parse_journal(json_item)
+
+    journal_article.published = _parse_date(json_item['date'])
+    journal_article.year = journal_article.published.year
+
+    journal_article.save()
+
+    _extract_authors(json_item, journal_article)
+    _extract_tags(json_item, journal_article)
+
+
+def parse_journal(json_item):
+    try:
+        journal = Journal.objects.get(slug=slugify(json_item['publicationTitle']))
+
+    except:
+        journal = Journal()
+
+    journal.title = json_item['publicationTitle']
+
+    journal.isbn = _assign_if_exists(json_item, 'ISSN')
+    journal.volume = _assign_if_exists(json_item, 'volume')
+    journal.series = _assign_if_exists(json_item, 'series')
+    journal.publisher = _assign_if_exists(json_item, 'publisher')
+    journal.place = _assign_if_exists(json_item, 'place')
+    journal.journal_abbreviation = _assign_if_exists(json_item, 'journalAbbrevation')
+
+    journal.published = _parse_date(json_item['date'])
+    journal.year = journal.published.year
+
+    journal.save()
+
+    return journal
+
+
+def parse_magazine_article(json_item):
+    try:
+        magazine_article = MagazineArticle.objects.get(slug=slugify(json_item['title']))
+    except:
+        magazine_article = MagazineArticle()
+
+    magazine_article.title = json_item['title']
+    magazine_article.short_title = _extract_short_title(json_item)
+
+    magazine_article.abstract = _assign_if_exists(json_item, 'abstractNote')
+    magazine_article.pages = _assign_if_exists(json_item, 'pages')
+    magazine_article.doi = _extract_doi(json_item)
+
+    magazine_article.parent_magazine = parse_magazine(json_item)
+
+    magazine_article.published = _parse_date(json_item['date'])
+    magazine_article.year = magazine_article.published.year
+
+    magazine_article.save()
+
+    _extract_authors(json_item, magazine_article)
+    _extract_tags(json_item, magazine_article)
+
+
+def parse_magazine(json_item):
+    try:
+        magazine = Magazine.objects.get(slug=slugify(json_item['publicationTitle']))
+    except:
+        magazine = Magazine()
+
+    magazine.title = json_item['publicationTitle']
+
+    magazine.issn = _assign_if_exists(json_item, 'ISSN')
+    magazine.volume = _assign_if_exists(json_item, 'volume')
+    magazine.issue = _assign_if_exists(json_item, 'issue')
+
+    magazine.published = _parse_date(json_item['date'])
+    magazine.year = magazine.published.year
+
+    magazine.save()
+
+    return magazine
+
+
+def _parse_date(date_string):
+    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))
+
+
+def _assign_if_exists(item, key):
+    if key in item.keys():
+        if item[key] != '':
+            return item[key]
+
+
+def _extract_doi(item):
+    DOI_ORG_BASE_URL = 'http://dx.doi.org/'
+    if 'DOI' in item.keys():
+        if item['DOI'] != '':
+            print item['DOI']
+            return item['DOI']
+    elif 'url' in item.keys():
+        if item['url'] != '' and DOI_ORG_BASE_URL in item['url']:
+            base_url_end_index = len(DOI_ORG_BASE_URL)
+            underscore_index = item['url'].find('_') if item['url'].find('_') != -1 else len(item['url'])
+            print item['url'][base_url_end_index:underscore_index]
+            return item['url'][base_url_end_index:underscore_index]
+
+
+def _extract_short_title(item):
+    if 'shortTitle' in item.keys():
+        if item['shortTitle'] != '':
+            return item['shortTitle']
+    else:
+        index = json_item['title'].find(':')
+
+        if index != -1:
+            return item['shortTitle'][:index]
+
+
+def _extract_authors(item, publication):
+    order = 1
+
+    if 'creators' in item.keys() and len(item['creators']) > 0:
+        for creator_item in item['creators']:
+            creator_type = creator_item['creatorType']
+
+            if creator_type == 'author':
+                author_first_name = creator_item['firstName'].encode('utf-8')
+                author_first_surname = creator_item['lastName'].encode('utf-8')
+
+                author_slug = slugify('%s %s' % (author_first_name, author_first_surname))
+
+                try:
+                    # Check if author is in DB (comparing by slug)
+                    author = Person.objects.get(slug=author_slug)
+
+                except:
+                    # If it isn't
+                    try:
+                        # Check if author name correspond with any of the posible nicknames of the authors in DB
+                        nick = Nickname.objects.get(slug=author_slug)
+                        author = nick.person
+                    except:
+                        # If there is no reference to that person in the DB, create a new one
+                        author = Person(
+                            first_name=author_first_name,
+                            first_surname=author_first_surname
+                        )
+
+                        author.save()
+
+                publication_author = PublicationAuthor(
+                    author=author,
+                    publication=publication,
+                    position=order,
+                )
+
+                publication_author.save()
+
+                order += 1
+
+
+def _extract_editors(item, publication):
+    if 'creators' in item.keys() and len(item['creators']) > 0:
+        for creator_item in item['creators']:
+            creator_type = creator_item['creatorType']
+
+            if creator_type == 'editor':
+                editor_first_name = creator_item['firstName'].encode('utf-8')
+                editor_first_surname = creator_item['lastName'].encode('utf-8')
+
+                editor_slug = slugify('%s %s' % (editor_first_name, editor_first_surname))
+
+                try:
+                    # Check if editor is in DB (comparing by slug)
+                    editor = Person.objects.get(slug=editor_slug)
+
+                except:
+                    # If it isn't
+                    try:
+                        # Check if editor name correspond with any of the posible nicknames of the authors in DB
+                        nick = Nickname.objects.get(slug=editor_slug)
+                        editor = nick.person
+                    except:
+                        # If there is no reference to that person in the DB, create a new one
+                        editor = Person(
+                            first_name=editor_first_name,
+                            first_surname=editor_first_surname
+                        )
+
+                        editor.save()
+
+                publication_editor = PublicationEditor(
+                    editor=editor,
+                    publication=publication,
+                )
+
+                publication_editor.save()
+
+
+def _extract_tags(item, publication):
+    if 'tags' in item.keys() and len(item['tags']) > 0:
+        for tag_item in item['tags']:
+            tag_name = tag_item['tag'].encode('utf-8')
+
+            try:
+                tag = Tag.objects.get(slug=slugify(tag_name))
+
+            except:
+                tag = Tag(
+                    name=tag_name,
+                )
+
+                tag.save()
+
+            publication_tag = PublicationTag(
+                tag=tag,
+                publication=publication,
+            )
+
+            publication_tag.save()
