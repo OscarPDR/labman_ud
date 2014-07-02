@@ -105,13 +105,13 @@ class Publication(BaseModel):
 
     class Meta:
         # abstract = True
-        ordering = ['slug']
+        ordering = ['-slug']
+
+    def __unicode__(self):
+        return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
-
-        if self.published and not self.year:
-            self.year = self.published.year
 
         super(Publication, self).save(*args, **kwargs)
 
@@ -193,8 +193,15 @@ class Book(CollectionPublication):
         null=True,
     )
 
-    def __unicode__(self):
-        return u'Book: %s' % (self.title)
+    number_of_pages = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    number_of_volumes = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
 
 
 ###########################################################################
@@ -204,7 +211,7 @@ class Book(CollectionPublication):
 class BookSection(PartOfCollectionPublication):
     parent_book = models.ForeignKey('Book')
 
-    presented_at = models.ForeignKey('events.Event')
+    presented_at = models.ForeignKey('events.Event', null=True, blank=True)
 
     isi = models.BooleanField(
         verbose_name=u'ISI',
@@ -222,9 +229,6 @@ class BookSection(PartOfCollectionPublication):
         default='None',
         blank=True,
     )
-
-    def __unicode__(self):
-        return u'Book section: %s' % (self.title)
 
 
 ###########################################################################
@@ -244,9 +248,6 @@ class Proceedings(CollectionPublication):
         blank=True,
         null=True,
     )
-
-    def __unicode__(self):
-        return u'Proceedings: %s' % (self.title)
 
 
 ###########################################################################
@@ -275,9 +276,6 @@ class ConferencePaper(PartOfCollectionPublication):
         blank=True,
         null=True,
     )
-
-    def __unicode__(self):
-        return u'Conference paper: %s' % (self.title)
 
 
 ###########################################################################
@@ -312,9 +310,6 @@ class Journal(CollectionPublication):
         null=True,
     )
 
-    def __unicode__(self):
-        return u'Journal: %s' % (self.title)
-
 
 ###########################################################################
 # Model: JournalArticle
@@ -327,9 +322,6 @@ class JournalArticle(PartOfCollectionPublication):
         blank=True,
         null=True,
     )
-
-    def __unicode__(self):
-        return u'Journal article: %s' % (self.title)
 
 
 ###########################################################################
@@ -350,9 +342,6 @@ class Magazine(CollectionPublication):
         null=True,
     )
 
-    def __unicode__(self):
-        return u'Magazine: %s' % (self.title)
-
 
 ###########################################################################
 # Model: MagazineArticle
@@ -360,9 +349,6 @@ class Magazine(CollectionPublication):
 
 class MagazineArticle(PartOfCollectionPublication):
     parent_magazine = models.ForeignKey('Magazine')
-
-    def __unicode__(self):
-        return u'Magazine article: %s' % (self.title)
 
 
 ###########################################################################
@@ -372,6 +358,9 @@ class MagazineArticle(PartOfCollectionPublication):
 class PublicationTag(BaseModel):
     tag = models.ForeignKey('utils.Tag')
     publication = models.ForeignKey('publications.Publication')
+
+    class Meta:
+        ordering = ['tag__slug']
 
     def __unicode__(self):
         return u'%s tagged as: %s' % (self.publication.title, self.tag.name)
@@ -391,7 +380,19 @@ class PublicationAuthor(BaseModel):
     )
 
     def __unicode__(self):
-        return u'%s has written: %s' % (self.author.full_name, self.publication.title)
+        return u'%s has written: %s as author #%d' % (self.author.full_name, self.publication.title, self.position)
+
+
+###########################################################################
+# Model: PublicationEditor
+###########################################################################
+
+class PublicationEditor(BaseModel):
+    editor = models.ForeignKey('persons.Person')
+    publication = models.ForeignKey('publications.Publication')
+
+    def __unicode__(self):
+        return u'%s has edited: %s' % (self.editor.full_name, self.publication.title)
 
 
 ###########################################################################
