@@ -9,7 +9,7 @@ from .models import *
 # Class: PublicationTagAdmin
 ###########################################################################
 
-class PublicationTagInline(admin.StackedInline):
+class PublicationTagInline(admin.TabularInline):
     model = PublicationTag
     extra = 1
 
@@ -20,6 +20,15 @@ class PublicationTagInline(admin.StackedInline):
 
 class PublicationAuthorInline(admin.TabularInline):
     model = PublicationAuthor
+    extra = 1
+
+
+###########################################################################
+# Class: PublicationEditorInline
+###########################################################################
+
+class PublicationEditorInline(admin.TabularInline):
+    model = PublicationEditor
     extra = 1
 
 
@@ -48,12 +57,13 @@ class CoAdvisorInline(admin.TabularInline):
 class PublicationAdmin(admin.ModelAdmin):
     model = Publication
 
-    search_fields = ['title', 'presented_at__short_name']
-    list_display = ['title', 'publication_type', 'year', 'part_of']
-    list_filter = ['publication_type__name', 'year']
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
     exclude = ['slug']
     inlines = [
         PublicationAuthorInline,
+        PublicationEditorInline,
         PublicationTagInline,
     ]
 
@@ -74,15 +84,6 @@ class ThesisAdmin(admin.ModelAdmin):
     ]
 
 
-# ###########################################################################
-# # Class: PublicationTypeAdmin
-# ###########################################################################
-
-# class PublicationTypeAdmin(admin.ModelAdmin):
-#     model = PublicationType
-#     list_display = ['name', 'description']
-
-
 ###########################################################################
 # Class: PublicationAuthorAdmin
 ###########################################################################
@@ -93,6 +94,18 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
     search_fields = ['publication__slug', 'author__slug']
     list_display = ['publication', 'author']
     list_filter = ['author__full_name']
+
+
+###########################################################################
+# Class: PublicationEditorAdmin
+###########################################################################
+
+class PublicationEditorAdmin(admin.ModelAdmin):
+    model = PublicationEditor
+
+    search_fields = ['publication__slug', 'editor__slug']
+    list_display = ['publication', 'editor']
+    list_filter = ['editor__full_name']
 
 
 ###########################################################################
@@ -121,6 +134,16 @@ class BookAdmin(admin.ModelAdmin):
 
 class BookSectionAdmin(admin.ModelAdmin):
     model = BookSection
+
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationEditorInline,
+        PublicationTagInline,
+    ]
 
 
 ###########################################################################
@@ -193,8 +216,6 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
-admin.site.register(CoAdvisor, CoAdvisorAdmin)
-# admin.site.register(Publication, PublicationAdmin)
 admin.site.register(Book, BookAdmin)
 admin.site.register(BookSection, BookSectionAdmin)
 admin.site.register(Proceedings, ProceedingsAdmin)
@@ -204,8 +225,10 @@ admin.site.register(JournalArticle, JournalArticleAdmin)
 admin.site.register(Magazine, MagazineAdmin)
 admin.site.register(MagazineArticle, MagazineArticleAdmin)
 
-admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
-admin.site.register(PublicationTag, PublicationTagAdmin)
-# admin.site.register(PublicationType, PublicationTypeAdmin)
 admin.site.register(Thesis, ThesisAdmin)
 admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
+admin.site.register(CoAdvisor, CoAdvisorAdmin)
+
+admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
+admin.site.register(PublicationEditor, PublicationEditorAdmin)
+admin.site.register(PublicationTag, PublicationTagAdmin)
