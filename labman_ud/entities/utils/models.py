@@ -157,7 +157,7 @@ class Tag(BaseModel):
     def save(self, *args, **kwargs):
         delete_tag_rdf(self)
 
-        self.slug = slugify(str(self.name.encode('utf-8')))
+        self.slug = slugify(str(self.name))
         super(Tag, self).save(*args, **kwargs)
 
         save_tag_as_rdf(self)
