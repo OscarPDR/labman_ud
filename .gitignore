@@ -33,3 +33,5 @@ fixtures/
 
 # Zotero logs
 labman_ud/zotero_labman.log.*
+
+celerybeat-schedule
