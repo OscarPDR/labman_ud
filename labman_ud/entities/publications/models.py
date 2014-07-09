@@ -13,7 +13,6 @@ MIN_YEAR_LIMIT = 1950
 MAX_YEAR_LIMIT = 2080
 
 CORE_CHOICES = (
-    ('A+', 'Core A+'),
     ('A', 'Core A'),
     ('B', 'Core B'),
     ('C', 'Core C'),
@@ -30,13 +29,14 @@ QUARTILE_CHOICES = (
 
 
 def publication_path(self, filename):
-    publication_type = self.__class__.__name__
-    publication_type_slug = slugify(publication_type)
+    publication_type_slug = slugify(self.child_type)
 
     sub_folder = publication_type_slug
 
-    if self.presented_at:
+    try:
         sub_folder = '%s/%s' % (sub_folder, self.presented_at.slug)
+    except:
+        pass
 
     return "%s/%s/%s/%s%s" % ("publications", self.published.year, sub_folder, self.slug, os.path.splitext(filename)[-1])
 
@@ -100,6 +100,11 @@ class Publication(BaseModel):
         null=True,
     )
 
+    child_type = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
     authors = models.ManyToManyField('persons.Person', through='PublicationAuthor')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
 
@@ -112,6 +117,9 @@ class Publication(BaseModel):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
+
+        if self.child_type == '':
+            self.child_type = self.__class__.__name__
 
         super(Publication, self).save(*args, **kwargs)
 
@@ -165,6 +173,25 @@ class PartOfCollectionPublication(Publication):
 
 
 ###########################################################################
+# Model: ISIDBLPTags
+###########################################################################
+
+class ISIDBLPTags(PartOfCollectionPublication):
+    isi = models.BooleanField(
+        verbose_name=u'ISI',
+        default=False,
+    )
+
+    dblp = models.BooleanField(
+        verbose_name=u'DBLP',
+        default=False,
+    )
+
+    class Meta:
+        abstract = True
+
+
+###########################################################################
 # Model: Book
 ###########################################################################
 
@@ -208,20 +235,10 @@ class Book(CollectionPublication):
 # Model: BookSection
 ###########################################################################
 
-class BookSection(PartOfCollectionPublication):
+class BookSection(ISIDBLPTags):
     parent_book = models.ForeignKey('Book')
 
     presented_at = models.ForeignKey('events.Event', null=True, blank=True)
-
-    isi = models.BooleanField(
-        verbose_name=u'ISI',
-        default=False,
-    )
-
-    dblp = models.BooleanField(
-        verbose_name=u'DBLP',
-        default=False,
-    )
 
     core = models.CharField(
         max_length=25,
@@ -254,19 +271,13 @@ class Proceedings(CollectionPublication):
 # Model: ConferencePaper
 ###########################################################################
 
-class ConferencePaper(PartOfCollectionPublication):
+class ConferencePaper(ISIDBLPTags):
     parent_proceedings = models.ForeignKey('Proceedings')
 
-    presented_at = models.ForeignKey('events.Event')
-
-    isi = models.BooleanField(
-        verbose_name=u'ISI',
-        default=False,
-    )
-
-    dblp = models.BooleanField(
-        verbose_name=u'DBLP',
-        default=False,
+    presented_at = models.ForeignKey(
+        'events.Event',
+        blank=True,
+        null=True,
     )
 
     core = models.CharField(
@@ -310,12 +321,19 @@ class Journal(CollectionPublication):
         null=True,
     )
 
+    impact_factor = models.DecimalField(
+        max_digits=7,
+        decimal_places=5,
+        blank=True,
+        null=True,
+    )
+
 
 ###########################################################################
 # Model: JournalArticle
 ###########################################################################
 
-class JournalArticle(PartOfCollectionPublication):
+class JournalArticle(ISIDBLPTags):
     parent_journal = models.ForeignKey('Journal')
 
     individually_published = models.DateField(
@@ -412,8 +430,18 @@ class Thesis(BaseModel):
         unique=True,
     )
 
-    advisor = models.ForeignKey('persons.Person', related_name='advised_thesis')
-    co_advisors = models.ManyToManyField('persons.Person', through='CoAdvisor', related_name='coadvised_thesis')
+    advisor = models.ForeignKey(
+        'persons.Person',
+        related_name='advised_thesis',
+    )
+
+    co_advisors = models.ManyToManyField(
+        'persons.Person',
+        blank=True,
+        null=True,
+        through='CoAdvisor',
+        related_name='coadvised_thesis',
+    )
 
     registration_date = models.DateField(
         blank=True,
@@ -432,6 +460,11 @@ class Thesis(BaseModel):
         null=True,
     )
 
+    number_of_pages = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
+
     viva = models.ForeignKey('events.Viva')
 
     phd_program = models.ForeignKey('utils.PhDProgram')
@@ -443,7 +476,6 @@ class Thesis(BaseModel):
         return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
-        self.year = self.registration_date.year
         self.slug = slugify(str(self.title.encode('utf-8')))
         super(Thesis, self).save(*args, **kwargs)
 

@@ -127,6 +127,16 @@ class PublicationTagAdmin(admin.ModelAdmin):
 class BookAdmin(admin.ModelAdmin):
     model = Book
 
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationEditorInline,
+        PublicationTagInline,
+    ]
+
 
 ###########################################################################
 # Class: BookSectionAdmin
@@ -153,6 +163,16 @@ class BookSectionAdmin(admin.ModelAdmin):
 class ProceedingsAdmin(admin.ModelAdmin):
     model = Proceedings
 
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationEditorInline,
+        PublicationTagInline,
+    ]
+
 
 ###########################################################################
 # Class: ConferencePaperAdmin
@@ -160,6 +180,15 @@ class ProceedingsAdmin(admin.ModelAdmin):
 
 class ConferencePaperAdmin(admin.ModelAdmin):
     model = ConferencePaper
+
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationTagInline,
+    ]
 
 
 ###########################################################################
@@ -169,6 +198,15 @@ class ConferencePaperAdmin(admin.ModelAdmin):
 class JournalAdmin(admin.ModelAdmin):
     model = Journal
 
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationTagInline,
+    ]
+
 
 ###########################################################################
 # Class: JournalArticleAdmin
@@ -176,6 +214,15 @@ class JournalAdmin(admin.ModelAdmin):
 
 class JournalArticleAdmin(admin.ModelAdmin):
     model = JournalArticle
+
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationTagInline,
+    ]
 
 
 ###########################################################################
@@ -185,6 +232,15 @@ class JournalArticleAdmin(admin.ModelAdmin):
 class MagazineAdmin(admin.ModelAdmin):
     model = Magazine
 
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationTagInline,
+    ]
+
 
 ###########################################################################
 # Class: MagazineArticleAdmin
@@ -192,6 +248,15 @@ class MagazineAdmin(admin.ModelAdmin):
 
 class MagazineArticleAdmin(admin.ModelAdmin):
     model = MagazineArticle
+
+    search_fields = ['title', 'slug']
+    list_display = ['title', 'year']
+    list_filter = ['year']
+    exclude = ['slug']
+    inlines = [
+        PublicationAuthorInline,
+        PublicationTagInline,
+    ]
 
 
 ###########################################################################
