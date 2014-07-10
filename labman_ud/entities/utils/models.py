@@ -34,7 +34,11 @@ class City(BaseModel):
         blank=True,
     )
 
-    country = models.ForeignKey('Country')
+    country = models.ForeignKey(
+        'Country',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ['slug']

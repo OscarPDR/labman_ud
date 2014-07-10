@@ -2,7 +2,19 @@
 
 from django.contrib import admin
 
-from .models import Country, GeographicalScope, Role, Tag, Language, Network, PhDProgram
+from .models import *
+
+
+###########################################################################
+# Class: CityAdmin
+###########################################################################
+
+class CityAdmin(admin.ModelAdmin):
+    model = City
+
+    search_fields = ['full_name', 'country']
+    list_display = ['full_name']
+    exclude = ['slug']
 
 
 ###########################################################################
@@ -91,6 +103,7 @@ class PhDProgramAdmin(admin.ModelAdmin):
 ###########################################################################
 ###########################################################################
 
+admin.site.register(City, CityAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(GeographicalScope, GeographicalScopeAdmin)
 admin.site.register(Language, LanguageAdmin)

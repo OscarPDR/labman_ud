@@ -8,7 +8,7 @@ from entities.events.models import Event, EventType
 from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
-from entities.utils.models import Tag, Country
+from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
 
 from datetime import datetime
@@ -327,6 +327,24 @@ def parse_conference(json_item, proceedings):
                 city_name = places_list[0]
                 country_name = places_list[1]
 
+                event_location = ''
+
+                if city_name and city_name != '':
+                    try:
+                        city = City.objects.get(slug=slugify(city_name))
+
+                    except:
+                        city = City(
+                            full_name=city_name,
+                        )
+
+                        city.save()
+
+                    event_location = city_name
+
+                else:
+                    city = None
+
                 if country_name and country_name != '':
                     try:
                         country = Country.objects.get(slug=slugify(country_name))
@@ -338,13 +356,21 @@ def parse_conference(json_item, proceedings):
 
                         country.save()
 
+                    city.country = country
+                    city.save()
+
+                    if city_name and city_name != '':
+                        event_location = '%s (%s)' % (event_location, country_name)
+                    else:
+                        event_location = '(%s)' % country_name
+
                 else:
                     country = None
 
-                event.host_city = city_name
+                event.host_city = city
                 event.host_country = country
 
-                event.location = '%s (%s)' % (city_name, country_name)
+                event.location = event_location
 
         event.published = _parse_date(json_item['date'])
         event.year = event.published.year
