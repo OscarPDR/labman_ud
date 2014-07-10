@@ -143,6 +143,9 @@ def clean_database():
 
     ZoteroExtractorLog.objects.all().delete()
 
+    Event.objects.filter(event_type__name='Academic event').delete()
+    City.objects.all().delete()
+
 
 ####################################################################################################
 # def: extract_publications_from_zotero()
@@ -190,6 +193,8 @@ def generate_publication_from_zotero(item_key):
 
     publication_type = content_json['itemType']
 
+    print '\t[%s] > %s' % (publication_type.encode('utf-8'), content_json['title'].encode('utf-8'))
+
     if publication_type == 'conferencePaper':
         parse_conference_paper(content_json, item_key)
     elif publication_type == 'bookSection':
@@ -220,7 +225,7 @@ def generate_publication_from_zotero(item_key):
         except:
             number_of_children = 0
 
-        if number_of_children == 1:
+        if number_of_children > 0:
             parse_attachment(item_key, publication_type)
 
 
@@ -629,41 +634,45 @@ def parse_attachment(item_key, publication_type):
     r = requests.get(url, headers=headers, params=params)
 
     xmldoc = minidom.parseString(r.text.encode('utf-8').replace("'", ""))
-    content = xmldoc.getElementsByTagName('content')[0].firstChild.nodeValue
-    content_json = json.loads(content)
 
-    if content_json['contentType'] == 'application/pdf':
-        file_item_key = xmldoc.getElementsByTagName('zapi:key')[0].firstChild.nodeValue
+    contents = xmldoc.getElementsByTagName('content')
 
-        base_url, api_key, library_id, library_type = get_zotero_variables()
+    for content_item in contents:
+        content = content_item.firstChild.nodeValue
+        content_json = json.loads(content)
 
-        url = '%s/%ss/%s/items/%s/file' % (base_url, library_type, library_id, file_item_key)
+        if content_json['contentType'] == 'application/pdf':
+            file_item_key = content_json['itemKey']
 
-        headers = {'Zotero-API-Version': 2}
+            base_url, api_key, library_id, library_type = get_zotero_variables()
 
-        params = {
-            'key': api_key,
-        }
+            url = '%s/%ss/%s/items/%s/file' % (base_url, library_type, library_id, file_item_key)
 
-        r = requests.get(url, headers=headers, params=params)
+            headers = {'Zotero-API-Version': 2}
 
-        zotero_extractor_log = ZoteroExtractorLog.objects.filter(item_key=item_key).order_by('-timestamp')[0]
-        publication = Publication.objects.get(pk=zotero_extractor_log.publication.id)
+            params = {
+                'key': api_key,
+            }
 
-        path = publication_path(publication, content_json['filename'])
+            r = requests.get(url, headers=headers, params=params)
 
-        # If the directory doesn't exist, create it
-        pdf_dir = getattr(settings, 'MEDIA_ROOT', None) + '/' + os.path.dirname(path)
+            zotero_extractor_log = ZoteroExtractorLog.objects.filter(item_key=item_key).order_by('-timestamp')[0]
+            publication = Publication.objects.get(pk=zotero_extractor_log.publication.id)
 
-        if not os.path.exists(pdf_dir):
-            os.makedirs(pdf_dir)
+            path = publication_path(publication, content_json['filename'])
 
-        with open(getattr(settings, 'MEDIA_ROOT', None) + '/' + path, 'wb') as pdffile:
-            pdffile.write(r.content)
+            # If the directory doesn't exist, create it
+            pdf_dir = getattr(settings, 'MEDIA_ROOT', None) + '/' + os.path.dirname(path)
 
-        publication.pdf = path
+            if not os.path.exists(pdf_dir):
+                os.makedirs(pdf_dir)
 
-        publication.save()
+            with open(getattr(settings, 'MEDIA_ROOT', None) + '/' + path, 'wb') as pdffile:
+                pdffile.write(r.content)
+
+            publication.pdf = path
+
+            publication.save()
 
 
 ####################################################################################################
