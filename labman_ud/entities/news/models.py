@@ -127,3 +127,15 @@ class PersonRelatedToNews(BaseModel):
 
     def __unicode__(self):
         return u'%s refers to project: %s' % (self.news.title, self.person.full_name)
+
+
+###########################################################################
+# Model: EventRelatedToNews
+###########################################################################
+
+class EventRelatedToNews(BaseModel):
+    event = models.ForeignKey('events.Event')
+    news = models.ForeignKey('News')
+
+    def __unicode__(self):
+        return u'%s refers to event: %s' % (self.news.title, self.event.full_name)
