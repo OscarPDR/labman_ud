@@ -16,26 +16,57 @@ def network_icon_path(self, filename):
 
 
 ###########################################################################
+# Model: City
+###########################################################################
+
+class City(BaseModel):
+    full_name = models.CharField(
+        max_length=150,
+    )
+
+    short_name = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    slug = models.SlugField(
+        max_length=150,
+        blank=True,
+    )
+
+    country = models.ForeignKey('Country')
+
+    class Meta:
+        ordering = ['slug']
+
+    def __unicode__(self):
+        return u'%s' % (self.full_name)
+
+    def save(self, *args, **kwargs):
+        if not self.short_name:
+            self.short_name = self.full_name.encode('utf-8')
+
+        self.slug = slugify(self.short_name)
+
+        super(City, self).save(*args, **kwargs)
+
+
+###########################################################################
 # Model: Country
 ###########################################################################
 
 class Country(BaseModel):
     full_name = models.CharField(
-        max_length=250,
+        max_length=150,
     )
 
     short_name = models.CharField(
-        max_length=250,
+        max_length=150,
         blank=True,
     )
 
     slug = models.SlugField(
-        max_length=250,
-        blank=True,
-    )
-
-    identifier_code = models.CharField(
-        max_length=10,
+        max_length=150,
         blank=True,
     )
 
