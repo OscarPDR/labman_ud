@@ -13,7 +13,7 @@ class CountryAdmin(admin.ModelAdmin):
     model = Country
 
     search_fields = ['full_name', 'short_name']
-    list_display = ['full_name', 'identifier_code']
+    list_display = ['full_name']
     exclude = ['slug']
 
 
@@ -61,7 +61,7 @@ class LanguageAdmin(admin.ModelAdmin):
     model = Language
 
     search_fields = ['name']
-    list_display = ['name', 'identifier_code']
+    list_display = ['name']
     exclude = ['slug']
 
 

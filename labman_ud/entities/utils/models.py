@@ -208,11 +208,6 @@ class Language(BaseModel):
         blank=True,
     )
 
-    identifier_code = models.CharField(
-        max_length=10,
-        blank=True,
-    )
-
     class Meta:
         ordering = ['slug']
 
