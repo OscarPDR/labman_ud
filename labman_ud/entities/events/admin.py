@@ -1,7 +1,16 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
-from .models import Event, EventType, Viva, VivaPanel
+from .models import *
+
+
+###########################################################################
+# Class: PersonRelatedToEventAdmin
+###########################################################################
+
+class PersonRelatedToEventInline(admin.TabularInline):
+    model = PersonRelatedToEvent
+    extra = 1
 
 
 ###########################################################################
@@ -27,6 +36,9 @@ class EventAdmin(admin.ModelAdmin):
     exclude = [
         'slug',
     ]
+    inlines = [
+        PersonRelatedToEventInline,
+    ]
 
 
 ###########################################################################
@@ -43,6 +55,17 @@ class VivaAdmin(admin.ModelAdmin):
 
 class VivaPanelAdmin(admin.ModelAdmin):
     model = VivaPanel
+
+
+###########################################################################
+# Class: PersonRelatedToEventAdmin
+###########################################################################
+
+class PersonRelatedToEventAdmin(admin.ModelAdmin):
+    model = PersonRelatedToEvent
+
+    search_fields = ['person__full_name', 'event__full_name']
+    list_display = ['person', 'event']
 
 
 ####################################################################################################

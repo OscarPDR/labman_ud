@@ -92,10 +92,7 @@ class Event(BaseModel):
         blank=True,
     )
 
-    host_city = models.CharField(
-        max_length=150,
-        blank=True,
-    )
+    host_city = models.ForeignKey('utils.City', blank=True, null=True)
 
     host_country = models.ForeignKey('utils.Country', blank=True, null=True)
 
@@ -148,6 +145,18 @@ class Event(BaseModel):
 
         self.slug = slugify(self.short_name)
         super(Event, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: PersonRelatedToEvent
+###########################################################################
+
+class PersonRelatedToEvent(BaseModel):
+    person = models.ForeignKey('persons.Person')
+    event = models.ForeignKey('Event')
+
+    def __unicode__(self):
+        return u'%s attended %s' % (self.person.full_name, self.event.full_name)
 
 
 ###########################################################################
