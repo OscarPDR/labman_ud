@@ -1,5 +1,6 @@
 {% extends "members/info.html" %}
 {% load staticfiles %}
+{% load sanitize_types %}
 
 
 
@@ -46,7 +47,7 @@
 
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            {{ value|length }} {{ key|lower }}{{ value|pluralize }}
+                            {{ value|length }} {{ key|sanitize|lower }}{{ value|pluralize }}
                         </div>
 
                         <table class="table table-striped table-hover">
@@ -61,32 +62,26 @@
                             </thead>
 
                             <tbody>
-                                {% for publication, parent_publication, coauthors, event in value %}
+                                {% for item in value %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'publication_info' publication.slug %}">
-                                                &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ publication.title }}
+                                            <a href="{% url 'publication_info' item.slug %}">
+                                                &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
                                             </a>
                                             <br>
                                             &emsp;<small>
-                                                {{ coauthors }}.
-                                                {% if event %}
-                                                    <b>{{ event.short_name }}.</b>
-                                                {% elif parent_publication %}
-                                                    <b>{{ parent_publication.title }}.</b>
-                                                {% endif %}
-                                                {% if parent_publication.impact_factor %}
-                                                    Impact Factor: {{ parent_publication.impact_factor|floatformat:3 }}
-                                                {% endif %}
+                                                {{ item.authors }}.
+                                                <br>
+                                                &emsp;&emsp;<b>{{ item.parent_title }}.</b>
                                             </small>
                                         </td>
 
                                         <td>
-                                            {{ publication.year }}
+                                            {{ item.year }}
                                         </td>
 
                                         <td>
-                                            {% if publication.bibtex %}
+                                            {% if item.bibtex %}
                                                 <a data-toggle="modal" href="#myModal_{{ key|slugify }}_{{ forloop.counter }}">
                                                     <i class="fa fa-paperclip fa-2x"></i>
                                                 </a>
@@ -100,7 +95,7 @@
                                                         </div>
 
                                                         <div class="modal-body">
-                                                        <pre style="text-align: left;">{{ publication.bibtex }}</pre>
+                                                        <pre style="text-align: left;">{{ item.bibtex }}</pre>
                                                         </div>
 
                                                         <div class="modal-footer">
@@ -113,8 +108,8 @@
                                         </td>
 
                                         <td>
-                                            {% if publication.pdf %}
-                                                <a target="_blank" href="{{ MEDIA_URL }}{{ publication.pdf }}">
+                                            {% if item.pdf %}
+                                                <a target="_blank" href="{{ MEDIA_URL }}{{ item.pdf }}">
                                                     <i class="fa fa-file-text fa-2x"></i>
                                                 </a>
                                             {% endif %}

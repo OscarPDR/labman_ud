@@ -1,5 +1,6 @@
 {% extends "labman_ud/base.html" %}
 {% load static %}
+{% load sanitize_types %}
 
 
 
@@ -28,8 +29,8 @@
 
                 <blockquote id="publication-type" class="pull-left">
                     <p>
-                        <a href="{% url 'view_publication_type' publication.publication_type.slug %}">
-                            {{ publication.publication_type.name }}
+                        <a href="{% url 'view_publication_type' publication.child_type %}">
+                            {{ publication.child_type|sanitize }}
                         </a>
                     </p>
                 </blockquote>
@@ -117,7 +118,7 @@
                 </a>
                 {% if related_publications %}
                 <a href="{% url 'publication_related_publications' publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
-                    <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publications{{ related_publications|pluralize }}
+                    <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publication{{ related_publications|pluralize }}
                 </a>
                 {% endif %}
                 {% if related_projects %}
@@ -163,23 +164,23 @@
                     <br>
                     <br>
 
-                    {% if publication.publication_type.name == 'Conference paper' %}
+                    {% if publication.child_type == 'ConferencePaper' %}
                         {% include 'publications/templates/conference_paper.html' %}
                     {% endif %}
 
-                    {% if publication.publication_type.name == 'Journal article' %}
+                    {% if publication.child_type == 'JournalArticle' %}
                         {% include 'publications/templates/journal_article.html' %}
                     {% endif %}
 
-                    {% if publication.publication_type.name == 'Book section' %}
+                    {% if publication.child_type == 'BookSection' %}
                         {% include 'publications/templates/book_section.html' %}
                     {% endif %}
 
-                    {% if publication.publication_type.name == 'Book' %}
+                    {% if publication.child_type == 'Book' %}
                         {% include 'publications/templates/book.html' %}
                     {% endif %}
 
-                    {% if publication.publication_type.name == 'Magazine article' %}
+                    {% if publication.child_type == 'MagazineArticle' %}
                         {% include 'publications/templates/magazine_article.html' %}
                     {% endif %}
 
