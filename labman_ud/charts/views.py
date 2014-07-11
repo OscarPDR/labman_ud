@@ -29,6 +29,14 @@ import numpy as np
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
+PUBLICATION_TYPES = [
+    'BookSection', 'Book',
+    'ConferencePaper', 'Proceedings',
+    'JournalArticle', 'Journal',
+    'MagazineArticle', 'Magazine',
+    'Thesis'
+]
+
 
 ###########################################################################
 # View: chart_index
@@ -253,32 +261,29 @@ def funding_total_incomes_by_scope(request):
 def publications_number_of_publications(request):
     publications = {}
 
-    # publication_types = PublicationType.objects.all()
-    publication_types = None
-
     # min_year = Publication.objects.aggregate(Min('published'))
     max_year = Publication.objects.aggregate(Max('published'))
 
     # min_year = min_year.get('published__min').year
-    max_year = max_year.get('published__max').year
-
     min_year = 2000
 
+    max_year = max_year.get('published__max').year
+
     years = []
+
     for year in range(min_year, max_year + 1):
         years.append(year)
 
-    for publication_type in publication_types:
-        pub_type = publication_type.name.encode('utf-8')
-        publications[pub_type] = {}
+    for publication_type in PUBLICATION_TYPES:
+        publications[publication_type] = {}
         for year in range(min_year, max_year + 1):
-            publications[pub_type][year] = 0
+            publications[publication_type][year] = 0
 
     # all_publications = Publication.objects.all()
     all_publications = Publication.objects.all().exclude(authors=None)
 
     for publication in all_publications:
-        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_type = publication.child_type
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
@@ -286,7 +291,7 @@ def publications_number_of_publications(request):
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': u'Number of publications',
-        'publication_types': publication_types,
+        'publication_types': PUBLICATION_TYPES,
         'publications': publications,
         'years': years,
     }
@@ -566,8 +571,6 @@ def publications_egonetwork(request, author_slug):
 
 def publications_by_author(request, author_slug):
     publications = {}
-    # publication_types = PublicationType.objects.all()
-    publication_types = None
 
     author = get_object_or_404(Person, slug=author_slug)
 
@@ -594,14 +597,13 @@ def publications_by_author(request, author_slug):
     for year in range(min_year, max_year + 1):
         years.append(year)
 
-    for publication_type in publication_types:
-        pub_type = publication_type.name.encode('utf-8')
-        publications[pub_type] = {}
+    for publication_type in PUBLICATION_TYPES:
+        publications[publication_type] = {}
         for year in range(min_year, max_year + 1):
-            publications[pub_type][year] = 0
+            publications[publication_type][year] = 0
 
     for publication in _publications:
-        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_type = publication.child_type
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
@@ -610,7 +612,7 @@ def publications_by_author(request, author_slug):
     return_dict = {
         'web_title': u'%s - Number of publications' % author.full_name,
         'author': author,
-        'publication_types': publication_types,
+        'publication_types': PUBLICATION_TYPES,
         'publications': publications,
         'years': years,
     }
