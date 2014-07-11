@@ -112,6 +112,21 @@ class Publication(BaseModel):
         # abstract = True
         ordering = ['-slug']
 
+    def display_all_fields(self):
+        all_fields = [
+            self.title,
+            self.slug,
+            # self.abstract,
+        ]
+
+        for author in self.authors.all():
+            all_fields.append(author.full_name)
+
+        for tag in self.tags.all():
+            all_fields.append(tag.name)
+
+        return u' '.join([field for field in all_fields if field])
+
     def __unicode__(self):
         return u'%s' % (self.title)
 
