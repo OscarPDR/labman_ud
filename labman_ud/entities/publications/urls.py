@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^feed/$', FeedWrapper(LatestPublicationsFeed()), name='publication_feed'),
 
     url(r'^tag/(?P<tag_slug>\S+)/$', 'entities.publications.views.publication_index', name='view_publication_tag'),
-    url(r'^publication_type/(?P<publication_type_slug>\S+)/$', 'entities.publications.views.publication_index', name='view_publication_type'),
+    url(r'^publication_type/(?P<publication_type>\S+)/$', 'entities.publications.views.publication_index', name='view_publication_type'),
 
     url(r'^query/(?P<query_string>.+)/$', 'entities.publications.views.publication_index', name='view_publication_query'),
 
