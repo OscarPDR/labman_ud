@@ -131,6 +131,8 @@ class Person(BaseModel):
         blank=True,
     )
 
+    publications = models.ManyToManyField('publications.Publication', through='publications.PublicationAuthor')
+
     class Meta:
         ordering = ['slug']
 
