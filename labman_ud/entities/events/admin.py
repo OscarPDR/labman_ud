@@ -5,7 +5,27 @@ from .models import *
 
 
 ###########################################################################
-# Class: PersonRelatedToEventAdmin
+# Class: EventSeeAlsoInline
+###########################################################################
+
+class EventSeeAlsoInline(admin.TabularInline):
+    model = EventSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: EventSeeAlsoAdmin
+###########################################################################
+
+class EventSeeAlsoAdmin(admin.ModelAdmin):
+    model = EventSeeAlso
+
+    list_display = ['event', 'see_also']
+    search_fields = ['event__full_name']
+
+
+###########################################################################
+# Class: PersonRelatedToEventInline
 ###########################################################################
 
 class PersonRelatedToEventInline(admin.TabularInline):
@@ -37,6 +57,7 @@ class EventAdmin(admin.ModelAdmin):
         'slug',
     ]
     inlines = [
+        EventSeeAlsoInline,
         PersonRelatedToEventInline,
     ]
 
@@ -74,6 +95,7 @@ class PersonRelatedToEventAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
+admin.site.register(EventSeeAlso, EventSeeAlsoAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Viva, VivaAdmin)

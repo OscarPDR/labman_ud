@@ -6,6 +6,226 @@ from .models import *
 
 
 ###########################################################################
+# Class: CitySeeAlsoInline
+###########################################################################
+
+class CitySeeAlsoInline(admin.TabularInline):
+    model = CitySeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: CitySeeAlsoAdmin
+###########################################################################
+
+class CitySeeAlsoAdmin(admin.ModelAdmin):
+    model = CitySeeAlso
+
+    list_display = ['city', 'see_also']
+    search_fields = ['city__full_name']
+
+
+###########################################################################
+# Class: CountrySeeAlsoInline
+###########################################################################
+
+class CountrySeeAlsoInline(admin.TabularInline):
+    model = CountrySeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: CountrySeeAlsoAdmin
+###########################################################################
+
+class CountrySeeAlsoAdmin(admin.ModelAdmin):
+    model = CountrySeeAlso
+
+    list_display = ['country', 'see_also']
+    search_fields = ['country__full_name']
+
+
+###########################################################################
+# Class: GeographicalScopeSeeAlsoInline
+###########################################################################
+
+class GeographicalScopeSeeAlsoInline(admin.TabularInline):
+    model = GeographicalScopeSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: GeographicalScopeSeeAlsoAdmin
+###########################################################################
+
+class GeographicalScopeSeeAlsoAdmin(admin.ModelAdmin):
+    model = GeographicalScopeSeeAlso
+
+    list_display = ['geographical_scope', 'see_also']
+    search_fields = ['geographical_scope__name']
+
+
+###########################################################################
+# Class: TagSeeAlsoInline
+###########################################################################
+
+class TagSeeAlsoInline(admin.TabularInline):
+    model = TagSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: TagSeeAlsoAdmin
+###########################################################################
+
+class TagSeeAlsoAdmin(admin.ModelAdmin):
+    model = TagSeeAlso
+
+    list_display = ['tag', 'see_also']
+    search_fields = ['tag__name']
+
+
+###########################################################################
+# Class: LanguageSeeAlsoInline
+###########################################################################
+
+class LanguageSeeAlsoInline(admin.TabularInline):
+    model = LanguageSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: LanguageSeeAlsoAdmin
+###########################################################################
+
+class LanguageSeeAlsoAdmin(admin.ModelAdmin):
+    model = LanguageSeeAlso
+
+    list_display = ['language', 'see_also']
+    search_fields = ['language__name']
+
+
+###########################################################################
+# Class: NetworkSeeAlsoInline
+###########################################################################
+
+class NetworkSeeAlsoInline(admin.TabularInline):
+    model = NetworkSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: NetworkSeeAlsoAdmin
+###########################################################################
+
+class NetworkSeeAlsoAdmin(admin.ModelAdmin):
+    model = NetworkSeeAlso
+
+    list_display = ['network', 'see_also']
+    search_fields = ['network__name']
+
+
+###########################################################################
+# Class: PhDProgramSeeAlsoInline
+###########################################################################
+
+class PhDProgramSeeAlsoInline(admin.TabularInline):
+    model = PhDProgramSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: PhDProgramSeeAlsoAdmin
+###########################################################################
+
+class PhDProgramSeeAlsoAdmin(admin.ModelAdmin):
+    model = PhDProgramSeeAlso
+
+    list_display = ['phd_program', 'see_also']
+    search_fields = ['phd_program__name']
+
+
+###########################################################################
+# Class: ContributionSeeAlsoInline
+###########################################################################
+
+class ContributionSeeAlsoInline(admin.TabularInline):
+    model = ContributionSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: ContributionSeeAlsoAdmin
+###########################################################################
+
+class ContributionSeeAlsoAdmin(admin.ModelAdmin):
+    model = ContributionSeeAlso
+
+    list_display = ['contribution', 'see_also']
+    search_fields = ['contribution__title']
+
+
+###########################################################################
+# Class: LicenseSeeAlsoInline
+###########################################################################
+
+class LicenseSeeAlsoInline(admin.TabularInline):
+    model = LicenseSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: LicenseSeeAlsoAdmin
+###########################################################################
+
+class LicenseSeeAlsoAdmin(admin.ModelAdmin):
+    model = LicenseSeeAlso
+
+    list_display = ['license', 'see_also']
+    search_fields = ['license__full_name']
+
+
+###########################################################################
+# Class: TalkOrCourseSeeAlsoInline
+###########################################################################
+
+class TalkOrCourseSeeAlsoInline(admin.TabularInline):
+    model = TalkOrCourseSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: TalkOrCourseSeeAlsoAdmin
+###########################################################################
+
+class TalkOrCourseSeeAlsoAdmin(admin.ModelAdmin):
+    model = TalkOrCourseSeeAlso
+
+    list_display = ['talk_or_course', 'see_also']
+    search_fields = ['talk_or_course__title']
+
+
+###########################################################################
+# Class: AwardSeeAlsoInline
+###########################################################################
+
+class AwardSeeAlsoInline(admin.TabularInline):
+    model = AwardSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: AwardSeeAlsoAdmin
+###########################################################################
+
+class AwardSeeAlsoAdmin(admin.ModelAdmin):
+    model = AwardSeeAlso
+
+    list_display = ['award', 'see_also']
+    search_fields = ['award__full_name']
+
+
+###########################################################################
 # Class: CityAdmin
 ###########################################################################
 
@@ -303,6 +523,18 @@ class AwardAdmin(admin.ModelAdmin):
 # Register classes
 ###########################################################################
 ###########################################################################
+
+admin.site.register(CitySeeAlso, CitySeeAlsoAdmin)
+admin.site.register(CountrySeeAlso, CountrySeeAlsoAdmin)
+admin.site.register(GeographicalScopeSeeAlso, GeographicalScopeSeeAlsoAdmin)
+admin.site.register(TagSeeAlso, TagSeeAlsoAdmin)
+admin.site.register(LanguageSeeAlso, LanguageSeeAlsoAdmin)
+admin.site.register(NetworkSeeAlso, NetworkSeeAlsoAdmin)
+admin.site.register(PhDProgramSeeAlso, PhDProgramSeeAlsoAdmin)
+admin.site.register(ContributionSeeAlso, ContributionSeeAlsoAdmin)
+admin.site.register(LicenseSeeAlso, LicenseSeeAlsoAdmin)
+admin.site.register(TalkOrCourseSeeAlso, TalkOrCourseSeeAlsoAdmin)
+admin.site.register(AwardSeeAlso, AwardSeeAlsoAdmin)
 
 admin.site.register(City, CityAdmin)
 admin.site.register(Country, CountryAdmin)

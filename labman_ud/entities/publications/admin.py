@@ -6,6 +6,46 @@ from .models import *
 
 
 ###########################################################################
+# Class: PublicationSeeAlsoInline
+###########################################################################
+
+class PublicationSeeAlsoInline(admin.TabularInline):
+    model = PublicationSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: PublicationSeeAlsoAdmin
+###########################################################################
+
+class PublicationSeeAlsoAdmin(admin.ModelAdmin):
+    model = PublicationSeeAlso
+
+    list_display = ['publication', 'see_also']
+    search_fields = ['publication__title']
+
+
+###########################################################################
+# Class: ThesisSeeAlsoInline
+###########################################################################
+
+class ThesisSeeAlsoInline(admin.TabularInline):
+    model = ThesisSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: ThesisSeeAlsoAdmin
+###########################################################################
+
+class ThesisSeeAlsoAdmin(admin.ModelAdmin):
+    model = ThesisSeeAlso
+
+    list_display = ['thesis', 'see_also']
+    search_fields = ['thesis__title']
+
+
+###########################################################################
 # Class: PublicationTagAdmin
 ###########################################################################
 
@@ -62,6 +102,7 @@ class PublicationAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
         PublicationTagInline,
@@ -80,6 +121,7 @@ class ThesisAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        ThesisSeeAlsoInline,
         ThesisAbstractInline,
     ]
 
@@ -132,6 +174,7 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
         PublicationTagInline,
@@ -150,6 +193,7 @@ class BookSectionAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
         PublicationTagInline,
@@ -168,6 +212,7 @@ class ProceedingsAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
         PublicationTagInline,
@@ -186,6 +231,7 @@ class ConferencePaperAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
     ]
@@ -203,6 +249,7 @@ class JournalAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
     ]
@@ -220,6 +267,7 @@ class JournalArticleAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
     ]
@@ -237,6 +285,7 @@ class MagazineAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
     ]
@@ -254,6 +303,7 @@ class MagazineArticleAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
     ]
@@ -280,6 +330,9 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 ###   Register classes
 ####################################################################################################
 ####################################################################################################
+
+admin.site.register(PublicationSeeAlso, PublicationSeeAlsoAdmin)
+admin.site.register(ThesisSeeAlso, ThesisSeeAlsoAdmin)
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(BookSection, BookSectionAdmin)

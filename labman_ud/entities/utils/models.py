@@ -61,6 +61,20 @@ class City(BaseModel):
 
 
 ###########################################################################
+# Model: CitySeeAlso
+###########################################################################
+
+class CitySeeAlso(BaseModel):
+    city = models.ForeignKey('City')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.city.full_name, self.see_also)
+
+
+###########################################################################
 # Model: Country
 ###########################################################################
 
@@ -99,6 +113,20 @@ class Country(BaseModel):
 
 
 ###########################################################################
+# Model: CountrySeeAlso
+###########################################################################
+
+class CountrySeeAlso(BaseModel):
+    country = models.ForeignKey('Country')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.country.full_name, self.see_also)
+
+
+###########################################################################
 # Model: GeographicalScope
 ###########################################################################
 
@@ -131,6 +159,20 @@ class GeographicalScope(BaseModel):
         super(GeographicalScope, self).save(*args, **kwargs)
 
         save_geographical_scope_as_rdf(self)
+
+
+###########################################################################
+# Model: GeographicalScopeSeeAlso
+###########################################################################
+
+class GeographicalScopeSeeAlso(BaseModel):
+    geographical_scope = models.ForeignKey('GeographicalScope')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.geographical_scope.name, self.see_also)
 
 
 ###########################################################################
@@ -204,6 +246,20 @@ class Tag(BaseModel):
 
 
 ###########################################################################
+# Model: TagSeeAlso
+###########################################################################
+
+class TagSeeAlso(BaseModel):
+    tag = models.ForeignKey('Tag')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.tag.name, self.see_also)
+
+
+###########################################################################
 # Model: Language
 ###########################################################################
 
@@ -226,6 +282,20 @@ class Language(BaseModel):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name.encode('utf-8')))
         super(Language, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: LanguageSeeAlso
+###########################################################################
+
+class LanguageSeeAlso(BaseModel):
+    language = models.ForeignKey('Language')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.language.name, self.see_also)
 
 
 ###########################################################################
@@ -266,6 +336,20 @@ class Network(BaseModel):
 
 
 ###########################################################################
+# Model: NetworkSeeAlso
+###########################################################################
+
+class NetworkSeeAlso(BaseModel):
+    network = models.ForeignKey('Network')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.network.name, self.see_also)
+
+
+###########################################################################
 # Model: PhDProgram
 ###########################################################################
 
@@ -298,6 +382,20 @@ class PhDProgram(BaseModel):
         blank=True,
         null=True,
     )
+
+
+###########################################################################
+# Model: PhDProgramSeeAlso
+###########################################################################
+
+class PhDProgramSeeAlso(BaseModel):
+    phd_program = models.ForeignKey('PhDProgram')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.phd_program.name, self.see_also)
 
 
 ###########################################################################
@@ -365,6 +463,20 @@ class Contribution(BaseModel):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name.encode('utf-8')))
         super(Contribution, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: ContributionSeeAlso
+###########################################################################
+
+class ContributionSeeAlso(BaseModel):
+    contribution = models.ForeignKey('Contribution')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.contribution.title, self.see_also)
 
 
 ###########################################################################
@@ -498,6 +610,20 @@ class License(BaseModel):
 
 
 ###########################################################################
+# Model: LicenseSeeAlso
+###########################################################################
+
+class LicenseSeeAlso(BaseModel):
+    license = models.ForeignKey('License')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.license.full_name, self.see_also)
+
+
+###########################################################################
 # Model: TalkOrCourse
 ###########################################################################
 
@@ -537,6 +663,20 @@ class TalkOrCourse(BaseModel):
         self.slug = slugify(self.title)
 
         super(TalkOrCourse, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: TalkOrCourseSeeAlso
+###########################################################################
+
+class TalkOrCourseSeeAlso(BaseModel):
+    talk_or_course = models.ForeignKey('TalkOrCourse')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.talk_or_course.title, self.see_also)
 
 
 ###########################################################################
@@ -637,6 +777,20 @@ class Award(BaseModel):
         self.slug = slugify(self.full_name)
 
         super(Award, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: AwardSeeAlso
+###########################################################################
+
+class AwardSeeAlso(BaseModel):
+    award = models.ForeignKey('Award')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.award.full_name, self.see_also)
 
 
 ###########################################################################

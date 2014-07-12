@@ -107,6 +107,20 @@ class Organization(BaseModel):
 
 
 ###########################################################################
+# Model: OrganizationSeeAlso
+###########################################################################
+
+class OrganizationSeeAlso(BaseModel):
+    organization = models.ForeignKey('Organization')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.organization.full_name, self.see_also)
+
+
+###########################################################################
 # Model: Unit
 ###########################################################################
 

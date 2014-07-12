@@ -164,6 +164,20 @@ class Project(BaseModel):
 
 
 ###########################################################################
+# Model: ProjectSeeAlso
+###########################################################################
+
+class ProjectSeeAlso(BaseModel):
+    project = models.ForeignKey('Project')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.project.full_name, self.see_also)
+
+
+###########################################################################
 # Model: Funding
 ###########################################################################
 
@@ -200,6 +214,20 @@ class Funding(BaseModel):
             self.slug = slugify(str(self.project_code))
 
         super(Funding, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: FundingSeeAlso
+###########################################################################
+
+class FundingSeeAlso(BaseModel):
+    funding = models.ForeignKey('Funding')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.funding.slug, self.see_also)
 
 
 ###########################################################################

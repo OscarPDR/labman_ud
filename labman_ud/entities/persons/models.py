@@ -190,6 +190,20 @@ class Person(BaseModel):
 
 
 ###########################################################################
+# Model: PersonSeeAlso
+###########################################################################
+
+class PersonSeeAlso(BaseModel):
+    person = models.ForeignKey('Person')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.person.full_name, self.see_also)
+
+
+###########################################################################
 # Model: AccountProfile
 ###########################################################################
 

@@ -140,6 +140,20 @@ class Publication(BaseModel):
 
 
 ###########################################################################
+# Model: PublicationSeeAlso
+###########################################################################
+
+class PublicationSeeAlso(BaseModel):
+    publication = models.ForeignKey('Publication')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.publication.title, self.see_also)
+
+
+###########################################################################
 # Model: CollectionPublication
 ###########################################################################
 
@@ -493,6 +507,20 @@ class Thesis(BaseModel):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.title.encode('utf-8')))
         super(Thesis, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: ThesisSeeAlso
+###########################################################################
+
+class ThesisSeeAlso(BaseModel):
+    thesis = models.ForeignKey('Thesis')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.thesis.title, self.see_also)
 
 
 ###########################################################################

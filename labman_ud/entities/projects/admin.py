@@ -2,7 +2,47 @@
 
 from django.contrib import admin
 
-from .models import Project, ProjectType, Funding, FundingAmount, AssignedPerson, ConsortiumMember, RelatedPublication, ProjectTag
+from .models import *
+
+
+###########################################################################
+# Class: ProjectSeeAlsoInline
+###########################################################################
+
+class ProjectSeeAlsoInline(admin.TabularInline):
+    model = ProjectSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: ProjectSeeAlsoAdmin
+###########################################################################
+
+class ProjectSeeAlsoAdmin(admin.ModelAdmin):
+    model = ProjectSeeAlso
+
+    list_display = ['project', 'see_also']
+    search_fields = ['project__full_name']
+
+
+###########################################################################
+# Class: FundingSeeAlsoInline
+###########################################################################
+
+class FundingSeeAlsoInline(admin.TabularInline):
+    model = FundingSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: FundingSeeAlsoAdmin
+###########################################################################
+
+class FundingSeeAlsoAdmin(admin.ModelAdmin):
+    model = FundingSeeAlso
+
+    list_display = ['funding', 'see_also']
+    search_fields = ['funding__slug']
 
 
 ###########################################################################
@@ -31,6 +71,7 @@ class FundingInline(admin.TabularInline):
     model = Funding
     extra = 1
     inlines = [
+        FundingSeeAlsoInline,
         FundingAmountInline,
     ]
 
@@ -76,6 +117,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'slug',
     ]
     inlines = [
+        ProjectSeeAlsoInline,
         FundingInline,
         ConsortiumMemberInline,
         AssignedPersonInline,
@@ -172,6 +214,8 @@ class RelatedPublicationAdmin(admin.ModelAdmin):
 ###########################################################################
 ###########################################################################
 
+admin.site.register(ProjectSeeAlso, ProjectSeeAlsoAdmin)
+admin.site.register(FundingSeeAlso, FundingSeeAlsoAdmin)
 admin.site.register(AssignedPerson, AssignedPersonAdmin)
 admin.site.register(ConsortiumMember, ConsortiumMemberAdmin)
 admin.site.register(Funding, FundingAdmin)

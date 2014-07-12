@@ -1,7 +1,27 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
-from .models import FundingProgram, FundingProgramLogo
+from .models import *
+
+
+###########################################################################
+# Class: FundingProgramSeeAlsoInline
+###########################################################################
+
+class FundingProgramSeeAlsoInline(admin.TabularInline):
+    model = FundingProgramSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: FundingProgramSeeAlsoAdmin
+###########################################################################
+
+class FundingProgramSeeAlsoAdmin(admin.ModelAdmin):
+    model = FundingProgramSeeAlso
+
+    list_display = ['funding_program', 'see_also']
+    search_fields = ['funding_program__full_name']
 
 
 ###########################################################################
@@ -24,6 +44,7 @@ class FundingProgramAdmin(admin.ModelAdmin):
     list_filter = ['geographical_scope']
     exclude = ['slug']
     inlines = [
+        FundingProgramSeeAlsoInline,
         FundingProgramLogoInline,
     ]
 
@@ -34,4 +55,5 @@ class FundingProgramAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
+admin.site.register(FundingProgramSeeAlso, FundingProgramSeeAlsoAdmin)
 admin.site.register(FundingProgram, FundingProgramAdmin)

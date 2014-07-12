@@ -148,6 +148,20 @@ class Event(BaseModel):
 
 
 ###########################################################################
+# Model: EventSeeAlso
+###########################################################################
+
+class EventSeeAlso(BaseModel):
+    event = models.ForeignKey('Event')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.event.full_name, self.see_also)
+
+
+###########################################################################
 # Model: PersonRelatedToEvent
 ###########################################################################
 
