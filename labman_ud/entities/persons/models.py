@@ -7,7 +7,10 @@ from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 from django.utils.html import strip_tags
 
+from .linked_data import *
+
 from redactor.fields import RedactorField
+
 
 # Create your models here.
 
@@ -128,6 +131,8 @@ class Person(BaseModel):
         blank=True,
     )
 
+    publications = models.ManyToManyField('publications.Publication', through='publications.PublicationAuthor')
+
     class Meta:
         ordering = ['slug']
 
@@ -147,6 +152,9 @@ class Person(BaseModel):
             return self.email.split('@')[1]
 
     def save(self, *args, **kwargs):
+        old_slug = self.slug
+        delete_person_rdf(self)
+
         full_name = self.first_name + ' ' + self.first_surname
 
         if self.second_surname:
@@ -169,6 +177,31 @@ class Person(BaseModel):
 
         super(Person, self).save(*args, **kwargs)
 
+        # To avoid triple deletion, generate triples for related Job instances
+        for job in self.job_set.all():
+            job.save()
+
+        # To avoid triple deletion, generate triples for related AccountProfile instances
+        for account_profile in self.accountprofile_set.all():
+            account_profile.save()
+
+        save_person_as_rdf(self)
+        update_person_object_triples(old_slug, self.slug)
+
+
+###########################################################################
+# Model: PersonSeeAlso
+###########################################################################
+
+class PersonSeeAlso(BaseModel):
+    person = models.ForeignKey('Person')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.person.full_name, self.see_also)
+
 
 ###########################################################################
 # Model: AccountProfile
@@ -185,6 +218,13 @@ class AccountProfile(BaseModel):
 
     def __unicode__(self):
         return u'%s\'s %s account profile: %s' % (self.person.full_name, self.network.name, self.profile_id)
+
+    def save(self, *args, **kwargs):
+        delete_account_profile_rdf(self)
+
+        super(AccountProfile, self).save(*args, **kwargs)
+
+        save_account_profile_as_rdf(self)
 
 
 ###########################################################################
@@ -221,6 +261,7 @@ class Nickname(BaseModel):
 
 class Job(BaseModel):
     person = models.ForeignKey('Person')
+    organization = models.ForeignKey('organizations.Organization')
 
     position = models.CharField(
         max_length=250,
@@ -231,8 +272,6 @@ class Job(BaseModel):
         max_length=2500,
         blank=True,
     )
-
-    organization = models.ForeignKey('organizations.Organization')
 
     start_date = models.DateField(
         blank=True,
@@ -246,6 +285,13 @@ class Job(BaseModel):
 
     def __unicode__(self):
         return u'%s worked as %s at %s' % (self.person.full_name, self.position, self.organization.short_name)
+
+    def save(self, *args, **kwargs):
+        delete_job_rdf(self)
+
+        super(Job, self).save(*args, **kwargs)
+
+        save_job_as_rdf(self)
 
 
 ###########################################################################

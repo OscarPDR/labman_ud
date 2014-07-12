@@ -1,24 +1,10 @@
 {% extends "labman_ud/base.html" %}
 {% load pagination_tags staticfiles %}
+{% load sanitize_types %}
 
 
 
 {% block content %}
-
-    <div class="centered">
-        {% if clean_index %}
-            <h2>{{ publications_length }} publication{{ publications|pluralize }}</h2>
-        {% else %}
-            {% if tag %}
-                <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em>
-            {% elif publication_type %}
-                <h2>{{ publications_length }} publication{{ publications|pluralize }} with type <em>'{{ publication_type.name }}'</em>
-            {% elif query_string %}
-                <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
-            {% endif %}
-            &emsp;<small><a id="clean-filters" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
-        {% endif %}
-    </div>
 
     <br>
 
@@ -34,22 +20,119 @@
             </div>
         <form>
 
-        <div class="col-md-2 pull-right">
+        <div class="col-md-2">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Publication types <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="#">
+                            Book
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Book section
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="#">
+                            Conference paper
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Proceedings
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="#">
+                            Journal article
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Journal
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="#">
+                            Magazine article
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Magazine
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="#">
+                            Thesis
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{% url 'publication_tag_cloud' %}" class="btn btn-info">
+                <i class="fa fa-cloud fa-large"></i>&emsp;Tag cloud
+            </a>
+        </div>
+
+        <div class="col-md-2">
             <a href="{% url 'publication_feed' %}" class="btn btn-info">
                 <i class="fa fa-rss"></i>&emsp;Subscribe
             </a>
         </div>
-
-        <div class="col-md-2 pull-right">
-            <a href="{% url 'publication_tag_cloud' %}" class="btn btn-info">
-                <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
-            </a>
-        </div>
     </div>
 
-    {% autopaginate publications %}
+    <br>
 
-    {% paginate %}
+    <div class="row">
+        <div class="col-md-8">
+            {% if clean_index %}
+
+                <h2>{{ publications_length }} publication{{ publications|pluralize }}</h2>
+
+            {% else %}
+
+                {% if tag %}
+                    <h2>{{ publications_length }} publication{{ publications|pluralize }} with tag <em>'{{ tag.name }}'</em>
+                {% elif publication_type %}
+                    <h2>{{ publications_length }} {{ publication_type|sanitize|lower }}{{ publications|pluralize }}</em>
+                {% elif query_string %}
+                    <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% endif %}
+                &emsp;<small><a id="clean-filters" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
+
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            {% autopaginate publications %}
+
+            {% paginate %}
+        </div>
+    </div>
 
     <br>
 
@@ -92,8 +175,8 @@
                         </td>
 
                         <td class="col-md-2">
-                            <a href="{% url 'view_publication_type' publication.publication_type.slug %}">
-                                {{ publication.publication_type.name }}
+                            <a href="{% url 'view_publication_type' publication.child_type %}">
+                                {{ publication.child_type|sanitize }}
                             </a>
                         </td>
 

@@ -1,8 +1,27 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
-from .models import Person, AccountProfile, Nickname, Job
+from .models import *
 
+
+###########################################################################
+# Class: PersonSeeAlsoInline
+###########################################################################
+
+class PersonSeeAlsoInline(admin.TabularInline):
+    model = PersonSeeAlso
+    extra = 1
+
+
+###########################################################################
+# Class: PersonSeeAlsoAdmin
+###########################################################################
+
+class PersonSeeAlsoAdmin(admin.ModelAdmin):
+    model = PersonSeeAlso
+
+    list_display = ['person', 'see_also']
+    search_fields = ['person__full_name']
 
 ###########################################################################
 # Class: AccountProfileInline
@@ -43,6 +62,7 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'email', 'is_active']
     list_filter = ['is_active']
     inlines = [
+        PersonSeeAlsoInline,
         AccountProfileInline,
         NicknameInline,
         JobInline,
@@ -80,6 +100,7 @@ class NicknameAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
+admin.site.register(PersonSeeAlso, PersonSeeAlsoAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(AccountProfile, AccountProfileAdmin)
 admin.site.register(Nickname, NicknameAdmin)

@@ -18,6 +18,8 @@ from entities.persons.models import Person, Job
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
+from collections import OrderedDict, Counter
+
 # Create your views here.
 
 
@@ -283,23 +285,18 @@ def project_related_publications(request, project_slug):
 ###########################################################################
 
 def project_tag_cloud(request):
-    tag_dict = {}
+    tags = ProjectTag.objects.all().values_list('tag__name', flat=True)
 
-    tags = ProjectTag.objects.all()
+    counter = Counter(tags)
+    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
 
-    for tag in tags:
-        t = tag.tag.name
-
-        if t in tag_dict.keys():
-            tag_dict[t] = tag_dict[t] + 1
-
-        else:
-            tag_dict[t] = 1
+    items = ord_dict.items()
+    items = items[len(items)-100:]
 
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': u'Projects tag cloud',
-        'tag_dict': tag_dict,
+        'tag_dict': dict(items),
     }
 
     return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
-from .models import News, NewsTag, ProjectRelatedToNews, PersonRelatedToNews, PublicationRelatedToNews
+from .models import *
 
 
 ###########################################################################
@@ -10,6 +10,15 @@ from .models import News, NewsTag, ProjectRelatedToNews, PersonRelatedToNews, Pu
 
 class NewsTagInline(admin.TabularInline):
     model = NewsTag
+    extra = 1
+
+
+###########################################################################
+# Class: EventRelatedToNewsInline
+###########################################################################
+
+class EventRelatedToNewsInline(admin.TabularInline):
+    model = EventRelatedToNews
     extra = 1
 
 
@@ -53,6 +62,7 @@ class NewsAdmin(admin.ModelAdmin):
     ]
     inlines = [
         NewsTagInline,
+        EventRelatedToNewsInline,
         ProjectRelatedToNewsInline,
         PersonRelatedToNewsInline,
         PublicationRelatedToNewsInline,
@@ -68,11 +78,25 @@ class NewsTagAdmin(admin.ModelAdmin):
 
 
 ###########################################################################
+# Class: EventRelatedToNewsAdmin
+###########################################################################
+
+class EventRelatedToNewsAdmin(admin.ModelAdmin):
+    model = EventRelatedToNews
+
+    search_fields = ['event__full_name', 'news__title']
+    list_display = ['event', 'news']
+
+
+###########################################################################
 # Class: ProjectRelatedToNewsAdmin
 ###########################################################################
 
 class ProjectRelatedToNewsAdmin(admin.ModelAdmin):
     model = ProjectRelatedToNews
+
+    search_fields = ['project__full_name', 'news__title']
+    list_display = ['project', 'news']
 
 
 ###########################################################################
@@ -82,6 +106,9 @@ class ProjectRelatedToNewsAdmin(admin.ModelAdmin):
 class PersonRelatedToNewsAdmin(admin.ModelAdmin):
     model = PersonRelatedToNews
 
+    search_fields = ['person__full_name', 'news__title']
+    list_display = ['person', 'news']
+
 
 ###########################################################################
 # Class: PublicationRelatedToNewsAdmin
@@ -89,6 +116,9 @@ class PersonRelatedToNewsAdmin(admin.ModelAdmin):
 
 class PublicationRelatedToNewsAdmin(admin.ModelAdmin):
     model = PublicationRelatedToNews
+
+    search_fields = ['publication__title', 'news__title']
+    list_display = ['publication', 'news']
 
 
 ####################################################################################################
@@ -99,3 +129,8 @@ class PublicationRelatedToNewsAdmin(admin.ModelAdmin):
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(NewsTag, NewsTagAdmin)
+
+admin.site.register(EventRelatedToNews, EventRelatedToNewsAdmin)
+admin.site.register(ProjectRelatedToNews, ProjectRelatedToNewsAdmin)
+admin.site.register(PersonRelatedToNews, PersonRelatedToNewsAdmin)
+admin.site.register(PublicationRelatedToNews, PublicationRelatedToNewsAdmin)

@@ -11,7 +11,7 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, Counter
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
@@ -20,9 +20,11 @@ from entities.news.models import PersonRelatedToNews
 from entities.events.models import Event
 from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
-from entities.publications.models import Publication, PublicationType, PublicationAuthor, PublicationTag
+from entities.publications.models import Publication, PublicationAuthor, PublicationTag
 from entities.utils.models import Role, Tag, Network
-from entities.publications.views import INDICATORS_TAG_SLUGS
+from entities.publications.views import *
+
+from charts.views import PUBLICATION_TYPES
 
 # Create your views here.
 
@@ -358,7 +360,7 @@ def member_projects(request, person_slug, role_slug=None):
 # View: member_publications
 ###########################################################################
 
-def member_publications(request, person_slug, publication_type_slug=None):
+def member_publications(request, person_slug, publication_type=None):
     person_status = __determine_person_status(person_slug)
 
     # Redirect to correct URL template if concordance doesn't exist
@@ -369,119 +371,75 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    publications = OrderedDict()
+    publications = {}
 
-    publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
+    if publication_type:
+        publication_ids = member.publications.filter(child_type=publication_type).values_list('id', flat=True)
 
-    # Get those tags which are indicators (ISI, JCR...)
-    tags = Tag.objects.filter(slug__in=INDICATORS_TAG_SLUGS).values('id', 'slug')
-    tags_by_slug = {}
-    for tag in tags:
-        tags_by_slug[tag['slug']] = tag['id']
+        if publication_type == 'ConferencePaper':
+            publication_items = ConferencePaper.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-    publication_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids, tag__slug__in=INDICATORS_TAG_SLUGS).values('tag_id', 'publication_id')
-    indicators_per_publication = defaultdict(list)
-    for publication_tag_id in publication_tag_ids:
-        indicators_per_publication[publication_tag_id['publication_id']].append(publication_tag_id['tag_id'])
+        if publication_type == 'BookSection':
+            publication_items = BookSection.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+
+        if publication_type == 'Book':
+            publication_items = Book.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+
+        if publication_type == 'MagazineArticle':
+            publication_items = MagazineArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+
+        if publication_type == 'JournalArticle':
+            publication_items = JournalArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+
+    else:
+        publication_ids = member.publications.all().values_list('id', flat=True)
+
+        publication_items = Publication.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
     has_publications = True if publication_ids else False
 
-    # Manage ordering
-    jcr_name = 'JCR article'
-    isi_name = 'ISI article'
+    for publication_item in publication_items:
+        title = publication_item.title
+        slug = publication_item.slug
+        bibtex = publication_item.bibtex
+        year = publication_item.year
+        pdf = publication_item.pdf if publication_item.pdf else None
+        author_list = PublicationAuthor.objects.filter(publication=publication_item).values_list('author__full_name', flat=True).order_by('position')
+        authors = ', '.join(author_list)
 
-    SPECIAL_ORDER = [jcr_name, isi_name, 'journal-article', 'conference-paper', 'book-section', 'phd-thesis']   # The rest afterwards in random order
+        if publication_item.child_type == 'ConferencePaper':
+            conference_paper = ConferencePaper.objects.get(id=publication_item.id)
+            parent_title = conference_paper.parent_proceedings.title if conference_paper.parent_proceedings else ''
 
-    tag_names = {
-        'q1': jcr_name,
-        'q2': jcr_name,
-        'q3': jcr_name,
-        'q4': jcr_name,
+        elif publication_item.child_type == 'BookSection':
+            book_section = BookSection.objects.get(id=publication_item.id)
+            parent_title = book_section.parent_book.title if book_section.parent_book else ''
 
-    }
+        elif publication_item.child_type == 'JournalArticle':
+            journal_article = JournalArticle.objects.get(id=publication_item.id)
+            parent_title = journal_article.parent_journal.title if journal_article.parent_journal else ''
 
-    SEPARATE_ISI = False
-    if SEPARATE_ISI:
-        tag_names['isi'] = isi_name
+        elif publication_item.child_type == 'MagazineArticle':
+            magazine_article = MagazineArticle.objects.get(id=publication_item.id)
+            parent_title = magazine_article.parent_magazine.title if magazine_article.parent_magazine else ''
 
-    if publication_type_slug:
-        publication_types = [get_object_or_404(PublicationType, slug=publication_type_slug)]
-        publication_query = Publication.objects.filter(id__in=publication_ids, publication_type__in=publication_types).order_by('-year')
-    else:
-        publication_types = PublicationType.objects.all()
-
-        for current_key in SPECIAL_ORDER:
-
-            found = False
-
-            for publication_type in publication_types:
-                if publication_type.slug == current_key:
-                    publications[publication_type.name.encode('utf-8')] = []
-                    found = True
-                    break
-
-            # Some keys do not really exist (such as JCR). Put it in that order anyway
-
-            if not found:
-                publications[current_key] = []
-
-        publication_query = Publication.objects.filter(id__in=publication_ids).order_by('-year')
-
-    publication_types_by_id = {}
-    for publication_type in publication_types:
-        publication_types_by_id[publication_type.id] = publication_type
-
-    #
-    # Efficiently (3 queries) retrieve the names of the coauthors
-    all_coauthors_publications = PublicationAuthor.objects.filter(publication__in=publication_ids).values('author_id', 'publication_id', 'position')
-    author_ids_per_publication_id = defaultdict(list)   # {
-    #     publication_id : [ (author_id1, position1), (author2, position2) ... ]
-    # }
-
-    distinct_coauthors = set()
-    for current_key in all_coauthors_publications:
-        distinct_coauthors.add(current_key['author_id'])
-        author_ids_per_publication_id[current_key['publication_id']].append((current_key['author_id'], current_key['position']))
-    all_coauthors = Person.objects.filter(id__in=distinct_coauthors).values('id', 'full_name')
-    coauthor_by_id = {}
-    for coauthor in all_coauthors:
-        coauthor_by_id[coauthor['id']] = coauthor['full_name']
-
-    coauthors_per_publication = {
-        # publication_id : [ full_name1, full_name2, full_name3 ]
-    }
-    for publication_id, coauthor_list in author_ids_per_publication_id.iteritems():
-        author_list = []
-        for author_id, _ in sorted(coauthor_list, lambda (author_id1, position1), (author_id2, position2): cmp(position1, position2)):
-            author_list.append(coauthor_by_id[author_id])
-        coauthors_per_publication[publication_id] = author_list
-
-    parent_publications = Publication.objects.filter(has_part__in=publication_query)
-    parent_publications_by_id = {}
-    for parent_publication in parent_publications:
-        parent_publications_by_id[parent_publication.id] = parent_publication
-
-    events = Event.objects.filter(proceedings__in=publication_query)
-    events_by_id = {}
-    for event in events:
-        events_by_id[event.id] = event
-
-    for publication in publication_query:
-        for tag_slug in tag_names:
-            if tags_by_slug.get(tag_slug, -1) in indicators_per_publication[publication.id]:
-                pub_type = tag_names[tag_slug]
-                break
         else:
-            pub_type = publication_types_by_id[publication.publication_type_id].name.encode('utf-8')
+            parent_title = ''
 
-        parent_publication = parent_publications_by_id.get(publication.part_of_id, None)
+        publication_dict = {
+            'title': title,
+            'slug': slug,
+            'bibtex': bibtex,
+            'year': year,
+            'pdf': pdf,
+            'authors': authors,
+            'parent_title': parent_title,
+        }
 
-        if pub_type not in publications:
-            publications[pub_type] = []
+        if not publication_item.child_type in publications.keys():
+            publications[publication_item.child_type] = []
 
-        event = events_by_id.get(publication.presented_at_id, None)
-
-        publications[pub_type].append((publication, parent_publication, ', '.join(coauthors_per_publication[publication.id]), event))
+        publications[publication_item.child_type].append(publication_dict)
 
     # dictionary to be returned in render_to_response()
     return_dict = {
@@ -729,12 +687,11 @@ def person_info(request, person_slug):
 
     publications = {}
 
-    for publication_type in PublicationType.objects.all():
-        pub_type = publication_type.name.encode('utf-8')
-        publications[pub_type] = []
+    for publication_type in PUBLICATION_TYPES:
+        publications[publication_type] = []
 
     for publication in _publications:
-        pub_type = publication.publication_type.name.encode('utf-8')
+        pub_type = publication.child_type
         publications[pub_type].append(publication)
 
     # dictionary to be returned in render_to_response()
@@ -743,9 +700,7 @@ def person_info(request, person_slug):
         'person': person,
         'projects': projects,
         'publications': publications,
-    }###########################################################################
-# View: member_profiles
-###########################################################################
+    }
 
     return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
 
@@ -879,20 +834,28 @@ def __get_job_data(member):
         }
         accounts.append(account_item)
 
-    publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
-    publications_by_id = __group_by_key(Publication.objects.filter(id__in=publication_ids))
-    publication_types_by_name = defaultdict(int)
+    # publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
+    # publication_types_by_id = None
+    # publications_by_id = __group_by_key(Publication.objects.filter(id__in=publication_ids))
+    # publication_types_by_name = defaultdict(int)
 
-    for publication_id in publication_ids:
-        publication_object = publications_by_id[publication_id]
-        publication_type_id = publication_object.publication_type_id
-        publication_type_name = publication_types_by_id[publication_type_id]['name'].encode('utf-8')
-        publication_type_slug = publication_types_by_id[publication_type_id]['slug']
-        publication_types_by_name[publication_type_name, publication_type_slug] += 1
+    publication_types = member.publications.all().values_list('child_type', flat=True)
 
-    pubtype_info = []
-    for (pubtype_name, pubtype_slug), number in publication_types_by_name.items():
-        pubtype_info.append((pubtype_slug, pubtype_name, number))
+    counter = Counter(publication_types)
+    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
+
+    items = ord_dict.items()
+
+    # for publication_id in publication_ids:
+    #     publication_object = publications_by_id[publication_id]
+    #     publication_type_id = publication_object.publication_type_id
+    #     publication_type_name = publication_types_by_id[publication_type_id]['name'].encode('utf-8')
+    #     publication_type_slug = publication_types_by_id[publication_type_id]['slug']
+    #     publication_types_by_name[publication_type_name, publication_type_slug] += 1
+
+    # pubtype_info = []
+    # for (pubtype_name, pubtype_slug), number in publication_types_by_name.items():
+    #     pubtype_info.append((pubtype_slug, pubtype_name, number))
 
     return {
         'first_job': first_job,
@@ -902,5 +865,5 @@ def __get_job_data(member):
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'accounts': accounts,
-        'pubtype_info': pubtype_info,
+        'pubtype_info': dict(items),
     }

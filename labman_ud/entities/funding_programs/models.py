@@ -60,6 +60,20 @@ class FundingProgram(BaseModel):
 
 
 ###########################################################################
+# Model: FundingProgramSeeAlso
+###########################################################################
+
+class FundingProgramSeeAlso(BaseModel):
+    funding_program = models.ForeignKey('FundingProgram')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.funding_program.full_name, self.see_also)
+
+
+###########################################################################
 # Model: FundingProgramLogo
 ###########################################################################
 

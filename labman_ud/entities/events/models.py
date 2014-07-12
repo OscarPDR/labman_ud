@@ -24,6 +24,15 @@ VIVA_RESULTS = (
     ('Cum Laude by unanimity', 'Cum Laude by unanimity'),
 )
 
+VIVA_PANEL_ROLES = (
+    ('Chair', 'Chair'),
+    ('Secretary', 'Secretary'),
+    ('Co-chair', 'Co-chair'),
+    ('First co-chair', 'First co-chair'),
+    ('Second co-chair', 'Second co-chair'),
+    ('Third co-chair', 'Third co-chair'),
+)
+
 
 ###########################################################################
 # Model: EventType
@@ -83,10 +92,7 @@ class Event(BaseModel):
         blank=True,
     )
 
-    host_city = models.CharField(
-        max_length=150,
-        blank=True,
-    )
+    host_city = models.ForeignKey('utils.City', blank=True, null=True)
 
     host_country = models.ForeignKey('utils.Country', blank=True, null=True)
 
@@ -125,7 +131,7 @@ class Event(BaseModel):
         null=True,
     )
 
-    proceedings = models.ForeignKey('publications.Publication', blank=True, null=True, related_name='conference')
+    proceedings = models.ForeignKey('publications.Proceedings', blank=True, null=True, related_name='conference')
 
     class Meta:
         ordering = ['slug']
@@ -139,6 +145,32 @@ class Event(BaseModel):
 
         self.slug = slugify(self.short_name)
         super(Event, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: EventSeeAlso
+###########################################################################
+
+class EventSeeAlso(BaseModel):
+    event = models.ForeignKey('Event')
+    see_also = models.URLField(
+        max_length=512,
+    )
+
+    def __unicode__(self):
+        return u'%s related resource: %s' % (self.event.full_name, self.see_also)
+
+
+###########################################################################
+# Model: PersonRelatedToEvent
+###########################################################################
+
+class PersonRelatedToEvent(BaseModel):
+    person = models.ForeignKey('persons.Person')
+    event = models.ForeignKey('Event')
+
+    def __unicode__(self):
+        return u'%s attended %s' % (self.person.full_name, self.event.full_name)
 
 
 ###########################################################################
@@ -157,60 +189,17 @@ class Viva(BaseModel):
 
     held_at_university = models.ForeignKey('organizations.Organization')
 
-    panel = models.ForeignKey('VivaPanel')
-
 
 ###########################################################################
 # Model: VivaPanel
 ###########################################################################
 
 class VivaPanel(BaseModel):
-    chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_chair',
-    )
+    viva = models.ForeignKey('Viva')
 
-    chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_chairs_organization',
-    )
+    person = models.ForeignKey('persons.Person')
 
-    first_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_first_co_chair',
-    )
-
-    first_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_first_co_chairs_organization',
-    )
-
-    second_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_second_co_chair',
-    )
-
-    second_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_second_co_chairs_organization',
-    )
-
-    third_co_chair = models.ForeignKey(
-        'persons.Person',
-        related_name='is_third_co_chair',
-    )
-
-    third_co_chairs_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_third_co_chairs_organization',
-    )
-
-    secretary = models.ForeignKey(
-        'persons.Person',
-        related_name='is_secretary',
-    )
-
-    secretarys_organization = models.ForeignKey(
-        'organizations.Organization',
-        related_name='is_secretarys_organization',
+    role = models.CharField(
+        max_length=150,
+        choices=VIVA_PANEL_ROLES,
     )

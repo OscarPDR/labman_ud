@@ -11,16 +11,25 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from .forms import PublicationSearchForm
-from .models import Publication, PublicationAuthor, PublicationTag, PublicationType
+from .models import *
 
 from entities.persons.models import Person
 from entities.projects.models import Project, RelatedPublication
 from entities.utils.models import Tag
 
+from collections import OrderedDict, Counter
 
 # Create your views here.
 
 INDICATORS_TAG_SLUGS = ['isi', 'corea', 'coreb', 'corec', 'q1', 'q2', 'q3', 'q4']
+
+PUBLICATION_TYPES = [
+    'Book section', 'Book',
+    'Conference paper', 'Proceedings',
+    'Journal article', 'Journal',
+    'Magazine article', 'Magazine',
+    'Thesis'
+]
 
 
 ###########################################################################
@@ -44,24 +53,22 @@ def _validate_term(token, name, numeric=False):
     return True
 
 
-def publication_index(request, tag_slug=None, publication_type_slug=None, query_string=None):
+def publication_index(request, tag_slug=None, publication_type=None, query_string=None):
     tag = None
-    publication_type = None
 
     clean_index = False
 
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
-        publications = Publication.objects.filter(id__in=publication_ids).select_related('publication_type', 'authors__author').prefetch_related('authors')
+        publications = Publication.objects.filter(id__in=publication_ids).select_related('authors__author').prefetch_related('authors')
 
-    if publication_type_slug:
-        publication_type = get_object_or_404(PublicationType, slug=publication_type_slug)
-        publications = Publication.objects.filter(publication_type=publication_type.id).select_related('publication_type', 'authors__author').prefetch_related('authors')
+    if publication_type:
+        publications = Publication.objects.filter(child_type=publication_type)
 
-    if not tag_slug and not publication_type_slug:
+    if not tag_slug and not publication_type:
         clean_index = True
-        publications = Publication.objects.all().select_related('publication_type', 'authors__author').prefetch_related('authors')
+        publications = Publication.objects.all().select_related('authors__author').prefetch_related('authors')
 
     publications = publications.order_by('-year', '-title').exclude(authors=None)
 
@@ -159,7 +166,7 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
         else:
             sql_query = Publication.objects.all()
 
-        sql_query = sql_query.select_related('publication_type', 'authors__author', 'tags__tag').prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
+        sql_query = sql_query.select_related('authors__author', 'tags__tag').prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
         publication_strings = [(publication, publication.display_all_fields().lower()) for publication in sql_query]
 
         publications = []
@@ -189,8 +196,8 @@ def publication_index(request, tag_slug=None, publication_type_slug=None, query_
         'form': form,
         'last_created': last_created,
         'last_modified': last_modified,
-        'publication_type': publication_type,
         'publications': publications,
+        'publication_type': publication_type,
         'publications_length': publications_length,
         'query_string': query_string,
         'tag': tag,
@@ -258,10 +265,27 @@ def __build_publication_return_dict(publication):
     except:
         pdf = None
 
+    parent_publication = None
+
     try:
-        parent_publication = Publication.objects.get(id=publication.part_of.id)
+        if publication.child_type == 'ConferencePaper':
+            conference_paper = ConferencePaper.objects.get(slug=publication.slug)
+            parent_publication = Proceedings.objects.get(id=conference_paper.parent_proceedings.id)
+
+        if publication.child_type == 'JournalArticle':
+            journal_article = JournalArticle.objects.get(slug=publication.slug)
+            parent_publication = Journal.objects.get(id=journal_article.parent_journal.id)
+
+        if publication.child_type == 'MagazineArticle':
+            magazine_article = MagazineArticle.objects.get(slug=publication.slug)
+            parent_publication = Magazine.objects.get(id=magazine_article.parent_magazine.id)
+
+        if publication.child_type == 'BookSection':
+            book_section = BookSection.objects.get(slug=publication.slug)
+            parent_publication = Book.objects.get(id=book_section.parent_book.id)
+
     except:
-        parent_publication = None
+        pass
 
     if publication.bibtex:
         bibtex = publication.bibtex.replace(",", ",\n")
@@ -287,21 +311,18 @@ def __build_publication_return_dict(publication):
 ###########################################################################
 
 def publication_tag_cloud(request):
+    tags = PublicationTag.objects.all().values_list('tag__name', flat=True)
 
-    tag_dict = {}
+    counter = Counter(tags)
+    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
 
-    tags = PublicationTag.objects.all()
-
-    for tag in tags:
-        t = tag.tag.name
-        if t in tag_dict.keys():
-            tag_dict[t] = tag_dict[t] + 1
-        else:
-            tag_dict[t] = 1
+    items = ord_dict.items()
+    items = items[len(items)-100:]
 
     # dictionary to be returned in render_to_response()
     return_dict = {
-        'tag_dict': tag_dict,
+        'web_title': u'Publications tag cloud',
+        'tag_dict': dict(items),
     }
 
     return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))

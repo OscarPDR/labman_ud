@@ -1,5 +1,6 @@
 {% extends "labman_ud/base.html" %}
 {% load staticfiles %}
+{% load sanitize_types %}
 
 
 
@@ -132,10 +133,10 @@
                     </button>
 
                     <ul class="dropdown-menu" role="menu">
-                        {% for pubtype_slug, pubtype_name, number in pubtype_info %}
+                        {% for type, number in pubtype_info.items %}
                             <li style="text-align: left;">
-                                <a href="{% url 'member_publications' member.slug pubtype_slug %}">
-                                    {{ number }} {{ pubtype_name }}{{ number|pluralize }}
+                                <a href="{% url 'member_publications' member.slug type %}">
+                                    {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
                                 </a>
                             </li>
                         {% endfor %}

@@ -1,14 +1,14 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 
 from django.core.management.base import NoArgsCommand
 
-from generators.zotero_labman.utils import greet_birthday
+from maintenance_tasks.publications.parse_publication import parse_publication
 
 
 class Command(NoArgsCommand):
     can_import_settings = True
 
-    help = 'Checks if today is some members birthday'
+    help = 'Test'
 
     def handle_noargs(self, **options):
-        greet_birthday()
+        parse_publication()

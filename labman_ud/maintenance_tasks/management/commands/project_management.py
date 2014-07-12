@@ -1,8 +1,8 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 
 from django.core.management.base import NoArgsCommand
 
-from generators.zotero_labman.utils import check_incomplete_project_dates_info
+from maintenance_tasks.projects.check_non_filled_dates import check_non_filled_dates
 
 
 class Command(NoArgsCommand):
@@ -11,4 +11,4 @@ class Command(NoArgsCommand):
     help = 'Checks for projects which start/end dates is not completed'
 
     def handle_noargs(self, **options):
-        check_incomplete_project_dates_info()
+        check_non_filled_dates()

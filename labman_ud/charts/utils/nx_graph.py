@@ -19,7 +19,8 @@ def analyze(G):
 
         #Calculate the in component betweeness, closeness and eigenvector centralities
         cent_betweenness = nx.betweenness_centrality(cc)
-        cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
+        # cent_eigenvector = nx.eigenvector_centrality_numpy(cc)
+        cent_eigenvector = nx.eigenvector_centrality(cc)
         cent_closeness = nx.closeness_centrality(cc)
 
         for name in cc.nodes():
