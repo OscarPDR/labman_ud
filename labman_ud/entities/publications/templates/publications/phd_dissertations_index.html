@@ -1,0 +1,50 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <h1>
+        {{ theses|length }} PhD dissertation{{ theses|pluralize }} defended by our members
+    </h1>
+
+    <br>
+
+    <div class="row">
+        {% for thesis in theses %}
+
+            {% if forloop.counter0|divisibleby:3 %}{% endif %}
+
+                <div class="col-md-4" {% if forloop.counter0|divisibleby:3 %}style="margin-left:0;"{% endif %}>
+                    <div class="centered">
+                        <a target="_blank" href="{{ MEDIA_URL }}{{ thesis.pdf }}">
+                            <img src="{{ STATIC_URL }}img/document_download.png"/>
+                        </a>
+
+                        <br>
+                        <br>
+                            <strong>Dr. {{ thesis.author.full_name }}</strong> ({{ thesis.year }})&emsp;
+                            <a href="{% url 'member_phd_dissertation' thesis.author.slug %}">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        <br>
+                        <p class="thesis-title">
+                            {{ thesis.title }}
+                        </p>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#publications-nav').addClass('active');
+    </script>
+
+{% endblock %}

@@ -729,3 +729,9 @@ path.color1 {
 .phd-thesis-abstract p {
     text-align: justify;
 }
+
+.thesis-title {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+}

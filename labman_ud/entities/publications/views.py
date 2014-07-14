@@ -189,6 +189,19 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     last_created = Publication.objects.order_by('-log_created')[0]
     last_modified = Publication.objects.order_by('-log_modified')[0]
 
+    publication_types = publications.all().values_list('child_type', flat=True)
+
+    counter = Counter(publication_types)
+    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
+
+    items = ord_dict.items()
+
+    try:
+        theses = Thesis.objects.all()
+
+    except:
+        theses = None
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': u'Publications',
@@ -201,6 +214,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'publications_length': publications_length,
         'query_string': query_string,
         'tag': tag,
+        'pubtype_info': dict(items),
+        'theses': theses,
     }
 
     return render_to_response('publications/index.html', return_dict, context_instance=RequestContext(request))
@@ -360,3 +375,19 @@ class LatestPublicationsFeed(Feed):
     def item_link(self, item):
         url = reverse('publication_info', args=[item.slug or 'no-slug-found'])
         return self.__request.request.build_absolute_uri(url)
+
+
+###########################################################################
+# View: phd_dissertations_index
+###########################################################################
+
+def phd_dissertations_index(request):
+    theses = Thesis.objects.filter(author__is_active=True).order_by('-year', 'author__full_name')
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title': u'PhD dissertations',
+        'theses': theses,
+    }
+
+    return render_to_response('publications/phd_dissertations_index.html', return_dict, context_instance=RequestContext(request))

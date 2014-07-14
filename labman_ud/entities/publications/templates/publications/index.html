@@ -27,67 +27,23 @@
                 </button>
 
                 <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="#">
-                            Book
-                        </a>
-                    </li>
+                    {% for type, number in pubtype_info.items %}
+                        <li style="text-align: left;">
+                            <a href="{% url 'view_publication_type' type %}">
+                                {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
+                            </a>
+                        </li>
+                    {% endfor %}
 
-                    <li>
-                        <a href="#">
-                            Book section
-                        </a>
-                    </li>
+                    {% if theses %}
+                        <li class="divider"></li>
 
-                    <li class="divider"></li>
-
-                    <li>
-                        <a href="#">
-                            Conference paper
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            Proceedings
-                        </a>
-                    </li>
-
-                    <li class="divider"></li>
-
-                    <li>
-                        <a href="#">
-                            Journal article
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            Journal
-                        </a>
-                    </li>
-
-                    <li class="divider"></li>
-
-                    <li>
-                        <a href="#">
-                            Magazine article
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            Magazine
-                        </a>
-                    </li>
-
-                    <li class="divider"></li>
-
-                    <li>
-                        <a href="#">
-                            Thesis
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{% url 'phd_dissertations_index' %}">
+                                {{ theses|length }} PhD dissertation{{ theses|pluralize}}
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
