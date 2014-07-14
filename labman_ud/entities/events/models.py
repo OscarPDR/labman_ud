@@ -14,26 +14,6 @@ def event_logo_path(self, filename):
     return '%s/%s%s' % ('events', self.slug, os.path.splitext(filename)[-1])
 
 
-def viva_photo_path(self, filename):
-    return "%s/%s%s" % ("vivas", self.slug, os.path.splitext(filename)[-1])
-
-
-VIVA_RESULTS = (
-    ('Apt', 'Apt'),
-    ('Cum Laude', 'Cum Laude'),
-    ('Cum Laude by unanimity', 'Cum Laude by unanimity'),
-)
-
-VIVA_PANEL_ROLES = (
-    ('Chair', 'Chair'),
-    ('Secretary', 'Secretary'),
-    ('Co-chair', 'Co-chair'),
-    ('First co-chair', 'First co-chair'),
-    ('Second co-chair', 'Second co-chair'),
-    ('Third co-chair', 'Third co-chair'),
-)
-
-
 ###########################################################################
 # Model: EventType
 ###########################################################################
@@ -171,35 +151,3 @@ class PersonRelatedToEvent(BaseModel):
 
     def __unicode__(self):
         return u'%s attended %s' % (self.person.full_name, self.event.full_name)
-
-
-###########################################################################
-# Model: Viva
-###########################################################################
-
-class Viva(BaseModel):
-    date = models.DateField()
-
-    result = models.CharField(
-        max_length=250,
-        choices=VIVA_RESULTS,
-        default='Apt',
-        blank=True,
-    )
-
-    held_at_university = models.ForeignKey('organizations.Organization')
-
-
-###########################################################################
-# Model: VivaPanel
-###########################################################################
-
-class VivaPanel(BaseModel):
-    viva = models.ForeignKey('Viva')
-
-    person = models.ForeignKey('persons.Person')
-
-    role = models.CharField(
-        max_length=150,
-        choices=VIVA_PANEL_ROLES,
-    )

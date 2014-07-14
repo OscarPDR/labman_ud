@@ -7,6 +7,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from datetime import datetime
+
 # Create your models here.
 
 MIN_YEAR_LIMIT = 1950
@@ -27,6 +29,22 @@ QUARTILE_CHOICES = (
     (None, 'None'),
 )
 
+VIVA_OUTCOMES = (
+    ('Apt', 'Apt'),
+    ('Cum Laude', 'Cum Laude'),
+    ('Cum Laude by unanimity', 'Cum Laude by unanimity'),
+)
+
+VIVA_PANEL_ROLES = (
+    ('Chair', 'Chair'),
+    ('Secretary', 'Secretary'),
+    ('Co-chair', 'Co-chair'),
+    ('First co-chair', 'First co-chair'),
+    ('Second co-chair', 'Second co-chair'),
+    ('Third co-chair', 'Third co-chair'),
+    ('Vocal', 'Vocal'),
+)
+
 
 def publication_path(self, filename):
     publication_type_slug = slugify(self.child_type)
@@ -42,7 +60,7 @@ def publication_path(self, filename):
 
 
 def thesis_path(self, filename):
-    return "%s/%s/%s%s" % ("publications", "theses", self.slug, os.path.splitext(filename)[-1])
+    return "%s/%s/%s%s" % ("publications", "theses", self.author.slug, os.path.splitext(filename)[-1])
 
 
 ###########################################################################
@@ -494,9 +512,26 @@ class Thesis(BaseModel):
         null=True,
     )
 
-    viva = models.ForeignKey('events.Viva')
+    viva_date = models.DateTimeField()
 
-    phd_program = models.ForeignKey('utils.PhDProgram')
+    viva_outcome = models.CharField(
+        max_length=250,
+        choices=VIVA_OUTCOMES,
+        default='Apt',
+        blank=True,
+    )
+
+    held_at_university = models.ForeignKey(
+        'organizations.Organization',
+        blank=True,
+        null=True,
+    )
+
+    phd_program = models.ForeignKey(
+        'utils.PhDProgram',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ['slug']
@@ -550,3 +585,18 @@ class CoAdvisor(BaseModel):
 
     def __unicode__(self):
         return u'%s has co-advised the thesis: %s' % (self.co_advisor.full_name, self.thesis.title)
+
+
+###########################################################################
+# Model: VivaPanel
+###########################################################################
+
+class VivaPanel(BaseModel):
+    thesis = models.ForeignKey('Thesis')
+
+    person = models.ForeignKey('persons.Person')
+
+    role = models.CharField(
+        max_length=150,
+        choices=VIVA_PANEL_ROLES,
+    )

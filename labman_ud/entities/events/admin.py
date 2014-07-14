@@ -63,22 +63,6 @@ class EventAdmin(admin.ModelAdmin):
 
 
 ###########################################################################
-# Class: VivaAdmin
-###########################################################################
-
-class VivaAdmin(admin.ModelAdmin):
-    model = Viva
-
-
-###########################################################################
-# Class: VivaPanelAdmin
-###########################################################################
-
-class VivaPanelAdmin(admin.ModelAdmin):
-    model = VivaPanel
-
-
-###########################################################################
 # Class: PersonRelatedToEventAdmin
 ###########################################################################
 
@@ -98,5 +82,3 @@ class PersonRelatedToEventAdmin(admin.ModelAdmin):
 admin.site.register(EventSeeAlso, EventSeeAlsoAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventType, EventTypeAdmin)
-admin.site.register(Viva, VivaAdmin)
-admin.site.register(VivaPanel, VivaPanelAdmin)

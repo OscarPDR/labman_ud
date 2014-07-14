@@ -6,6 +6,15 @@ from .models import *
 
 
 ###########################################################################
+# Class: VivaPanelInline
+###########################################################################
+
+class VivaPanelInline(admin.TabularInline):
+    model = VivaPanel
+    extra = 1
+
+
+###########################################################################
 # Class: PublicationSeeAlsoInline
 ###########################################################################
 
@@ -121,9 +130,19 @@ class ThesisAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        VivaPanelInline,
+        CoAdvisorInline,
         ThesisSeeAlsoInline,
         ThesisAbstractInline,
     ]
+
+
+###########################################################################
+# Class: VivaPanelAdmin
+###########################################################################
+
+class VivaPanelAdmin(admin.ModelAdmin):
+    model = VivaPanel
 
 
 ###########################################################################
@@ -346,6 +365,7 @@ admin.site.register(MagazineArticle, MagazineArticleAdmin)
 admin.site.register(Thesis, ThesisAdmin)
 admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
 admin.site.register(CoAdvisor, CoAdvisorAdmin)
+admin.site.register(VivaPanel, VivaPanelAdmin)
 
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationEditor, PublicationEditorAdmin)
