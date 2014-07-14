@@ -721,3 +721,11 @@ path.color0 {
 path.color1 {
     fill: #ccc;
 }
+
+.phd-thesis-abstract ul.nav.nav-tabs, .tab-content {
+    min-height: 0;
+}
+
+.phd-thesis-abstract p {
+    text-align: justify;
+}

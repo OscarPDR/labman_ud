@@ -834,11 +834,6 @@ def __get_job_data(member):
         }
         accounts.append(account_item)
 
-    # publication_types_by_id = __group_by_key(PublicationType.objects.values('id', 'name', 'slug'))
-    # publication_types_by_id = None
-    # publications_by_id = __group_by_key(Publication.objects.filter(id__in=publication_ids))
-    # publication_types_by_name = defaultdict(int)
-
     publication_types = member.publications.all().values_list('child_type', flat=True)
 
     counter = Counter(publication_types)
@@ -846,24 +841,70 @@ def __get_job_data(member):
 
     items = ord_dict.items()
 
-    # for publication_id in publication_ids:
-    #     publication_object = publications_by_id[publication_id]
-    #     publication_type_id = publication_object.publication_type_id
-    #     publication_type_name = publication_types_by_id[publication_type_id]['name'].encode('utf-8')
-    #     publication_type_slug = publication_types_by_id[publication_type_id]['slug']
-    #     publication_types_by_name[publication_type_name, publication_type_slug] += 1
+    try:
+        Thesis.objects.get(author_id=member.id)
+        has_thesis = True
 
-    # pubtype_info = []
-    # for (pubtype_name, pubtype_slug), number in publication_types_by_name.items():
-    #     pubtype_info.append((pubtype_slug, pubtype_name, number))
+    except:
+        has_thesis = False
 
     return {
-        'first_job': first_job,
-        'last_job': last_job,
+        'accounts': accounts,
         'company': company,
-        'position': position,
+        'first_job': first_job,
+        'has_thesis': has_thesis,
+        'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
-        'accounts': accounts,
+        'position': position,
         'pubtype_info': dict(items),
     }
+
+
+###########################################################################
+# View: member_phd_thesis
+###########################################################################
+
+def member_phd_thesis(request, person_slug):
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_phd_thesis', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_phd_thesis', kwargs={'person_slug': person_slug}))
+
+    member = get_object_or_404(Person, slug=person_slug)
+
+    thesis = Thesis.objects.get(author_id=member.id)
+
+    viva_panel = {}
+
+    viva_panel_items = VivaPanel.objects.filter(thesis=thesis)
+
+    for viva_panel_item in viva_panel_items:
+        person_name = viva_panel_item.person.full_name
+        role = viva_panel_item.role
+
+        viva_panel[person_name] = role
+
+    abstracts = {}
+
+    thesis_abstracts = ThesisAbstract.objects.filter(thesis=thesis)
+
+    for thesis_abstract in thesis_abstracts:
+        abstracts[thesis_abstract.language.name] = thesis_abstract.abstract
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title': u'%s - PhD thesis' % member.full_name,
+        'member': member,
+        'thesis': thesis,
+        'viva_panel': viva_panel,
+        'abstracts': abstracts,
+    }
+
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render_to_response("members/phd_thesis.html", return_dict, context_instance=RequestContext(request))

@@ -1,0 +1,115 @@
+{% extends "members/info.html" %}
+{% load staticfiles %}
+
+
+
+{% block member_content %}
+
+    <div class="tab-pane active">
+        <blockquote>
+            <p>{{ thesis.title }}</p>
+        </blockquote>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div>
+                    <i class="fa fa-calendar"></i>&emsp;{{ thesis.viva_date|date:"d M Y - H:i" }}
+                    <br>
+                    <i class="fa fa-university"></i>&emsp;{{ thesis.held_at_university.full_name }}
+                    <br>
+                    <i class="fa fa-certificate"></i>&emsp;{{ thesis.viva_outcome }}
+                    <br>
+                </div>
+
+                <br>
+
+                {% if thesis.pdf %}
+                    <div class="well row">
+                        <div class="col-md-4">
+                            <a target="_blank" href="{{ MEDIA_URL }}{{ thesis.pdf }}">
+                                <img class="img-responsive" src="{{ STATIC_URL }}img/document_download.png"/>
+                            </a>
+                        </div>
+
+                        <div class="col-md-8">
+                            {% if thesis.number_of_pages %}
+                                <br>
+                                {{ thesis.number_of_pages }} pages
+
+                                {% if thesis.pdf %}
+                                    (&asymp; {{ thesis.pdf.size|filesizeformat }})
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-6">
+                <i class="fa fa-gavel"></i>&emsp;Viva panel
+                <br>
+                <br>
+
+                <table class="table table-condensed table-striped">
+                    {% for person, role in viva_panel.items %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'determine_person_info' person|slugify %}">
+                                    {{ person }}
+                                </a>
+                            </td>
+
+                            <td>
+                                <strong>{{ role }}</strong>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="phd-thesis-abstract">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                {% for language, abstract in abstracts.items %}
+                    <li {% if forloop.first %}class="active"{% endif %}>
+                        <a href="#{{ language }}" role="tab" data-toggle="tab">
+                            {{ language }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                {% for language, abstract in abstracts.items %}
+                    <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ language }}">
+                        <br>
+                        <p>{{ abstract }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('btn-primary');
+        $('.member_biography').addClass('btn-default');
+
+        $('.member_publications').removeClass('btn-default');
+        $('.member_publications').addClass('btn-primary');
+    </script>
+
+{% endblock %}
