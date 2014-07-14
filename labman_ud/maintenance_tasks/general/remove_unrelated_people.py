@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from entities.person.models import Person, Job
-from entities.organization.models import Organization
+from entities.persons.models import Person, Job
+from entities.organizations.models import Organization
 
 
 ###########################################################################

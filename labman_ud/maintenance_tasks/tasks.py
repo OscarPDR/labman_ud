@@ -7,6 +7,15 @@ from django.core.management import call_command
 from labman_ud.celery import app
 
 
+@app.task(name='tasks.clean_tags')
+def clean_tags():
+    try:
+        call_command('clean_tags')
+
+    except:
+        pass
+
+
 @app.task(name='tasks.greet_birthday')
 def greet_birthday():
     try:
