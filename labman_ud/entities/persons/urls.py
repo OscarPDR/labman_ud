@@ -37,8 +37,8 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='member_publications'),
     url(r'^former_members/(?P<person_slug>\S+)/publications/$', 'entities.persons.views.member_publications', name='former_member_publications'),
     # phd_thesis
-    url(r'^members/(?P<person_slug>\S+)/phd_thesis/$', 'entities.persons.views.member_phd_thesis', name='member_phd_thesis'),
-    url(r'^former_members/(?P<person_slug>\S+)/phd_thesis/$', 'entities.persons.views.member_phd_thesis', name='former_member_phd_thesis'),
+    url(r'^members/(?P<person_slug>\S+)/phd_dissertation/$', 'entities.persons.views.member_phd_dissertation', name='member_phd_dissertation'),
+    url(r'^former_members/(?P<person_slug>\S+)/phd_dissertation/$', 'entities.persons.views.member_phd_dissertation', name='former_member_phd_dissertation'),
     # list of social profiles
     url(r'^members/(?P<person_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='member_profiles'),
     url(r'^former_members/(?P<person_slug>\S+)/profiles/$', 'entities.persons.views.member_profiles', name='former_member_profiles'),

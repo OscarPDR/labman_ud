@@ -862,17 +862,17 @@ def __get_job_data(member):
 
 
 ###########################################################################
-# View: member_phd_thesis
+# View: member_phd_dissertation
 ###########################################################################
 
-def member_phd_thesis(request, person_slug):
+def member_phd_dissertation(request, person_slug):
     person_status = __determine_person_status(person_slug)
 
     # Redirect to correct URL template if concordance doesn't exist
     if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('member_phd_thesis', kwargs={'person_slug': person_slug}))
+        return HttpResponseRedirect(reverse('member_phd_dissertation', kwargs={'person_slug': person_slug}))
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('former_member_phd_thesis', kwargs={'person_slug': person_slug}))
+        return HttpResponseRedirect(reverse('former_member_phd_dissertation', kwargs={'person_slug': person_slug}))
 
     member = get_object_or_404(Person, slug=person_slug)
 
@@ -907,4 +907,4 @@ def member_phd_thesis(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/phd_thesis.html", return_dict, context_instance=RequestContext(request))
+    return render_to_response("members/phd_dissertation.html", return_dict, context_instance=RequestContext(request))
