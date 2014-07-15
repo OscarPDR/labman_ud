@@ -121,8 +121,12 @@ def project_info(request, project_slug):
     return_dict = __build_project_information(project)
     return_dict['web_title'] = project.full_name
 
-    if project.project_type.name == 'Internal Project':
+    if project.project_type == 'Internal project':
         return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
+
+    elif project.project_type == 'External project':
+        return render_to_response("projects/info_external_project.html", return_dict, context_instance=RequestContext(request))
+
     else:
         return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
 
@@ -322,11 +326,13 @@ def __build_project_information(project):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
-    internal_project = project.project_type.name == 'Internal Project'
+    internal_project = project.project_type == 'Internal project'
+    external_project = project.project_type == 'External project'
 
     # dictionary to be returned in render_to_response()
     return {
         'is_internal': internal_project,
+        'is_external': external_project,
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,
