@@ -5,23 +5,6 @@
 
 {% block content %}
 
-    <div class="centered">
-        {% if clean_index %}
-            <h2>{{ projects_length }} project{{ projects|pluralize }}</h2>
-        {% else %}
-            {% if tag %}
-                <h2>{{ projects_length }} project{{ projects|pluralize }} with tag <em>'{{ tag.name }}'</em>
-            {% elif project_type %}
-                <h2>{{ projects_length }} project{{ projects|pluralize }} with type <em>'{{ project_type.name }}'</em>
-            {% elif status %}
-                <h2>{{ projects_length }} project{{ projects|pluralize }} with status <em>'{{ status }}'</em>
-            {% elif query_string %}
-                <h2>{{ projects_length }} project{{ projects|pluralize }} found for <em>'{{ query_string }}'</em>
-            {% endif %}
-            &emsp;<small><a id="clean-filters" href="{% url 'project_index' %}">Clean filters</a></small></h2>
-        {% endif %}
-    </div>
-
     <br>
 
     <div class="row">
@@ -36,22 +19,63 @@
             </div>
         <form>
 
-        <div class="col-md-2 pull-right">
+        <div class="col-md-2">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Project types <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu">
+                    {% for type, number in project_type_info.items %}
+                        <li style="text-align: left;">
+                            <a href="{% url 'view_project_type' type|slugify %}">
+                                {{ number }} {{ type|lower }}{{ number|pluralize }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{% url 'project_tag_cloud' %}" class="btn btn-info">
+                <i class="fa fa-cloud fa-large"></i>&emsp;Tag cloud
+            </a>
+        </div>
+
+        <div class="col-md-2">
             <a href="{% url 'project_feed' %}" class="btn btn-info">
                 <i class="fa fa-rss"></i>&emsp;Subscribe
             </a>
         </div>
-
-        <div class="col-md-2 pull-right">
-            <a href="{% url 'project_tag_cloud' %}" class="btn btn-info">
-                <i class="fa fa-cloud fa-large"></i>&emsp;View tag cloud
-            </a>
-        </div>
     </div>
 
-    {% autopaginate projects %}
+    <br>
 
-    {% paginate %}
+    <div class="row">
+        <div class="col-md-8">
+            {% if clean_index %}
+                <h2>{{ projects_length }} project{{ projects|pluralize }}</h2>
+            {% else %}
+                {% if tag %}
+                    <h2>{{ projects_length }} project{{ projects|pluralize }} with tag <em>'{{ tag.name }}'</em>
+                {% elif project_type %}
+                    <h2>{{ projects_length }} {{ project_type|lower }}{{ projects|pluralize }}</em>
+                {% elif status %}
+                    <h2>{{ projects_length }} project{{ projects|pluralize }} with status <em>'{{ status }}'</em>
+                {% elif query_string %}
+                    <h2>{{ projects_length }} project{{ projects|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% endif %}
+                &emsp;<small><a id="clean-filters" href="{% url 'project_index' %}">Clean filters</a></small></h2>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            {% autopaginate projects %}
+
+            {% paginate %}
+        </div>
+    </div>
 
     <br>
 
@@ -99,8 +123,8 @@
                     </td>
 
                     <td class="col-md-2">
-                        <a href="{% url 'view_project_type' project.project_type.slug %}">
-                            {{ project.project_type.name }}
+                        <a href="{% url 'view_project_type' project.project_type|slugify %}">
+                            {{ project.project_type }}
                         </a>
                     </td>
 

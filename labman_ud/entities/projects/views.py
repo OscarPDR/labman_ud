@@ -2,6 +2,7 @@
 import threading
 import weakref
 from datetime import date
+from inflection import titleize
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -11,7 +12,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
 from .forms import ProjectSearchForm
-from .models import Project, FundingAmount, AssignedPerson, ConsortiumMember, Funding, RelatedPublication, ProjectTag, ProjectType
+from .models import *
 
 from entities.funding_programs.models import FundingProgram, FundingProgramLogo
 from entities.persons.models import Person, Job
@@ -44,8 +45,8 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         projects = Project.objects.filter(status=status)
 
     if project_type_slug:
-        project_type = get_object_or_404(ProjectType, slug=project_type_slug)
-        projects = Project.objects.filter(project_type=project_type.id)
+        project_type = titleize(project_type_slug).capitalize()
+        projects = Project.objects.filter(project_type=project_type)
 
     if not tag_slug and not status_slug and not project_type_slug:
         clean_index = True
@@ -83,6 +84,13 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     last_created = Project.objects.order_by('-log_created')[0]
     last_modified = Project.objects.order_by('-log_modified')[0]
 
+    project_types = Project.objects.all().values_list('project_type', flat=True)
+
+    counter = Counter(project_types)
+    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
+
+    items = ord_dict.items()
+
     # dictionary to be returned in render_to_response()
     return_dict = {
         'web_title': u'Projects',
@@ -91,6 +99,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'last_created': last_created,
         'last_modified': last_modified,
         'project_type': project_type,
+        'project_type_info': dict(items),
         'projects': projects,
         'projects_length': projects_length,
         'query_string': query_string,

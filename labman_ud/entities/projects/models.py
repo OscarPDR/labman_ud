@@ -39,36 +39,15 @@ MONTHS = (
     ('12', 'December'),
 )
 
-
-###########################################################################
-# Model: ProjectType
-###########################################################################
-
-class ProjectType(BaseModel):
-    name = models.CharField(
-        max_length=100,
-    )
-
-    slug = models.SlugField(
-        max_length=100,
-        blank=True,
-        unique=True,
-    )
-
-    description = models.TextField(
-        max_length=1500,
-        blank=True,
-    )
-
-    class Meta:
-        ordering = ['slug']
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name.encode('utf-8'))
-        super(ProjectType, self).save(*args, **kwargs)
+PROJECT_TYPES = (
+    ('Applied research project', 'Applied research project'),
+    ('Development project', 'Development project'),
+    ('External project', 'External project'),
+    ('Innovation project', 'Innovation project'),
+    ('Internal project', 'Internal project'),
+    ('Project', 'Project'),
+    ('Research project', 'Research project'),
+)
 
 
 ###########################################################################
@@ -78,7 +57,11 @@ class ProjectType(BaseModel):
 class Project(BaseModel):
     project_leader = models.ForeignKey('organizations.Organization')
 
-    project_type = models.ForeignKey('ProjectType')
+    project_type = models.CharField(
+        max_length=50,
+        choices=PROJECT_TYPES,
+        default='Project',
+    )
 
     full_name = models.CharField(
         max_length=250,
@@ -159,7 +142,7 @@ class Project(BaseModel):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
 
-        self.slug = slugify(str(self.short_name))
+        self.slug = slugify(self.short_name.encode('utf-8'))
         super(Project, self).save(*args, **kwargs)
 
 

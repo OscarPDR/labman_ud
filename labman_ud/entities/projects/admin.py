@@ -112,7 +112,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
     search_fields = ['full_name', 'short_name']
     list_display = ['full_name', 'short_name', 'start_year', 'end_year', 'status']
-    list_filter = ['start_year', 'end_year', 'status']
+    list_filter = ['start_year', 'end_year', 'status', 'project_type']
     exclude = [
         'slug',
     ]
@@ -124,16 +124,6 @@ class ProjectAdmin(admin.ModelAdmin):
         RelatedPublicationInline,
         ProjectTagInline,
     ]
-
-
-###########################################################################
-# Class: ProjectTypeAdmin
-###########################################################################
-
-class ProjectTypeAdmin(admin.ModelAdmin):
-    model = ProjectType
-
-    list_display = ['name', 'description']
 
 
 ###########################################################################
@@ -222,5 +212,4 @@ admin.site.register(Funding, FundingAdmin)
 admin.site.register(FundingAmount, FundingAmountAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectTag, ProjectTagAdmin)
-admin.site.register(ProjectType, ProjectTypeAdmin)
 admin.site.register(RelatedPublication, RelatedPublicationAdmin)
