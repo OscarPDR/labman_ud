@@ -7,6 +7,14 @@ from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
 
+EVENT_TYPES = (
+    ('Academic event', 'Academic event'),
+    ('Generic event', 'Generic event'),
+    ('Hackathon', 'Hackathon'),
+    ('Project meeting', 'Project meeting'),
+)
+
+
 # Create your models here.
 
 
@@ -15,42 +23,15 @@ def event_logo_path(self, filename):
 
 
 ###########################################################################
-# Model: EventType
-###########################################################################
-
-class EventType(BaseModel):
-    name = models.CharField(
-        max_length=100,
-    )
-
-    slug = models.SlugField(
-        max_length=100,
-        blank=True,
-        unique=True,
-    )
-
-    description = models.TextField(
-        max_length=1500,
-        blank=True,
-    )
-
-    class Meta:
-        ordering = ['slug']
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name.encode('utf-8')))
-        super(EventType, self).save(*args, **kwargs)
-
-
-###########################################################################
 # Model: Event
 ###########################################################################
 
 class Event(BaseModel):
-    event_type = models.ForeignKey('EventType')
+    event_type = models.CharField(
+        max_length=75,
+        choices=EVENT_TYPES,
+        default='Generic event',
+    )
 
     full_name = models.CharField(
         max_length=250,

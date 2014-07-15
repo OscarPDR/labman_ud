@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models import Max
 from django.template.defaultfilters import slugify
 
-from entities.events.models import Event, EventType
+from entities.events.models import Event
 from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
@@ -313,15 +313,7 @@ def parse_conference(json_item, proceedings):
         except:
             event = Event()
 
-        try:
-            event_type = EventType.objects.get(slug=slugify('Academic event'))
-
-        except:
-            event_type = EventType()
-            event_type.name = 'Academic event'
-            event_type.save()
-
-        event.event_type = event_type
+        event.event_type = 'Academic event'
 
         event.full_name = json_item['conferenceName']
 

@@ -34,17 +34,6 @@ class PersonRelatedToEventInline(admin.TabularInline):
 
 
 ###########################################################################
-# Class: EventTypeAdmin
-###########################################################################
-
-class EventTypeAdmin(admin.ModelAdmin):
-    model = EventType
-    exclude = [
-        'slug',
-    ]
-
-
-###########################################################################
 # Class: EventAdmin
 ###########################################################################
 
@@ -81,4 +70,3 @@ class PersonRelatedToEventAdmin(admin.ModelAdmin):
 
 admin.site.register(EventSeeAlso, EventSeeAlsoAdmin)
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventType, EventTypeAdmin)
