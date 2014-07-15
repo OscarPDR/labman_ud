@@ -189,7 +189,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     last_created = Publication.objects.order_by('-log_created')[0]
     last_modified = Publication.objects.order_by('-log_modified')[0]
 
-    publication_types = publications.all().values_list('child_type', flat=True)
+    publication_types = Publication.objects.all().exclude(authors=None).values_list('child_type', flat=True)
 
     counter = Counter(publication_types)
     ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
