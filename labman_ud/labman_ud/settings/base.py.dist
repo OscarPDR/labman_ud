@@ -4,6 +4,8 @@
 
 from unipath import Path
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+from datetime import timedelta
 from celery.task.schedules import crontab
 
 PROJECT_DIR = Path(__file__).ancestor(3)
@@ -335,9 +337,40 @@ ZOTERO_LIBRARY_TYPE = ''
 BROKER_URL = ''
 CELERYBEAT_SCHEDULER = ''
 
+CELERYBEAT_SCHEDULE = {
+    'clean_tags': {
+        'task': 'tasks.clean_tags',
+        'schedule': crontab(hour=0, minute=0),  # Execute everyday at 0:00 am
+    },
+    'greet_birthday': {
+        'task': 'tasks.greet_birthday',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+    'people_management': {
+        'task': 'tasks.people_management',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+    'project_management': {
+        'task': 'tasks.project_management',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+    'remove_empty_folders': {
+        'task': 'tasks.remove_empty_folders',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+    'remove_unrelated_entities': {
+        'task': 'tasks.remove_unrelated_entities',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+    'synchronize_zotero': {
+        'task': 'tasks.synchronize_zotero',
+        'schedule': timedelta(hours=12),  # Execute every 12 hours
+    },
+}
+
 
 ####################################################################################################
-###     RDF & Virtuoso settings
+###     RDF settings
 ####################################################################################################
 
 HTTP_PROXY = ''
