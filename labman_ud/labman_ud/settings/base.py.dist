@@ -110,11 +110,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'pagination_bootstrap.middleware.PaginationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'pagination_bootstrap.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'labman_ud.urls'
@@ -148,6 +149,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    # Django admin templates
     'suit',
 
     # Uncomment the next line to enable the admin:
@@ -157,9 +159,9 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     # Re-usable applications
+    'debug_toolbar',
     'django_extensions',
     'logentry_admin',
-    'debug_toolbar',
     'redactor',
 
     # Custom applications with data models
@@ -172,19 +174,15 @@ INSTALLED_APPS = (
     'entities.publications',
     'entities.utils',
     'entities.core',
+    'maintenance_tasks',
 
     # Custom applications for data consulting only
     'charts',
-    # 'semantic_search',
 
-    # Zotero integration
-    'generators.zotero_labman',
-
-    # South: database migrations
-    'south',
-
-    'pagination_bootstrap',
+    # Extension packages
     'django_cleanup',
+    'pagination_bootstrap',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
