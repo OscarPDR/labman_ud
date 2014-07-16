@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
+
+from .linked_data import *
 from .models import *
 
 
@@ -22,6 +24,7 @@ class PersonSeeAlsoAdmin(admin.ModelAdmin):
 
     list_display = ['person', 'see_also']
     search_fields = ['person__full_name']
+
 
 ###########################################################################
 # Class: AccountProfileInline
@@ -58,6 +61,12 @@ class JobInline(admin.StackedInline):
 
 class PersonAdmin(admin.ModelAdmin):
     model = Person
+
+    def delete_model(modeladmin, request, queryset):
+        for obj in queryset:
+            delete_person_rdf(obj)
+            obj.delete()
+
     search_fields = ['full_name', 'slug']
     list_display = ['full_name', 'email', 'is_active']
     list_filter = ['is_active']
@@ -71,6 +80,9 @@ class PersonAdmin(admin.ModelAdmin):
         'full_name',
         'slug',
         'safe_biography',
+    ]
+    actions = [
+        delete_model,
     ]
 
 
@@ -104,3 +116,5 @@ admin.site.register(PersonSeeAlso, PersonSeeAlsoAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(AccountProfile, AccountProfileAdmin)
 admin.site.register(Nickname, NicknameAdmin)
+
+admin.site.disable_action('delete_selected')

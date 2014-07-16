@@ -177,6 +177,9 @@ class Person(BaseModel):
 
         super(Person, self).save(*args, **kwargs)
 
+        for see_also in self.see_also_links.all():
+            see_also.save()
+
         # To avoid triple deletion, generate triples for related Job instances
         for job in self.job_set.all():
             job.save()
@@ -188,19 +191,37 @@ class Person(BaseModel):
         save_person_as_rdf(self)
         update_person_object_triples(old_slug, self.slug)
 
+    def delete(self, *args, **kwargs):
+        delete_person_rdf(self)
+
+        super(Person, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: PersonSeeAlso
 ###########################################################################
 
 class PersonSeeAlso(BaseModel):
-    person = models.ForeignKey('Person')
+    person = models.ForeignKey('Person', related_name='see_also_links')
+
     see_also = models.URLField(
         max_length=512,
     )
 
     def __unicode__(self):
         return u'%s related resource: %s' % (self.person.full_name, self.see_also)
+
+    def save(self, *args, **kwargs):
+        delete_person_see_also_rdf(self)
+
+        super(PersonSeeAlso, self).save(*args, **kwargs)
+
+        save_person_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_person_see_also_rdf(self)
+
+        super(PersonSeeAlso, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -225,6 +246,11 @@ class AccountProfile(BaseModel):
         super(AccountProfile, self).save(*args, **kwargs)
 
         save_account_profile_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_account_profile_rdf(self)
+
+        super(AccountProfile, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -251,8 +277,17 @@ class Nickname(BaseModel):
         return u'%s is also known as: %s' % (self.person.first_name, self.nickname)
 
     def save(self, *args, **kwargs):
+        delete_nickname_rdf(self)
+
         self.slug = slugify(self.nickname)
         super(Nickname, self).save(*args, **kwargs)
+
+        save_nickname_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_nickname_rdf(self)
+
+        super(Nickname, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -292,6 +327,11 @@ class Job(BaseModel):
         super(Job, self).save(*args, **kwargs)
 
         save_job_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_job_rdf(self)
+
+        super(Job, self).delete(*args, **kwargs)
 
 
 ###########################################################################

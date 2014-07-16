@@ -82,8 +82,12 @@ def save_person_as_rdf(person):
         graph.add((resource_uri, FOAF.depiction, Literal(profile_picture_url)))
 
     # Generate triples for person's nicks
-    for nick in person.nicknames.values_list('nickname', flat=True):
-        graph.add((resource_uri, FOAF.nick, Literal(nick)))
+    for nick in person.nicknames.all():
+        save_nickname_as_rdf(nick)
+
+    # Generate triples for person's see also links
+    for see_also_link in person.see_also_links.all():
+        save_person_see_also_as_rdf(see_also_link)
 
     insert_by_post(graph)
 
@@ -99,6 +103,76 @@ def delete_person_rdf(person):
     resource_uri = resource_uri_for_person_from_slug(person.slug)
 
     delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: PersonSeeAlso
+###########################################################################
+
+def save_person_see_also_as_rdf(person_see_also):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_person_from_slug(person_see_also.person.slug)
+
+    graph.add((resource_uri, RDFS.seeAlso, URIRef(person_see_also.see_also)))
+
+    insert_by_post(graph)
+
+
+def delete_person_see_also_rdf(person_see_also):
+    resource_uri = resource_uri_for_person_from_slug(person_see_also.person.slug)
+
+    delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
+
+
+###########################################################################
+# Model: AccountProfile
+###########################################################################
+
+
+def save_account_profile_as_rdf(account_profile):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_account_profile_from_id(account_profile.id)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRCFE.AccountProfile))
+
+    label = '%s\'s profile at %s' % (account_profile.person.full_name, account_profile.network.name)
+    graph.add((resource_uri, RDFS.label, Literal(label)))
+
+    # Profile ID is required
+    graph.add((resource_uri, SWRCFE.profileId, Literal(account_profile.profile_id)))
+
+    graph.add((resource_uri_for_person_from_slug(account_profile.person.slug), SWRCFE.holds, resource_uri))
+
+    insert_by_post(graph)
+
+
+def delete_account_profile_rdf(account_profile):
+    resource_uri = resource_uri_for_account_profile_from_id(account_profile.id)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: Nickname
+###########################################################################
+
+def save_nickname_as_rdf(nickname):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_person_from_slug(nickname.person.slug)
+
+    graph.add((resource_uri, FOAF.nick, Literal(nickname.nickname)))
+
+    insert_by_post(graph)
+
+
+def delete_nickname_rdf(nickname):
+    resource_uri = resource_uri_for_person_from_slug(nickname.person.slug)
+
+    delete_resources_with_predicate(resource_uri, FOAF.nick)
 
 
 ###########################################################################
@@ -151,35 +225,5 @@ def save_job_as_rdf(job):
 
 def delete_job_rdf(job):
     resource_uri = resource_uri_for_job_from_id(job.id)
-
-    delete_resource(resource_uri)
-
-
-###########################################################################
-# Model: AccountProfile
-###########################################################################
-
-
-def save_account_profile_as_rdf(account_profile):
-    graph = create_namespaced_graph()
-
-    resource_uri = resource_uri_for_account_profile_from_id(account_profile.id)
-
-    # Define type and label of resource
-    graph.add((resource_uri, RDF.type, SWRCFE.AccountProfile))
-
-    label = '%s\'s profile at %s' % (account_profile.person.full_name, account_profile.network.name)
-    graph.add((resource_uri, RDFS.label, Literal(label)))
-
-    # Profile ID is required
-    graph.add((resource_uri, SWRCFE.profileId, Literal(account_profile.profile_id)))
-
-    graph.add((resource_uri_for_person_from_slug(account_profile.person.slug), SWRCFE.holds, resource_uri))
-
-    insert_by_post(graph)
-
-
-def delete_account_profile_rdf(account_profile):
-    resource_uri = resource_uri_for_account_profile_from_id(account_profile.id)
 
     delete_resource(resource_uri)
