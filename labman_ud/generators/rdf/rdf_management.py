@@ -62,6 +62,17 @@ def delete_resource(resource_uri):
     _perform_request(query)
 
 
+def delete_resources_with_predicate(resource_uri, predicate):
+    query = """
+        WITH <%s>
+        DELETE { <%s> <%s> ?o . }
+        WHERE {
+            <%s> <%s> ?o .
+        }""" % (getattr(settings, 'GRAPH_BASE_URL', None), resource_uri, predicate, resource_uri, predicate)
+
+    _perform_request(query)
+
+
 def update_resource_uri(old_resource_uri, new_resource_uri):
     query = """
         WITH <%s>
