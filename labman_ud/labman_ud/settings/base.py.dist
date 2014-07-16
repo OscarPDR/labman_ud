@@ -325,6 +325,7 @@ NEWS_TITLE_MAX_LENGTH = 120
 ###     Zotero settings: https://www.zotero.org/
 ####################################################################################################
 
+ZOTERO_API_BASE_URL = ''
 ZOTERO_API_KEY = ''
 ZOTERO_LIBRARY_ID = ''
 ZOTERO_LIBRARY_TYPE = ''
