@@ -336,7 +336,6 @@ ZOTERO_LIBRARY_TYPE = ''
 ####################################################################################################
 
 BROKER_URL = ''
-CELERYBEAT_SCHEDULER = ''
 
 CELERYBEAT_SCHEDULE = {
     'clean_tags': {
@@ -377,4 +376,6 @@ CELERYBEAT_SCHEDULE = {
 HTTP_PROXY = ''
 HTTPS_PROXY = ''
 
-RDF_URI = ''
+SPARQL_ENDPOINT_URL = ''
+GRAPH_BASE_URL = ''
+RESOURCES_BASE_URL = ''

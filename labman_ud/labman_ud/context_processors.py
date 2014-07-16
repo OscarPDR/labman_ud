@@ -4,4 +4,4 @@ from django.conf import settings
 
 
 def global_vars(request):
-    return {'RDF_URI': getattr(settings, 'RDF_URI', None)}
+    return {'RDF_URI': getattr(settings, 'RESOURCES_BASE_URL', None)}
