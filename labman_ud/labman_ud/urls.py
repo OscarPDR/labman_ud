@@ -31,16 +31,16 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
     # Entities urls
+    url(r'^funding_programs/', include('entities.funding_programs.urls')),
+    url(r'^news/', include('entities.news.urls')),
     url(r'^organizations/', include('entities.organizations.urls')),
     url(r'^people/', include('entities.persons.urls')),
     url(r'^projects/', include('entities.projects.urls')),
-    url(r'^funding_programs/', include('entities.funding_programs.urls')),
     url(r'^publications/', include('entities.publications.urls')),
-    url(r'^news/', include('entities.news.urls')),
 
     # Custom app urls
     url(r'^charts/', include('charts.urls')),
-    url(r'^semantic_search/', include('semantic_search.urls')),
+    # url(r'^semantic_search/', include('semantic_search.urls')),
 
     # Third-party app urls
     url(r'^redactor/', include('redactor.urls')),
