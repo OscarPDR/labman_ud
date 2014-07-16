@@ -5,7 +5,6 @@
 from unipath import Path
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 from celery.task.schedules import crontab
-import djcelery
 
 PROJECT_DIR = Path(__file__).ancestor(3)
 
@@ -184,9 +183,6 @@ INSTALLED_APPS = (
     # South: database migrations
     'south',
 
-    # Celery: background task queueing system
-    'djcelery',
-
     'pagination_bootstrap',
     'django_cleanup',
 )
@@ -333,14 +329,11 @@ ZOTERO_API_KEY = ''
 ZOTERO_LIBRARY_ID = ''
 ZOTERO_LIBRARY_TYPE = ''
 
-ZOTERO_CRONTAB = crontab(hour='*/2')
-ZOTERO_LOG_PATH = ''
 
 ####################################################################################################
 ###     Celery settings: http://www.celeryproject.org/
 ####################################################################################################
 
-djcelery.setup_loader()
 BROKER_URL = ''
 CELERYBEAT_SCHEDULER = ''
 
@@ -353,10 +346,3 @@ HTTP_PROXY = ''
 HTTPS_PROXY = ''
 
 RDF_URI = ''
-
-D2R_TO_VIRTUOSO = False
-D2R_SPARQL_URL = ''
-D2R_MAPPING_PATH = ''
-
-VIRTUOSO_ODBC = ''
-VIRTUOSO_GRAPH = RDF_URI
