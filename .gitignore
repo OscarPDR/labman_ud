@@ -13,12 +13,11 @@ labman_ud/labman_ud/wsgi.py
 *.DS_Store
 
 # Settings
-labman_ud/labman_ud/settings/*.py.dist
+labman_ud/labman_ud/settings/*.py
 
 # Media and static files
 labman_ud/media/
 labman_ud/collected_static/
-
 # Database and JSON
 *.db
 
