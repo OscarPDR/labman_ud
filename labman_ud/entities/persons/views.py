@@ -11,24 +11,22 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
-from collections import OrderedDict, defaultdict, Counter
+from collections import OrderedDict, Counter
 
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
 
 from entities.news.models import PersonRelatedToNews
-from entities.events.models import Event
 from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
-from entities.publications.models import Publication, PublicationAuthor, PublicationTag
-from entities.utils.models import Role, Tag, Network
+from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
+from entities.utils.models import Role, Network
 
 from charts.views import PUBLICATION_TYPES
 
 # Create your views here.
 
-REMOVABLE_TAGS = ['ISI', 'corea', 'coreb', 'corec', 'Q1', 'Q2']
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
 # Status
@@ -703,41 +701,6 @@ def person_info(request, person_slug):
     }
 
     return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
-
-
-####################################################################################################
-# __clean_publication_tags
-####################################################################################################
-
-def __clean_publication_tags(member_id, min_year, max_year):
-    publication_ids = PublicationAuthor.objects.filter(author_id=member_id).values('publication_id')
-
-    pub_tag_ids = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id')
-    all_pub_tags = PublicationTag.objects.filter(publication_id__in=publication_ids).values('tag_id__name', 'publication_id__year')
-    pub_tags = Tag.objects.filter(id__in=pub_tag_ids).values_list('name', flat=True).distinct()
-
-    tags = [x for x in pub_tags if x not in REMOVABLE_TAGS]
-
-    publication_tags_per_year = {}
-
-    for t in tags:
-        tag = t.encode('utf-8')
-        publication_tags_per_year[tag] = {}
-
-        for year in range(min_year, max_year + 1):
-            publication_tags_per_year[tag][year] = 0
-
-    for pub_tag in all_pub_tags:
-        try:
-            tag_name = pub_tag.get('tag_id__name').encode('utf-8')
-            year = pub_tag.get('publication_id__year')
-
-            publication_tags_per_year[tag_name][year] = publication_tags_per_year[tag_name][year] + 1
-
-        except:
-            pass
-
-    return publication_tags_per_year
 
 
 ####################################################################################################
