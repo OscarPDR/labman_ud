@@ -34,7 +34,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
     search_fields = ['full_name', 'short_name']
     list_display = ['full_name', 'short_name', 'organization_type']
-    list_filter = ['country__full_name', 'organization_type__name']
+    list_filter = ['country__full_name', 'organization_type']
     exclude = [
         'slug',
     ]
@@ -44,18 +44,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 ###########################################################################
-# Class: OrganizationTypeAdmin
-###########################################################################
-
-class OrganizationTypeAdmin(admin.ModelAdmin):
-    model = OrganizationType
-
-    list_display = ['name', 'description']
-    exclude = ['slug']
-
-
-###########################################################################
-# Class: OrganizationTypeAdmin
+# Class: UnitAdmin
 ###########################################################################
 
 class UnitAdmin(admin.ModelAdmin):
@@ -72,5 +61,4 @@ class UnitAdmin(admin.ModelAdmin):
 
 admin.site.register(OrganizationSeeAlso, OrganizationSeeAlsoAdmin)
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(OrganizationType, OrganizationTypeAdmin)
 admin.site.register(Unit, UnitAdmin)

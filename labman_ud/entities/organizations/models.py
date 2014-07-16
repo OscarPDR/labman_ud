@@ -7,6 +7,15 @@ from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
 
+ORGANIZATION_TYPES = (
+    ('Company', 'Company'),
+    ('Educational organization', 'Educational organization'),
+    ('Foundation', 'Foundation'),
+    ('Public administration', 'Public administration'),
+    ('Research centre', 'Research centre'),
+    ('University', 'University'),
+)
+
 # Create your models here.
 
 
@@ -15,42 +24,15 @@ def organization_logo_path(self, filename):
 
 
 ###########################################################################
-# Model: OrganizationType
-###########################################################################
-
-class OrganizationType(BaseModel):
-    name = models.CharField(
-        max_length=100,
-    )
-
-    slug = models.SlugField(
-        max_length=100,
-        blank=True,
-        unique=True,
-    )
-
-    description = models.TextField(
-        max_length=1500,
-        blank=True,
-    )
-
-    class Meta:
-        ordering = ['slug']
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.name.encode('utf-8')))
-        super(OrganizationType, self).save(*args, **kwargs)
-
-
-###########################################################################
 # Model: Organization
 ###########################################################################
 
 class Organization(BaseModel):
-    organization_type = models.ForeignKey('OrganizationType')
+    organization_type = models.CharField(
+        max_length=75,
+        choices=ORGANIZATION_TYPES,
+        default='Company',
+    )
 
     sub_organization_of = models.ForeignKey(
         'self',

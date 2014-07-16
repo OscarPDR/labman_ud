@@ -10,7 +10,7 @@
             <h2>{{ organizations_length }} organization{{ organizations|pluralize }}</h2>
         {% else %}
             {% if organization_type %}
-                <h2>{{ organizations_length }} organization{{ organizations|pluralize }} with type <em>'{{ organization_type.name }}'</em>
+                <h2>{{ organizations_length }} {{ organization_type|lower }}{{ organizations|pluralize }}</em>
             {% elif query_string %}
                 <h2>{{ organizations_length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
             {% endif %}
@@ -71,8 +71,8 @@
                     </td>
 
                     <td class="col-md-3">
-                        <a href="{% url 'view_organization_type' organization.organization_type.slug %}">
-                            {{ organization.organization_type.name }}
+                        <a href="{% url 'view_organization_type' organization.organization_type|slugify %}">
+                            {{ organization.organization_type }}
                         </a>
                     </td>
 
