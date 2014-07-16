@@ -18,8 +18,10 @@ labman_ud/labman_ud/settings/*.py
 # Media and static files
 labman_ud/media/
 labman_ud/collected_static/
-# Database and JSON
+
+# Test database files
 *.db
+*.sqlite3
 
 # South migrations and database fixtures
 migrations/
@@ -28,8 +30,5 @@ fixtures/
 # Sublime Text project configuration
 *.sublime-project
 *.sublime-workspace
-
-# Zotero logs
-labman_ud/zotero_labman.log.*
 
 celerybeat-schedule
