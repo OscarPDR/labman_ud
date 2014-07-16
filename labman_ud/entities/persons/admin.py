@@ -22,8 +22,16 @@ class PersonSeeAlsoInline(admin.TabularInline):
 class PersonSeeAlsoAdmin(admin.ModelAdmin):
     model = PersonSeeAlso
 
+    def delete_model(modeladmin, request, queryset):
+        for obj in queryset:
+            delete_person_see_also_rdf(obj)
+            obj.delete()
+
     list_display = ['person', 'see_also']
     search_fields = ['person__full_name']
+    actions = [
+        delete_model,
+    ]
 
 
 ###########################################################################
@@ -93,6 +101,15 @@ class PersonAdmin(admin.ModelAdmin):
 class AccountProfileAdmin(admin.ModelAdmin):
     model = AccountProfile
 
+    def delete_model(modeladmin, request, queryset):
+        for obj in queryset:
+            delete_account_profile_rdf(obj)
+            obj.delete()
+
+    actions = [
+        delete_model,
+    ]
+
 
 ###########################################################################
 # Class: NicknameAdmin
@@ -101,9 +118,17 @@ class AccountProfileAdmin(admin.ModelAdmin):
 class NicknameAdmin(admin.ModelAdmin):
     model = Nickname
 
+    def delete_model(modeladmin, request, queryset):
+        for obj in queryset:
+            delete_nickname_rdf(obj)
+            obj.delete()
+
     search_fields = ['nickname', 'slug']
     list_display = ['nickname', 'slug']
     exclude = ['slug']
+    actions = [
+        delete_model,
+    ]
 
 
 ####################################################################################################
