@@ -9,16 +9,19 @@ from rdflib.namespace import Namespace, FOAF, DC, XSD, RDF, RDFS
 
 from django.conf import settings
 
+BIBO = Namespace('http://purl.org/ontology/bibo/')
+DCTERMS = Namespace('http://purl.org/dc/terms/')
 GEONAMES = Namespace('http://www.geonames.org/ontology#')
 MUTO = Namespace('http://purl.org/muto/core#')
 PLACES = Namespace('http://purl.org/ontology/places#')
+SWRC = Namespace('http://swrc.ontoware.org/ontology#')
 SWRCFE = Namespace('http://www.morelab.deusto.es/ontologies/swrcfe#')
-DCTERMS = Namespace('http://purl.org/dc/terms/')
 
 
 def create_namespaced_graph():
     graph = Graph()
 
+    graph.bind('bibo', BIBO)
     graph.bind('dc', DC)
     graph.bind('dcterms', DCTERMS)
     graph.bind('foaf', FOAF)
@@ -27,6 +30,7 @@ def create_namespaced_graph():
     graph.bind('places', PLACES)
     graph.bind('rdf', RDF)
     graph.bind('rdfs', RDFS)
+    graph.bind('swrc', SWRC)
     graph.bind('swrcfe', SWRCFE)
     graph.bind('xsd', XSD)
 
