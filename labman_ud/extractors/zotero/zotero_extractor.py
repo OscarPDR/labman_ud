@@ -120,7 +120,6 @@ def get_item_keys_since_last_synchronized_version(from_version):
         }
 
         r = requests.get(url, headers=headers, params=params)
-        print r.url
 
         item_key_list = r.text.split('\n')
 
