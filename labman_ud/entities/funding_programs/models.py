@@ -81,17 +81,18 @@ class FundingProgramLogo(BaseModel):
     funding_program = models.ForeignKey('FundingProgram')
 
     name = models.CharField(
-        max_length=100,
+        max_length=250,
         blank=True,
     )
 
     slug = models.SlugField(
-        max_length=100,
+        max_length=250,
         blank=True,
         unique=True,
     )
 
     logo = models.ImageField(
+        max_length=250,
         upload_to=funding_program_logo_path,
         blank=True,
         null=True,
