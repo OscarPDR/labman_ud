@@ -124,7 +124,8 @@ class Publication(BaseModel):
         blank=True,
     )
 
-    authors = models.ManyToManyField('persons.Person', through='PublicationAuthor')
+    authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='authors')
+    editors = models.ManyToManyField('persons.Person', through='PublicationEditor', related_name='editors')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
 
     class Meta:
@@ -150,12 +151,17 @@ class Publication(BaseModel):
         return u'%s' % (self.title)
 
     def save(self, *args, **kwargs):
+        old_slug = self.slug
+
         self.slug = slugify(str(self.title.encode('utf-8')))
 
         if self.child_type == '':
             self.child_type = self.__class__.__name__
 
         super(Publication, self).save(*args, **kwargs)
+
+        save_publication_as_rdf(self)
+        update_publication_object_triples(old_slug, self.slug)
 
 
 ###########################################################################
@@ -304,9 +310,21 @@ class BookSection(ISIDBLPTags):
     core = models.CharField(
         max_length=25,
         choices=CORE_CHOICES,
-        default='None',
         blank=True,
+        null=True,
     )
+
+    def save(self, *args, **kwargs):
+        delete_book_section_rdf(self)
+
+        super(BookSection, self).save(*args, **kwargs)
+
+        save_book_section_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_book_section_rdf(self)
+
+        super(BookSection, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -327,6 +345,18 @@ class Proceedings(CollectionPublication):
         null=True,
     )
 
+    def save(self, *args, **kwargs):
+        delete_proceedings_rdf(self)
+
+        super(Proceedings, self).save(*args, **kwargs)
+
+        save_proceedings_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_proceedings_rdf(self)
+
+        super(Proceedings, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: ConferencePaper
@@ -344,10 +374,21 @@ class ConferencePaper(ISIDBLPTags):
     core = models.CharField(
         max_length=25,
         choices=CORE_CHOICES,
-        default='None',
         blank=True,
         null=True,
     )
+
+    def save(self, *args, **kwargs):
+        delete_conference_paper_rdf(self)
+
+        super(ConferencePaper, self).save(*args, **kwargs)
+
+        save_conference_paper_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_conference_paper_rdf(self)
+
+        super(ConferencePaper, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -389,6 +430,18 @@ class Journal(CollectionPublication):
         null=True,
     )
 
+    def save(self, *args, **kwargs):
+        delete_journal_rdf(self)
+
+        super(Journal, self).save(*args, **kwargs)
+
+        save_journal_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_journal_rdf(self)
+
+        super(Journal, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: JournalArticle
@@ -401,6 +454,18 @@ class JournalArticle(ISIDBLPTags):
         blank=True,
         null=True,
     )
+
+    def save(self, *args, **kwargs):
+        delete_journal_article_rdf(self)
+
+        super(JournalArticle, self).save(*args, **kwargs)
+
+        save_journal_article_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_journal_article_rdf(self)
+
+        super(JournalArticle, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -451,6 +516,7 @@ class PublicationTag(BaseModel):
 
 class PublicationAuthor(BaseModel):
     author = models.ForeignKey('persons.Person')
+
     publication = models.ForeignKey('publications.Publication')
 
     position = models.PositiveIntegerField(
@@ -468,6 +534,7 @@ class PublicationAuthor(BaseModel):
 
 class PublicationEditor(BaseModel):
     editor = models.ForeignKey('persons.Person')
+
     publication = models.ForeignKey('publications.Publication')
 
     def __unicode__(self):

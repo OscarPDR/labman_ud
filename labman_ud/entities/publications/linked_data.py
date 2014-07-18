@@ -14,6 +14,52 @@ from generators.rdf.resource_uris import *
 
 
 ###########################################################################
+# Model: BookSection
+###########################################################################
+
+def save_book_section_as_rdf(book_section):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(book_section.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.InBook))
+    graph.add((resource_uri, RDFS.label, Literal(book_section.title)))
+
+    # Indexed by ISI is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.isi, Literal(book_section.isi)))
+
+    # Indexed by DBLP is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.dblp, Literal(book_section.dblp)))
+
+    # Pages is optional
+    if book_section.pages:
+        graph.add((resource_uri, BIBO.pages, Literal(book_section.pages)))
+
+    # Short title is optional
+    if book_section.short_title:
+        graph.add((resource_uri, SWRCFE.publicationShortTitle, Literal(book_section.short_title)))
+
+    # Parent book is always present
+    graph.add((resource_uri, DCTERMS.isPartOf, resource_uri_for_publication_from_slug(book_section.parent_book.slug)))
+
+    # Presented at is optional
+    # TODO: reference to event page
+
+    # Core is optional
+    if book_section.core:
+        graph.add((resource_uri, SWRCFE.core, Literal(book_section.core)))
+
+    insert_by_post(graph)
+
+
+def delete_book_section_rdf(book_section):
+    resource_uri = resource_uri_for_publication_from_slug(book_section.slug)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
 # Model: Book
 ###########################################################################
 
@@ -25,36 +71,6 @@ def save_book_as_rdf(book):
     # Define type and label of resource
     graph.add((resource_uri, RDF.type, SWRC.Book))
     graph.add((resource_uri, RDFS.label, Literal(book.title)))
-
-    # Title is required
-    graph.add((resource_uri, DC.title, Literal(book.title)))
-
-    # Abstract is optional
-    if book.abstract:
-        graph.add((resource_uri, BIBO.abstract, Literal(book.abstract)))
-
-    # DOI is optional
-    if book.doi:
-        graph.add((resource_uri, BIBO.doi, Literal(book.doi)))
-
-    # Published is optional
-    if book.published:
-        graph.add((resource_uri, DC.date, Literal(book.published, datatype=XSD.date)))
-
-    # Year is required
-    graph.add((resource_uri, SWRCFE.publicationYear, Literal(book.year)))
-
-    # PDF is optional
-    if book.pdf:
-        pdf_url = '%s%s' % (getattr(settings, 'BASE_URL', None), book.pdf.url)
-        graph.add((resource_uri, RDFS.seeAlso, URIRef(pdf_url)))
-
-    # Language is required
-    graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(book.language.slug)))
-
-    # Bibtex is optional
-    if book.bibtex:
-        graph.add((resource_uri, SWRCFE.bibtex, Literal(book.bibtex)))
 
     # Publisher is optional
     if book.publisher:
@@ -95,17 +111,259 @@ def save_book_as_rdf(book):
     insert_by_post(graph)
 
 
-# def update_person_object_triples(old_slug, new_slug):
-#     old_resource_uri = resource_uri_for_person_from_slug(old_slug)
-#     new_resource_uri = resource_uri_for_person_from_slug(new_slug)
-
-#     update_resource_uri(old_resource_uri, new_resource_uri)
-
-
 def delete_book_rdf(book):
     resource_uri = resource_uri_for_publication_from_slug(book.slug)
 
     delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: ConferencePaper
+###########################################################################
+
+def save_conference_paper_as_rdf(conference_paper):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(conference_paper.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.InProceedings))
+    graph.add((resource_uri, RDFS.label, Literal(conference_paper.title)))
+
+    # Indexed by ISI is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.isi, Literal(conference_paper.isi)))
+
+    # Indexed by DBLP is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.dblp, Literal(conference_paper.dblp)))
+
+    # Pages is optional
+    if conference_paper.pages:
+        graph.add((resource_uri, BIBO.pages, Literal(conference_paper.pages)))
+
+    # Short title is optional
+    if conference_paper.short_title:
+        graph.add((resource_uri, SWRCFE.publicationShortTitle, Literal(conference_paper.short_title)))
+
+    # Parent proceedings is always present
+    graph.add((resource_uri, DCTERMS.isPartOf, resource_uri_for_publication_from_slug(conference_paper.parent_proceedings.slug)))
+
+    # Presented at is optional
+    # TODO: reference to event page
+
+    # Core is optional
+    if conference_paper.core:
+        graph.add((resource_uri, SWRCFE.core, Literal(conference_paper.core)))
+
+    insert_by_post(graph)
+
+
+def delete_conference_paper_rdf(conference_paper):
+    resource_uri = resource_uri_for_publication_from_slug(conference_paper.slug)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: Proceedings
+###########################################################################
+
+def save_proceedings_as_rdf(proceedings):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(proceedings.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.Proceedings))
+    graph.add((resource_uri, RDFS.label, Literal(proceedings.title)))
+
+    # Publisher is optional
+    if proceedings.publisher:
+        graph.add((resource_uri, DCTERMS.publisher, Literal(proceedings.publisher)))
+
+    # Place is optional
+    if proceedings.place:
+        graph.add((resource_uri, DCTERMS.spatial, Literal(proceedings.place)))
+
+    # Volume is optional
+    if proceedings.volume:
+        graph.add((resource_uri, BIBO.volume, Literal(proceedings.volume)))
+
+    # ISBN is optional
+    if proceedings.isbn:
+        graph.add((resource_uri, BIBO.isbn, Literal(proceedings.isbn)))
+
+    # Series is optional
+    if proceedings.series:
+        graph.add((resource_uri, SWRCFE.series, Literal(proceedings.series)))
+
+    insert_by_post(graph)
+
+
+def delete_proceedings_rdf(proceedings):
+    resource_uri = resource_uri_for_publication_from_slug(proceedings.slug)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: JournalArticle
+###########################################################################
+
+def save_journal_article_as_rdf(journal_article):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(journal_article.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.Article))
+    graph.add((resource_uri, RDFS.label, Literal(journal_article.title)))
+
+    # Indexed by ISI is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.isi, Literal(journal_article.isi)))
+
+    # Indexed by DBLP is always present (defaults to False)
+    graph.add((resource_uri, SWRCFE.dblp, Literal(journal_article.dblp)))
+
+    # Pages is optional
+    if journal_article.pages:
+        graph.add((resource_uri, BIBO.pages, Literal(journal_article.pages)))
+
+    # Short title is optional
+    if journal_article.short_title:
+        graph.add((resource_uri, SWRCFE.publicationShortTitle, Literal(journal_article.short_title)))
+
+    # Parent journal is always present
+    graph.add((resource_uri, DCTERMS.isPartOf, resource_uri_for_publication_from_slug(journal_article.parent_journal.slug)))
+
+    # Individually published is optional
+    # TODO:
+
+    insert_by_post(graph)
+
+
+def delete_journal_article_rdf(journal_article):
+    resource_uri = resource_uri_for_publication_from_slug(journal_article.slug)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: Journal
+###########################################################################
+
+def save_journal_as_rdf(journal):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(journal.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.Journal))
+    graph.add((resource_uri, RDFS.label, Literal(journal.title)))
+
+    # Publisher is optional
+    if journal.publisher:
+        graph.add((resource_uri, DCTERMS.publisher, Literal(journal.publisher)))
+
+    # Place is optional
+    if journal.place:
+        graph.add((resource_uri, DCTERMS.spatial, Literal(journal.place)))
+
+    # Volume is optional
+    if journal.volume:
+        graph.add((resource_uri, BIBO.volume, Literal(journal.volume)))
+
+    # ISSN is optional
+    if journal.issn:
+        graph.add((resource_uri, BIBO.issn, Literal(journal.issn)))
+
+    # Issue is optional
+    if journal.issue:
+        graph.add((resource_uri, BIBO.issue, Literal(journal.issue)))
+
+    # Journal abbreviation is optional
+    if journal.journal_abbreviation:
+        graph.add((resource_uri, SWRCFE.journalAbbreviation, Literal(journal.journal_abbreviation)))
+
+    # Quartile is optional
+    if journal.quartile:
+        graph.add((resource_uri, SWRCFE.quartile, Literal(journal.quartile)))
+
+    # Impact factor is optional
+    if journal.impact_factor:
+        graph.add((resource_uri, SWRCFE.impactFactor, Literal(journal.impact_factor)))
+
+    insert_by_post(graph)
+
+
+def delete_journal_rdf(journal):
+    resource_uri = resource_uri_for_publication_from_slug(journal.slug)
+
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: Publication
+###########################################################################
+
+def save_publication_as_rdf(publication):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(publication.slug)
+
+    # Title is required
+    graph.add((resource_uri, DC.title, Literal(publication.title)))
+
+    # Abstract is optional
+    if publication.abstract:
+        graph.add((resource_uri, BIBO.abstract, Literal(publication.abstract)))
+
+    # DOI is optional
+    if publication.doi:
+        graph.add((resource_uri, BIBO.doi, Literal(publication.doi)))
+
+    # Published is optional
+    if publication.published:
+        graph.add((resource_uri, DC.date, Literal(publication.published, datatype=XSD.date)))
+
+    # Year is required
+    graph.add((resource_uri, SWRCFE.publicationYear, Literal(publication.year)))
+
+    # PDF is optional
+    if publication.pdf:
+        pdf_url = '%s%s' % (getattr(settings, 'BASE_URL', None), publication.pdf.url)
+        graph.add((resource_uri, RDFS.seeAlso, URIRef(pdf_url)))
+
+    # Language is required
+    graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(publication.language.slug)))
+
+    # Bibtex is optional
+    if publication.bibtex:
+        graph.add((resource_uri, SWRCFE.bibtex, Literal(publication.bibtex)))
+
+    if len(publication.authors.all()) > 0:
+        for publication_author in publication.publicationauthor_set.all():
+            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_author.author.slug)))
+
+            # Save publication author object
+
+    if len(publication.editors.all()) > 0:
+        for publication_editor in publication.publicationeditor_set.all():
+            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_editor.editor.slug)))
+
+            # Save publication editor object
+
+    if len(publication.tags.all()) > 0:
+        for publication_tag in publication.publicationtag_set.all():
+            graph.add((resource_uri, DC.subject, resource_uri_for_tag_from_slug(publication_tag.tag.slug)))
+
+    insert_by_post(graph)
+
+
+def update_publication_object_triples(old_slug, new_slug):
+    old_resource_uri = resource_uri_for_publication_from_slug(old_slug)
+    new_resource_uri = resource_uri_for_publication_from_slug(new_slug)
+
+    update_resource_uri(old_resource_uri, new_resource_uri)
 
 
 ###########################################################################
