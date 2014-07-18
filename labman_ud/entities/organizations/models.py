@@ -6,13 +6,16 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from .linked_data import *
+
 
 ORGANIZATION_TYPES = (
-    ('Company', 'Company'),
+    ('Association', 'Association'),
     ('Educational organization', 'Educational organization'),
+    ('Enterprise', 'Enterprise'),
     ('Foundation', 'Foundation'),
     ('Public administration', 'Public administration'),
-    ('Research centre', 'Research centre'),
+    ('Research group', 'Research group'),
     ('University', 'University'),
 )
 
@@ -31,7 +34,7 @@ class Organization(BaseModel):
     organization_type = models.CharField(
         max_length=75,
         choices=ORGANIZATION_TYPES,
-        default='Company',
+        default='Enterprise',
     )
 
     sub_organization_of = models.ForeignKey(
@@ -55,7 +58,11 @@ class Organization(BaseModel):
         unique=True,
     )
 
-    country = models.ForeignKey('utils.Country')
+    country = models.ForeignKey(
+        'utils.Country',
+        blank=True,
+        null=True,
+    )
 
     homepage = models.URLField(
         blank=True,
@@ -78,6 +85,8 @@ class Organization(BaseModel):
             return u'%s (%s)' % (self.short_name, self.full_name)
 
     def save(self, *args, **kwargs):
+        delete_organization_rdf(self)
+
         if not self.short_name:
             self.short_name = self.full_name
 
@@ -85,7 +94,15 @@ class Organization(BaseModel):
             self.short_name = self.short_name
 
         self.slug = slugify(self.short_name.encode('utf-8'))
+
         super(Organization, self).save(*args, **kwargs)
+
+        save_organization_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_organization_rdf(self)
+
+        super(Organization, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -93,7 +110,8 @@ class Organization(BaseModel):
 ###########################################################################
 
 class OrganizationSeeAlso(BaseModel):
-    organization = models.ForeignKey('Organization')
+    organization = models.ForeignKey('Organization', related_name='see_also_links')
+
     see_also = models.URLField(
         max_length=512,
     )
@@ -101,13 +119,25 @@ class OrganizationSeeAlso(BaseModel):
     def __unicode__(self):
         return u'%s related resource: %s' % (self.organization.full_name, self.see_also)
 
+    def save(self, *args, **kwargs):
+        delete_organization_see_also_rdf(self)
+
+        super(OrganizationSeeAlso, self).save(*args, **kwargs)
+
+        save_organization_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_organization_see_also_rdf(self)
+
+        super(OrganizationSeeAlso, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: Unit
 ###########################################################################
 
 class Unit(BaseModel):
-    organization = models.ForeignKey('Organization')
+    organization = models.ForeignKey('Organization', related_name='unit')
 
     head = models.ForeignKey('persons.Person', null=True, blank=True)
 
@@ -122,4 +152,13 @@ class Unit(BaseModel):
         return u'%s' % (self.organization.full_name)
 
     def save(self, *args, **kwargs):
+        delete_unit_rdf(self)
+
         super(Unit, self).save(*args, **kwargs)
+
+        save_unit_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_unit_rdf(self)
+
+        super(Unit, self).delete(*args, **kwargs)
