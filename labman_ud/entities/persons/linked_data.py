@@ -58,7 +58,7 @@ def save_person_as_rdf(person):
 
     # Personal website is optional
     if person.personal_website:
-        graph.add((resource_uri, FOAF.homepage, Literal(person.personal_website)))
+        graph.add((resource_uri, FOAF.homepage, URIRef(person.personal_website)))
 
     # Email is optional
     if person.email:
