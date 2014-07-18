@@ -61,6 +61,15 @@ def remove_unrelated_entities():
         pass
 
 
+@app.task(name='tasks.republish_all_data_as_rdf')
+def republish_all_data_as_rdf():
+    try:
+        call_command('republish_all_data_as_rdf')
+
+    except:
+        pass
+
+
 @app.task(name='tasks.reset_publications')
 def reset_publications():
     try:
