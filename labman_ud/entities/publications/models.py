@@ -7,7 +7,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
-from datetime import datetime
+from .linked_data import *
+
 
 # Create your models here.
 
@@ -163,6 +164,7 @@ class Publication(BaseModel):
 
 class PublicationSeeAlso(BaseModel):
     publication = models.ForeignKey('Publication')
+
     see_also = models.URLField(
         max_length=512,
     )
@@ -276,6 +278,18 @@ class Book(CollectionPublication):
         blank=True,
         null=True,
     )
+
+    def save(self, *args, **kwargs):
+        delete_book_rdf(self)
+
+        super(Book, self).save(*args, **kwargs)
+
+        save_book_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        delete_book_rdf(self)
+
+        super(Book, self).delete(*args, **kwargs)
 
 
 ###########################################################################
