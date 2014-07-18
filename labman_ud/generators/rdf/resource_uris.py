@@ -43,3 +43,7 @@ def resource_uri_for_publication_from_slug(_slug):
 
 def resource_uri_for_language_from_slug(_slug):
     return URIRef('%s/%s/%s' % (getattr(settings, 'RESOURCES_BASE_URL', None), 'languages', _slug))
+
+
+def resource_uri_for_publication_author_from_id(_id):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'RESOURCES_BASE_URL', None), 'publication_authors', _id))
