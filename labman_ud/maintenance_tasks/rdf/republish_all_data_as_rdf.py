@@ -34,6 +34,7 @@ def republish_all_data_as_rdf():
     for organization in Organization.objects.all():
         try:
             organization.save()
+
         except:
             print 'Error while publishing: %s' % organization.full_name
     print '\t\tModule re-published'
@@ -43,16 +44,49 @@ def republish_all_data_as_rdf():
     for person in Person.objects.all():
         try:
             person.save()
+
         except:
             print 'Error while publishing: %s' % person.full_name
     print '\t\tModule re-published'
     print
 
-    print '\tRe-publishing books'
-    for book in Book.objects.all():
+    print '\tRe-publishing publications module'
+    for publication in Publication.objects.all():
+
         try:
-            book.save()
+            if publication.child_type == 'Book':
+                book = Book.objects.get(slug=publication.slug)
+                book.save()
+
+            elif publication.child_type == 'BookSection':
+                book_section = BookSection.objects.get(slug=publication.slug)
+                book_section.save()
+
+            elif publication.child_type == 'ConferencePaper':
+                conference_paper = ConferencePaper.objects.get(slug=publication.slug)
+                conference_paper.save()
+
+            elif publication.child_type == 'Proceedings':
+                proceedings = Proceedings.objects.get(slug=publication.slug)
+                proceedings.save()
+
+            if publication.child_type == 'JournalArticle':
+                journal_article = JournalArticle.objects.get(slug=publication.slug)
+                journal_article.save()
+
+            if publication.child_type == 'Journal':
+                journal = Journal.objects.get(slug=publication.slug)
+                journal.save()
+
+            if publication.child_type == 'MagazineArticle':
+                magazine_article = MagazineArticle.objects.get(slug=publication.slug)
+                magazine_article.save()
+
+            if publication.child_type == 'Magazine':
+                magazine = Magazine.objects.get(slug=publication.slug)
+                magazine.save()
+
         except:
-            print 'Error while publishing: %s' % book.title
-    print '\t\Books re-published'
+            print 'Error while publishing: %s' % publication.title
+    print '\t\Module re-published'
     print
