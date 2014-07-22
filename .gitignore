@@ -32,5 +32,3 @@ fixtures/
 *.sublime-workspace
 
 celerybeat-schedule
-celery.py
-
