@@ -38,8 +38,20 @@ def create_namespaced_graph():
 
 
 def _perform_request(query):
+    url = getattr(settings, 'SPARQL_ENDPOINT_URL', None)
+
+    if getattr(settings, 'SPARQL_ENDPOINT_AUTH', False):
+        realm = getattr(settings, 'SPARQL_ENDPOINT_REALM', None)
+        user = getattr(settings, 'SPARQL_ENDPOINT_USER', None)
+        password = getattr(settings, 'SPARQL_ENDPOINT_PASSWORD', None)
+
+        authhandler = urllib2.HTTPDigestAuthHandler()
+        authhandler.add_password(realm, url, user, password)
+        opener = urllib2.build_opener(authhandler)
+        urllib2.install_opener(opener)
+
     data = urllib.urlencode({'query': query})
-    request = urllib2.Request(getattr(settings, 'SPARQL_ENDPOINT_URL', None), data)
+    request = urllib2.Request(url, data)
     urllib2.urlopen(request)
 
 
