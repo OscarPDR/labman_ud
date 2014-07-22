@@ -142,7 +142,7 @@ def clean_database():
 
     ZoteroExtractorLog.objects.all().delete()
 
-    Event.objects.filter(event_type__name='Academic event').delete()
+    Event.objects.filter(event_type='Academic event').delete()
     City.objects.all().delete()
 
 
