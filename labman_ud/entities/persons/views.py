@@ -3,6 +3,8 @@
 import threading
 import weakref
 
+from inflection import titleize
+
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
@@ -358,7 +360,7 @@ def member_projects(request, person_slug, role_slug=None):
 # View: member_publications
 ###########################################################################
 
-def member_publications(request, person_slug, publication_type=None):
+def member_publications(request, person_slug, publication_type_slug=None):
     person_status = __determine_person_status(person_slug)
 
     # Redirect to correct URL template if concordance doesn't exist
@@ -371,22 +373,23 @@ def member_publications(request, person_slug, publication_type=None):
 
     publications = {}
 
-    if publication_type:
+    if publication_type_slug:
+        publication_type = titleize(publication_type_slug).replace(' ', '')
         publication_ids = member.publications.filter(child_type=publication_type).values_list('id', flat=True)
 
-        if publication_type == 'ConferencePaper':
+        if publication_type_slug == 'conference-paper':
             publication_items = ConferencePaper.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type == 'BookSection':
+        if publication_type_slug == 'book-section':
             publication_items = BookSection.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type == 'Book':
+        if publication_type_slug == 'book':
             publication_items = Book.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type == 'MagazineArticle':
+        if publication_type_slug == 'magazine-article':
             publication_items = MagazineArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type == 'JournalArticle':
+        if publication_type_slug == 'journal-article':
             publication_items = JournalArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
     else:
@@ -797,7 +800,10 @@ def __get_job_data(member):
         }
         accounts.append(account_item)
 
-    publication_types = member.publications.all().values_list('child_type', flat=True)
+    publication_types = []
+
+    for publication_type in member.publications.all().values_list('child_type', flat=True):
+        publication_types.append(titleize(publication_type).lower())
 
     counter = Counter(publication_types)
     ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))

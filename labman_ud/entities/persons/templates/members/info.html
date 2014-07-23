@@ -143,8 +143,8 @@
 
                         {% for type, number in pubtype_info.items %}
                             <li style="text-align: left;">
-                                <a href="{% url 'member_publications' member.slug type %}">
-                                    {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
+                                <a href="{% url 'member_publications' member.slug type|slugify %}">
+                                    {{ number }} {{ type }}{{ number|pluralize }}
                                 </a>
                             </li>
                         {% endfor %}
