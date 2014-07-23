@@ -8,7 +8,7 @@ from django.conf import settings
 import os
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'labman_ud.settings.local')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'labman_ud.settings')
 
 app = Celery('labman_ud')
 
