@@ -50,6 +50,16 @@ def republish_all_data_as_rdf():
     print '\t\tModule re-published'
     print
 
+    print '\tRe-publishing events module'
+    for event in Event.objects.all():
+        try:
+            event.save()
+
+        except:
+            print 'Error while publishing: %s' % event.full_name
+    print '\t\tModule re-published'
+    print
+
     print '\tRe-publishing publications module'
     for publication in Publication.objects.all():
 
@@ -89,4 +99,14 @@ def republish_all_data_as_rdf():
         except:
             print 'Error while publishing: %s' % publication.title
     print '\t\Module re-published'
+    print
+
+    print '\tRe-publishing events module'
+    for project in Project.objects.all():
+        try:
+            project.save()
+
+        except:
+            print 'Error while publishing: %s' % project.full_name
+    print '\t\tModule re-published'
     print

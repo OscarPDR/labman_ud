@@ -7,6 +7,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from .linked_data import *
+
 # Create your models here.
 
 
@@ -80,6 +82,7 @@ class Project(BaseModel):
 
     description = models.TextField(
         max_length=3000,
+        blank=True,
     )
 
     homepage = models.URLField(
@@ -139,11 +142,29 @@ class Project(BaseModel):
         return u'%s' % (self.full_name)
 
     def save(self, *args, **kwargs):
+        old_slug = self.slug
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_project_rdf(self)
+
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
 
         self.slug = slugify(self.short_name.encode('utf-8'))
         super(Project, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_project_as_rdf(self)
+            update_project_object_triples(old_slug, self.slug)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_project_rdf(self)
+
+        super(Project, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -158,6 +179,24 @@ class ProjectSeeAlso(BaseModel):
 
     def __unicode__(self):
         return u'%s related resource: %s' % (self.project.full_name, self.see_also)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_project_see_also_rdf(self)
+
+        super(ProjectSeeAlso, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_project_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_project_see_also_rdf(self)
+
+        super(ProjectSeeAlso, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -191,12 +230,27 @@ class Funding(BaseModel):
         return u'%s funded by %s - Project code: %s' % (self.project.short_name, self.funding_program.short_name, self.project_code)
 
     def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_rdf(self)
+
         if not self.project_code:
             self.slug = self.project.slug + '_' + self.funding_program.slug
         else:
             self.slug = slugify(str(self.project_code))
 
         super(Funding, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_funding_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_rdf(self)
+
+        super(Funding, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -205,12 +259,31 @@ class Funding(BaseModel):
 
 class FundingSeeAlso(BaseModel):
     funding = models.ForeignKey('Funding')
+
     see_also = models.URLField(
         max_length=512,
     )
 
     def __unicode__(self):
         return u'%s related resource: %s' % (self.funding.slug, self.see_also)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_see_also_rdf(self)
+
+        super(FundingSeeAlso, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_funding_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_see_also_rdf(self)
+
+        super(FundingSeeAlso, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -223,17 +296,32 @@ class FundingAmount(BaseModel):
     own_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        blank=True,
-        null=True,
     )
 
     year = models.IntegerField(
         validators=[MinValueValidator(MIN_YEAR_LIMIT), MaxValueValidator(MAX_YEAR_LIMIT)],
-        blank=True,
     )
 
     def __unicode__(self):
         return u'Year %s - %s € Deusto' % (self.year, self.own_amount)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_amount_rdf(self)
+
+        super(FundingAmount, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_funding_amount_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_funding_amount_rdf(self)
+
+        super(FundingAmount, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -266,6 +354,24 @@ class AssignedPerson(BaseModel):
 
     def __unicode__(self):
         return u'%s is working at %s as a %s' % (self.person.full_name, self.project.short_name, self.role.name)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_assigned_person_rdf(self)
+
+        super(AssignedPerson, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_assigned_person_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_assigned_person_rdf(self)
+
+        super(AssignedPerson, self).delete(*args, **kwargs)
 
 
 ###########################################################################

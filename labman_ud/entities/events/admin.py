@@ -70,3 +70,4 @@ class PersonRelatedToEventAdmin(admin.ModelAdmin):
 
 admin.site.register(EventSeeAlso, EventSeeAlsoAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(PersonRelatedToEvent, PersonRelatedToEventAdmin)
