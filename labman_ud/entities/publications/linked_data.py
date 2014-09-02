@@ -8,6 +8,8 @@ from django.conf import settings
 from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
+from entities.utils.models import Language
+
 # print graph.serialize(format='turtle')
 # print graph.serialize(format='n3')
 # print graph.serialize(format='xml')
@@ -46,7 +48,12 @@ def save_publication_as_rdf(publication):
         graph.add((resource_uri, RDFS.seeAlso, URIRef(pdf_url)))
 
     # Language is required
-    graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(publication.language.slug)))
+    if publication.language:
+        graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(publication.language.slug)))
+
+    else:
+        english = Language.objects.get_or_create(name='English')[0]
+        graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(english.slug)))
 
     # Bibtex is optional
     if publication.bibtex:
