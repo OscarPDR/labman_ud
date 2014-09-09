@@ -7,7 +7,7 @@ from inflection import titleize
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -380,18 +380,19 @@ def member_publications(request, person_slug, publication_type_slug=None):
         if publication_type_slug == 'conference-paper':
             publication_items = ConferencePaper.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type_slug == 'book-section':
+        elif publication_type_slug == 'book-section':
             publication_items = BookSection.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type_slug == 'book':
+        elif publication_type_slug == 'book':
             publication_items = Book.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type_slug == 'magazine-article':
+        elif publication_type_slug == 'magazine-article':
             publication_items = MagazineArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
 
-        if publication_type_slug == 'journal-article':
+        elif publication_type_slug == 'journal-article':
             publication_items = JournalArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
-
+        else:
+            raise Http404
     else:
         publication_ids = member.publications.all().values_list('id', flat=True)
 
