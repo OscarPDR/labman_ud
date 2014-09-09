@@ -2,6 +2,7 @@
 
 import os
 
+from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
@@ -100,7 +101,9 @@ class Country(BaseModel):
         return u'%s' % (self.full_name)
 
     def save(self, *args, **kwargs):
-        delete_country_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_country_rdf(self)
 
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
@@ -109,7 +112,9 @@ class Country(BaseModel):
 
         super(Country, self).save(*args, **kwargs)
 
-        save_country_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_country_as_rdf(self)
 
 
 ###########################################################################
@@ -153,12 +158,16 @@ class GeographicalScope(BaseModel):
         return u'%s' % (self.name)
 
     def save(self, *args, **kwargs):
-        delete_geographical_scope_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_geographical_scope_rdf(self)
 
         self.slug = slugify(str(self.name))
         super(GeographicalScope, self).save(*args, **kwargs)
 
-        save_geographical_scope_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_geographical_scope_as_rdf(self)
 
 
 ###########################################################################
@@ -237,12 +246,16 @@ class Tag(BaseModel):
         return u'%s' % (name)
 
     def save(self, *args, **kwargs):
-        delete_tag_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_tag_rdf(self)
 
         self.slug = slugify(str(self.name))
         super(Tag, self).save(*args, **kwargs)
 
-        save_tag_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_tag_as_rdf(self)
 
 
 ###########################################################################

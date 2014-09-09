@@ -2,6 +2,7 @@
 
 import os
 
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
@@ -110,6 +111,7 @@ class Publication(BaseModel):
 
     language = models.ForeignKey(
         'utils.Language',
+        blank=True,
         null=True,
     )
 
@@ -160,8 +162,10 @@ class Publication(BaseModel):
 
         super(Publication, self).save(*args, **kwargs)
 
-        save_publication_as_rdf(self)
-        update_publication_object_triples(old_slug, self.slug)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_publication_as_rdf(self)
+            update_publication_object_triples(old_slug, self.slug)
 
 
 ###########################################################################
@@ -177,6 +181,24 @@ class PublicationSeeAlso(BaseModel):
 
     def __unicode__(self):
         return u'%s related resource: %s' % (self.publication.title, self.see_also)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_publication_see_also_rdf(self)
+
+        super(PublicationSeeAlso, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_publication_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_publication_see_also_rdf(self)
+
+        super(PublicationSeeAlso, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -286,14 +308,20 @@ class Book(CollectionPublication):
     )
 
     def save(self, *args, **kwargs):
-        delete_book_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_book_rdf(self)
 
         super(Book, self).save(*args, **kwargs)
 
-        save_book_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_book_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_book_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_book_rdf(self)
 
         super(Book, self).delete(*args, **kwargs)
 
@@ -315,14 +343,20 @@ class BookSection(ISIDBLPTags):
     )
 
     def save(self, *args, **kwargs):
-        delete_book_section_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_book_section_rdf(self)
 
         super(BookSection, self).save(*args, **kwargs)
 
-        save_book_section_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_book_section_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_book_section_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_book_section_rdf(self)
 
         super(BookSection, self).delete(*args, **kwargs)
 
@@ -346,14 +380,20 @@ class Proceedings(CollectionPublication):
     )
 
     def save(self, *args, **kwargs):
-        delete_proceedings_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_proceedings_rdf(self)
 
         super(Proceedings, self).save(*args, **kwargs)
 
-        save_proceedings_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_proceedings_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_proceedings_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_proceedings_rdf(self)
 
         super(Proceedings, self).delete(*args, **kwargs)
 
@@ -379,14 +419,20 @@ class ConferencePaper(ISIDBLPTags):
     )
 
     def save(self, *args, **kwargs):
-        delete_conference_paper_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_conference_paper_rdf(self)
 
         super(ConferencePaper, self).save(*args, **kwargs)
 
-        save_conference_paper_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_conference_paper_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_conference_paper_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_conference_paper_rdf(self)
 
         super(ConferencePaper, self).delete(*args, **kwargs)
 
@@ -431,14 +477,20 @@ class Journal(CollectionPublication):
     )
 
     def save(self, *args, **kwargs):
-        delete_journal_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_journal_rdf(self)
 
         super(Journal, self).save(*args, **kwargs)
 
-        save_journal_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_journal_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_journal_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_journal_rdf(self)
 
         super(Journal, self).delete(*args, **kwargs)
 
@@ -456,14 +508,20 @@ class JournalArticle(ISIDBLPTags):
     )
 
     def save(self, *args, **kwargs):
-        delete_journal_article_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_journal_article_rdf(self)
 
         super(JournalArticle, self).save(*args, **kwargs)
 
-        save_journal_article_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_journal_article_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_journal_article_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_journal_article_rdf(self)
 
         super(JournalArticle, self).delete(*args, **kwargs)
 
@@ -486,6 +544,24 @@ class Magazine(CollectionPublication):
         null=True,
     )
 
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_magazine_rdf(self)
+
+        super(Magazine, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_magazine_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_magazine_rdf(self)
+
+        super(Magazine, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: MagazineArticle
@@ -493,6 +569,24 @@ class Magazine(CollectionPublication):
 
 class MagazineArticle(PartOfCollectionPublication):
     parent_magazine = models.ForeignKey('Magazine')
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_magazine_article_rdf(self)
+
+        super(MagazineArticle, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_magazine_article_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_magazine_article_rdf(self)
+
+        super(MagazineArticle, self).delete(*args, **kwargs)
 
 
 ###########################################################################

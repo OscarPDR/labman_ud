@@ -85,7 +85,9 @@ class Organization(BaseModel):
             return u'%s (%s)' % (self.short_name, self.full_name)
 
     def save(self, *args, **kwargs):
-        delete_organization_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_organization_rdf(self)
 
         if not self.short_name:
             self.short_name = self.full_name
@@ -97,10 +99,14 @@ class Organization(BaseModel):
 
         super(Organization, self).save(*args, **kwargs)
 
-        save_organization_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_organization_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_organization_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_organization_rdf(self)
 
         super(Organization, self).delete(*args, **kwargs)
 
@@ -120,14 +126,20 @@ class OrganizationSeeAlso(BaseModel):
         return u'%s related resource: %s' % (self.organization.full_name, self.see_also)
 
     def save(self, *args, **kwargs):
-        delete_organization_see_also_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_organization_see_also_rdf(self)
 
         super(OrganizationSeeAlso, self).save(*args, **kwargs)
 
-        save_organization_see_also_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_organization_see_also_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_organization_see_also_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_organization_see_also_rdf(self)
 
         super(OrganizationSeeAlso, self).delete(*args, **kwargs)
 
@@ -152,13 +164,19 @@ class Unit(BaseModel):
         return u'%s' % (self.organization.full_name)
 
     def save(self, *args, **kwargs):
-        delete_unit_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_unit_rdf(self)
 
         super(Unit, self).save(*args, **kwargs)
 
-        save_unit_as_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_unit_as_rdf(self)
 
     def delete(self, *args, **kwargs):
-        delete_unit_rdf(self)
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_unit_rdf(self)
 
         super(Unit, self).delete(*args, **kwargs)

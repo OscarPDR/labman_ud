@@ -8,9 +8,81 @@ from django.conf import settings
 from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
+from entities.utils.models import Language
+
 # print graph.serialize(format='turtle')
 # print graph.serialize(format='n3')
 # print graph.serialize(format='xml')
+
+
+###########################################################################
+# Model: Publication
+###########################################################################
+
+def save_publication_as_rdf(publication):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(publication.slug)
+
+    # Title is required
+    graph.add((resource_uri, DC.title, Literal(publication.title)))
+
+    # Abstract is optional
+    if publication.abstract:
+        graph.add((resource_uri, BIBO.abstract, Literal(publication.abstract)))
+
+    # DOI is optional
+    if publication.doi:
+        graph.add((resource_uri, BIBO.doi, Literal(publication.doi)))
+
+    # Published is optional
+    if publication.published:
+        graph.add((resource_uri, DC.date, Literal(publication.published, datatype=XSD.date)))
+
+    # Year is required
+    graph.add((resource_uri, SWRCFE.publicationYear, Literal(publication.year)))
+
+    # PDF is optional
+    if publication.pdf:
+        pdf_url = '%s%s' % (getattr(settings, 'BASE_URL', None), publication.pdf.url)
+        graph.add((resource_uri, RDFS.seeAlso, URIRef(pdf_url)))
+
+    # Language is required
+    if publication.language:
+        graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(publication.language.slug)))
+
+    else:
+        english = Language.objects.get_or_create(name='English')[0]
+        graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(english.slug)))
+
+    # Bibtex is optional
+    if publication.bibtex:
+        graph.add((resource_uri, SWRCFE.bibtex, Literal(publication.bibtex)))
+
+    if len(publication.authors.all()) > 0:
+        for publication_author in publication.publicationauthor_set.all():
+            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_author.author.slug)))
+
+            # Save publication author object
+
+    if len(publication.editors.all()) > 0:
+        for publication_editor in publication.publicationeditor_set.all():
+            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_editor.editor.slug)))
+
+            # Save publication editor object
+
+    if len(publication.tags.all()) > 0:
+        for publication_tag in publication.publicationtag_set.all():
+            graph.add((resource_uri, DC.subject, resource_uri_for_tag_from_slug(publication_tag.tag.slug)))
+
+    insert_by_post(graph)
+
+
+def update_publication_object_triples(old_slug, new_slug):
+    old_resource_uri = resource_uri_for_publication_from_slug(old_slug)
+    new_resource_uri = resource_uri_for_publication_from_slug(new_slug)
+
+    update_resource_uri(old_resource_uri, new_resource_uri)
 
 
 ###########################################################################
@@ -302,85 +374,98 @@ def delete_journal_rdf(journal):
 
 
 ###########################################################################
-# Model: Publication
+# Model: MagazineArticle
 ###########################################################################
 
-def save_publication_as_rdf(publication):
+def save_magazine_article_as_rdf(magazine_article):
     graph = create_namespaced_graph()
 
-    resource_uri = resource_uri_for_publication_from_slug(publication.slug)
+    resource_uri = resource_uri_for_publication_from_slug(magazine_article.slug)
 
-    # Title is required
-    graph.add((resource_uri, DC.title, Literal(publication.title)))
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.UnrefereedArticle))
+    graph.add((resource_uri, RDFS.label, Literal(magazine_article.title)))
 
-    # Abstract is optional
-    if publication.abstract:
-        graph.add((resource_uri, BIBO.abstract, Literal(publication.abstract)))
+    # Pages is optional
+    if magazine_article.pages:
+        graph.add((resource_uri, BIBO.pages, Literal(magazine_article.pages)))
 
-    # DOI is optional
-    if publication.doi:
-        graph.add((resource_uri, BIBO.doi, Literal(publication.doi)))
+    # Short title is optional
+    if magazine_article.short_title:
+        graph.add((resource_uri, SWRCFE.publicationShortTitle, Literal(magazine_article.short_title)))
 
-    # Published is optional
-    if publication.published:
-        graph.add((resource_uri, DC.date, Literal(publication.published, datatype=XSD.date)))
+    # Parent magazine is always present
+    graph.add((resource_uri, DCTERMS.isPartOf, resource_uri_for_publication_from_slug(magazine_article.parent_magazine.slug)))
 
-    # Year is required
-    graph.add((resource_uri, SWRCFE.publicationYear, Literal(publication.year)))
-
-    # PDF is optional
-    if publication.pdf:
-        pdf_url = '%s%s' % (getattr(settings, 'BASE_URL', None), publication.pdf.url)
-        graph.add((resource_uri, RDFS.seeAlso, URIRef(pdf_url)))
-
-    # Language is required
-    graph.add((resource_uri, DC.language, resource_uri_for_language_from_slug(publication.language.slug)))
-
-    # Bibtex is optional
-    if publication.bibtex:
-        graph.add((resource_uri, SWRCFE.bibtex, Literal(publication.bibtex)))
-
-    if len(publication.authors.all()) > 0:
-        for publication_author in publication.publicationauthor_set.all():
-            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_author.author.slug)))
-
-            # Save publication author object
-
-    if len(publication.editors.all()) > 0:
-        for publication_editor in publication.publicationeditor_set.all():
-            graph.add((resource_uri, DC.creator, resource_uri_for_person_from_slug(publication_editor.editor.slug)))
-
-            # Save publication editor object
-
-    if len(publication.tags.all()) > 0:
-        for publication_tag in publication.publicationtag_set.all():
-            graph.add((resource_uri, DC.subject, resource_uri_for_tag_from_slug(publication_tag.tag.slug)))
+    # Individually published is optional
+    # TODO:
 
     insert_by_post(graph)
 
 
-def update_publication_object_triples(old_slug, new_slug):
-    old_resource_uri = resource_uri_for_publication_from_slug(old_slug)
-    new_resource_uri = resource_uri_for_publication_from_slug(new_slug)
+def delete_magazine_article_rdf(magazine_article):
+    resource_uri = resource_uri_for_publication_from_slug(magazine_article.slug)
 
-    update_resource_uri(old_resource_uri, new_resource_uri)
+    delete_resource(resource_uri)
+
+
+###########################################################################
+# Model: Magazine
+###########################################################################
+
+def save_magazine_as_rdf(magazine):
+    graph = create_namespaced_graph()
+
+    resource_uri = resource_uri_for_publication_from_slug(magazine.slug)
+
+    # Define type and label of resource
+    graph.add((resource_uri, RDF.type, SWRC.Magazine))
+    graph.add((resource_uri, RDFS.label, Literal(magazine.title)))
+
+    # Publisher is optional
+    if magazine.publisher:
+        graph.add((resource_uri, DCTERMS.publisher, Literal(magazine.publisher)))
+
+    # Place is optional
+    if magazine.place:
+        graph.add((resource_uri, DCTERMS.spatial, Literal(magazine.place)))
+
+    # Volume is optional
+    if magazine.volume:
+        graph.add((resource_uri, BIBO.volume, Literal(magazine.volume)))
+
+    # ISSN is optional
+    if magazine.issn:
+        graph.add((resource_uri, BIBO.issn, Literal(magazine.issn)))
+
+    # Issue is optional
+    if magazine.issue:
+        graph.add((resource_uri, BIBO.issue, Literal(magazine.issue)))
+
+    insert_by_post(graph)
+
+
+def delete_magazine_rdf(magazine):
+    resource_uri = resource_uri_for_publication_from_slug(magazine.slug)
+
+    delete_resource(resource_uri)
 
 
 ###########################################################################
 # Model: PublicationSeeAlso
 ###########################################################################
 
-# def save_person_see_also_as_rdf(person_see_also):
-#     graph = create_namespaced_graph()
+def save_publication_see_also_as_rdf(publication_see_also):
+    graph = create_namespaced_graph()
 
-#     resource_uri = resource_uri_for_person_from_slug(person_see_also.person.slug)
+    resource_uri = resource_uri_for_publication_from_slug(publication_see_also.publication.slug)
 
-#     graph.add((resource_uri, RDFS.seeAlso, URIRef(person_see_also.see_also)))
+    graph.add((resource_uri, RDFS.seeAlso, URIRef(publication_see_also.see_also)))
 
-#     insert_by_post(graph)
+    insert_by_post(graph)
 
 
-# def delete_person_see_also_rdf(person_see_also):
-#     resource_uri = resource_uri_for_person_from_slug(person_see_also.person.slug)
+def delete_publication_see_also_rdf(publication_see_also):
+    resource_uri = resource_uri_for_publication_from_slug(publication_see_also.publication.slug)
 
-#     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
+    delete_resources_with_predicate(resource_uri, RDFS.seeAlso)

@@ -6,6 +6,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from .linked_data import *
 
 EVENT_TYPES = (
     ('Academic event', 'Academic event'),
@@ -51,11 +52,20 @@ class Event(BaseModel):
     location = models.CharField(
         max_length=250,
         blank=True,
+        null=True,
     )
 
-    host_city = models.ForeignKey('utils.City', blank=True, null=True)
+    host_city = models.ForeignKey(
+        'utils.City',
+        blank=True,
+        null=True,
+    )
 
-    host_country = models.ForeignKey('utils.Country', blank=True, null=True)
+    host_country = models.ForeignKey(
+        'utils.Country',
+        blank=True,
+        null=True,
+    )
 
     start_date = models.DateField(
         blank=True,
@@ -101,11 +111,29 @@ class Event(BaseModel):
         return u'%s %s' % (self.short_name, self.year)
 
     def save(self, *args, **kwargs):
+        old_slug = self.slug
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_event_rdf(self)
+
         if not self.short_name:
             self.short_name = self.full_name
 
         self.slug = slugify(self.short_name)
         super(Event, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_event_as_rdf(self)
+            update_event_object_triples(old_slug, self.slug)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_event_rdf(self)
+
+        super(Event, self).delete(*args, **kwargs)
 
 
 ###########################################################################
@@ -121,6 +149,24 @@ class EventSeeAlso(BaseModel):
     def __unicode__(self):
         return u'%s related resource: %s' % (self.event.full_name, self.see_also)
 
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_event_see_also_rdf(self)
+
+        super(EventSeeAlso, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_event_see_also_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_event_see_also_rdf(self)
+
+        super(EventSeeAlso, self).delete(*args, **kwargs)
+
 
 ###########################################################################
 # Model: PersonRelatedToEvent
@@ -132,3 +178,21 @@ class PersonRelatedToEvent(BaseModel):
 
     def __unicode__(self):
         return u'%s attended %s' % (self.person.full_name, self.event.full_name)
+
+    def save(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_person_related_to_event_rdf(self)
+
+        super(PersonRelatedToEvent, self).save(*args, **kwargs)
+
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            save_person_related_to_event_as_rdf(self)
+
+    def delete(self, *args, **kwargs):
+        # Publish RDF data
+        if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+            delete_person_related_to_event_rdf(self)
+
+        super(PersonRelatedToEvent, self).delete(*args, **kwargs)

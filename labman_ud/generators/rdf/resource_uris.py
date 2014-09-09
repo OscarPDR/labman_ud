@@ -47,3 +47,27 @@ def resource_uri_for_language_from_slug(_slug):
 
 def resource_uri_for_publication_author_from_id(_id):
     return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'publication_authors', _id))
+
+
+def resource_uri_for_funding_program_from_slug(_slug):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'funding_programs', _slug))
+
+
+def resource_uri_for_event_from_slug(_slug):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'events', _slug))
+
+
+def resource_uri_for_project_from_slug(_slug):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'projects', _slug))
+
+
+def resource_uri_for_funding_from_slug(_slug):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'fundings', _slug))
+
+
+def resource_uri_for_funding_amount_from_id(_id):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'funding_amounts', _id))
+
+
+def resource_uri_for_assigned_person_from_id(_id):
+    return URIRef('%s/%s/%s' % (getattr(settings, 'GRAPH_BASE_URL', None), 'assigned_persons', _id))
