@@ -111,6 +111,7 @@ class Publication(BaseModel):
 
     language = models.ForeignKey(
         'utils.Language',
+        blank=True,
         null=True,
     )
 
