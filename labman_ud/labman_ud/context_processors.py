@@ -4,4 +4,4 @@ from django.conf import settings
 
 
 def global_vars(request):
-    return {'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', None)}
+    return {'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', None) + '/'}
