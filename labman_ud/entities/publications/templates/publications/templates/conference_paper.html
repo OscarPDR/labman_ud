@@ -87,10 +87,15 @@
     </div>
 
     <div class="panel-body">
-        <p style="font-style: italic">
+        <p>
             {% for author in authors %}
                 {{ author.full_name }}{% if not forloop.last %}, {% else %}.{% endif %}
-            {% endfor %}{% if parent_publication.year %} ({{ parent_publication.year }}){% endif %} In {{ parent_publication.title }}. {% if publication.pages %}(pp. {{ publication.pages }}).{% endif %}{% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
+            {% endfor %}
+            {% if parent_publication.year %} ({{ parent_publication.year }}){% endif %}
+             "<em>{{ publication.title }}</em>"
+             In {{ parent_publication.title }}.
+            {% if publication.pages %}(pp. {{ publication.pages }}).{% endif %}
+            {% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
         </p>
     </div>
 </div>
