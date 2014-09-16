@@ -9,4 +9,4 @@ from extractors.zotero.zotero_extractor import generate_publication_from_zotero
 ###########################################################################
 
 def parse_publication():
-    generate_publication_from_zotero('KQ5EAQM6')
+    generate_publication_from_zotero('NZK77RXD')

@@ -12,7 +12,7 @@ from django.conf import settings
 import json
 
 
-TAGS_FILEPATH = '%s/static/%s' % (getattr(settings, 'PROJECT_DIR', None), 'json/tag_nicks.json')
+TAGS_FILEPATH = '%s/collected_static/%s' % (getattr(settings, 'PROJECT_DIR', None), 'json/tag_nicks.json')
 
 
 ###########################################################################
