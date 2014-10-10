@@ -61,7 +61,7 @@
                     <div>
                         <a href="{% url 'home' %}">
                             <h1 id="principal-h1">
-                                <img src="{% static 'img/morelab.png' %}" width="100"/>
+                                <img alt="MORElab" src="{% static 'img/morelab.png' %}" width="100"/>
                                 DeustoTech INTERNET + TELECOM units
                             </h1>
                         </a>
@@ -70,42 +70,42 @@
                     <ul class="nav nav-justified">
                         <li id="news-nav">
                             <a href="{% url 'news_index' %}">
-                                <img src="{% static 'img/index/news_mini.png' %}" width="24"/>
+                                <img alt="News" src="{% static 'img/index/news_mini.png' %}" width="24"/>
                                 News
                             </a>
                         </li>
 
                         <li id="projects-nav">
                             <a href="{% url 'project_index' %}">
-                                <img src="{% static 'img/index/project_micro.png' %}"/>
+                                <img alt="Projects" src="{% static 'img/index/project_micro.png' %}"/>
                                 Projects
                             </a>
                         </li>
 
                         <li id="publications-nav">
                             <a href="{% url 'publication_index' %}">
-                                <img src="{% static 'img/index/publication_micro.png' %}"/>
+                                <img alt="Publications" src="{% static 'img/index/publication_micro.png' %}"/>
                                 Publications
                             </a>
                         </li>
 
                         <li id="members-nav">
                             <a href="{% url 'members' %}">
-                                <img src="{% static 'img/index/person_micro.png' %}"/>
+                                <img alt="Members" src="{% static 'img/index/person_micro.png' %}"/>
                                 Members
                             </a>
                         </li>
 
                         <li id="charts-nav">
                             <a href="{% url 'chart_index' %}">
-                                <img src="{% static 'img/index/chart_micro.png' %}"/>
+                                <img alt="Charts" src="{% static 'img/index/chart_micro.png' %}"/>
                                 Charts
                             </a>
                         </li>
 
                         <li id="about-nav">
                             <a href="{% url 'about' %}">
-                                <img src="{% static 'img/index/info_micro.png' %}"/>
+                                <img alt="About" src="{% static 'img/index/info_micro.png' %}"/>
                                 About
                             </a>
                         </li>
@@ -128,7 +128,7 @@
             <div class="row">
                 <div class="col-md-4 footer-object">
                     <div class="col-md-4 hidden-xs footer-icon">
-                        <img src="{% static 'img/footer/placemarker-mini.png' %}"/>
+                        <img alt="Place Marker" src="{% static 'img/footer/placemarker-mini.png' %}"/>
                     </div>
 
                     <div class="col-md-8 footer-description">
@@ -148,7 +148,7 @@
 
                 <div class="col-md-4 footer-object">
                     <div class="col-md-4 hidden-xs footer-icon">
-                        <img src="{% static 'img/footer/phone-mini.png' %}"/>
+                        <img alt="Phone" src="{% static 'img/footer/phone-mini.png' %}"/>
                     </div>
 
                     <div class="col-md-8 footer-description">
@@ -165,27 +165,27 @@
 
                     <div class="footer-social">
                         <a target="_blank" href="https://github.com/morelab">
-                            <img src="{% static 'img/footer/github-color.png' %}" width="75"/>
+                            <img alt="GitHub" src="{% static 'img/footer/github-color.png' %}" width="75"/>
                         </a>
 
                         <a target="_blank" href="http://twitter.com/morelab_ud">
-                            <img src="{% static 'img/footer/twitter-color.png' %}" width="75"/>
+                            <img alt="Twitter" src="{% static 'img/footer/twitter-color.png' %}" width="75"/>
                         </a>
 
                         <a target="_blank" href="http://www.slideshare.net/tag/morelab">
-                            <img src="{% static 'img/footer/slideshare-color.png' %}" width="75"/>
+                            <img alt="SlideShare" src="{% static 'img/footer/slideshare-color.png' %}" width="75"/>
                         </a>
 
                         <a target="_blank" href="http://www.youtube.com/user/deustomorelab">
-                            <img src="{% static 'img/footer/youtube-color.png' %}" width="75"/>
+                            <img alt="YouTube" src="{% static 'img/footer/youtube-color.png' %}" width="75"/>
                         </a>
                     </div>
                 </div>
             </div>
         </footer>
 
-    </body>
-
+    {% block scripts %}
+    
     <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
@@ -201,7 +201,7 @@
         })();
     </script>
 
-    {% block scripts %}
     {% endblock %}
-
+    
+    </body>
 </html>
