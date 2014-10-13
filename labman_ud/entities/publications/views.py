@@ -284,20 +284,20 @@ def __build_publication_return_dict(publication):
 
     try:
         if publication.child_type == 'ConferencePaper':
-            conference_paper = ConferencePaper.objects.get(slug=publication.slug)
-            parent_publication = Proceedings.objects.get(id=conference_paper.parent_proceedings.id)
+            publication = ConferencePaper.objects.get(slug=publication.slug)
+            parent_publication = Proceedings.objects.get(id=publication.parent_proceedings.id)
 
         if publication.child_type == 'JournalArticle':
-            journal_article = JournalArticle.objects.get(slug=publication.slug)
-            parent_publication = Journal.objects.get(id=journal_article.parent_journal.id)
+            publication = JournalArticle.objects.get(slug=publication.slug)
+            parent_publication = Journal.objects.get(id=publication.parent_journal.id)
 
         if publication.child_type == 'MagazineArticle':
-            magazine_article = MagazineArticle.objects.get(slug=publication.slug)
-            parent_publication = Magazine.objects.get(id=magazine_article.parent_magazine.id)
+            publication = MagazineArticle.objects.get(slug=publication.slug)
+            parent_publication = Magazine.objects.get(id=publication.parent_magazine.id)
 
         if publication.child_type == 'BookSection':
-            book_section = BookSection.objects.get(slug=publication.slug)
-            parent_publication = Book.objects.get(id=book_section.parent_book.id)
+            publication = BookSection.objects.get(slug=publication.slug)
+            parent_publication = Book.objects.get(id=publication.parent_book.id)
 
     except:
         pass
