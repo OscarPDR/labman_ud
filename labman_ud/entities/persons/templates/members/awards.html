@@ -1,0 +1,41 @@
+{% extends "members/info.html" %}
+{% load staticfiles %}
+
+
+
+{% block member_content %}
+
+    {% if awards %}
+        {% for key, value in awards.items %}
+            <blockquote>
+                <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+
+                <dl class="dl-horizontal">
+                    {% for item in value %}
+                        <dt class="day-number">{{ item.date|date:"d" }}</dt>
+                        <dd class="news-title"><a href="{# {% url 'view_award' item.slug %} #}">{{ item.full_name }}</a></dd>
+                    {% endfor %}
+                </dl>
+            </blockquote>
+        {% endfor %}
+    {% else %}
+        <p>
+            {{ member.full_name }} does not have any award yet.
+        </p>
+    {% endif %}
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('btn-primary');
+        $('.member_biography').addClass('btn-default');
+
+        $('.member_awards').removeClass('btn-default');
+        $('.member_awards').addClass('btn-primary');
+    </script>
+
+{% endblock %}

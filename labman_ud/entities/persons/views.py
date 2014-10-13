@@ -23,7 +23,7 @@ from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
-from entities.utils.models import Role, Network
+from entities.utils.models import Role, Network, PersonRelatedToAward
 
 from charts.views import PUBLICATION_TYPES
 
@@ -515,6 +515,33 @@ def member_news(request, person_slug):
     return_dict.update(data_dict)
 
     return render_to_response('members/news.html', return_dict, context_instance=RequestContext(request))
+
+###########################################################################
+# View: member_awards
+###########################################################################
+
+def member_awards(request, person_slug):
+    member = get_object_or_404(Person, slug=person_slug)
+    person_awards = PersonRelatedToAward.objects.filter(person=member).select_related('award').order_by('-award__date')
+    awards = OrderedDict()
+
+    for award_person in person_awards:
+        award = award_person.award
+        year_month = u'%s %s' % (award.date.strftime('%B'), award.date.year)
+        if not year_month in awards:
+            awards[year_month] = []
+        awards[year_month].append(award)
+
+    # dictionary to be returned in render_to_response()
+    return_dict = {
+        'web_title': u'%s - Awards' % member.full_name,
+        'member': member,
+        'awards': awards,
+    }
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render_to_response('members/awards.html', return_dict, context_instance=RequestContext(request))
 
 
 ###########################################################################
