@@ -9,7 +9,7 @@
     <div id="member-name">
         <h1 id="member-name">
             <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">
-                <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{% static 'img/rdf.png' %}"/>
+                <img class="rdf-icon" alt="rdf-icon" title="RDF description" width="32" src="{% static 'img/rdf.png' %}"/>
             </a>
             &emsp;
             {% if member.title %}
@@ -32,12 +32,12 @@
 
         <div class="col-md-3">
             {% if member.profile_picture %}
-                <img id="profile-picture" src="{{ MEDIA_URL }}{{ member.profile_picture }}"/>
+                <img id="profile-picture" alt="profile-picture" src="{{ MEDIA_URL }}{{ member.profile_picture }}"/>
             {% else %}
                 {% if member.gender == 'Female' %}
-                    <img id="profile-picture" src="{% static 'img/female.png' %}"/>
+                    <img id="profile-picture" alt="generic-female-profile-picture" src="{% static 'img/female.png' %}"/>
                 {% else %}
-                    <img id="profile-picture" src="{% static 'img/male.png' %}"/>
+                    <img id="profile-picture" alt="generic-male-profile-picture" src="{% static 'img/male.png' %}"/>
                 {% endif %}
             {% endif %}
 
@@ -99,7 +99,7 @@
                     </div>
                     {% for account in accounts %}
                         <div class="personal-website">
-                        &emsp;<img class="fa fa-large" src="{{ MEDIA_URL }}{{ account.icon_url }}" width="24" height="24"/>
+                        &emsp;<img class="fa fa-large" alt="social-network-icon" src="{{ MEDIA_URL }}{{ account.icon_url }}" width="24" height="24"/>
                         &emsp;<a target="_blank" href="{{ account.base_url }}{{ account.profile_id}}"> {{ account.network_name }} </a>
                         </div>
                     {% endfor %}
