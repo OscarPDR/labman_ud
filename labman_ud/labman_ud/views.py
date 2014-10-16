@@ -3,8 +3,7 @@
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 
 from entities.news.models import News
 
@@ -17,12 +16,12 @@ from entities.news.models import News
 ###########################################################################
 
 def home(request):
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'latest_news': News.objects.order_by('-created')[:3]
     }
 
-    return render_to_response('labman_ud/index.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'labman_ud/index.html', return_dict)
 
 
 ###########################################################################
@@ -39,7 +38,7 @@ def logout_view(request):
 ###########################################################################
 
 def about(request):
-    return render_to_response('labman_ud/about.html', {'web_title': 'About'})
+    return render(request, 'labman_ud/about.html', {'web_title': 'About'})
 
 
 ###########################################################################
@@ -47,7 +46,7 @@ def about(request):
 ###########################################################################
 
 def about_collaborations(request):
-    return render_to_response('labman_ud/about/collaborations.html', {'web_title': 'Collaborations'})
+    return render(request, 'labman_ud/about/collaborations.html', {'web_title': 'Collaborations'})
 
 
 ###########################################################################
@@ -55,7 +54,7 @@ def about_collaborations(request):
 ###########################################################################
 
 def about_prototyping(request):
-    return render_to_response('labman_ud/about/prototyping.html', {'web_title': 'Prototyping'})
+    return render(request, 'labman_ud/about/prototyping.html', {'web_title': 'Prototyping'})
 
 
 ###########################################################################
@@ -63,4 +62,4 @@ def about_prototyping(request):
 ###########################################################################
 
 def view404(request):
-    return render_to_response('labman_ud/404.html')
+    return render(request, 'labman_ud/404.html')

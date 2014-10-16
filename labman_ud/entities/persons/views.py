@@ -8,8 +8,7 @@ from inflection import titleize
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
@@ -108,7 +107,7 @@ def person_index(request, query_string=None):
 
     persons_length = len(persons)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
         'form': form,
@@ -117,7 +116,7 @@ def person_index(request, query_string=None):
         'query_string': query_string,
     }
 
-    return render_to_response("persons/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "persons/index.html", return_dict)
 
 
 ###########################################################################
@@ -186,7 +185,7 @@ def members(request, organization_slug=None):
             konami_positions.append(member.konami_code_position)
             konami_profile_pictures.append(member.profile_konami_code_picture)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Members',
         'heads_of_unit': heads_of_unit,
@@ -199,7 +198,7 @@ def members(request, organization_slug=None):
         'is_active_members': True,
     }
 
-    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/index.html", return_dict)
 
 
 ###########################################################################
@@ -266,7 +265,7 @@ def former_members(request, organization_slug=None):
             konami_positions.append(former_member.konami_code_position)
             konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Former members',
         'konami_positions': konami_positions,
@@ -278,7 +277,7 @@ def former_members(request, organization_slug=None):
         'is_active_members': False,
     }
 
-    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/index.html", return_dict)
 
 
 ###########################################################################
@@ -296,7 +295,7 @@ def member_info(request, person_slug):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': member.full_name,
         'member': member,
@@ -305,7 +304,7 @@ def member_info(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/info.html", return_dict)
 
 
 ###########################################################################
@@ -342,7 +341,7 @@ def member_projects(request, person_slug, role_slug=None):
         for project in project_objects:
             projects[role.name].append(project)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Projects' % member.full_name,
         'member': member,
@@ -353,7 +352,7 @@ def member_projects(request, person_slug, role_slug=None):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/projects.html", return_dict)
 
 
 ###########################################################################
@@ -443,7 +442,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
         publications[publication_item.child_type].append(publication_dict)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Publications' % member.full_name,
         'member': member,
@@ -454,7 +453,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/publications.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/publications.html", return_dict)
 
 
 ###########################################################################
@@ -474,7 +473,7 @@ def member_publication_bibtex(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/bibtex.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/bibtex.html", return_dict)
 
 
 ###########################################################################
@@ -505,7 +504,7 @@ def member_news(request, person_slug):
             news[year_month] = []
         news[year_month].append(news_piece)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - News' % member.full_name,
         'member': member,
@@ -514,7 +513,8 @@ def member_news(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response('members/news.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'members/news.html', return_dict)
+
 
 ###########################################################################
 # View: member_awards
@@ -532,7 +532,7 @@ def member_awards(request, person_slug):
             awards[year_month] = []
         awards[year_month].append(award)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Awards' % member.full_name,
         'member': member,
@@ -541,7 +541,7 @@ def member_awards(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response('members/awards.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'members/awards.html', return_dict)
 
 
 ###########################################################################
@@ -646,7 +646,7 @@ def member_profiles(request, person_slug):
         }
         accounts.append(account_item)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'member': member,
         'accounts': accounts,
@@ -655,7 +655,7 @@ def member_profiles(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/profiles.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/profiles.html", return_dict)
 
 
 ###########################################################################
@@ -673,7 +673,7 @@ def member_graphs(request, person_slug):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'member': member,
     }
@@ -681,7 +681,7 @@ def member_graphs(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/graphs.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/graphs.html", return_dict)
 
 
 ###########################################################################
@@ -723,7 +723,7 @@ def person_info(request, person_slug):
         pub_type = publication.child_type
         publications[pub_type].append(publication)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': person.full_name,
         'person': person,
@@ -731,7 +731,7 @@ def person_info(request, person_slug):
         'publications': publications,
     }
 
-    return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "persons/info.html", return_dict)
 
 
 ####################################################################################################
@@ -892,7 +892,7 @@ def member_phd_dissertation(request, person_slug):
     for thesis_abstract in thesis_abstracts:
         abstracts[thesis_abstract.language.name] = thesis_abstract.abstract
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - PhD thesis' % member.full_name,
         'member': member,
@@ -904,4 +904,4 @@ def member_phd_dissertation(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/phd_dissertation.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/phd_dissertation.html", return_dict)
