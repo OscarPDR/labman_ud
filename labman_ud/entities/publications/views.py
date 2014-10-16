@@ -21,16 +21,6 @@ from collections import OrderedDict, Counter
 
 # Create your views here.
 
-INDICATORS_TAG_SLUGS = ['isi', 'corea', 'coreb', 'corec', 'q1', 'q2', 'q3', 'q4']
-
-PUBLICATION_TYPES = [
-    'Book section', 'Book',
-    'Conference paper', 'Proceedings',
-    'Journal article', 'Journal',
-    'Magazine article', 'Magazine',
-    'Thesis'
-]
-
 
 ###########################################################################
 # View: publication_index
@@ -264,16 +254,48 @@ def __build_publication_return_dict(publication):
     related_publications = Publication.objects.filter(id__in=related_publications_ids).exclude(id=publication.id)
 
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tag_list = Tag.objects.filter(id__in=tag_ids).order_by('name')
 
-    tag_list = []
     indicators_list = []
 
-    for tag in tags:
-        if tag.slug in INDICATORS_TAG_SLUGS:
-            indicators_list.append(tag)
-        else:
-            tag_list.append(tag)
+    # Check for indicators
+
+    if (publication.child_type == 'JournalArticle'):
+        publication = JournalArticle.objects.get(slug=publication.slug)
+        parent_publication = Journal.objects.get(id=publication.parent_journal.id)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if parent_publication.quartile:
+            indicators_list.append(parent_publication.quartile.lower())
+
+    if (publication.child_type == 'BookSection'):
+        publication = BookSection.objects.get(slug=publication.slug)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if publication.core:
+            indicators_list.append('core' + publication.core.lower())
+
+    if (publication.child_type == 'ConferencePaper'):
+        publication = ConferencePaper.objects.get(slug=publication.slug)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if publication.core:
+            indicators_list.append('core' + publication.core.lower())
 
     try:
         pdf = publication.pdf

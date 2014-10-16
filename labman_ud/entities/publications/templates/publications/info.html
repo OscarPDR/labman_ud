@@ -55,17 +55,17 @@
 
             <ul id="publication-tabs" class="nav nav-pills nav-stacked">
                 {% if indicators_list %}
-                    <br>
-
                     <div class="centered">
                         {% for indicator in indicators_list %}
-                            <img class="indicator-image" src="{{ STATIC_URL }}img/indicators/{{ indicator.slug }}.png"/>
+                            <br>
+                            <img class="indicator-image" src="{{ STATIC_URL }}img/indicators/{{ indicator }}.png"/>
                             <br>
                         {% endfor %}
                     </div>
                 {% endif %}
 
                 {% if publication.bibtex %}
+                    <br>
                     <div class="centered">
                         <a data-toggle="modal" href="#myModal" class="btn btn-default bibtex-button">
                             <img src="{{ STATIC_URL }}img/bibtex.png" width="75" />
