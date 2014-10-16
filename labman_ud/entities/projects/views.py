@@ -7,8 +7,7 @@ from inflection import titleize
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
@@ -92,7 +91,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     items = ord_dict.items()
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Projects',
         'clean_index': clean_index,
@@ -108,7 +107,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'tag': tag,
     }
 
-    return render_to_response("projects/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "projects/index.html", return_dict)
 
 
 ###########################################################################
@@ -118,18 +117,18 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 def project_info(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict['web_title'] = project.full_name
 
     if project.project_type == 'Internal project':
-        return render_to_response("projects/info_internal_project.html", return_dict, context_instance=RequestContext(request))
+        return render(request, "projects/info_internal_project.html", return_dict)
 
     elif project.project_type == 'External project':
-        return render_to_response("projects/info_external_project.html", return_dict, context_instance=RequestContext(request))
+        return render(request, "projects/info_external_project.html", return_dict)
 
     else:
-        return render_to_response("projects/info.html", return_dict, context_instance=RequestContext(request))
+        return render(request, "projects/info.html", return_dict)
 
 
 ###########################################################################
@@ -162,7 +161,7 @@ def project_funding_details(request, project_slug):
 
     funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
         'web_title': u'%s - Funding details' % project.full_name,
@@ -173,7 +172,7 @@ def project_funding_details(request, project_slug):
         'total_funds': total_funds,
     })
 
-    return render_to_response("projects/funding_details.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "projects/funding_details.html", return_dict)
 
 
 ###########################################################################
@@ -250,7 +249,7 @@ def project_assigned_persons(request, project_slug):
         if role.slug == 'researcher':
             researchers.append(person_item)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
         'web_title': u'%s - Assigned persons' % project.full_name,
@@ -261,7 +260,7 @@ def project_assigned_persons(request, project_slug):
         'chart_height': (len(project_managers) + len(researchers) + 1) * 45,
     })
 
-    return render_to_response("projects/assigned_persons.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "projects/assigned_persons.html", return_dict)
 
 
 ###########################################################################
@@ -273,14 +272,14 @@ def project_consortium_members(request, project_slug):
 
     consortium_members = ConsortiumMember.objects.filter(project_id=project.id).order_by('organization')
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
         'web_title': u'%s - Consortium members' % project.full_name,
         'consortium_members': consortium_members,
     })
 
-    return render_to_response("projects/consortium_members.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "projects/consortium_members.html", return_dict)
 
 
 ###########################################################################
@@ -293,14 +292,14 @@ def project_related_publications(request, project_slug):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
         'web_title': u'%s - Related publications' % project.full_name,
         'related_publications': related_publications,
     })
 
-    return render_to_response("projects/related_publications.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "projects/related_publications.html", return_dict)
 
 
 ###########################################################################
@@ -316,13 +315,13 @@ def project_tag_cloud(request):
     items = ord_dict.items()
     items = items[len(items)-100:]
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Projects tag cloud',
         'tag_dict': dict(items),
     }
 
-    return render_to_response('projects/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'projects/tag_cloud.html', return_dict)
 
 
 ############################################################################
@@ -339,7 +338,7 @@ def __build_project_information(project):
     internal_project = project.project_type == 'Internal project'
     external_project = project.project_type == 'External project'
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return {
         'is_internal': internal_project,
         'is_external': external_project,
