@@ -95,6 +95,18 @@
 
                                                 {% endif %}
                                         {% endfor %}
+
+                                        {% if total_funds %}
+                                            <tr>
+                                                <td>
+                                                    <strong>Total funds</strong>
+                                                </td>
+
+                                                <td>
+                                                    <strong>{{ total_funds|intcomma|intword }} €</strong>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div> <!-- end .col-md-6 -->

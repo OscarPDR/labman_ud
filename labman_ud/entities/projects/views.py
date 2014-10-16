@@ -152,6 +152,14 @@ def project_funding_details(request, project_slug):
 
     funding_amounts = FundingAmount.objects.filter(funding_id__in=funding_ids).order_by('year')
 
+    total_funds = None
+
+    if funding_amounts:
+        total_funds = 0
+
+        for funding in funding_amounts:
+            total_funds += funding.own_amount
+
     funding_program_logos = FundingProgramLogo.objects.filter(funding_program__in=funding_program_ids)
 
     # dictionary to be returned in render_to_response()
@@ -162,6 +170,7 @@ def project_funding_details(request, project_slug):
         'funding_program_logos': funding_program_logos,
         'funding_programs': funding_programs,
         'fundings': fundings,
+        'total_funds': total_funds,
     })
 
     return render_to_response("projects/funding_details.html", return_dict, context_instance=RequestContext(request))
