@@ -272,6 +272,8 @@ def __build_publication_return_dict(publication):
 
         if parent_publication.quartile:
             indicators_list.append(parent_publication.quartile.lower())
+            if 'isi' in indicators_list:
+                indicators_list.remove('isi')
 
     if (publication.child_type == 'BookSection'):
         publication = BookSection.objects.get(slug=publication.slug)
