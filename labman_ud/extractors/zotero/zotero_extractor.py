@@ -159,12 +159,28 @@ def extract_publications_from_zotero(from_version):
     print '*' * 50
     print
 
-    for item_key in item_key_list:
+    non_parsed_items = []
+
+    for index, item_key in enumerate(item_key_list):
+        print '%d/%d\t' % (index, len(item_key_list)),
+
         try:
             generate_publication_from_zotero(item_key)
 
         except:
             print 'Error retrieving information from Zotero API about item: %s' % item_key
+            non_parsed_items.append(item_key)
+
+    if len(non_parsed_items) > 0:
+        print
+        print 'Re-trying failed item keys retrieval...'
+
+        for item_key in non_parsed_items:
+            try:
+                generate_publication_from_zotero(item_key)
+
+            except:
+                print 'Unable to retrieve information from Zotero API about item: %s' % item_key
 
 
 ####################################################################################################
@@ -184,7 +200,6 @@ def generate_publication_from_zotero(item_key):
     }
 
     r = requests.get(url, headers=headers, params=params)
-    print r.url
 
     xmldoc = minidom.parseString(r.text.encode('utf-8').replace("'", ""))
     content = xmldoc.getElementsByTagName('content')[0].firstChild.nodeValue
@@ -538,6 +553,7 @@ def parse_journal(json_item):
         journal.publisher = _assign_if_exists(json_item, 'publisher')
         journal.place = _assign_if_exists(json_item, 'place')
         journal.journal_abbreviation = _assign_if_exists(json_item, 'journalAbbrevation')
+        journal.issue = _assign_if_exists(json_item, 'issue')
 
         journal.published = _parse_date(json_item['date'])
         journal.year = journal.published.year
