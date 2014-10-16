@@ -229,6 +229,8 @@ LOGOUT_URL = 'logout/'
 
 BASE_URL = ''
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
 
 ####################################################################################################
 ###     Redactor: https://github.com/douglasmiranda/django-wysiwyg-redactor
