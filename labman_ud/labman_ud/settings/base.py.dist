@@ -184,7 +184,6 @@ INSTALLED_APPS = (
     # Extension packages
     'django_cleanup',
     'pagination_bootstrap',
-    'south',
 )
 
 # A sample logging configuration. The only tangible logging
