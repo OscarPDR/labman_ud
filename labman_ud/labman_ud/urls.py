@@ -38,6 +38,8 @@ urlpatterns = patterns('',
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^publications/', include('entities.publications.urls')),
 
+    url(r'^management/', include('management.urls')),
+
     # Custom app urls
     url(r'^charts/', include('charts.urls')),
     # url(r'^semantic_search/', include('semantic_search.urls')),

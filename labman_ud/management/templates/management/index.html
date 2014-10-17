@@ -1,0 +1,56 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <th>Full name #1</th>
+            <th>Full name #2</th>
+            <th>Similarity ratio</th>
+            <th>Actions</th>
+        </thead>
+
+        <tbody>
+            {% for item in similarities %}
+                <tr>
+                    <td>
+                        <a  href="{% url 'assign_alias' item.test_person.id item.testing_person.id %}" class="btn btn-primary btn-xs">
+                            &emsp;
+                        </a>
+                        &emsp;
+                        {{ item.test_person.full_name }}
+                    </td>
+
+                    <td>
+                        <a  href="{% url 'assign_alias' item.testing_person.id item.test_person.id %}" class="btn btn-info btn-xs">
+                            &emsp;
+                        </a>
+                        &emsp;
+                        {{ item.testing_person.full_name }}
+                    </td>
+
+                    <td>
+                        {{ item.ratio }}
+                    </td>
+
+                    <td>
+                        <a href="" class="btn btn-danger btn-xs">
+                            Mark as different persons
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}
