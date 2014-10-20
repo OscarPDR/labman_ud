@@ -1,48 +1,7 @@
 {% extends "awards/info.html" %}
-{% load staticfiles %}
-{% load sanitize_types %}
 
 {% block award_contents %}
     <h3>Related publications</h3>
 
-    <div class="tab-pane active" id="project-related-publications">
-
-        <table class="table table-bordered table-striped table-hover">
-            <thead>
-                <th>Title</th>
-                <th>Year</th>
-                <th>Type</th>
-            </thead>
-
-            <tbody>
-                {% for publication in related_publications %}
-                    <tr class="vertical-alignment">
-                        <td class="col-md-8">
-                            <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
-                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
-                            </a>
-
-                            <a href="{% url 'publication_info' publication.slug %}">
-                                {{ publication.title }}
-                            </a>
-                        </td>
-
-                        <td class="col-md-1">
-                            {{ publication.year }}
-                        </td>
-
-                        <td class="col-md-3">
-                            <a href="{% url 'view_publication_type' publication.child_type %}">
-                                {{ publication.child_type|sanitize }}
-                            </a>
-
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-    </div>
-
-
+    {% include "publications/tpl_related_publications.html" %}
 {% endblock %}
