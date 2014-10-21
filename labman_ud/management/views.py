@@ -1,7 +1,9 @@
-from django.shortcuts import render
+
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.conf import settings
+from django.shortcuts import render
 
 from entities.persons.models import Person, Nickname
 from .models import IgnoredSimilarNames
@@ -12,11 +14,18 @@ import difflib
 import itertools
 from operator import itemgetter
 
+
 # Create your views here.
+
 
 DEFAULT_THRESHOLD_RATIO = getattr(settings, 'DEFAULT_THRESHOLD_RATIO', 60)
 
 
+####################################################################################################
+###     View: index()
+####################################################################################################
+
+@login_required
 def index(request):
 
     return_dict = {}
@@ -24,6 +33,11 @@ def index(request):
     return render(request, 'management/index.html', return_dict)
 
 
+####################################################################################################
+###     View: check_names_similarity(threshold_ratio)
+####################################################################################################
+
+@login_required
 def check_names_similarity(request, threshold_ratio=DEFAULT_THRESHOLD_RATIO):
     normalized_threshold_ratio = float(threshold_ratio) / 100
 
@@ -69,6 +83,11 @@ def check_names_similarity(request, threshold_ratio=DEFAULT_THRESHOLD_RATIO):
     return render(request, 'management/name_similarities.html', return_dict)
 
 
+####################################################################################################
+###     View: assign_alias(person_id, alias_id, threshold_ratio)
+####################################################################################################
+
+@login_required
 def assign_alias(request, person_id, alias_id, threshold_ratio):
     valid_person = Person.objects.get(id=person_id)
     alias_person = Person.objects.get(id=alias_id)
@@ -89,6 +108,11 @@ def assign_alias(request, person_id, alias_id, threshold_ratio):
         return HttpResponseRedirect(reverse('check_names_similarity', args=[threshold_ratio]))
 
 
+####################################################################################################
+###     View: ignore_relationship(test_person_id, testing_person_id, threshold_ratio)
+####################################################################################################
+
+@login_required
 def ignore_relationship(request, test_person_id, testing_person_id, threshold_ratio):
     ignored_similar_names = IgnoredSimilarNames(
         test_person=Person.objects.get(id=test_person_id),
@@ -104,6 +128,11 @@ def ignore_relationship(request, test_person_id, testing_person_id, threshold_ra
         return HttpResponseRedirect(reverse('check_names_similarity', args=[threshold_ratio]))
 
 
+####################################################################################################
+###     View: reset_ignored_relationships(threshold_ratio)
+####################################################################################################
+
+@login_required
 def reset_ignored_relationships(request, threshold_ratio):
 
     for item in IgnoredSimilarNames.objects.all():
