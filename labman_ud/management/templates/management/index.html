@@ -7,46 +7,15 @@
 
     <br>
 
-    <table class="table table-striped table-bordered">
-        <thead>
-            <th>Full name #1</th>
-            <th>Full name #2</th>
-            <th>Similarity ratio</th>
-            <th>Actions</th>
-        </thead>
+    <p>
+        Check for person similarities
 
-        <tbody>
-            {% for item in similarities %}
-                <tr>
-                    <td>
-                        <a  href="{% url 'assign_alias' item.test_person.id item.testing_person.id %}" class="btn btn-primary btn-xs">
-                            &emsp;
-                        </a>
-                        &emsp;
-                        {{ item.test_person.full_name }}
-                    </td>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity_default' %}">Default</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 70 %}">70%</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 80 %}">80%</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 90 %}">90%</a>
+    </p>
 
-                    <td>
-                        <a  href="{% url 'assign_alias' item.testing_person.id item.test_person.id %}" class="btn btn-info btn-xs">
-                            &emsp;
-                        </a>
-                        &emsp;
-                        {{ item.testing_person.full_name }}
-                    </td>
-
-                    <td>
-                        {{ item.ratio }}
-                    </td>
-
-                    <td>
-                        <a href="" class="btn btn-danger btn-xs">
-                            Mark as different persons
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
 {% endblock %}
 
