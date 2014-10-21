@@ -390,3 +390,10 @@ GRAPH_BASE_URL = ''
 SPARQL_ENDPOINT_REALM = ''
 SPARQL_ENDPOINT_USER = ''
 SPARQL_ENDPOINT_PASSWORD = ''
+
+
+####################################################################################################
+###     Management app settings
+####################################################################################################
+
+DEFAULT_THRESHOLD_RATIO = None
