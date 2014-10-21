@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Login & Logout views
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html', 'authentication_form': LoginForm}, name='login_view'),
+    url(r'login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html', 'authentication_form': LoginForm}, name='login_view'),
     url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
     # Entities urls
@@ -37,6 +37,8 @@ urlpatterns = patterns('',
     url(r'^people/', include('entities.persons.urls')),
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^publications/', include('entities.publications.urls')),
+
+    url(r'^management/', include('management.urls')),
 
     # Custom app urls
     url(r'^charts/', include('charts.urls')),
