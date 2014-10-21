@@ -142,7 +142,7 @@
 
 {% block project_scripts %}
 
-    <script src="http://d3js.org/d3.min.js"></script>
+    <script src="{% static 'js/d3.min.js' %}"></script>
 
     <script>
         var donut_chart_width = $('#project-funding-details').width() / 2;
