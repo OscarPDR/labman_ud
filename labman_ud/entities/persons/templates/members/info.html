@@ -150,6 +150,12 @@
                         {% endfor %}
                     </ul>
                 </div>
+                
+                {% if has_awards %}
+                    <a href="{% url 'member_awards' member.slug %}" class="btn btn-default general-member-button member_awards">
+                        <i class="fa fa-trophy fa-large"></i>&emsp;Awards
+                    </a>
+                {% endif %}
 
                 <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
                     <i class="fa fa-calendar fa-large"></i>&emsp;News

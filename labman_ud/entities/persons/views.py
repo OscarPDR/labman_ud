@@ -909,18 +909,22 @@ def __get_job_data(member):
 
     items = ord_dict.items()
 
-    try:
-        Thesis.objects.get(author_id=member.id)
+    if Thesis.objects.filter(author_id=member.id).count():
         has_thesis = True
-
-    except:
+    else:
         has_thesis = False
+
+    if PersonRelatedToAward.objects.filter(person_id=member.id).count():
+        has_awards = True
+    else:
+        has_awards = False
 
     return {
         'accounts': accounts,
         'company': company,
         'first_job': first_job,
         'has_thesis': has_thesis,
+        'has_awards' : has_awards,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
