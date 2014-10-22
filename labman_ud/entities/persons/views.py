@@ -606,16 +606,12 @@ def award_related_projects(request, award_slug):
 # View: award_index
 ###########################################################################
 def award_index(request):
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
+    awards = Award.objects.all()
     return_dict = {
-        'web_title': u'Awards - %s' % award.full_name,
-        'award': award,
+        'web_title': u'Awards',
+        'awards': awards,
     }
-    return render(request, 'awards/info.html', return_dict)
+    return render(request, 'awards/index.html', return_dict)
     
 
 
