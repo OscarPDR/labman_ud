@@ -6,11 +6,12 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <![endif]-->
 
-        {% if web_title %}
-            <title>MORElab - {{ web_title }}</title>
-        {% else %}
-            <title>MORElab Research Group</title>
-        {% endif %}
+        <title>
+            {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}
+            {% if web_title %}
+             - {{ web_title }}
+            {% endif %}
+        </title>
 
         {% if RESEARCH_GROUP_SETTINGS.favicon %}
             <link rel="shortcut icon" href="{{ RESEARCH_GROUP_SETTINGS.favicon.url }}" />
@@ -19,9 +20,9 @@
         <meta charset="utf-8" />
 
         <meta name="robots" content="index, follow" />
-        <meta name="keywords" content="morelab, internet, deustotech, deusto, deusto institute of technology, research, investigación, tecnológico fundación deusto, mobile, context, aware, semantic, aal, ambient assisted living, future internet, smartlab, smart environments, smart, fuzzy, wireless, internet of things, semantic web, faculty of engineering, university of deusto, ict, linked data, linked open data" />
+        <meta name="keywords" content="{{ SEO_AND_ANALYTICS.meta_keywords }}" />
 
-        <meta name="description" content="MoreLab, the research group behind the INTERNET unit of DeustoTech at Deusto Institute of Technology at the Faculty of Engineering of the University of Deusto. The aim of our group is to contribute with ICT innovations and research towards improving users quality of life through more intelligent and personalised environments and services." />
+        <meta name="description" content="{{ SEO_AND_ANALYTICS.meta_description }}" />
         <meta name="author" content="" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -81,42 +82,42 @@
                     <ul class="nav nav-justified">
                         <li id="news-nav">
                             <a href="{% url 'news_index' %}">
-                                <i class="fa fa-newspaper-o"></i>
+                                <i class="fa fa-newspaper-o fa-grey"></i>
                                 &emsp;News
                             </a>
                         </li>
 
                         <li id="projects-nav">
                             <a href="{% url 'project_index' %}">
-                                <i class="fa fa-gears"></i>
+                                <i class="fa fa-gears fa-grey"></i>
                                 &emsp;Projects
                             </a>
                         </li>
 
                         <li id="publications-nav">
                             <a href="{% url 'publication_index' %}">
-                                <i class="fa fa-book"></i>
+                                <i class="fa fa-book fa-grey"></i>
                                 &emsp;Publications
                             </a>
                         </li>
 
                         <li id="members-nav">
                             <a href="{% url 'members' %}">
-                                <i class="fa fa-users"></i>
+                                <i class="fa fa-users fa-grey"></i>
                                 &emsp;Members
                             </a>
                         </li>
 
                         <li id="charts-nav">
                             <a href="{% url 'chart_index' %}">
-                                <i class="fa fa-bar-chart"></i>
+                                <i class="fa fa-bar-chart fa-grey"></i>
                                 &emsp;Charts
                             </a>
                         </li>
 
                         <li id="about-nav">
                             <a href="{% url 'about' %}">
-                                <i class="fa fa-info-circle"></i>
+                                <i class="fa fa-info-circle fa-grey"></i>
                                 &emsp;About
                             </a>
                         </li>
@@ -140,17 +141,19 @@
         <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-        <script>
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-15127034-1']);
-            _gaq.push(['_trackPageview']);
+        {% if SEO_AND_ANALYTICS.google_analytics_account %}
+            <script>
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '{{ SEO_AND_ANALYTICS.google_analytics_account }}']);
+                _gaq.push(['_trackPageview']);
 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        {% endif %}
 
         {% block scripts %}{% endblock %}
 

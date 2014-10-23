@@ -18,7 +18,7 @@
 
         <div class="col-md-4">
             <h2>
-                &emsp;<i class="fa fa-newspaper-o"></i>
+                &emsp;<i class="fa fa-newspaper-o fa-grey"></i>
                 Latest news
                 <a class="pull-right" href="{% url 'news_index' %}"><small>All news</small></a>
             </h2>
@@ -28,7 +28,7 @@
             {% for news in latest_news %}
                 <div class="well latest-news">
                     <strong>
-                        <i class="fa fa-chevron-right"></i>&emsp;{{ news.title|safe }}
+                        <i class="fa fa-chevron-right fa-grey"></i>&emsp;{{ news.title|safe }}
                     </strong>
 
                     <p>

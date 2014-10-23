@@ -34,7 +34,7 @@
             <div class="footer-content">
                 {% if RESEARCH_GROUP_SETTINGS.phone_number %}
                     <p>
-                        <i class="fa fa-phone"></i>&emsp;
+                        <i class="fa fa-phone fa-grey"></i>&emsp;
                         <a href="tel:{{ RESEARCH_GROUP_SETTINGS.phone_number }}">
                             {{ RESEARCH_GROUP_SETTINGS.phone_number }}
                         </a>
@@ -47,7 +47,7 @@
 
                 {% if RESEARCH_GROUP_SETTINGS.email_address %}
                     <p>
-                        <i class="fa fa-envelope-o"></i>&emsp;
+                        <i class="fa fa-envelope-o fa-grey"></i>&emsp;
                         <a target="_blank" href="mailto:{{ RESEARCH_GROUP_SETTINGS.email_address }}">
                             {{ RESEARCH_GROUP_SETTINGS.email_address }}
                         </a>
@@ -56,7 +56,7 @@
 
                 {% if RESEARCH_GROUP_SETTINGS.contact_person %}
                     <p>
-                        <i class="fa fa-user"></i>&emsp;<strong>{{ RESEARCH_GROUP_SETTINGS.contact_person }}</strong>
+                        <i class="fa fa-user fa-grey"></i>&emsp;<strong>{{ RESEARCH_GROUP_SETTINGS.contact_person }}</strong>
                     </p>
                 {% endif %}
             </div>
