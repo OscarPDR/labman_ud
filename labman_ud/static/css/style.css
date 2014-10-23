@@ -158,6 +158,10 @@ h4 {
     min-height: 500px;
 }
 
+.container {
+    padding: 0;
+}
+
 .edit-organization-logo {
     margin: 1em;
     width: 25%;
@@ -384,12 +388,10 @@ ul.nav.nav-tabs {
 }
 
 footer {
-    text-align: center;
+    text-align: left;
     width: 100%;
-    line-height: 2.5em;
     min-height: 2.5em;
     margin: 0 auto;
-    padding-bottom: 2em;
 }
 
 footer > a {
@@ -398,46 +400,39 @@ footer > a {
     padding-right: 1em;
 }
 
-.footer-description > h4 {
-    padding-top: 0;
-    text-align: left;
+footer h4 {
+    padding-top: 0.5em;
+    margin-bottom: 1em;
+    font-weight: bold;
 }
 
-.footer-description > h4 > a {
-    font-size: 12px;
+.footer-content {
+    padding-left: 2em;
 }
 
-.footer-description > address, p {
-    text-align: left;
-}
-
-.footer-icon > img {
-    width: 50%;
-}
-
-.footer-social {
-    text-align: left;
-}
-
-.footer-social > a {
-    margin: 0;
-}
-
-.footer-social img {
+.footer-content img {
+    padding: 0;
+    margin: 5px;
     -webkit-filter: grayscale(1);
 }
 
-.footer-social img:hover {
+.footer-content img:hover {
     -webkit-filter: grayscale(0);
+}
+
+.footer-object {
+    padding: 0;
+    padding-left: 3em;
+}
+
+#map-link {
+    font-size: 0.75em;
+    font-weight: normal;
 }
 
 .form-search {
     margin-top: 5px;
     margin-bottom: 0;
-}
-
-.footer-object {
-    padding: 0 1.5em;
 }
 
 .circular {
@@ -486,13 +481,14 @@ footer > a {
     padding-left: 0.75em;
 }
 
-#team-image {
+#research-group-team-image {
     box-shadow: 2px 2px 3px black;
     margin-top: 2.5em;
     margin-bottom: 2.5em;
+    width: 100%;
 }
 
-#team-desc {
+#research-group-description > p {
     text-align: justify;
     font-weight: 200;
     line-height: 1.4em;
@@ -733,5 +729,21 @@ path.color1 {
 .thesis-title {
     text-align: center;
     font-style: italic;
+    color: #999;
+}
+
+#powered-by-labman {
+    padding-top: 0.75em;
+    padding-bottom: 0.5em;
+    margin-top: 1em;
+    background-color: #e3e3e3;
+    text-align: center;
+}
+
+.row {
+    margin: 0;
+}
+
+i.fa {
     color: #999;
 }
