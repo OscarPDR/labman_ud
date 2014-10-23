@@ -35,7 +35,7 @@
 
 
 {% block scripts %}
-    <script src="http://d3js.org/d3.min.js"></script>
+    <script src="{% static 'js/d3.min.js' %}"></script>
 
     {% if multiple_organizations %}
         {% for organization in positions_per_organization %}

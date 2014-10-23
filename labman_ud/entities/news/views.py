@@ -5,8 +5,7 @@ import weakref
 from collections import OrderedDict
 
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.contrib.syndication.views import Feed
 
 from .models import News, PersonRelatedToNews, ProjectRelatedToNews, PublicationRelatedToNews
@@ -34,13 +33,13 @@ def news_index(request):
             news[year_month] = []
         news[year_month].append(news_piece)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'News',
         'news': news,
     }
 
-    return render_to_response('news/index.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'news/index.html', return_dict)
 
 
 ###########################################################################
@@ -65,7 +64,7 @@ def view_news(request, news_slug):
     else:
         related = True
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         # 'tags': tags,
         'web_title': news.title,
@@ -76,7 +75,8 @@ def view_news(request, news_slug):
         'related_publications': related_publications,
     }
 
-    return render_to_response('news/info.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'news/info.html', return_dict)
+
 
 ###########################################################################
 # Feed: news feeds
@@ -87,7 +87,7 @@ class LatestNewsFeed(Feed):
         super(LatestNewsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title       = "MORElab news"
+    title = "MORElab news"
     description = "MORElab news"
 
     def get_object(self, request):
@@ -110,4 +110,3 @@ class LatestNewsFeed(Feed):
     def item_link(self, item):
         url = reverse('view_news', args=[item.slug])
         return self.__request.request.build_absolute_uri(url)
-

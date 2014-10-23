@@ -4,8 +4,7 @@ from inflection import titleize
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 
 from .forms import OrganizationSearchForm
@@ -61,7 +60,7 @@ def organization_index(request, organization_type_slug=None, query_string=None):
 
     organizations_length = len(organizations)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
         'form': form,
@@ -71,7 +70,7 @@ def organization_index(request, organization_type_slug=None, query_string=None):
         'query_string': query_string,
     }
 
-    return render_to_response("organizations/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "organizations/index.html", return_dict)
 
 
 ###########################################################################
@@ -95,4 +94,4 @@ def organization_info(request, slug):
         'projects_leaded': projects_leaded,
     }
 
-    return render_to_response("organizations/info.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "organizations/info.html", return_dict)

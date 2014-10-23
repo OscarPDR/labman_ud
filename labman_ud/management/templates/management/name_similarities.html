@@ -1,0 +1,68 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <p>
+        Looking for similarities with a threshold above or equal to: <strong>{{ threshold_ratio }}%</strong>
+    </p>
+
+    <br>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <th>Full name #1</th>
+            <th>Full name #2</th>
+            <th>Similarity ratio</th>
+            <th>Actions</th>
+        </thead>
+
+        <tbody>
+            {% for item in similarities %}
+                <tr>
+                    <td>
+                        <a  href="{% url 'assign_alias' item.test_person.id item.testing_person.id threshold_ratio %}" class="btn btn-primary btn-xs">
+                            &emsp;
+                        </a>
+                        &emsp;
+                        {{ item.test_person.full_name }}
+                    </td>
+
+                    <td>
+                        <a  href="{% url 'assign_alias' item.testing_person.id item.test_person.id threshold_ratio %}" class="btn btn-info btn-xs">
+                            &emsp;
+                        </a>
+                        &emsp;
+                        {{ item.testing_person.full_name }}
+                    </td>
+
+                    <td>
+                        {{ item.ratio }}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'ignore_relationship' item.test_person.id item.testing_person.id threshold_ratio %}" class="btn btn-warning btn-xs">
+                            Mark as different persons
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+
+    <a class="btn btn-danger" href="{% url 'reset_ignored_relationships' threshold_ratio %}">
+        Reset ignored matches
+    </a>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

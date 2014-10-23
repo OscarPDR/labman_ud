@@ -1,0 +1,25 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <p>
+        Check for person similarities
+
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity_default' %}">Default</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 70 %}">70%</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 80 %}">80%</a>
+        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 90 %}">90%</a>
+    </p>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

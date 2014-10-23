@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from entities.publications.models import PublicationTag
-from entities.projects.models import ProjectTag
+from entities.projects.models import ProjectTag, AssignedPersonTag
 from entities.news.models import NewsTag
 from entities.utils.models import Tag
 
@@ -24,6 +24,9 @@ def remove_unrelated_tags():
         used_tag_ids.add(item.tag.id)
 
     for item in NewsTag.objects.all():
+        used_tag_ids.add(item.tag.id)
+
+    for item in AssignedPersonTag.objects.all():
         used_tag_ids.add(item.tag.id)
 
     unused_tags = Tag.objects.exclude(id__in=used_tag_ids)

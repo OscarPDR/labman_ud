@@ -10,6 +10,7 @@ from entities.core.models import BaseModel
 
 from .linked_data import *
 
+from redactor.fields import RedactorField
 
 # Create your models here.
 
@@ -741,7 +742,7 @@ class ThesisAbstract(BaseModel):
     thesis = models.ForeignKey('Thesis')
     language = models.ForeignKey('utils.Language')
 
-    abstract = models.TextField(
+    abstract = RedactorField(
         max_length=5000,
         blank=True,
     )

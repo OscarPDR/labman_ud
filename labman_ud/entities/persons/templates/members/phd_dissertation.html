@@ -80,6 +80,7 @@
 
         <div class="phd-thesis-abstract">
             <!-- Nav tabs -->
+            {% if abstracts|length > 1 %}
             <ul class="nav nav-tabs" role="tablist">
                 {% for language, abstract in abstracts.items %}
                     <li {% if forloop.first %}class="active"{% endif %}>
@@ -89,13 +90,14 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% endif %}
 
             <!-- Tab panes -->
             <div class="tab-content">
                 {% for language, abstract in abstracts.items %}
                     <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ language }}">
                         <br>
-                        <p>{{ abstract }}</p>
+                        <p>{{ abstract|safe }}</p>
                     </div>
                 {% endfor %}
             </div>

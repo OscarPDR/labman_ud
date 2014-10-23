@@ -95,6 +95,18 @@
 
                                                 {% endif %}
                                         {% endfor %}
+
+                                        {% if total_funds %}
+                                            <tr>
+                                                <td>
+                                                    <strong>Total funds</strong>
+                                                </td>
+
+                                                <td>
+                                                    <strong>{{ total_funds|intcomma|intword }} €</strong>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div> <!-- end .col-md-6 -->
@@ -130,7 +142,7 @@
 
 {% block project_scripts %}
 
-    <script src="http://d3js.org/d3.min.js"></script>
+    <script src="{% static 'js/d3.min.js' %}"></script>
 
     <script>
         var donut_chart_width = $('#project-funding-details').width() / 2;

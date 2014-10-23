@@ -51,12 +51,12 @@
                 </div>
             {% endif %}
 
-            {% if publication.issue %}
+            {% if parent_publication.issue %}
                 <div class="col-md-4">
                     <h5>Issue:</h5>
 
                     <p>
-                        {{ publication.issue }}
+                        {{ parent_publication.issue }}
                     </p>
 
                     <br>
@@ -80,7 +80,9 @@
                     <h5>DOI:</h5>
 
                     <p>
-                        {{ publication.doi }}
+                        <a target="_blank" href="http://dx.doi.org/{{ publication.doi }}">
+                            {{ publication.doi }}
+                        </a>
                     </p>
 
                     <br>
@@ -103,7 +105,8 @@
             {% if parent_publication.year %} ({{ parent_publication.year }}){% endif %}
              "<em>{{ publication.title }}</em>"
              In {{ parent_publication.title }}.
-            {% if publication.pages %}(pp. {{ publication.pages }}).{% endif %}
+            {% if parent_publication.volume %} vol. {{ parent_publication.volume }}.{% endif %}
+            {% if publication.pages %} p. {{ publication.pages }}.{% endif %}
             {% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
         </p>
     </div>

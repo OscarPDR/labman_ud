@@ -7,8 +7,7 @@ import weakref
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 
 from .forms import PublicationSearchForm
 from .models import *
@@ -20,16 +19,6 @@ from entities.utils.models import Tag
 from collections import OrderedDict, Counter
 
 # Create your views here.
-
-INDICATORS_TAG_SLUGS = ['isi', 'corea', 'coreb', 'corec', 'q1', 'q2', 'q3', 'q4']
-
-PUBLICATION_TYPES = [
-    'Book section', 'Book',
-    'Conference paper', 'Proceedings',
-    'Journal article', 'Journal',
-    'Magazine article', 'Magazine',
-    'Thesis'
-]
 
 
 ###########################################################################
@@ -202,7 +191,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     except:
         theses = None
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Publications',
         'clean_index': clean_index,
@@ -218,7 +207,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'theses': theses,
     }
 
-    return render_to_response('publications/index.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/index.html', return_dict)
 
 
 ###########################################################################
@@ -230,7 +219,7 @@ def publication_info(request, slug):
     return_dict = __build_publication_return_dict(publication)
     return_dict['current_tab'] = u'info'
     return_dict['web_title'] = publication.title
-    return render_to_response('publications/info.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/info.html', return_dict)
 
 
 def publication_related_projects(request, slug):
@@ -238,7 +227,7 @@ def publication_related_projects(request, slug):
     return_dict = __build_publication_return_dict(publication)
     return_dict['current_tab'] = 'projects'
     return_dict['web_title'] = u'%s - Related projects' % publication.title
-    return render_to_response('publications/related_projects.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/related_projects.html', return_dict)
 
 
 def publication_related_publications(request, slug):
@@ -246,7 +235,7 @@ def publication_related_publications(request, slug):
     return_dict = __build_publication_return_dict(publication)
     return_dict['current_tab'] = 'publications'
     return_dict['web_title'] = u'%s - Related publications' % publication.title
-    return render_to_response('publications/related_publications.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/related_publications.html', return_dict)
 
 
 def __build_publication_return_dict(publication):
@@ -264,16 +253,50 @@ def __build_publication_return_dict(publication):
     related_publications = Publication.objects.filter(id__in=related_publications_ids).exclude(id=publication.id)
 
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
-    tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
+    tag_list = Tag.objects.filter(id__in=tag_ids).order_by('name')
 
-    tag_list = []
     indicators_list = []
 
-    for tag in tags:
-        if tag.slug in INDICATORS_TAG_SLUGS:
-            indicators_list.append(tag)
-        else:
-            tag_list.append(tag)
+    # Check for indicators
+
+    if (publication.child_type == 'JournalArticle'):
+        publication = JournalArticle.objects.get(slug=publication.slug)
+        parent_publication = Journal.objects.get(id=publication.parent_journal.id)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if parent_publication.quartile:
+            indicators_list.append(parent_publication.quartile.lower())
+            if 'isi' in indicators_list:
+                indicators_list.remove('isi')
+
+    if (publication.child_type == 'BookSection'):
+        publication = BookSection.objects.get(slug=publication.slug)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if publication.core:
+            indicators_list.append('core' + publication.core.lower())
+
+    if (publication.child_type == 'ConferencePaper'):
+        publication = ConferencePaper.objects.get(slug=publication.slug)
+
+        if publication.isi:
+            indicators_list.append('isi')
+
+        # if publication.dblp:
+        #     indicators_list.append('dblp')
+
+        if publication.core:
+            indicators_list.append('core' + publication.core.lower())
 
     try:
         pdf = publication.pdf
@@ -284,20 +307,20 @@ def __build_publication_return_dict(publication):
 
     try:
         if publication.child_type == 'ConferencePaper':
-            conference_paper = ConferencePaper.objects.get(slug=publication.slug)
-            parent_publication = Proceedings.objects.get(id=conference_paper.parent_proceedings.id)
+            publication = ConferencePaper.objects.get(slug=publication.slug)
+            parent_publication = Proceedings.objects.get(id=publication.parent_proceedings.id)
 
         if publication.child_type == 'JournalArticle':
-            journal_article = JournalArticle.objects.get(slug=publication.slug)
-            parent_publication = Journal.objects.get(id=journal_article.parent_journal.id)
+            publication = JournalArticle.objects.get(slug=publication.slug)
+            parent_publication = Journal.objects.get(id=publication.parent_journal.id)
 
         if publication.child_type == 'MagazineArticle':
-            magazine_article = MagazineArticle.objects.get(slug=publication.slug)
-            parent_publication = Magazine.objects.get(id=magazine_article.parent_magazine.id)
+            publication = MagazineArticle.objects.get(slug=publication.slug)
+            parent_publication = Magazine.objects.get(id=publication.parent_magazine.id)
 
         if publication.child_type == 'BookSection':
-            book_section = BookSection.objects.get(slug=publication.slug)
-            parent_publication = Book.objects.get(id=book_section.parent_book.id)
+            publication = BookSection.objects.get(slug=publication.slug)
+            parent_publication = Book.objects.get(id=publication.parent_book.id)
 
     except:
         pass
@@ -307,7 +330,7 @@ def __build_publication_return_dict(publication):
     else:
         bibtex = None
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return {
         'authors': authors,
         'bibtex': bibtex,
@@ -334,13 +357,13 @@ def publication_tag_cloud(request):
     items = ord_dict.items()
     items = items[len(items)-100:]
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Publications tag cloud',
         'tag_dict': dict(items),
     }
 
-    return render_to_response('publications/tag_cloud.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/tag_cloud.html', return_dict)
 
 
 ###########################################################################
@@ -384,10 +407,10 @@ class LatestPublicationsFeed(Feed):
 def phd_dissertations_index(request):
     theses = Thesis.objects.filter(author__is_active=True).order_by('-year', 'author__full_name')
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'PhD dissertations',
         'theses': theses,
     }
 
-    return render_to_response('publications/phd_dissertations_index.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'publications/phd_dissertations_index.html', return_dict)

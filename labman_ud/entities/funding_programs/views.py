@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 
 from django.db.models import Sum, Min, Max
@@ -38,12 +37,13 @@ def funding_program_index(request):
     else:
         form = FundingProgramSearchForm()
 
-    return render_to_response("funding_programs/index.html", {
-            'funding_programs': funding_programs,
-            'funding_programs_length': len(funding_programs),
-            'form': form,
-        },
-        context_instance=RequestContext(request))
+    return_dict = {
+        'funding_programs': funding_programs,
+        'funding_programs_length': len(funding_programs),
+        'form': form,
+    }
+
+    return render(request, "funding_programs/index.html", return_dict)
 
 
 def funding_program_info(request, slug):
@@ -80,11 +80,12 @@ def funding_program_info(request, slug):
 
     projects = Project.objects.filter(id__in=fundings.values('project_id')).order_by('start_year', 'full_name')
 
-    return render_to_response("funding_programs/info.html", {
-            'funding_program': funding_program,
-            'projects': projects,
-            'datum': datum,
-            'min_year': min_year,
-            'max_year': max_year,
-        },
-        context_instance=RequestContext(request))
+    return_dict = {
+        'funding_program': funding_program,
+        'projects': projects,
+        'datum': datum,
+        'min_year': min_year,
+        'max_year': max_year,
+    }
+
+    return render(request, "funding_programs/info.html", return_dict)

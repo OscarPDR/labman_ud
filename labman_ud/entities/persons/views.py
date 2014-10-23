@@ -8,8 +8,7 @@ from inflection import titleize
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
 
@@ -23,7 +22,7 @@ from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
-from entities.utils.models import Role, Network
+from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward
 
 from charts.views import PUBLICATION_TYPES
 
@@ -108,7 +107,7 @@ def person_index(request, query_string=None):
 
     persons_length = len(persons)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
         'form': form,
@@ -117,7 +116,7 @@ def person_index(request, query_string=None):
         'query_string': query_string,
     }
 
-    return render_to_response("persons/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "persons/index.html", return_dict)
 
 
 ###########################################################################
@@ -186,7 +185,7 @@ def members(request, organization_slug=None):
             konami_positions.append(member.konami_code_position)
             konami_profile_pictures.append(member.profile_konami_code_picture)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Members',
         'heads_of_unit': heads_of_unit,
@@ -199,7 +198,7 @@ def members(request, organization_slug=None):
         'is_active_members': True,
     }
 
-    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/index.html", return_dict)
 
 
 ###########################################################################
@@ -266,7 +265,7 @@ def former_members(request, organization_slug=None):
             konami_positions.append(former_member.konami_code_position)
             konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Former members',
         'konami_positions': konami_positions,
@@ -278,7 +277,7 @@ def former_members(request, organization_slug=None):
         'is_active_members': False,
     }
 
-    return render_to_response("members/index.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/index.html", return_dict)
 
 
 ###########################################################################
@@ -296,7 +295,7 @@ def member_info(request, person_slug):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': member.full_name,
         'member': member,
@@ -305,7 +304,7 @@ def member_info(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/info.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/info.html", return_dict)
 
 
 ###########################################################################
@@ -342,7 +341,7 @@ def member_projects(request, person_slug, role_slug=None):
         for project in project_objects:
             projects[role.name].append(project)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Projects' % member.full_name,
         'member': member,
@@ -353,7 +352,7 @@ def member_projects(request, person_slug, role_slug=None):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/projects.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/projects.html", return_dict)
 
 
 ###########################################################################
@@ -443,7 +442,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
         publications[publication_item.child_type].append(publication_dict)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Publications' % member.full_name,
         'member': member,
@@ -454,7 +453,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/publications.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/publications.html", return_dict)
 
 
 ###########################################################################
@@ -474,7 +473,7 @@ def member_publication_bibtex(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/bibtex.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/bibtex.html", return_dict)
 
 
 ###########################################################################
@@ -505,7 +504,7 @@ def member_news(request, person_slug):
             news[year_month] = []
         news[year_month].append(news_piece)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - News' % member.full_name,
         'member': member,
@@ -514,7 +513,106 @@ def member_news(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response('members/news.html', return_dict, context_instance=RequestContext(request))
+    return render(request, 'members/news.html', return_dict)
+
+
+###########################################################################
+# View: member_awards
+###########################################################################
+
+def member_awards(request, person_slug):
+    member = get_object_or_404(Person, slug=person_slug)
+    person_awards = PersonRelatedToAward.objects.filter(person=member).select_related('award').order_by('-award__date')
+    awards = OrderedDict()
+
+    for award_person in person_awards:
+        award = award_person.award
+        year_month = u'%s %s' % (award.date.strftime('%B'), award.date.year)
+        if not year_month in awards:
+            awards[year_month] = []
+        awards[year_month].append(award)
+
+    # dictionary to be returned in render(request, )
+    return_dict = {
+        'web_title': u'%s - Awards' % member.full_name,
+        'member': member,
+        'awards': awards,
+    }
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render(request, 'members/awards.html', return_dict)
+
+###########################################################################
+# View: __get_award_info
+###########################################################################
+def __get_award_info(award_slug):
+    award = get_object_or_404(Award, slug=award_slug)
+
+    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person')
+    recipients = [ recipient_relation.person for recipient_relation in recipient_relations ]
+
+    project_relations = ProjectRelatedToAward.objects.filter(award = award).select_related('project')
+    projects = [ project_relation.project for project_relation in project_relations ]
+
+    publication_relations = PublicationRelatedToAward.objects.filter(award = award).select_related('publication')
+    publications = [ publication_relation.publication for publication_relation in publication_relations ]
+
+    # dictionary to be returned in render(request, )
+    return_dict = {
+        'award': award,
+        'recipients' : recipients,
+        'related_projects' : projects,
+        'related_publications' : publications,
+    }
+    return return_dict, award
+
+
+###########################################################################
+# View: member_awards
+###########################################################################
+def award_info(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s' % award.full_name,
+        'current_link' : 'info',
+    })
+    return render(request, 'awards/info.html', return_dict)
+
+###########################################################################
+# View: award_related_publications
+###########################################################################
+def award_related_publications(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s - Related publications' % award.full_name,
+        'current_link' : 'related_publications',
+    })
+    return render(request, 'awards/related_publications.html', return_dict)
+
+###########################################################################
+# View: award_related_projects
+###########################################################################
+def award_related_projects(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s - Related projects' % award.full_name,
+        'current_link' : 'related_projects',
+    })
+    return render(request, 'awards/related_projects.html', return_dict)
+
+
+###########################################################################
+# View: award_index
+###########################################################################
+def award_index(request):
+    awards = Award.objects.all()
+    return_dict = {
+        'web_title': u'Awards',
+        'awards': awards,
+    }
+    return render(request, 'awards/index.html', return_dict)
+    
 
 
 ###########################################################################
@@ -619,7 +717,7 @@ def member_profiles(request, person_slug):
         }
         accounts.append(account_item)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'member': member,
         'accounts': accounts,
@@ -628,7 +726,7 @@ def member_profiles(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/profiles.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/profiles.html", return_dict)
 
 
 ###########################################################################
@@ -646,7 +744,7 @@ def member_graphs(request, person_slug):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'member': member,
     }
@@ -654,7 +752,7 @@ def member_graphs(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/graphs.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/graphs.html", return_dict)
 
 
 ###########################################################################
@@ -696,7 +794,7 @@ def person_info(request, person_slug):
         pub_type = publication.child_type
         publications[pub_type].append(publication)
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': person.full_name,
         'person': person,
@@ -704,7 +802,7 @@ def person_info(request, person_slug):
         'publications': publications,
     }
 
-    return render_to_response("persons/info.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "persons/info.html", return_dict)
 
 
 ####################################################################################################
@@ -811,18 +909,22 @@ def __get_job_data(member):
 
     items = ord_dict.items()
 
-    try:
-        Thesis.objects.get(author_id=member.id)
+    if Thesis.objects.filter(author_id=member.id).count():
         has_thesis = True
-
-    except:
+    else:
         has_thesis = False
+
+    if PersonRelatedToAward.objects.filter(person_id=member.id).count():
+        has_awards = True
+    else:
+        has_awards = False
 
     return {
         'accounts': accounts,
         'company': company,
         'first_job': first_job,
         'has_thesis': has_thesis,
+        'has_awards' : has_awards,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
@@ -865,7 +967,7 @@ def member_phd_dissertation(request, person_slug):
     for thesis_abstract in thesis_abstracts:
         abstracts[thesis_abstract.language.name] = thesis_abstract.abstract
 
-    # dictionary to be returned in render_to_response()
+    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - PhD thesis' % member.full_name,
         'member': member,
@@ -877,4 +979,4 @@ def member_phd_dissertation(request, person_slug):
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
-    return render_to_response("members/phd_dissertation.html", return_dict, context_instance=RequestContext(request))
+    return render(request, "members/phd_dissertation.html", return_dict)
