@@ -180,3 +180,28 @@ class ZoteroConfiguration(models.Model):
     library_type = models.CharField(
         max_length=100,
     )
+
+
+####################################################################################################
+###     Model: SEOAndAnalytics
+####################################################################################################
+
+class SEOAndAnalytics(models.Model):
+
+    meta_keywords = models.TextField(
+        max_length=750,
+        blank=True,
+        null=True,
+    )
+
+    meta_description = models.TextField(
+        max_length=750,
+        blank=True,
+        null=True,
+    )
+
+    google_analytics_account = models.CharField(
+        max_length=25,
+        blank=True,
+        null=True,
+    )

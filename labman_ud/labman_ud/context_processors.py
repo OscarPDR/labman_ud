@@ -8,6 +8,7 @@ def global_vars(request):
 
     _settings = LabmanDeployGeneralSettings.objects.get()
     social_profiles = OfficialSocialProfile.objects.all().order_by('name')
+    seo_and_analytics = SEOAndAnalytics.objects.get()
 
     footer_sections = 0
     address_details = False
@@ -54,6 +55,7 @@ def global_vars(request):
         'SOCIAL_DETAILS': social_details,
         'SOCIAL_PROFILES': social_profiles,
         'SOCIAL_PROFILE_WIDTH': social_profile_width,
+        'SEO_AND_ANALYTICS': seo_and_analytics,
     }
 
     return return_dict

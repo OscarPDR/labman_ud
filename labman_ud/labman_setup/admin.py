@@ -26,6 +26,14 @@ class OfficialSocialProfileAdmin(admin.ModelAdmin):
     exclude = ['slug']
 
 
+###########################################################################
+# Class: SEOAndAnalyticsAdmin
+###########################################################################
+
+class SEOAndAnalyticsAdmin(admin.ModelAdmin):
+    model = SEOAndAnalytics
+
+
 ####################################################################################################
 ####################################################################################################
 ###   Register classes
@@ -34,3 +42,4 @@ class OfficialSocialProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(LabmanDeployGeneralSettings, LabmanDeployGeneralSettingsAdmin)
 admin.site.register(OfficialSocialProfile, OfficialSocialProfileAdmin)
+admin.site.register(SEOAndAnalytics, SEOAndAnalyticsAdmin)
