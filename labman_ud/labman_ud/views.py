@@ -16,9 +16,10 @@ from entities.news.models import News
 ###########################################################################
 
 def home(request):
+
     # dictionary to be returned in render(request, )
     return_dict = {
-        'latest_news': News.objects.order_by('-created')[:3]
+        'latest_news': News.objects.order_by('-created')[:3],
     }
 
     return render(request, 'labman_ud/index.html', return_dict)
