@@ -176,6 +176,7 @@ a:hover {
   text-decoration: none;
 }
 
-.mastfoot p {
+.footer-p {
+  color: #777;
   text-align: center;
 }
