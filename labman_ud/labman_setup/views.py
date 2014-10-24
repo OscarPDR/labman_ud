@@ -6,6 +6,7 @@ from django.template import RequestContext
 
 from django.contrib.auth.models import User
 
+from entities.news.models import *
 from entities.organizations.models import *
 from entities.persons.models import *
 from entities.projects.models import *
@@ -468,6 +469,67 @@ def populate_database(request):
         PublicationTag.objects.create(
             publication=screams_mall_journal_article,
             tag=springfield_tag,
+        )
+
+        RelatedPublication.objects.create(
+            project=project_itchy_scratchy,
+            publication=barbershop_journal_article,
+        )
+
+        RelatedPublication.objects.create(
+            project=project_itchy_scratchy,
+            publication=screams_mall_journal_article,
+        )
+
+        news_1 = News(
+            title=u"Bart to Martin: 'Eat my shorts'",
+            content=u"<img src='http://www.simpsoncrazy.com/content/lists/newspaper/news_027.jpg' />",
+        )
+
+        news_1.save()
+
+        news_2 = News(
+            title=u"Extra!!! Prince beats Simpson",
+            content=u"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at dapibus neque. Etiam quis pulvinar ante. Sed ut nulla eu purus mattis elementum.</p><br><img src='http://www.simpsoncrazy.com/content/lists/newspaper/news_028.jpg' />",
+        )
+
+        news_2.save()
+
+        news_3 = News(
+            title=u"First day of spring",
+            content=u"<p>Ants, Picnickers Reach Last-Minute Accord</p><br><img src='http://www.simpsoncrazy.com/content/lists/newspaper/news_145.jpg' />",
+        )
+
+        news_3.save()
+
+        PersonRelatedToNews.objects.create(
+            person=bart_simpson,
+            news=news_1,
+        )
+
+        PersonRelatedToNews.objects.create(
+            person=lisa_simpson,
+            news=news_1,
+        )
+
+        PersonRelatedToNews.objects.create(
+            person=bart_simpson,
+            news=news_2,
+        )
+
+        PersonRelatedToNews.objects.create(
+            person=seymour_skinner,
+            news=news_3,
+        )
+
+        ProjectRelatedToNews.objects.create(
+            project=project_itchy_scratchy,
+            news=news_3,
+        )
+
+        PublicationRelatedToNews.objects.create(
+            publication=barbershop_journal_article,
+            news=news_3,
         )
 
     else:
