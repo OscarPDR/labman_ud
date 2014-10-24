@@ -27,6 +27,10 @@
     <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
 
     <script>
+        $('#publications-nav').addClass('active');
+    </script>
+
+    <script>
         var word_array = [
             {% for key, value in tag_dict.items %}
              {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_publication_tag' key|slugify %}"},
