@@ -175,8 +175,13 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     publications_length = len(publications)
 
-    last_created = Publication.objects.order_by('-log_created')[0]
-    last_modified = Publication.objects.order_by('-log_modified')[0]
+    if (publications_length > 0):
+        last_created = Publication.objects.order_by('-log_created')[0]
+        last_modified = Publication.objects.order_by('-log_modified')[0]
+
+    else:
+        last_created = None
+        last_modified = None
 
     publication_types = Publication.objects.all().exclude(authors=None).values_list('child_type', flat=True)
 

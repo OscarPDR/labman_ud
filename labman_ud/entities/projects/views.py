@@ -81,8 +81,13 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     projects_length = len(projects)
 
-    last_created = Project.objects.order_by('-log_created')[0]
-    last_modified = Project.objects.order_by('-log_modified')[0]
+    if (projects_length > 0):
+        last_created = Project.objects.order_by('-log_created')[0]
+        last_modified = Project.objects.order_by('-log_modified')[0]
+
+    else:
+        last_created = None
+        last_modified = None
 
     project_types = Project.objects.all().values_list('project_type', flat=True)
 
