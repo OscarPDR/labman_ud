@@ -73,7 +73,9 @@
                     <div>
                         <a href="{% url 'home' %}">
                             <h1 id="principal-h1">
-                                <img alt="MORElab-icon" src="{{ RESEARCH_GROUP_SETTINGS.research_group_official_logo.url }}" width="100"/>
+                                {% if RESEARCH_GROUP_SETTINGS.research_group_official_logo %}
+                                    <img alt="MORElab-icon" src="{{ RESEARCH_GROUP_SETTINGS.research_group_official_logo.url }}" width="100"/>
+                                {% endif %}
                                 {{ RESEARCH_GROUP_SETTINGS.research_group_full_name }}
                             </h1>
                         </a>

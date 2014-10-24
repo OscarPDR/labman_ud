@@ -6,9 +6,16 @@ from labman_setup.models import *
 
 def global_vars(request):
 
-    _settings = LabmanDeployGeneralSettings.objects.get()
+    try:
+        _settings = LabmanDeployGeneralSettings.objects.get()
+
+    except:
+        return {
+            'INITIAL_SETUP': True,
+        }
+
     social_profiles = OfficialSocialProfile.objects.all().order_by('name')
-    seo_and_analytics = SEOAndAnalytics.objects.get()
+    seo_and_analytics = SEOAndAnalytics.objects.first()
 
     footer_sections = 0
     address_details = False

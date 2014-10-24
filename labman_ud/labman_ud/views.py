@@ -1,9 +1,9 @@
-# -*- encoding: utf-8 -*-
 
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.template import RequestContext
 
 from entities.news.models import News
 
@@ -16,13 +16,16 @@ from entities.news.models import News
 ###########################################################################
 
 def home(request):
+    if RequestContext(request).get('INITIAL_SETUP'):
+        return render(request, 'labman_ud/initial_setup.html', {})
 
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'latest_news': News.objects.order_by('-created')[:3],
-    }
+    else:
+        # dictionary to be returned in render(request, )
+        return_dict = {
+            'latest_news': News.objects.order_by('-created')[:3],
+        }
 
-    return render(request, 'labman_ud/index.html', return_dict)
+        return render(request, 'labman_ud/index.html', return_dict)
 
 
 ###########################################################################
