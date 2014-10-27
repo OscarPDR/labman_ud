@@ -32,7 +32,7 @@
                     </strong>
 
                     <p>
-                        {{ news.created|date:"l, d F Y" }}
+                        {{ news.log_created|date:"l, d F Y" }}
                     </p>
 
                     <a class="btn btn-primary" href="{% url 'view_news' news.slug %}">

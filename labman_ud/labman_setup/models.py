@@ -31,6 +31,11 @@ def favicon_picture_path(self, filename):
 
 class LabmanDeployGeneralSettings(models.Model):
 
+    base_url = models.URLField(
+        blank=True,
+        null=True,
+    )
+
     favicon = models.ImageField(
         upload_to=favicon_picture_path,
         blank=True,
@@ -156,6 +161,30 @@ class TweetPonyConfiguration(models.Model):
 
     access_token_secret = models.CharField(
         max_length=100,
+    )
+
+    http_proxy = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
+    https_proxy = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
+    karmacracy_username = models.CharField(
+        max_length=75,
+        blank=True,
+        null=True,
+    )
+
+    karmacracy_api_key = models.CharField(
+        max_length=75,
+        blank=True,
+        null=True,
     )
 
 
