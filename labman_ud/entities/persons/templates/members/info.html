@@ -112,9 +112,11 @@
         <div class="col-md-9">
 
             <div class="centered">
+                {% if display_bio %}
                 <a href="{% url 'member_info' member.slug %}" class="btn btn-primary general-member-button member_biography">
                     <i class="fa fa-user fa-large"></i>&emsp;Biography
                 </a>
+                {% endif %}
     
                 {% if number_of_projects %}
                 <a href="{% url 'member_projects' member.slug %}" class="btn btn-default general-member-button member_projects">
@@ -155,28 +157,62 @@
                 </div>
                 {% endif %}
 
-                {% if has_talks %}
-                    <a href="" class="btn btn-default general-member-button member_talks">
-                        <i class="fa fa-bullhorn fa-large"></i>&emsp;Talks
-                    </a>
-                {% endif %}
+                {% if header_rows == 1 %}
+                    {% if has_talks %}
+                        <a href="" class="btn btn-default general-member-button member_talks">
+                            <i class="fa fa-bullhorn fa-large"></i>&emsp;Talks
+                        </a>
+                    {% endif %}
 
-                {% if has_contributions %}
-                    <a href="" class="btn btn-default general-member-button member_contributions">
-                        <i class="fa fa-code fa-large"></i>&emsp;Contributions
-                    </a>
-                {% endif %}
+                    {% if has_contributions %}
+                        <a href="" class="btn btn-default general-member-button member_contributions">
+                            <i class="fa fa-code fa-large"></i>&emsp;Contributions
+                        </a>
+                    {% endif %}
 
-                {% if has_awards %}
-                    <a href="{% url 'member_awards' member.slug %}" class="btn btn-default general-member-button member_awards">
-                        <i class="fa fa-trophy fa-large"></i>&emsp;Awards
+                    {% if has_awards %}
+                        <a href="{% url 'member_awards' member.slug %}" class="btn btn-default general-member-button member_awards">
+                            <i class="fa fa-trophy fa-large"></i>&emsp;Awards
+                        </a>
+                    {% endif %}
+        
+                    {% if has_news %}
+                    <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
+                        <i class="fa fa-calendar fa-large"></i>&emsp;News
                     </a>
+                    {% endif %}
                 {% endif %}
-
-                <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
-                    <i class="fa fa-calendar fa-large"></i>&emsp;News
-                </a>
             </div> <!-- end #member-tabs -->
+
+            <br>
+
+            {% if header_rows == 2 %}
+                <div class="centered">
+                    {% if has_talks %}
+                        <a href="" class="btn btn-default general-member-button member_talks">
+                            <i class="fa fa-bullhorn fa-large"></i>&emsp;Talks
+                        </a>
+                    {% endif %}
+
+                    {% if has_contributions %}
+                        <a href="" class="btn btn-default general-member-button member_contributions">
+                            <i class="fa fa-code fa-large"></i>&emsp;Contributions
+                        </a>
+                    {% endif %}
+
+                    {% if has_awards %}
+                        <a href="{% url 'member_awards' member.slug %}" class="btn btn-default general-member-button member_awards">
+                            <i class="fa fa-trophy fa-large"></i>&emsp;Awards
+                        </a>
+                    {% endif %}
+        
+                    {% if has_news %}
+                    <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
+                        <i class="fa fa-calendar fa-large"></i>&emsp;News
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             <br>
 

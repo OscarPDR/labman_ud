@@ -22,7 +22,7 @@ from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
-from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward
+from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
 
 from charts.views import PUBLICATION_TYPES
 
@@ -919,17 +919,47 @@ def __get_job_data(member):
     else:
         has_awards = False
 
+    if PersonRelatedToTalkOrCourse.objects.filter(person_id=member.id).count():
+        has_talks = True
+    else:
+        has_talks = False
+
+    if PersonRelatedToContribution.objects.filter(person_id=member.id).count():
+        has_contributions = True
+    else:
+        has_contributions = False
+
+    if PersonRelatedToNews.objects.filter(person_id=member.id).count():
+        has_news = True
+    else:
+        has_news = False
+
+    if has_awards and has_talks and has_contributions and has_news:
+        header_rows = 2
+    else:
+        header_rows = 1
+
+    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 and len(publication_ids) == 0:
+        display_bio = False
+    else:
+        display_bio = True
+
     return {
         'accounts': accounts,
         'company': company,
         'first_job': first_job,
         'has_thesis': has_thesis,
         'has_awards' : has_awards,
+        'has_talks' : has_talks,
+        'has_contributions' : has_contributions,
+        'has_news' : has_news,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'position': position,
         'pubtype_info': dict(items),
+        'header_rows' : header_rows,
+        'display_bio' : display_bio,
     }
 
 
