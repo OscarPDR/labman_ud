@@ -7,20 +7,18 @@
 
     <div class="row">
         <div class="col-md-8">
-            <img id="team-image" class="img-responsive" src="{% static 'img/team2013.jpg' %}" alt="morelab-team">
+            {% if RESEARCH_GROUP_SETTINGS.research_group_team_image %}
+                <img id="research-group-team-image" class="img-responsive" src="{{ RESEARCH_GROUP_SETTINGS.research_group_team_image.url }}" alt="{{ RESEARCH_GROUP_SETTINGS.research_group_short_name }} team picture">
+            {% endif %}
 
-            <p id="team-desc">
-                Welcome to the homepage of MORElab (envisioning future internet), the research group behind the <em>INTERNET</em> and <em>TELECOM</em> units of <a target="_blank" href="http://www.deustotech.deusto.es/">DeustoTech - Deusto Institute of Technology</a> at the <a target="_blank" href="http://www.ingenieria.deusto.es/">Faculty of Engineering</a> of the <a target="_blank" href="http://www.deusto.es/">University of Deusto</a>. We firmly believe that we can contribute to a better world through Internet and Telecom technology. We carry out basic and applied research adapted to the needs of the Industry.
-            </p>
-
-            <a target="_blank" href="http://www.deustotech.deusto.es/">
-                <img alt="deustotech-logo" class="img-responsive col-md-6 col-md-offset-3" src="{% static 'img/deustotech.jpg' %}"/>
-            </a>
+            <div id="research-group-description">
+                {{ RESEARCH_GROUP_SETTINGS.research_group_description|safe }}
+            </div>
         </div>
 
         <div class="col-md-4">
             <h2>
-                <img alt="news-mini-icon" src="{% static 'img/index/news_mini.png' %}" height="42" width="42">
+                &emsp;<i class="fa fa-newspaper-o fa-grey"></i>
                 Latest news
                 <a class="pull-right" href="{% url 'news_index' %}"><small>All news</small></a>
             </h2>
@@ -30,11 +28,11 @@
             {% for news in latest_news %}
                 <div class="well latest-news">
                     <strong>
-                        <i class="fa fa-chevron-right"></i>&emsp;{{ news.title|safe }}
+                        <i class="fa fa-chevron-right fa-grey"></i>&emsp;{{ news.title|safe }}
                     </strong>
 
                     <p>
-                        {{ news.created|date:"l, d F Y" }}
+                        {{ news.log_created|date:"l, d F Y" }}
                     </p>
 
                     <a class="btn btn-primary" href="{% url 'view_news' news.slug %}">

@@ -1,0 +1,107 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Welcome to labman_ud!</title>
+
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/cover.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/rainbow_theme.css' %}" />
+    </head>
+
+    <body>
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
+                <div class="cover-container">
+
+                    <div class="inner cover">
+                        <h1 class="cover-heading">
+                            Thanks for installing <strong>labman_ud</strong>!
+                            <br>
+                            <small>...there is still some work to do though ;-)</small>
+                        </h1>
+
+                        <p>
+                            <span class="lead">1.</span>&emsp;Create a <strong>superuser</strong> account. This will allow you to get access to the <em>admin</em> site to manage all the model entities <strong>labman_ud</strong> provides. Having the virtualenv active, execute the following command from the same level as the <strong>manage.py</strong> file, and follow the instructions on the prompt:
+
+                            <pre>
+                                <code data-language="shell">
+> python manage.py createsuperuser --settings=labman_ud.settings.local
+                                </code>
+                            </pre>
+                        </p>
+
+                        <p>
+                            If you have not initialised a database, run the following command first:
+
+                            <pre>
+                                <code data-language="shell">
+> python manage.py migrate --settings=labman_ud.settings.local
+                                </code>
+                            </pre>
+                        </p>
+
+                        <p>
+                            Now the development server can be re-invoked to run <strong>labman_ud</strong> locally:
+
+                            <pre>
+                                <code data-language="shell">
+> python manage.py runserver --settings=labman_ud.settings.local
+                                </code>
+                            </pre>
+                        </p>
+
+                        <br>
+
+                        <p>
+                            <span class="lead">2.</span>&emsp;Access the <a target="_blank" href="/admin">admin site</a>, login with the previous credentials, search for <strong>Labman setup > Labman deploy general settings</strong> on the left menu, click the <em>add</em> button, fill the form and save the data to end your <strong>labman_ud</strong> setup.
+                        </p>
+
+                        <br>
+
+                        <p>
+                            <span class="lead">3.</span>&emsp;Refresh this website and let the fun begin!
+                        </p>
+
+                        <p class="lead text-center">or...</p>
+
+                        <p>
+                            In order to have some default data to see the features of <strong>labman_ud</strong>, feel free to <a href="{% url 'populate_database' %}">populate the database</a> with dummy instances. It may take a while to finish, once loaded you will be redirected to the main page. You will be able to login in the <a target="_blank" href="/admin">admin site</a> using:
+                        </p>
+
+                        <p style="text-align: center;">
+                            <strong>username:</strong> <em>admin</em>&emsp;/&emsp;<strong>password:</strong> <em>admin</em>
+                        </p>
+
+                        <br>
+
+                        <p>
+                            > Remember this dummy data is not intended but to serve as an example. Please, reset the database before populating <strong>labman_ud</strong> with your own data.
+                        </p>
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <p class="footer-p">
+                        Should you have any question regarding labman_ud, don't hesitate
+                        <br>
+                        to send an email to <a href="mailto:oscar.pena@deusto.es">oscar.pena@deusto.es</a> for further help.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/rainbow-custom.min.js' %}"></script>
+    </body>
+</html>

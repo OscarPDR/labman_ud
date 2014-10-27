@@ -22,7 +22,7 @@ from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
-from entities.utils.models import Role, Network, PersonRelatedToAward
+from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward
 
 from charts.views import PUBLICATION_TYPES
 
@@ -542,6 +542,81 @@ def member_awards(request, person_slug):
     return_dict.update(data_dict)
 
     return render(request, 'members/awards.html', return_dict)
+
+###########################################################################
+# View: __get_award_info
+###########################################################################
+def __get_award_info(award_slug):
+    award = get_object_or_404(Award, slug=award_slug)
+
+    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person')
+    recipients = [ recipient_relation.person for recipient_relation in recipient_relations ]
+
+    project_relations = ProjectRelatedToAward.objects.filter(award = award).select_related('project')
+    projects = [ project_relation.project for project_relation in project_relations ]
+
+    publication_relations = PublicationRelatedToAward.objects.filter(award = award).select_related('publication')
+    publications = [ publication_relation.publication for publication_relation in publication_relations ]
+
+    # dictionary to be returned in render(request, )
+    return_dict = {
+        'award': award,
+        'recipients' : recipients,
+        'related_projects' : projects,
+        'related_publications' : publications,
+    }
+    return return_dict, award
+
+
+###########################################################################
+# View: member_awards
+###########################################################################
+def award_info(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s' % award.full_name,
+        'current_link' : 'info',
+    })
+    return render(request, 'awards/info.html', return_dict)
+
+###########################################################################
+# View: award_related_publications
+###########################################################################
+def award_related_publications(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s - Related publications' % award.full_name,
+        'current_link' : 'related_publications',
+    })
+    return render(request, 'awards/related_publications.html', return_dict)
+
+###########################################################################
+# View: award_related_projects
+###########################################################################
+def award_related_projects(request, award_slug):
+    return_dict, award = __get_award_info(award_slug)
+    return_dict.update({
+        'web_title': u'Awards - %s - Related projects' % award.full_name,
+        'current_link' : 'related_projects',
+    })
+    return render(request, 'awards/related_projects.html', return_dict)
+
+
+###########################################################################
+# View: award_index
+###########################################################################
+def award_index(request):
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    return_dict = {
+        'web_title': u'Awards - %s' % award.full_name,
+        'award': award,
+    }
+    return render(request, 'awards/info.html', return_dict)
+    
 
 
 ###########################################################################

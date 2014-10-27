@@ -1,0 +1,85 @@
+{% load staticfiles %}
+
+<div class="soften"></div>
+
+<div class="row">
+    {% if ADDRESS_DETAILS %}
+        <div class="col-md-{{ FOOTER_DIVISIONS_WIDTH }} footer-object">
+            <h4>
+                Where we are
+                {% if RESEARCH_GROUP_SETTINGS.map_external_link %}
+                    &emsp;
+                    <a id="map-link" target="_blank" href="{{ RESEARCH_GROUP_SETTINGS.map_external_link }}">
+                        (view on map)
+                    </a>
+                {% endif %}
+            </h4>
+
+            <div class="footer-content">
+                <address>
+                    {{ RESEARCH_GROUP_SETTINGS.address|safe }}
+                </address>
+
+
+            </div>
+        </div>
+    {% endif %}
+
+    {% if CONTACT_DETAILS %}
+        <div class="col-md-{{ FOOTER_DIVISIONS_WIDTH }} footer-object">
+            <h4>
+                Contact us
+            </h4>
+
+            <div class="footer-content">
+                {% if RESEARCH_GROUP_SETTINGS.phone_number %}
+                    <p>
+                        <i class="fa fa-phone fa-grey"></i>&emsp;
+                        <a href="tel:{{ RESEARCH_GROUP_SETTINGS.phone_number }}">
+                            {{ RESEARCH_GROUP_SETTINGS.phone_number }}
+                        </a>
+
+                        {% if RESEARCH_GROUP_SETTINGS.phone_extension %}
+                            &emsp;<strong>ext:</strong> {{ RESEARCH_GROUP_SETTINGS.phone_extension }}
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                {% if RESEARCH_GROUP_SETTINGS.email_address %}
+                    <p>
+                        <i class="fa fa-envelope-o fa-grey"></i>&emsp;
+                        <a target="_blank" href="mailto:{{ RESEARCH_GROUP_SETTINGS.email_address }}">
+                            {{ RESEARCH_GROUP_SETTINGS.email_address }}
+                        </a>
+                    </p>
+                {% endif %}
+
+                {% if RESEARCH_GROUP_SETTINGS.contact_person %}
+                    <p>
+                        <i class="fa fa-user fa-grey"></i>&emsp;<strong>{{ RESEARCH_GROUP_SETTINGS.contact_person }}</strong>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if SOCIAL_DETAILS %}
+        <div class="col-md-{{ FOOTER_DIVISIONS_WIDTH }} footer-object">
+            <h4>
+                Find us on
+            </h4>
+
+            <div class="footer-content row">
+                {% for profile in SOCIAL_PROFILES %}
+                    <a target="_blank" href="{{ profile.profile_link }}" {% if profile.help_text %}title="{{ profile.help_text }}"{% endif %}>
+                        <img class="img-responsive col-md-{{ SOCIAL_PROFILE_WIDTH }}" src="{{ profile.network_image.url }}" alt="{{ profile.slug }}-icon" />
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div id="powered-by-labman" class="row">
+    <em>Powered by</em>&emsp;<a target="_blank" href="https://github.com/OscarPDR/labman_ud">labman_ud</a>
+</div>

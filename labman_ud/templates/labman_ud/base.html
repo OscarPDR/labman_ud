@@ -6,24 +6,27 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <![endif]-->
 
-        {% if web_title %}
-            <title>MORElab - {{ web_title }}</title>
-        {% else %}
-            <title>MORElab Research Group</title>
-        {% endif %}
+        <title>
+            {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}
+            {% if web_title %}
+             - {{ web_title }}
+            {% endif %}
+        </title>
 
-        <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+        {% if RESEARCH_GROUP_SETTINGS.favicon %}
+            <link rel="shortcut icon" href="{{ RESEARCH_GROUP_SETTINGS.favicon.url }}" />
+        {% endif %}
 
         <meta charset="utf-8" />
 
         <meta name="robots" content="index, follow" />
-        <meta name="keywords" content="morelab, internet, deustotech, deusto, deusto institute of technology, research, investigación, tecnológico fundación deusto, mobile, context, aware, semantic, aal, ambient assisted living, future internet, smartlab, smart environments, smart, fuzzy, wireless, internet of things, semantic web, faculty of engineering, university of deusto, ict, linked data, linked open data" />
+        <meta name="keywords" content="{{ SEO_AND_ANALYTICS.meta_keywords }}" />
 
-        <meta name="description" content="MoreLab, the research group behind the INTERNET unit of DeustoTech at Deusto Institute of Technology at the Faculty of Engineering of the University of Deusto. The aim of our group is to contribute with ICT innovations and research towards improving users quality of life through more intelligent and personalised environments and services." />
+        <meta name="description" content="{{ SEO_AND_ANALYTICS.meta_description }}" />
         <meta name="author" content="" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
+
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@deustoMORElab" />
         <meta name="twitter:title" content="MORElab - Envisioning Future Internet" />
@@ -70,8 +73,10 @@
                     <div>
                         <a href="{% url 'home' %}">
                             <h1 id="principal-h1">
-                                <img alt="MORElab-icon" src="{% static 'img/morelab.png' %}" width="100"/>
-                                DeustoTech INTERNET + TELECOM units
+                                {% if RESEARCH_GROUP_SETTINGS.research_group_official_logo %}
+                                    <img alt="MORElab-icon" src="{{ RESEARCH_GROUP_SETTINGS.research_group_official_logo.url }}" width="100"/>
+                                {% endif %}
+                                {{ RESEARCH_GROUP_SETTINGS.research_group_full_name }}
                             </h1>
                         </a>
                     </div>
@@ -79,43 +84,43 @@
                     <ul class="nav nav-justified">
                         <li id="news-nav">
                             <a href="{% url 'news_index' %}">
-                                <img alt="news-icon" src="{% static 'img/index/news_mini.png' %}" width="24"/>
-                                News
+                                <i class="fa fa-newspaper-o fa-grey"></i>
+                                &emsp;News
                             </a>
                         </li>
 
                         <li id="projects-nav">
                             <a href="{% url 'project_index' %}">
-                                <img alt="projects-icon" src="{% static 'img/index/project_micro.png' %}"/>
-                                Projects
+                                <i class="fa fa-gears fa-grey"></i>
+                                &emsp;Projects
                             </a>
                         </li>
 
                         <li id="publications-nav">
                             <a href="{% url 'publication_index' %}">
-                                <img alt="publications-icon" src="{% static 'img/index/publication_micro.png' %}"/>
-                                Publications
+                                <i class="fa fa-book fa-grey"></i>
+                                &emsp;Publications
                             </a>
                         </li>
 
                         <li id="members-nav">
                             <a href="{% url 'members' %}">
-                                <img alt="member-icon" src="{% static 'img/index/person_micro.png' %}"/>
-                                Members
+                                <i class="fa fa-users fa-grey"></i>
+                                &emsp;Members
                             </a>
                         </li>
 
                         <li id="charts-nav">
                             <a href="{% url 'chart_index' %}">
-                                <img alt="charts-icon" src="{% static 'img/index/chart_micro.png' %}"/>
-                                Charts
+                                <i class="fa fa-bar-chart fa-grey"></i>
+                                &emsp;Charts
                             </a>
                         </li>
 
                         <li id="about-nav">
                             <a href="{% url 'about' %}">
-                                <img alt="about-icon" src="{% static 'img/index/info_micro.png' %}"/>
-                                About
+                                <i class="fa fa-info-circle fa-grey"></i>
+                                &emsp;About
                             </a>
                         </li>
                     </ul> <!-- end .nav .nav-justified -->
@@ -132,81 +137,25 @@
         </div> <!-- end wrap -->
 
         <footer>
-            <div class="soften"></div>
-
-            <div class="row">
-                <div class="col-md-4 footer-object">
-                    <div class="col-md-4 hidden-xs footer-icon">
-                        <img alt="location-icon" src="{% static 'img/footer/placemarker-mini.png' %}"/>
-                    </div>
-
-                    <div class="col-md-8 footer-description">
-                        <h4>
-                            Visit
-                            <a target="_blank" href="http://goo.gl/maps/qNEIz">(view on map)</a>
-                        </h4>
-
-                        <address>
-                            Engineering faculty - 4<sup>th</sup> floor<br>
-                            Avda. Universidades, 24<br>
-                            Bilbao (Bizkaia)<br>
-                            48007 - Spain
-                        </address>
-                    </div>
-                </div>
-
-                <div class="col-md-4 footer-object">
-                    <div class="col-md-4 hidden-xs footer-icon">
-                        <img alt="phone-icon" src="{% static 'img/footer/phone-mini.png' %}"/>
-                    </div>
-
-                    <div class="col-md-8 footer-description">
-                        <h4>Call</h4>
-
-                        <p>
-                            944 13 90 03 <strong>ext:</strong> 2548
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 footer-description footer-object">
-                    <h4>&emsp;Social</h4>
-
-                    <div class="footer-social">
-                        <a target="_blank" href="https://github.com/morelab">
-                            <img alt="github-icon" src="{% static 'img/footer/github-color.png' %}" width="75"/>
-                        </a>
-
-                        <a target="_blank" href="http://twitter.com/deustoMORElab">
-                            <img alt="twitter-icon" src="{% static 'img/footer/twitter-color.png' %}" width="75"/>
-                        </a>
-
-                        <a target="_blank" href="http://www.slideshare.net/tag/morelab">
-                            <img alt="slideshare-icon" src="{% static 'img/footer/slideshare-color.png' %}" width="75"/>
-                        </a>
-
-                        <a target="_blank" href="http://www.youtube.com/user/deustomorelab">
-                            <img alt="youtube-icon" src="{% static 'img/footer/youtube-color.png' %}" width="75"/>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% include 'labman_ud/footer.html' %}
         </footer>
 
         <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-        <script>
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-15127034-1']);
-            _gaq.push(['_trackPageview']);
+        {% if SEO_AND_ANALYTICS.google_analytics_account %}
+            <script>
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '{{ SEO_AND_ANALYTICS.google_analytics_account }}']);
+                _gaq.push(['_trackPageview']);
 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        {% endif %}
 
         {% block scripts %}{% endblock %}
 

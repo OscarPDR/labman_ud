@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^publications/', include('entities.publications.urls')),
 
     url(r'^management/', include('management.urls')),
+    url(r'^populate_database/', 'labman_setup.views.populate_database', name='populate_database'),
 
     # Custom app urls
     url(r'^charts/', include('charts.urls')),

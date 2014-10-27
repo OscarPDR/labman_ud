@@ -397,3 +397,13 @@ SPARQL_ENDPOINT_PASSWORD = ''
 ####################################################################################################
 
 DEFAULT_THRESHOLD_RATIO = None
+
+
+####################################################################################################
+###     Department specific settings
+####################################################################################################
+
+RESEARCH_GROUP_NAME = None
+
+# Path relative to the 'static' folder
+TEAM_IMAGE_PATH = 'img/group_image.jpg'
