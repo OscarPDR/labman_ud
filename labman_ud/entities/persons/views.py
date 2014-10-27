@@ -549,7 +549,7 @@ def member_awards(request, person_slug):
 def __get_award_info(award_slug):
     award = get_object_or_404(Award, slug=award_slug)
 
-    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person')
+    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person').order_by('id')
     recipients = [ recipient_relation.person for recipient_relation in recipient_relations ]
 
     project_relations = ProjectRelatedToAward.objects.filter(award = award).select_related('project')
@@ -606,7 +606,7 @@ def award_related_projects(request, award_slug):
 # View: award_index
 ###########################################################################
 def award_index(request):
-    awards = Award.objects.all()
+    awards = Award.objects.all().order_by('-date')
     return_dict = {
         'web_title': u'Awards',
         'awards': awards,
