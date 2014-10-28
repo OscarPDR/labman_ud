@@ -500,12 +500,12 @@ def member_publication_bibtex_download(request, person_slug):
 
 def member_news(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
-    person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__created')
+    person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__log_created')
     news = OrderedDict()
 
     for news_person in person_news:
         news_piece = news_person.news
-        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
+        year_month = u'%s %s' % (news_piece.log_created.strftime('%B'), news_piece.log_created.year)
         if not year_month in news:
             news[year_month] = []
         news[year_month].append(news_piece)
@@ -645,7 +645,7 @@ class LatestUserNewsFeed(Feed):
         return "News about %s" % obj.full_name
 
     def items(self, obj):
-        return PersonRelatedToNews.objects.filter(person=obj).select_related('news').order_by('-news__created')[:30]
+        return PersonRelatedToNews.objects.filter(person=obj).select_related('news').order_by('-news__log_created')[:30]
 
     def item_title(self, item):
         return item.news.title

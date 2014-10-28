@@ -16,7 +16,7 @@
 
                 <dl class="dl-horizontal">
                     {% for item in value %}
-                        <dt class="day-number">{{ item.created|date:"d" }}</dt>
+                        <dt class="day-number">{{ item.log_created|date:"d" }}</dt>
                         <dd class="news-title"><a href="{% url 'view_news' item.slug %}">{{ item.title }}</a></dd>
                     {% endfor %}
                 </dl>

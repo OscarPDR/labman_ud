@@ -23,12 +23,12 @@ from entities.publications.models import Publication
 ###########################################################################
 
 def news_index(request):
-    _news = News.objects.all().order_by('-created', 'title')
+    _news = News.objects.all().order_by('-log_created', 'title')
 
     news = OrderedDict()
 
     for news_piece in _news:
-        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
+        year_month = u'%s %s' % (news_piece.log_created.strftime('%B'), news_piece.log_created.year)
         if not year_month in news:
             news[year_month] = []
         news[year_month].append(news_piece)
