@@ -7,7 +7,7 @@ from inflection import titleize
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
@@ -200,6 +200,12 @@ def members(request, organization_slug=None):
 
     return render(request, "members/index.html", return_dict)
 
+###########################################################################
+# View: members_redirect
+###########################################################################
+
+def members_redirect(request):
+    return HttpResponseRedirect(reverse('members'))
 
 ###########################################################################
 # View: former_members
@@ -289,9 +295,9 @@ def member_info(request, person_slug):
 
     # Redirect to correct URL template if concordance doesn't exist
     if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
+        return HttpResponsePermanentRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
+        return HttpResponsePermanentRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
 
     member = get_object_or_404(Person, slug=person_slug)
 

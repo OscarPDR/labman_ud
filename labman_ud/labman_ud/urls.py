@@ -35,6 +35,8 @@ urlpatterns = patterns('',
     url(r'^news/', include('entities.news.urls')),
     url(r'^organizations/', include('entities.organizations.urls')),
     url(r'^people/', include('entities.persons.urls')),
+    url(r'^p/(?P<person_slug>\S+)/$', 'entities.persons.views.member_info', name='full_url_member_info'),
+    url(r'^p/$', 'entities.persons.views.members_redirect', name='members_redirect'),
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^publications/', include('entities.publications.urls')),
 
