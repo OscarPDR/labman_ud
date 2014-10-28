@@ -55,7 +55,6 @@ def global_vars(request):
     return_dict = {
         'RESEARCH_GROUP_SETTINGS': _settings,
         'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', None) + '/',
-        'TEAM_IMAGE_PATH': getattr(settings, 'TEAM_IMAGE_PATH', None) + '',
         'FOOTER_DIVISIONS_WIDTH': footer_divisions_width,
         'ADDRESS_DETAILS': address_details,
         'CONTACT_DETAILS': contact_details,
