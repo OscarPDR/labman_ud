@@ -7,7 +7,7 @@ from inflection import titleize
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
@@ -22,7 +22,7 @@ from entities.organizations.models import Organization, Unit
 from entities.projects.models import Project, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
-from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward
+from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
 
 from charts.views import PUBLICATION_TYPES
 
@@ -200,6 +200,12 @@ def members(request, organization_slug=None):
 
     return render(request, "members/index.html", return_dict)
 
+###########################################################################
+# View: members_redirect
+###########################################################################
+
+def members_redirect(request):
+    return HttpResponseRedirect(reverse('members'))
 
 ###########################################################################
 # View: former_members
@@ -289,9 +295,9 @@ def member_info(request, person_slug):
 
     # Redirect to correct URL template if concordance doesn't exist
     if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
+        return HttpResponsePermanentRedirect(reverse('member_info', kwargs={'person_slug': person_slug}))
     if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
-        return HttpResponseRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
+        return HttpResponsePermanentRedirect(reverse('former_member_info', kwargs={'person_slug': person_slug}))
 
     member = get_object_or_404(Person, slug=person_slug)
 
@@ -549,7 +555,7 @@ def member_awards(request, person_slug):
 def __get_award_info(award_slug):
     award = get_object_or_404(Award, slug=award_slug)
 
-    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person')
+    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person').order_by('id')
     recipients = [ recipient_relation.person for recipient_relation in recipient_relations ]
 
     project_relations = ProjectRelatedToAward.objects.filter(award = award).select_related('project')
@@ -606,16 +612,12 @@ def award_related_projects(request, award_slug):
 # View: award_index
 ###########################################################################
 def award_index(request):
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
+    awards = Award.objects.all().order_by('-date')
     return_dict = {
-        'web_title': u'Awards - %s' % award.full_name,
-        'award': award,
+        'web_title': u'Awards',
+        'awards': awards,
     }
-    return render(request, 'awards/info.html', return_dict)
+    return render(request, 'awards/index.html', return_dict)
     
 
 
@@ -913,23 +915,57 @@ def __get_job_data(member):
 
     items = ord_dict.items()
 
-    try:
-        Thesis.objects.get(author_id=member.id)
+    if Thesis.objects.filter(author_id=member.id).count():
         has_thesis = True
-
-    except:
+    else:
         has_thesis = False
+
+    if PersonRelatedToAward.objects.filter(person_id=member.id).count():
+        has_awards = True
+    else:
+        has_awards = False
+
+    if PersonRelatedToTalkOrCourse.objects.filter(person_id=member.id).count():
+        has_talks = True
+    else:
+        has_talks = False
+
+    if PersonRelatedToContribution.objects.filter(person_id=member.id).count():
+        has_contributions = True
+    else:
+        has_contributions = False
+
+    if PersonRelatedToNews.objects.filter(person_id=member.id).count():
+        has_news = True
+    else:
+        has_news = False
+
+    if has_awards and has_talks and has_contributions and has_news:
+        header_rows = 2
+    else:
+        header_rows = 1
+
+    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 and len(publication_ids) == 0:
+        display_bio = False
+    else:
+        display_bio = True
 
     return {
         'accounts': accounts,
         'company': company,
         'first_job': first_job,
         'has_thesis': has_thesis,
+        'has_awards' : has_awards,
+        'has_talks' : has_talks,
+        'has_contributions' : has_contributions,
+        'has_news' : has_news,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'position': position,
         'pubtype_info': dict(items),
+        'header_rows' : header_rows,
+        'display_bio' : display_bio,
     }
 
 
