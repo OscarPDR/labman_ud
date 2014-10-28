@@ -143,3 +143,18 @@ def reset_ignored_relationships(request, threshold_ratio):
 
     else:
         return HttpResponseRedirect(reverse('check_names_similarity', args=[threshold_ratio]))
+
+
+####################################################################################################
+###     View: tags()
+####################################################################################################
+
+@login_required
+def tags(request):
+    tags = Tag.objects.all().order_by('name')
+
+    return_dict = {
+        'tags': tags,
+    }
+
+    return render(request, 'management/tags.html', return_dict)

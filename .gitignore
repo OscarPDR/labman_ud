@@ -23,10 +23,6 @@ labman_ud/collected_static/
 *.db
 *.sqlite3
 
-# South migrations and database fixtures
-migrations/
-fixtures/
-
 # Sublime Text project configuration
 *.sublime-project
 *.sublime-workspace
