@@ -13,6 +13,7 @@
                 {% else %}
                     {{ members_length }} former member{{ members_length|pluralize }}
                 {% endif %}
+
                 {% if organization %}
                     <small>&emsp;<em>'{{ organization.short_name }}'</em></small>
                 {% endif %}
@@ -101,8 +102,11 @@
                         </span>
                         <br>
                         <span class="member-position">{{ member.position }}</span>
-                        <br>
-                        <span class="label {{ member.organization_slug }}">{{ member.organization }}</span>
+
+                        {% if units|length > 1 %}
+                            <br>
+                            <span class="label {{ member.organization_slug }}">{{ member.organization }}</span>
+                        {% endif %}
                     </div>
                 </div>
         {% endfor %}

@@ -26,8 +26,11 @@
                 </span>
                 <br>
                 <span class="member-position">{{ head.position }}</span>
-                <br>
-                <span class="label {{ head.organization_slug }}">{{ head.organization }}</span>
+
+                {% if units|length > 1 %}
+                    <br>
+                    <span class="label {{ head.organization_slug }}">{{ head.organization }}</span>
+                {% endif %}
             </div>
         </div>
     {% endfor %}

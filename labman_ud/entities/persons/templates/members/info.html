@@ -41,19 +41,11 @@
                 {% endif %}
             {% endif %}
 
-            <div id="member-company" class="centered">
-                {% if company == 'DeustoTech - Internet' %}
-                    <span class="label label-primary">{{ company }}</span>
-                {% endif %}
-
-                {% if company == 'DeustoTech - Telecom' %}
-                    <span class="label label-success">{{ company }}</span>
-                {% endif %}
-
-                {% if company == 'MORElab' %}
-                    <span class="label label-default">{{ company }}</span>
-                {% endif %}
-            </div>
+            {% if units|length > 1 %}
+                <div id="member-company" class="centered">
+                    <span class="label {{ company_slug }}">{{ company }}</span>
+                </div>
+            {% endif %}
 
             <div id="working-period" class="centered">
                 {% if first_job.start_date %}
@@ -117,7 +109,7 @@
                     <i class="fa fa-user fa-large"></i>&emsp;Biography
                 </a>
                 {% endif %}
-    
+
                 {% if number_of_projects %}
                 <a href="{% url 'member_projects' member.slug %}" class="btn btn-default general-member-button member_projects">
                     <i class="fa fa-gears fa-large"></i>&emsp;
@@ -175,7 +167,7 @@
                             <i class="fa fa-trophy fa-large"></i>&emsp;Awards
                         </a>
                     {% endif %}
-        
+
                     {% if has_news %}
                     <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
                         <i class="fa fa-calendar fa-large"></i>&emsp;News
@@ -205,7 +197,7 @@
                             <i class="fa fa-trophy fa-large"></i>&emsp;Awards
                         </a>
                     {% endif %}
-        
+
                     {% if has_news %}
                     <a href="{% url 'member_news' member.slug %}" class="btn btn-default general-member-button member_news">
                         <i class="fa fa-calendar fa-large"></i>&emsp;News

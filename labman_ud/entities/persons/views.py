@@ -291,6 +291,8 @@ def former_members(request, organization_slug=None):
 ###########################################################################
 
 def member_info(request, person_slug):
+    units = Unit.objects.all()
+
     person_status = __determine_person_status(person_slug)
 
     # Redirect to correct URL template if concordance doesn't exist
@@ -305,6 +307,7 @@ def member_info(request, person_slug):
     return_dict = {
         'web_title': member.full_name,
         'member': member,
+        'units': units,
     }
 
     data_dict = __get_job_data(member)
@@ -618,7 +621,7 @@ def award_index(request):
         'awards': awards,
     }
     return render(request, 'awards/index.html', return_dict)
-    
+
 
 
 ###########################################################################
@@ -872,6 +875,7 @@ def __group_by_key(stmt, key='id'):
 
 def __get_job_data(member):
     company = None
+    company_slug = None
     first_job = None
     last_job = None
     position = None
@@ -884,6 +888,7 @@ def __get_job_data(member):
         last_job = jobs.reverse()[0]
         organization = Organization.objects.get(id=last_job.organization_id)
         company = organization.short_name
+        company_slug = organization.slug
         position = last_job.position
     except:
         pass
@@ -953,19 +958,20 @@ def __get_job_data(member):
     return {
         'accounts': accounts,
         'company': company,
+        'company_slug': company_slug,
+        'display_bio' : display_bio,
         'first_job': first_job,
-        'has_thesis': has_thesis,
         'has_awards' : has_awards,
-        'has_talks' : has_talks,
         'has_contributions' : has_contributions,
         'has_news' : has_news,
+        'has_talks' : has_talks,
+        'has_thesis': has_thesis,
+        'header_rows' : header_rows,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'position': position,
         'pubtype_info': dict(items),
-        'header_rows' : header_rows,
-        'display_bio' : display_bio,
     }
 
 
