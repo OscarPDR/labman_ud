@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django.conf import settings
 from django.db.models import Max
@@ -10,6 +9,7 @@ from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
 from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
+from labman_setup.models import ZoteroConfiguration
 
 from datetime import datetime
 from dateutil import parser
@@ -32,12 +32,20 @@ JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
 ####################################################################################################
 
 def get_zotero_variables():
-    base_url = getattr(settings, 'ZOTERO_API_BASE_URL', None)
-    api_key = getattr(settings, 'ZOTERO_API_KEY', None)
-    library_id = getattr(settings, 'ZOTERO_LIBRARY_ID', None)
-    library_type = getattr(settings, 'ZOTERO_LIBRARY_TYPE', None)
+    try:
+        zotero_config = ZoteroConfiguration.objects.get()
 
-    return base_url, api_key, library_id, library_type
+        base_url = zotero_config.base_url
+        api_key = zotero_config.api_key
+        library_id = zotero_config.library_id
+        library_type = zotero_config.library_type
+
+        return base_url, api_key, library_id, library_type
+
+    except:
+        print "ZoteroConfiguration object not configured in admin panel"
+
+        return '', '', '', ''
 
 
 ####################################################################################################

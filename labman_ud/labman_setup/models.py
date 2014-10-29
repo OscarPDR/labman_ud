@@ -194,20 +194,22 @@ class TweetPonyConfiguration(models.Model):
 
 class ZoteroConfiguration(models.Model):
 
-    consumer_key = models.CharField(
-        max_length=100,
-    )
-
-    api_key = models.CharField(
-        max_length=100,
-    )
-
-    library_id = models.CharField(
-        max_length=100,
+    base_url = models.CharField(
+        max_length=50,
+        default=u'https://api.zotero.org',
     )
 
     library_type = models.CharField(
-        max_length=100,
+        max_length=10,
+        default=u'group'
+    )
+
+    api_key = models.CharField(
+        max_length=50,
+    )
+
+    library_id = models.CharField(
+        max_length=25,
     )
 
 

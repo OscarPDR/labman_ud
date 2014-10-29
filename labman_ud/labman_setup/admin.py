@@ -34,6 +34,22 @@ class SEOAndAnalyticsAdmin(admin.ModelAdmin):
     model = SEOAndAnalytics
 
 
+###########################################################################
+# Class: TweetPonyConfigurationAdmin
+###########################################################################
+
+class TweetPonyConfigurationAdmin(admin.ModelAdmin):
+    model = TweetPonyConfiguration
+
+
+###########################################################################
+# Class: ZoteroConfigurationAdmin
+###########################################################################
+
+class ZoteroConfigurationAdmin(admin.ModelAdmin):
+    model = ZoteroConfiguration
+
+
 ####################################################################################################
 ####################################################################################################
 ###   Register classes
@@ -43,3 +59,5 @@ class SEOAndAnalyticsAdmin(admin.ModelAdmin):
 admin.site.register(LabmanDeployGeneralSettings, LabmanDeployGeneralSettingsAdmin)
 admin.site.register(OfficialSocialProfile, OfficialSocialProfileAdmin)
 admin.site.register(SEOAndAnalytics, SEOAndAnalyticsAdmin)
+admin.site.register(TweetPonyConfiguration, TweetPonyConfigurationAdmin)
+admin.site.register(ZoteroConfiguration, ZoteroConfigurationAdmin)

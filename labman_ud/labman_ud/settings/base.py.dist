@@ -310,31 +310,6 @@ GENERAL_NOTIFICATIONS_ADDRESSES = ['']
 
 
 ####################################################################################################
-###     News twitter configuration: https://github.com/Mezgrman/TweetPony & http://karmacracy.com/
-####################################################################################################
-
-TWEETPONY_CONSUMER_KEY = ''
-TWEETPONY_CONSUMER_SECRET = ''
-TWEETPONY_ACCESS_TOKEN = ''
-TWEETPONY_ACCESS_TOKEN_SECRET = ''
-
-KARMACRACY_URL = ''
-
-NEWS_DETAIL_BASE_URL = ''
-NEWS_TITLE_MAX_LENGTH = 120
-
-
-####################################################################################################
-###     Zotero settings: https://www.zotero.org/
-####################################################################################################
-
-ZOTERO_API_BASE_URL = ''
-ZOTERO_API_KEY = ''
-ZOTERO_LIBRARY_ID = ''
-ZOTERO_LIBRARY_TYPE = ''
-
-
-####################################################################################################
 ###     Celery settings: http://www.celeryproject.org/
 ####################################################################################################
 
