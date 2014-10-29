@@ -410,12 +410,30 @@ class LatestPublicationsFeed(Feed):
 ###########################################################################
 
 def phd_dissertations_index(request):
-    theses = Thesis.objects.filter(author__is_active=True).order_by('-year', 'author__full_name')
+
+    phd_dissertations = []
+
+    theses = Thesis.objects.filter(author__is_active=True).order_by('-viva_date', 'author__full_name')
+
+    for thesis in theses:
+        phd_dissertation = {}
+
+        phd_dissertation['thesis'] = thesis
+
+        co_advisors = CoAdvisor.objects.filter(thesis=thesis)
+
+        if co_advisors:
+            phd_dissertation['co_advisors'] = []
+
+            for co_advisor in co_advisors:
+                phd_dissertation['co_advisors'].append(co_advisor.co_advisor.full_name)
+
+        phd_dissertations.append(phd_dissertation)
 
     # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'PhD dissertations',
-        'theses': theses,
+        'phd_dissertations': phd_dissertations,
     }
 
     return render(request, 'publications/phd_dissertations_index.html', return_dict)

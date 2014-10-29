@@ -747,3 +747,8 @@ path.color1 {
 i.fa-grey {
     color: #999;
 }
+
+blockquote footer {
+    margin-bottom: 0;
+    min-height: 0;
+}

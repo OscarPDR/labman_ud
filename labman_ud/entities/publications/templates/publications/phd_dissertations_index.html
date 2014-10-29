@@ -6,35 +6,66 @@
 {% block content %}
 
     <h1>
-        {{ theses|length }} PhD dissertation{{ theses|pluralize }} defended by our members
+        {{ phd_dissertations|length }} PhD dissertation{{ phd_dissertations|pluralize }} defended by our members
     </h1>
 
     <br>
     <br>
 
     <div class="row">
-        {% for thesis in theses %}
+        {% for phd_dissertation in phd_dissertations %}
 
-            {% if forloop.counter0|divisibleby:3 %}{% endif %}
-
-                <div class="col-md-4" {% if forloop.counter0|divisibleby:3 %}style="margin-left:0;"{% endif %}>
-                    <div class="centered">
-                        <a target="_blank" href="{{ MEDIA_URL }}{{ thesis.pdf }}">
-                            <img src="{{ STATIC_URL }}img/document_download.png"/>
+            <div class="row">
+                <div class="col-md-2">
+                    {% if phd_dissertation.thesis.pdf %}
+                        <a target="_blank" href="{{ MEDIA_URL }}{{ phd_dissertation.thesis.pdf }}">
+                            <img class="img-responsive" src="{{ STATIC_URL }}img/document_download.png"/>
                         </a>
+                        <br>
+                    {% endif %}
+                </div>
 
-                        <br>
-                        <br>
-                            <strong>Dr. {{ thesis.author.full_name }}</strong> ({{ thesis.year }})&emsp;
-                            <a href="{% url 'member_phd_dissertation' thesis.author.slug %}">
-                                <i class="fa fa-info-circle"></i>
+                <div class="col-md-10">
+                    <blockquote>
+                        <p>{{ phd_dissertation.thesis.title }}</p>
+                        <footer>
+                            <a href="{% url 'member_info' phd_dissertation.thesis.author.slug %}">
+                                {{ phd_dissertation.thesis.author.full_name }}
                             </a>
-                        <br>
-                        <p class="thesis-title">
-                            {{ thesis.title }}
+                        </footer>
+                    </blockquote>
+
+                    <div class="row">
+                        <p class="col-md-4">
+                            <strong>Directed by:</strong>&emsp;{{ phd_dissertation.thesis.advisor.full_name }}
+                            <br>
+
+                            {% if phd_dissertation.co_advisors %}
+                                &emsp;
+                                <small>
+                                    <strong>Co-advisors:</strong>
+                                    {% for co_advisor in phd_dissertation.co_advisors %}
+                                        &emsp;{{ co_advisor }}
+                                    {% endfor %}
+                                </small>
+                            {% endif %}
                         </p>
+
+                        <p class="col-md-4">
+                            <strong>VIVA date:</strong>&emsp;{{ phd_dissertation.thesis.viva_date|date:"d M Y - H:i" }}
+                        </p>
+
+                        <div class="col-md-4">
+                            <a href="{% url 'member_phd_dissertation' phd_dissertation.thesis.author.slug %}">
+                                <i class="fa fa-info-circle"></i>&emsp;Extended information
+                            </a>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="soften-limited"></div>
+            <br>
         {% endfor %}
     </div>
 
