@@ -62,12 +62,12 @@ for new_item in news:
         continue
     else:
         news_slugs.append(slug)
-    created = datetime.datetime.strptime(new_item['created'], '%Y-%m-%d %H:%M:%S')
-    modified = datetime.datetime.strptime(new_item['modified'], '%Y-%m-%d %H:%M:%S')
+    created = datetime.datetime.strptime(new_item['log_created'], '%Y-%m-%d %H:%M:%S')
+    modified = datetime.datetime.strptime(new_item['log_modified'], '%Y-%m-%d %H:%M:%S')
 
     text_altogether = u' ' + title.lower() + u' ' + content.lower()  + u' '
 
-    cursor.execute("insert into news_news(content, title, slug, created, log_created, log_modified) values(%s, %s, %s, %s, %s, %s)", (content, title, slug, created, created, modified))
+    cursor.execute("insert into news_news(content, title, slug, log_created, log_modified) values(%s, %s, %s, %s, %s, %s)", (content, title, slug, created, modified))
     connection.commit()
 
     cursor.execute("select id from news_news where title = %s", (title,))
@@ -94,7 +94,7 @@ for new_item in news:
                 cursor.execute("insert into news_personrelatedtonews(person_id, news_id, log_created, log_modified) values(%s, %s, %s, %s)", (person_id, news_id, created, modified))
                 connection.commit()
                 used_persons.append(person_id)
-   
+
 
 cursor.close()
 connection.close()
