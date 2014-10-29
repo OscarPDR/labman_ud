@@ -6,7 +6,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from entities.persons.models import Person, Nickname
+
 from .models import IgnoredSimilarNames
+from .forms import TagRenameForm
 
 from maintenance_tasks.people.check_author_redundancy_through_nicks import *
 
@@ -146,15 +148,91 @@ def reset_ignored_relationships(request, threshold_ratio):
 
 
 ####################################################################################################
-###     View: tags()
+###     View: manage_tags()
 ####################################################################################################
 
 @login_required
-def tags(request):
+def manage_tags(request):
     tags = Tag.objects.all().order_by('name')
 
     return_dict = {
         'tags': tags,
     }
 
-    return render(request, 'management/tags.html', return_dict)
+    return render(request, 'management/manage_tags.html', return_dict)
+
+
+####################################################################################################
+###     View: rename_tag(tag_id)
+####################################################################################################
+
+@login_required
+def rename_tag(request, tag_id):
+    tag_to_be_renamed = Tag.objects.get(id=tag_id)
+
+    news_tags = NewsTag.objects.filter(tag=tag_to_be_renamed)
+    assigned_person_tags = AssignedPersonTag.objects.filter(tag=tag_to_be_renamed)
+    project_tags = ProjectTag.objects.filter(tag=tag_to_be_renamed)
+    publication_tags = PublicationTag.objects.filter(tag=tag_to_be_renamed)
+
+    if request.method == 'POST':
+        form = TagRenameForm(request.POST)
+
+        if form.is_valid():
+
+            tag_name = form.cleaned_data['tag_name']
+            parent_tag_name = form.cleaned_data['parent_tag']
+
+            if tag_name:
+                try:
+                    new_tag = Tag.objects.get(name=tag_name)
+
+                    for news_tag in news_tags:
+                        news_tag.tag = new_tag
+                        news_tag.save()
+
+                    for assigned_person_tag in assigned_person_tags:
+                        assigned_person_tag.tag = new_tag
+                        assigned_person_tag.save()
+
+                    for project_tag in project_tags:
+                        project_tag.tag = new_tag
+                        project_tag.save()
+
+                    for publication_tag in publication_tags:
+                        publication_tag.tag = new_tag
+                        publication_tag.save()
+
+                    tag_to_be_renamed.delete()
+
+                except:
+                    tag_to_be_renamed.name = tag_name
+                    tag_to_be_renamed.save()
+
+            if parent_tag_name:
+                parent_tag = Tag.objects.get(name=parent_tag_name)
+
+                if tag_name:
+                    tag_to_update = Tag.objects.get(name=tag_name)
+
+                else:
+                    tag_to_update = tag_to_be_renamed
+
+                tag_to_update.sub_tag_of = parent_tag
+                tag_to_update.save()
+
+            return HttpResponseRedirect(reverse('manage_tags'))
+
+    else:
+        form = TagRenameForm()
+
+    return_dict = {
+        'tag_to_be_renamed': tag_to_be_renamed,
+        'form': form,
+        'news_tags': news_tags,
+        'assigned_person_tags': assigned_person_tags,
+        'project_tags': project_tags,
+        'publication_tags': publication_tags,
+    }
+
+    return render(request, 'management/rename_tag.html', return_dict)

@@ -1,0 +1,149 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <h3 class="center">
+        Actually editing tag:&emsp;<strong>{{ tag_to_be_renamed.name }}</strong>
+    </h3>
+
+    <br>
+    <br>
+
+    <form class="form-horizontal centered" role="form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">New tag name</label>
+
+            <div class="col-md-4">
+                {{ form.tag_name }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputEmail1" class="col-sm-2 control-label">Sub tag of</label>
+
+            <div class="col-md-4">
+                {{ form.parent_tag }}
+            </div>
+        </div>
+
+        <br>
+
+        <input type="submit" class="btn btn-info" value="Submit" />
+    </form>
+
+    <br>
+
+    <div class="panel-group" id="accordion">
+        {% if assigned_person_tags %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#assigned_person_tags">
+                            {{ assigned_person_tags|length }} person{{ assigned_person_tags|pluralize }} using this tag
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="assigned_person_tags" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            {% for assigned_person_tag in assigned_person_tags %}
+                                <li>
+                                    {{ assigned_person_tag.person.full_name }} - {{ assigned_person_tag.tag.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if news_tags %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#news_tags">
+                            {{ news_tags|length }} news using this tag
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="news_tags" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            {% for news_tag in news_tags %}
+                                <li>
+                                    <a href="{% url 'view_news' news_tag.news.slug %}">
+                                       {{ news_tag.news.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if project_tags %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#project_tags">
+                            {{ project_tags|length }} project{{ project_tags|pluralize }} using this tag
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="project_tags" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            {% for project_tag in project_tags %}
+                                <li>
+                                    <a href="{% url 'project_info' project_tag.project.slug %}">
+                                        {{ project_tag.project.short_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if publication_tags %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#publication_tags">
+                            {{ publication_tags|length }} publication{{ publication_tags|pluralize }} using this tag
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="publication_tags" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            {% for publication_tag in publication_tags %}
+                                <li>
+                                    <a href="{% url 'publication_info' publication_tag.publication.slug %}">
+                                        {{ publication_tag.publication.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

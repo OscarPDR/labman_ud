@@ -1,0 +1,39 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <h3 class="center">
+        Actual number of tags:&emsp;<strong>{{ tags|length }}</strong>
+    </h3>
+
+    <br>
+
+    <table class="row table table-striped ">
+        {% for tag in tags %}
+            {% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
+                <td class="col-md-4">
+                    <a href="{% url 'rename_tag' tag.id %}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    &emsp;{{ tag.name }}
+
+                    {% if tag.sub_tag_of %}
+                        <small class="text-muted">&emsp;
+                            <i class="fa fa-angle-double-right"></i>
+                            <strong> {{ tag.sub_tag_of.name }}</strong>
+                        </small>
+                    {% endif %}
+                </td>
+            {% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}
