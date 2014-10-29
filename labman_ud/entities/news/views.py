@@ -99,7 +99,7 @@ class LatestNewsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
-        return News.objects.order_by('-created')[:30]
+        return News.objects.order_by('-log_created')[:30]
 
     def item_title(self, item):
         return item.title
