@@ -2,71 +2,113 @@
 <div class="tab-pane active">
     <div class="text-center">
         <h3>
-            <i class="fa fa-bar-chart-o"></i>&emsp;Charts
+            <i class="fa fa-bar-chart"></i>&emsp;Charts
         </h3>
     </div>
 
-    <h4>
-        <i class="fa fa-file-text-o fa-2"></i>&emsp;Publications
-    </h4>
-
-    <div class="soften-limited"></div>
-
-    <ul>
-        <li>
-            <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
-        </li>
-
-        <li>
-            <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
-        </li>
-
-        <li>
-            <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
-        </li>
-    </ul>
-
     <br>
 
-    <h4>
-        <i class="fa fa-gears fa-2"></i>&emsp;Projects
-    </h4>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#publication_charts">
+                        <i class="fa fa-book"></i>&emsp;Publications
+                    </a>
+                </h5>
+            </div>
 
-    <div class="soften-limited"></div>
+            <div id="publication_charts" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
+                        </dt>
+                        <dd>
+                            Shows the graph relationship between {{ member.full_name }} and {% if member.gender == 'Female' %} her {% else %} his {% endif %} co-authors.
+                        </dd>
 
-    <ul>
-        <li>
-            <a href="{% url 'projects_timeline' member.slug %}">Timeline</a>
-        </li>
-    </ul>
+                        <br>
 
-    <br>
+                        <dt>
+                            <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
+                        </dt>
+                        <dd>
+                            Timeline with the number of publications (by type and total amount) authored by {{ member.full_name }} through the years.
+                        </dd>
 
-    <h4>
-        <i class="fa fa-briefcase fa-2"></i>&emsp;Positions
-    </h4>
+                        <br>
 
-    <div class="soften-limited"></div>
+                        <dt>
+                            <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
+                        </dt>
+                        <dd>
+                            Weighed list of the topics used in the publications authored by {{ member.full_name }}, visually represented as a cloud.
+                        </dd>
 
-    <ul>
-        <li>
-            <a href="{% url 'person_timeline' member.slug %}">Timeline</a>
-        </li>
-    </ul>
+                        <br>
 
-    <br>
+                        <dt>
+                            <a href="{% url 'related_persons' member.slug %}">Similar people</a>
+                        </dt>
+                        <dd>
+                            Performs an analysis based on the topics used by {{ member.full_name }}, looking for similar people having published in those topics. The greatest the overlap, the strongest the similarity between them.
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
-    <h4>
-        <i class="fa fa-user fa-2"></i>&emsp;People
-    </h4>
+        <br>
 
-    <div class="soften-limited"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#project_charts">
+                        <i class="fa fa-gears"></i>&emsp;Projects
+                    </a>
+                </h5>
+            </div>
 
-    <ul>
-        <li>
-            <a href="{% url 'related_persons' member.slug %}">Related persons</a>
-        </li>
-    </ul>
+            <div id="project_charts" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            <a href="{% url 'projects_timeline' member.slug %}">Timeline</a>
+                        </dt>
+                        <dd>
+                            Displays the projects in which {{ member.full_name }} has been involved through the years.
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#position_charts">
+                        <i class="fa fa-book"></i>&emsp;Positions
+                    </a>
+                </h5>
+            </div>
+
+            <div id="position_charts" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            <a href="{% url 'person_timeline' member.slug %}">Evolution</a>
+                        </dt>
+                        <dd>
+                            Displays in a visual way the different positions {{ member.full_name }} has held.
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {# Write inside this block the links protected from public rendering (if any) #}
     {% if user.is_authenticated %}
