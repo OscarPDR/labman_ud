@@ -3,18 +3,17 @@
 {% block content %}
 
         <div class="row">
-            <div class="col-md-9">
-                <h3>
-                    <a href="{% url 'award_index' %}">
-                        <img width="32" src="{{ STATIC_URL }}img/back.png" />
-                    </a>
+            <h3>
+                <a href="{% url 'award_index' %}">
+                    <img width="32" src="{{ STATIC_URL }}img/back.png" />
+                </a>
 
-                    {{ award.full_name }}
-                </h3>
-            </div> <!-- end .col-md-9 -->
+                {{ award.full_name }}
+            </h3>
         </div>
 
-        <br><br>
+        <br>
+        <br>
 
         <div class="row">
             <div class="col-md-3">
@@ -26,19 +25,19 @@
                     </li>
 
                     {% if related_projects %}
-                    <li {% if current_link = 'related_projects' %}class="active"{% endif %}>
-                        <a href="{% url 'award_related_projects' award.slug %}">
-                            <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_projects|length }} project{{ related_projects|pluralize }}
-                        </a>
-                    </li>
+                        <li {% if current_link = 'related_projects' %}class="active"{% endif %}>
+                            <a href="{% url 'award_related_projects' award.slug %}">
+                                <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_projects|length }} project{{ related_projects|pluralize }}
+                            </a>
+                        </li>
                     {% endif %}
 
                     {% if related_publications %}
-                    <li {% if current_link = 'related_publications' %}class="active"{% endif %}>
-                        <a href="{% url 'award_related_publications' award.slug %}">
-                            <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
-                        </a>
-                    </li>
+                        <li {% if current_link = 'related_publications' %}class="active"{% endif %}>
+                            <a href="{% url 'award_related_publications' award.slug %}">
+                                <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -50,6 +49,7 @@
                             <h5>Recipients:</h5>
 
                             {% for recipient in recipients %}
+                                &emsp;
                                 {% if recipient.is_active %}
                                     <a href="{% url 'member_info' recipient.slug %}">
                                         {{ recipient.full_name }}{% if not forloop.last %},{% endif %}
@@ -59,29 +59,35 @@
                                         {{ recipient.full_name }}{% if not forloop.last %},{% endif %}
                                     </a>
                                 {% endif %}
-                                &emsp;
                             {% endfor %}
+
+                            <br>
+                            <br>
 
                             <div class="row">
                                 {% if award.date %}
-                                <div class="col-md-2">
-                                    <h5>Date</h5>
-                                    {{ award.date }}
-                                </div>
+                                    <div class="col-md-2">
+                                        <h5>Date</h5>
+                                        {{ award.date }}
+                                    </div>
                                 {% endif %}
+
                                 {% if award.supporting_organization %}
-                                <div class="col-md-5">
-                                    <h5>Entity</h5>
-                                    {{ award.supporting_organization }}
-                                </div>
+                                    <div class="col-md-5">
+                                        <h5>Entity</h5>
+                                        {{ award.supporting_organization }}
+                                    </div>
                                 {% endif %}
+
                                 {% if award.event %}
-                                <div class="col-md-5">
-                                    <h5>Event</h5>
-                                    {{ award.event.full_name }}
-                                </div>
+                                    <div class="col-md-5">
+                                        <h5>Event</h5>
+                                        {{ award.event.full_name }}
+                                    </div>
                                 {% endif %}
                             </div>
+
+                            <br>
 
                             <h5>Description:</h5>
                             {{ award.description|safe }}

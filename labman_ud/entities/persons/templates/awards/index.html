@@ -8,6 +8,7 @@
         </div>
     </div>
 
+    <br>
 
     <div class="row">
         <table class="table table-striped table-bordered table-hover">
@@ -43,7 +44,9 @@
                         </td>
 
                         <td class="col-md-2">
-                            {{ award.supporting_organization }}
+                            {% if award.supporting_organization %}
+                                {{ award.supporting_organization.full_name }}
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
