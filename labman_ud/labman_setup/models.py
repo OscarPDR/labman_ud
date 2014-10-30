@@ -31,11 +31,6 @@ def favicon_picture_path(self, filename):
 
 class LabmanDeployGeneralSettings(models.Model):
 
-    base_url = models.URLField(
-        blank=True,
-        null=True,
-    )
-
     favicon = models.ImageField(
         upload_to=favicon_picture_path,
         blank=True,
