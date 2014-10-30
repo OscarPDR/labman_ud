@@ -351,9 +351,6 @@ CELERYBEAT_SCHEDULE = {
 ###     RDF settings
 ####################################################################################################
 
-HTTP_PROXY = ''
-HTTPS_PROXY = ''
-
 ENABLE_RDF_PUBLISHING = False
 
 SPARQL_ENDPOINT_AUTH = False
@@ -372,13 +369,3 @@ SPARQL_ENDPOINT_PASSWORD = ''
 ####################################################################################################
 
 DEFAULT_THRESHOLD_RATIO = None
-
-
-####################################################################################################
-###     Department specific settings
-####################################################################################################
-
-RESEARCH_GROUP_NAME = None
-
-# Path relative to the 'static' folder
-TEAM_IMAGE_PATH = 'img/group_image.jpg'
