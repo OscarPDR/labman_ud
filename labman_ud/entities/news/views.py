@@ -23,12 +23,12 @@ from entities.publications.models import Publication
 ###########################################################################
 
 def news_index(request):
-    _news = News.objects.all().order_by('-log_created', 'title')
+    _news = News.objects.all().order_by('-created', 'title')
 
     news = OrderedDict()
 
     for news_piece in _news:
-        year_month = u'%s %s' % (news_piece.log_created.strftime('%B'), news_piece.log_created.year)
+        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
         if not year_month in news:
             news[year_month] = []
         news[year_month].append(news_piece)
@@ -99,7 +99,7 @@ class LatestNewsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
-        return News.objects.order_by('-log_created')[:30]
+        return News.objects.order_by('-created')[:30]
 
     def item_title(self, item):
         return item.title

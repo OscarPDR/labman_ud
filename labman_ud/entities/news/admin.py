@@ -56,7 +56,7 @@ class PublicationRelatedToNewsInline(admin.TabularInline):
 class NewsAdmin(admin.ModelAdmin):
     model = News
     search_fields = ['title', 'content']
-    list_display = ['title', 'log_created']
+    list_display = ['title', 'created']
     exclude = [
         'slug',
     ]

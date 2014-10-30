@@ -22,7 +22,7 @@ def home(request):
     else:
         # dictionary to be returned in render(request, )
         return_dict = {
-            'latest_news': News.objects.order_by('-log_created')[:3],
+            'latest_news': News.objects.order_by('-created')[:3],
         }
 
         return render(request, 'labman_ud/index.html', return_dict)

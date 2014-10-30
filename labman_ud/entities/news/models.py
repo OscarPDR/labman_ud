@@ -3,6 +3,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
 
+from datetime import datetime
 from redactor.fields import RedactorField
 
 from management.post_tweet import post_tweet
@@ -37,6 +38,33 @@ class News(BaseModel):
     )
 
     content = RedactorField()
+
+    created = models.DateTimeField(
+        default=datetime.now,
+        blank=True,
+    )
+
+    city = models.ForeignKey(
+        'utils.City',
+        blank=True,
+        null=True,
+    )
+
+    country = models.ForeignKey(
+        'utils.Country',
+        blank=True,
+        null=True,
+    )
+
+    latitude = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
+    longitude = models.FloatField(
+        blank=True,
+        null=True,
+    )
 
     tags = models.ManyToManyField('utils.Tag', through='NewsTag', related_name='news')
     projects = models.ManyToManyField('projects.Project', through='ProjectRelatedToNews', related_name='news')
