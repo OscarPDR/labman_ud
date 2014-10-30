@@ -8,9 +8,10 @@ from django.shortcuts import render
 from entities.persons.models import Person, Nickname
 
 from .models import IgnoredSimilarNames
-from .forms import TagRenameForm
+from .forms import *
 
 from maintenance_tasks.people.check_author_redundancy_through_nicks import *
+from extractors.zotero.zotero_extractor import *
 
 import difflib
 import itertools
@@ -236,3 +237,46 @@ def rename_tag(request, tag_id):
     }
 
     return render(request, 'management/rename_tag.html', return_dict)
+
+
+####################################################################################################
+###     View: parse_publications()
+####################################################################################################
+
+@login_required
+def parse_publications(request):
+
+    if request.method == 'POST':
+        form = PublicationItemForm(request.POST)
+
+        if form.is_valid():
+            item_key = form.cleaned_data['item_key']
+
+            generate_publication_from_zotero(item_key)
+
+        return HttpResponseRedirect(reverse('parse_publications'))
+
+    else:
+        form = PublicationItemForm()
+
+    return_dict = {
+        'form': form,
+        'last_zotero_version': get_last_zotero_version(),
+        'last_synchronized_zotero_version': get_last_synchronized_zotero_version(),
+    }
+
+    return render(request, 'management/parse_publications.html', return_dict)
+
+
+####################################################################################################
+###     View: synchronize_publications(from_version)
+####################################################################################################
+
+@login_required
+def synchronize_publications(request, from_version=0):
+    item_key_list = get_item_keys_since_last_synchronized_version(from_version)
+
+    for item_key in item_key_list:
+        generate_publication_from_zotero(item_key)
+
+    return HttpResponseRedirect(reverse('parse_publications'))

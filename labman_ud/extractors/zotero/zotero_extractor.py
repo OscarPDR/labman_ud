@@ -49,10 +49,10 @@ def get_zotero_variables():
 
 
 ####################################################################################################
-# def: _get_last_zotero_version()
+# def: get_last_zotero_version()
 ####################################################################################################
 
-def _get_last_zotero_version():
+def get_last_zotero_version():
     base_url, api_key, library_id, library_type = get_zotero_variables()
 
     url = '%s/%ss/%s/items' % (base_url, library_type, library_id)
@@ -95,7 +95,7 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def get_item_keys_since_last_synchronized_version(from_version):
-    last_zotero_version = _get_last_zotero_version()
+    last_zotero_version = get_last_zotero_version()
 
     if from_version == last_zotero_version:
         print 'Labman is updated to the last version in Zotero (%d)' % (last_zotero_version)
@@ -105,7 +105,6 @@ def get_item_keys_since_last_synchronized_version(from_version):
     else:
         if from_version > last_zotero_version:
             # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
-            print 'Labman version number (%d) is higher than Zotero\'s one (%d)...' % (version, last_version)
             from_version = last_zotero_version - 1
             print 'Error solved'
 

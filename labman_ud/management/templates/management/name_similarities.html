@@ -5,11 +5,23 @@
 
 {% block content %}
 
-    <br>
+    <ul class="nav nav-pills threshold_pills" role="tablist">
+        <li id="threshold_60" role="presentation">
+            <a href="{% url 'check_names_similarity_default' %}">Default</a>
+        </li>
 
-    <p>
-        Looking for similarities with a threshold above or equal to: <strong>{{ threshold_ratio }}%</strong>
-    </p>
+        <li id="threshold_70" role="presentation">
+            <a href="{% url 'check_names_similarity' 70 %}">> 70%</a>
+        </li>
+
+        <li id="threshold_80" role="presentation">
+            <a href="{% url 'check_names_similarity' 80 %}">> 80%</a>
+        </li>
+
+        <li id="threshold_90" role="presentation">
+            <a href="{% url 'check_names_similarity' 90 %}">> 90%</a>
+        </li>
+    </ul>
 
     <br>
 
@@ -65,4 +77,9 @@
 
 
 {% block scripts %}
+
+    <script>
+        $('#threshold_{{ threshold_ratio }}').addClass('active');
+    </script>
+
 {% endblock %}

@@ -752,3 +752,22 @@ blockquote footer {
     margin-bottom: 0;
     min-height: 0;
 }
+
+.threshold_pills > li > a {
+    padding: 3px 15px;
+    margin-right: 1em;
+}
+
+#parse_btn {
+    text-decoration: none;
+    color: #428bca;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+    padding: 0;
+}
+
+#parse_btn:hover {
+    text-decoration: none;
+    color: #2a6496;
+}

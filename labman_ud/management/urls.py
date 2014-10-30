@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^reset_ignored_relationships/(?P<threshold_ratio>\d{2})/$', 'management.views.reset_ignored_relationships', name='reset_ignored_relationships'),
     url(r'^display_tags/$', 'management.views.manage_tags', name='manage_tags'),
     url(r'^rename_tag/(?P<tag_id>\d+)/$', 'management.views.rename_tag', name='rename_tag'),
+    url(r'^parse_publications/$', 'management.views.parse_publications', name='parse_publications'),
+    url(r'^reset/$', 'management.views.synchronize_publications', name='reset_publications'),
+    url(r'^synchronize/(?P<from_version>\d+)/$', 'management.views.synchronize_publications', name='synchronize_publications'),
 ]

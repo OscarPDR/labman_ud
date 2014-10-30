@@ -5,17 +5,46 @@
 
 {% block content %}
 
+    <h2 class="centered">Management site</h2>
+
     <br>
 
-    <p>
-        Check for person similarities
-
-        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity_default' %}">Default</a>
-        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 70 %}">70%</a>
-        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 80 %}">80%</a>
-        <a class="btn btn-info btn-xs" href="{% url 'check_names_similarity' 90 %}">90%</a>
+    <p class="lead">
+        This site is intended to perform <strong>management</strong> tasks avoiding the command line. The different actions performed in this section are only viewable by registered users, and its actions modify directly the data stored. Please be cautious before taking any action that could lead to information loss.
     </p>
 
+    <div class="soften-limited"></div>
+
+    <br>
+
+    <dl class="dl-horizontal">
+        <dt>
+            <a class="btn btn-default btn-sm" href="{% url 'check_names_similarity_default' %}">Similar person names</a>
+        </dt>
+        <dd>
+            This task will check all the person names in the system, trying to disambiguate those names with a relevant similarity ratio. The following buttons will filter the similarities with a ratio above the indicated threshold. For each similarity tuple, clicking on the button before each name will make that the <strong>official</strong> name for that person, making the other one an <strong>alias</strong>. If the user prefers to ignore this similarity (they address clearly two different persons), it will not be shown in later iterations. Clicking on the <em>reset</em> button will bring back all the ignored similarities.
+        </dd>
+
+        <br>
+        <br>
+
+        <dt>
+            <a class="btn btn-default btn-sm" href="{% url 'manage_tags' %}">Tags management</a>
+        </dt>
+        <dd>
+            Tags address those topics projects, publications and news cover. At first, the whole list of tags is alphabetically displayed. Clicking on the edit button before each tag, takes the user to a page where the tag text and its parent tag (for topic hierarchy purposes) can be edited. This page also displays information about the entities within <em>labman_ud</em> that make use of that tag. Setting an already existing tag name will update all the entities to use the same tag, which is usefull to avoid topic redundancy.
+        </dd>
+
+        <br>
+        <br>
+
+        <dt>
+            <a class="btn btn-default btn-sm" href="{% url 'parse_publications' %}">Parse publications</a>
+        </dt>
+        <dd>
+            To ease the process of extracting information about publications, <em>labman_ud</em> relies on <a target="_blank" href="http://zotero.org">zotero</a>, a tool to collect, organize, cite and share research sources among peers. To use the zotero extractor, please register a new application in order to get the OAuth credentials. Once done, fill the <strong>ZoteroConfiguration</strong> model in the <a target="_blank" href="/admin">admin site</a> to have everything ready for the parser.
+        </dd>
+    </dl>
 
 {% endblock %}
 

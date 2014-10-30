@@ -1,0 +1,85 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <table class="table table-bordered table-condensed centered table-striped">
+        <thead>
+            <th class="centered">Actual zotero library version</th>
+            <th class="centered">Last synchronized version</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ last_zotero_version }}</td>
+                <td>{{ last_synchronized_zotero_version }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <h5>Actions:</h5>
+
+    <br>
+
+    <dl class="dl-horizontal">
+        <dt>
+            <a href="{% url 'synchronize_publications' last_synchronized_zotero_version %}">
+                <i class="fa fa-refresh"></i>&emsp;Synchronize
+            </a>
+        </dt>
+        <dd>
+            Retrieves all the changes from the last update to the actual status of the zotero library.
+        </dd>
+
+        <br>
+        <br>
+
+        <dt>
+            <a href="{% url 'reset_publications' %}">
+                <i class="fa fa-repeat"></i>&emsp;Reset
+            </a>
+        </dt>
+        <dd>
+            Removes all publication-related data from the system and parses everything from the first version.
+        </dd>
+
+        <br>
+        <br>
+
+        <form class="form-inline" role="form" method="POST">
+            {% csrf_token %}
+            <dt>
+                <button type="submit" class="btn btn-link" id="parse_btn">
+                    <i class="fa fa-download"></i>&emsp;Parse
+                </button>
+            </dt>
+            <dd>
+                Parse an individual publication given its
+                <div class="form-group">
+                    <div class="col-md-4">
+                        {{ form.item_key }}
+                    </div>
+                </div>
+            </dd>
+        </form>
+    </dl>
+
+    <br>
+
+    <p class="well centered">
+        Remember all this actions may take a while to complete, especially taking into account the amount of publications stored in zotero.
+    </p>
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

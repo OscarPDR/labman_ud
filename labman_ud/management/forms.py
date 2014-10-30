@@ -23,3 +23,15 @@ class TagRenameForm(forms.Form):
             'type': 'select',
         })
     )
+
+
+class PublicationItemForm(forms.Form):
+    item_key = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control input-sm',
+            'type': 'text',
+            'placeholder': 'item key',
+        })
+    )
