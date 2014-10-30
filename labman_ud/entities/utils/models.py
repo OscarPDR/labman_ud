@@ -60,7 +60,12 @@ class City(BaseModel):
         ordering = ['slug']
 
     def __unicode__(self):
-        return u'%s' % (self.full_name)
+        city_name = self.full_name
+
+        if self.country:
+            city_name = '%s (%s)' % (city_name, self.country.full_name)
+
+        return u'%s' % (city_name)
 
     def save(self, *args, **kwargs):
         if not self.short_name:
