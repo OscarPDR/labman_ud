@@ -68,7 +68,7 @@ class News(BaseModel):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
 
-        if post_tweet:
+        if self.post_tweet:
             post_tweet(self)
 
         super(News, self).save(*args, **kwargs)

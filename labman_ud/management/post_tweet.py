@@ -82,8 +82,8 @@ def _get_short_url(full_news_url, tweetpony_config):
 
 
 def _generate_tweet_text(news_instance):
-    if news_instance.cc:
-        cc_text = "cc %s" % news_instance.cc
+    if news_instance.tweet_cc:
+        cc_text = "cc %s" % news_instance.tweet_cc
 
     else:
         cc_text = ''
