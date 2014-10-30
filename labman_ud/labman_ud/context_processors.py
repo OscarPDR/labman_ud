@@ -55,6 +55,7 @@ def global_vars(request):
     return_dict = {
         'RESEARCH_GROUP_SETTINGS': _settings,
         'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', '') + '/',
+        'ENABLE_RDF_PUBLISHING': getattr(settings, 'ENABLE_RDF_PUBLISHING', False),
         'FOOTER_DIVISIONS_WIDTH': footer_divisions_width,
         'ADDRESS_DETAILS': address_details,
         'CONTACT_DETAILS': contact_details,
