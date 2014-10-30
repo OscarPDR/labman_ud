@@ -53,9 +53,12 @@
             {% for organization in organizations %}
                 <tr>
                     <td class="col-md-6">
-                        <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
-                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
-                        </a>&emsp;
+                        {% if ENABLE_RDF_PUBLISHING %}
+                            <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
+                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
+                            </a>
+                        {% endif %}
+                        &emsp;
                         <a href="{% url 'organization_info' organization.slug %}">
                             {{ organization.full_name }}
                             {% if organization.short_name != organization.short_name %}

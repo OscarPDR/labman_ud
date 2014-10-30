@@ -95,9 +95,11 @@
                         </a>
                         <br>
                         <span class="member-name">
-                            <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
-                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{% static 'img/rdf.png' %}"/>
-                            </a>
+                            {% if ENABLE_RDF_PUBLISHING %}
+                                <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
+                                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{% static 'img/rdf.png' %}"/>
+                                </a>
+                            {% endif %}
                             {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
                         </span>
                         <br>
