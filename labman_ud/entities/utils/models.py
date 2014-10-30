@@ -40,6 +40,16 @@ class City(BaseModel):
         blank=True,
     )
 
+    latitude = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
+    longitude = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
     country = models.ForeignKey(
         'Country',
         blank=True,

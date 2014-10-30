@@ -18,7 +18,7 @@ from management.post_tweet import post_tweet
 
 class News(BaseModel):
     post_tweet = models.BooleanField(
-        default=True,
+        default=False,
     )
 
     tweet_cc = models.CharField(
@@ -42,6 +42,7 @@ class News(BaseModel):
     created = models.DateTimeField(
         default=datetime.now,
         blank=True,
+        null=True,
     )
 
     city = models.ForeignKey(
@@ -52,16 +53,6 @@ class News(BaseModel):
 
     country = models.ForeignKey(
         'utils.Country',
-        blank=True,
-        null=True,
-    )
-
-    latitude = models.FloatField(
-        blank=True,
-        null=True,
-    )
-
-    longitude = models.FloatField(
         blank=True,
         null=True,
     )
