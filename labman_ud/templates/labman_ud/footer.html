@@ -64,7 +64,7 @@
     {% endif %}
 
     {% if SOCIAL_DETAILS %}
-        <div class="col-md-{{ FOOTER_DIVISIONS_WIDTH }} col-sm-{{ FOOTER_DIVISIONS_WIDTH }} col-xs-{{ FOOTER_DIVISIONS_WIDTH }} footer-object">
+        <div class="col-md-{{ FOOTER_DIVISIONS_WIDTH }} footer-object">
             <h4>
                 Find us on
             </h4>
@@ -72,7 +72,7 @@
             <div class="footer-content row">
                 {% for profile in SOCIAL_PROFILES %}
                     <a target="_blank" href="{{ profile.profile_link }}" {% if profile.help_text %}title="{{ profile.help_text }}"{% endif %}>
-                        <img class="img-responsive col-md-{{ SOCIAL_PROFILE_WIDTH }}" src="{{ profile.network_image.url }}" alt="{{ profile.slug }}-icon" />
+                        <img class="img-responsive col-md-{{ SOCIAL_PROFILE_WIDTH }} col-sm-{{ SOCIAL_PROFILE_WIDTH }} col-xs-{{ SOCIAL_PROFILE_WIDTH }}" src="{{ profile.network_image.url }}" alt="{{ profile.slug }}-icon" />
                     </a>
                 {% endfor %}
             </div>
