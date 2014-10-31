@@ -175,7 +175,11 @@ INSTALLED_APPS = (
     'entities.projects',
     'entities.publications',
     'entities.utils',
+    'extractors.zotero',
+    'labman_setup',
     'maintenance_tasks',
+    'management',
+    'template_tags',
 
     # Custom applications for data consulting only
     'charts',
