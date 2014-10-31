@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 
 from .base import *
 
@@ -14,8 +13,8 @@ ADMINS = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.sqlite3',
+        'ENGINE': 'django.db.backends.',
+        'NAME': '',
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
