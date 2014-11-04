@@ -448,9 +448,19 @@ def projects_collaborations(request):
     G = nx.Graph()
 
     projects = Project.objects.all()
-    pr_role = Role.objects.get(slug='principal-researcher')
+
+    try:
+        pr_role = Role.objects.get(slug='principal-researcher')
+
+    except:
+        pr_role = None
+
     for project in projects:
-        person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
+        if pr_role:
+            person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
+        else:
+            person_ids = AssignedPerson.objects.filter(project_id=project.id).values('person_id')
+
         if person_ids:
             _list = [person_id['person_id'] for person_id in person_ids]
             for pos, person_id in enumerate(_list):
