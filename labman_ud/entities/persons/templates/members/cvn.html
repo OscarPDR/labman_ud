@@ -1,0 +1,26 @@
+{% extends "members/info.html" %}
+{% load staticfiles %}
+
+
+
+{% block member_content %}
+
+    <div class="tab-pane active">
+        <h3>Spanish CVN</h3>
+
+        <br>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block people_scripts %}
+
+    <script>
+        $('.member_biography').removeClass('btn-primary');
+        $('.member_biography').addClass('btn-default');
+    </script>
+
+{% endblock %}
