@@ -1,0 +1,7 @@
+
+# Include the base.txt requirements file
+-r base.txt
+
+# Pro-tip: Try not to put anything here. There should be no dependency in production that isn't in development.
+gunicorn==18.0
+psycopg2==2.5.4

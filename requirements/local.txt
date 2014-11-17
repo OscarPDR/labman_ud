@@ -1,0 +1,6 @@
+
+# Include the base.txt requirements file
+-r base.txt
+
+# Local development dependencies go here
+django-debug-toolbar==1.2.2

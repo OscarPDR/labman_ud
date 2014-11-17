@@ -7,8 +7,6 @@
 .htaccess
 .htpasswd
 
-labman_ud/labman_ud/wsgi.py
-
 # Mac OS
 *.DS_Store
 

@@ -72,7 +72,7 @@
             <div class="footer-content row">
                 {% for profile in SOCIAL_PROFILES %}
                     <a target="_blank" href="{{ profile.profile_link }}" {% if profile.help_text %}title="{{ profile.help_text }}"{% endif %}>
-                        <img class="img-responsive col-md-{{ SOCIAL_PROFILE_WIDTH }}" src="{{ profile.network_image.url }}" alt="{{ profile.slug }}-icon" />
+                        <img class="img-responsive col-md-{{ SOCIAL_PROFILE_WIDTH }} col-sm-{{ SOCIAL_PROFILE_WIDTH }} col-xs-{{ SOCIAL_PROFILE_WIDTH }}" src="{{ profile.network_image.url }}" alt="{{ profile.slug }}-icon" />
                     </a>
                 {% endfor %}
             </div>

@@ -1,17 +1,12 @@
-# encoding: utf-8
 
 from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from .forms import LoginForm
 
 admin.autodiscover()
-#admin.site.unregister(Site)
-
 
 urlpatterns = patterns('',
     url(r'^$', 'labman_ud.views.home', name='home'),

@@ -276,7 +276,7 @@ def parse_publications(request):
 def synchronize_publications(request, from_version=0):
     item_key_list = get_item_keys_since_last_synchronized_version(from_version)
 
-    for item_key in item_key_list:
+    for item_key in item_key_list[:25]:
         generate_publication_from_zotero(item_key)
 
     return HttpResponseRedirect(reverse('parse_publications'))

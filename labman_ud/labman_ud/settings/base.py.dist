@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 
 # Django settings for labman_ud project.
 
@@ -9,6 +8,9 @@ from datetime import timedelta
 from celery.task.schedules import crontab
 
 PROJECT_DIR = Path(__file__).ancestor(3)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'THIS-SHOULD-NOT-BE-EMPTY'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -96,9 +98,6 @@ STATICFILES_FINDERS = (
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'THIS-SHOULD-NOT-BE-EMPTY'
-
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -167,6 +166,7 @@ INSTALLED_APPS = (
     'redactor',
 
     # Custom applications with data models
+    'entities.core',
     'entities.events',
     'entities.funding_programs',
     'entities.news',
@@ -175,8 +175,11 @@ INSTALLED_APPS = (
     'entities.projects',
     'entities.publications',
     'entities.utils',
-    'entities.core',
+    'extractors.zotero',
+    'labman_setup',
     'maintenance_tasks',
+    'management',
+    'template_tags',
 
     # Custom applications for data consulting only
     'charts',
@@ -218,6 +221,7 @@ LOGGING = {
 LOGIN_URL = 'login/'
 LOGOUT_URL = 'logout/'
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 ####################################################################################################
@@ -226,10 +230,7 @@ LOGOUT_URL = 'logout/'
 ####################################################################################################
 ####################################################################################################
 
-
 BASE_URL = ''
-
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 ####################################################################################################
@@ -368,4 +369,4 @@ SPARQL_ENDPOINT_PASSWORD = ''
 ###     Management app settings
 ####################################################################################################
 
-DEFAULT_THRESHOLD_RATIO = None
+DEFAULT_THRESHOLD_RATIO = 60

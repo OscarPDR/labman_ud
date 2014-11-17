@@ -893,8 +893,13 @@ def __get_job_data(member):
     except:
         pass
 
-    pr_role = Role.objects.get(slug='principal-researcher')
-    project_ids = AssignedPerson.objects.filter(person_id=member.id).exclude(role_id=pr_role.id).values('project_id')
+    try:
+        pr_role = Role.objects.get(slug='principal-researcher')
+        project_ids = AssignedPerson.objects.filter(person_id=member.id).exclude(role_id=pr_role.id).values('project_id')
+
+    except:
+        project_ids = AssignedPerson.objects.filter(person_id=member.id).values('project_id')
+
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values_list('publication_id', flat=True)
 
     accounts = []

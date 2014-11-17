@@ -559,18 +559,27 @@ def _save_profile_picture(person_instance, image_url, konami_url):
 
 
 def _save_general_settings_images(settings_instance, logo_url, team_image_url):
-    result_logo = urllib.urlretrieve(logo_url)
 
-    settings_instance.research_group_official_logo.save(
-        os.path.basename(logo_url),
-        File(open(result_logo[0]))
-    )
+    try:
+        result_logo = urllib.urlretrieve(logo_url)
 
-    result_team_image = urllib.urlretrieve(team_image_url)
+        settings_instance.research_group_official_logo.save(
+            os.path.basename(logo_url),
+            File(open(result_logo[0]))
+        )
 
-    settings_instance.research_group_team_image.save(
-        os.path.basename(team_image_url),
-        File(open(result_team_image[0]))
-    )
+    except:
+        pass
+
+    try:
+        result_team_image = urllib.urlretrieve(team_image_url)
+
+        settings_instance.research_group_team_image.save(
+            os.path.basename(team_image_url),
+            File(open(result_team_image[0]))
+        )
+
+    except:
+        pass
 
     settings_instance.save()
