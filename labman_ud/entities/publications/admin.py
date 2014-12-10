@@ -144,6 +144,10 @@ class ThesisAdmin(admin.ModelAdmin):
 class VivaPanelAdmin(admin.ModelAdmin):
     model = VivaPanel
 
+    search_fields = ['person__full_name']
+    list_display = ['thesis', 'person', 'role']
+    list_filter = ['thesis', 'role']
+
 
 ###########################################################################
 # Class: PublicationAuthorAdmin
