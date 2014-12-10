@@ -134,6 +134,8 @@ class Publication(BaseModel):
     class Meta:
         # abstract = True
         ordering = ['-slug']
+        verbose_name = u'Publication'
+        verbose_name_plural = u'Publications'
 
     def display_all_fields(self):
         all_fields = [
@@ -308,6 +310,10 @@ class Book(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Book'
+        verbose_name_plural = u'Books'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -342,6 +348,10 @@ class BookSection(ISIDBLPTags):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'Book section'
+        verbose_name_plural = u'Book sections'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -379,6 +389,10 @@ class Proceedings(CollectionPublication):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'Proceedings item'
+        verbose_name_plural = u'Proceedings'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -418,6 +432,10 @@ class ConferencePaper(ISIDBLPTags):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'Conference paper'
+        verbose_name_plural = u'Conference papers'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -477,6 +495,10 @@ class Journal(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Journal'
+        verbose_name_plural = u'Journals'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -507,6 +529,10 @@ class JournalArticle(ISIDBLPTags):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'Journal article'
+        verbose_name_plural = u'Journal articles'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -545,6 +571,10 @@ class Magazine(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Magazine'
+        verbose_name_plural = u'Magazines'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -570,6 +600,10 @@ class Magazine(CollectionPublication):
 
 class MagazineArticle(PartOfCollectionPublication):
     parent_magazine = models.ForeignKey('Magazine')
+
+    class Meta:
+        verbose_name = u'Magazine article'
+        verbose_name_plural = u'Magazine articles'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -599,6 +633,10 @@ class PublicationTag(BaseModel):
     publication = models.ForeignKey('publications.Publication')
 
     class Meta:
+        verbose_name = u'Publication tag'
+        verbose_name_plural = u'Publication tags'
+
+    class Meta:
         ordering = ['tag__slug']
 
     def __unicode__(self):
@@ -619,6 +657,10 @@ class PublicationAuthor(BaseModel):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Publication author'
+        verbose_name_plural = u'Publication authors'
+
     def __unicode__(self):
         return u'%s has written: %s as author #%d' % (self.author.full_name, self.publication.title, self.position)
 
@@ -631,6 +673,10 @@ class PublicationEditor(BaseModel):
     editor = models.ForeignKey('persons.Person')
 
     publication = models.ForeignKey('publications.Publication')
+
+    class Meta:
+        verbose_name = u'Publication editor'
+        verbose_name_plural = u'Publication editors'
 
     def __unicode__(self):
         return u'%s has edited: %s' % (self.editor.full_name, self.publication.title)
@@ -711,6 +757,8 @@ class Thesis(BaseModel):
 
     class Meta:
         ordering = ['slug']
+        verbose_name = u'Thesis'
+        verbose_name_plural = u'Theses'
 
     def __unicode__(self):
         return u'%s' % (self.title)
@@ -747,6 +795,10 @@ class ThesisAbstract(BaseModel):
         blank=True,
     )
 
+    class Meta:
+        verbose_name = u'Thesis abstract'
+        verbose_name_plural = u'Thesis abstracts'
+
     def __unicode__(self):
         return u'Abstract in %s for: %s' % (self.language.name, self.thesis.title)
 
@@ -758,6 +810,10 @@ class ThesisAbstract(BaseModel):
 class CoAdvisor(BaseModel):
     thesis = models.ForeignKey('Thesis')
     co_advisor = models.ForeignKey('persons.Person')
+
+    class Meta:
+        verbose_name = u'Co-advisor'
+        verbose_name_plural = u'Co-advisors'
 
     def __unicode__(self):
         return u'%s has co-advised the thesis: %s' % (self.co_advisor.full_name, self.thesis.title)
@@ -776,3 +832,7 @@ class VivaPanel(BaseModel):
         max_length=150,
         choices=VIVA_PANEL_ROLES,
     )
+
+    class Meta:
+        verbose_name = u'VIVA panel'
+        verbose_name_plural = u'VIVA panels'

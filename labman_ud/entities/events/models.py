@@ -106,6 +106,8 @@ class Event(BaseModel):
 
     class Meta:
         ordering = ['slug']
+        verbose_name = u'Event'
+        verbose_name_plural = u'Events'
 
     def __unicode__(self):
         return u'%s %s' % (self.short_name, self.year)
@@ -175,6 +177,10 @@ class EventSeeAlso(BaseModel):
 class PersonRelatedToEvent(BaseModel):
     person = models.ForeignKey('persons.Person')
     event = models.ForeignKey('Event')
+
+    class Meta:
+        verbose_name = u'Person related to event'
+        verbose_name_plural = u'People related to events'
 
     def __unicode__(self):
         return u'%s attended %s' % (self.person.full_name, self.event.full_name)
