@@ -316,6 +316,8 @@ class NetworkAdmin(admin.ModelAdmin):
 class PhDProgramAdmin(admin.ModelAdmin):
     model = PhDProgram
 
+    list_display = ['name', 'university', 'faculty']
+
 
 ###########################################################################
 # Class: LicenseAdmin

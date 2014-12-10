@@ -411,6 +411,13 @@ class PhDProgram(BaseModel):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'PhD program'
+        verbose_name_plural = 'PhD programs'
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 
 ###########################################################################
 # Model: PhDProgramSeeAlso
