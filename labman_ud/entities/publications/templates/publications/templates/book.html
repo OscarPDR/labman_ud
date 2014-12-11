@@ -1,32 +1,94 @@
 
-<div class="row">
-    {% if publication.publisher %}
-        <div class="col-md-4">
-            <h5>Publisher:</h5>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Publisher:</strong>&emsp;{{ publication.publisher }}
+    </div>
 
-            <p>
-                {{ publication.publisher }}
-            </p>
+    <div class="panel-body">
+        <div class="row">
+            {% if publication.place %}
+                <div class="col-md-4">
+                    <h5>Place:</h5>
+
+                    <p>
+                        {{ publication.place }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if publication.isbn %}
+                <div class="col-md-4">
+                    <h5>ISBN:</h5>
+
+                    <p>
+                        {{ publication.isbn }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if publication.published %}
+                <div class="col-md-4">
+                    <h5>Date:</h5>
+
+                    <p>
+                        {{ publication.published }}
+                    </p>
+
+                    <br>
+                </div>
+            {% else %}
+                <div class="col-md-4">
+                    <h5>Year:</h5>
+
+                    <p>
+                        {{ publication.year }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
 
-    {% if publication.isbn %}
-        <div class="col-md-4">
-            <h5>ISBN:</h5>
+        {% if publication.series %}
+            <div class="row">
+                    <h5>Series:</h5>
 
-            <p>
-                {{ publication.isbn }}
-            </p>
+                    <p>
+                        {{ publication.series }}
+                    </p>
+
+                    <br>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            {% if publication.series_number %}
+                <div class="col-md-4">
+                    <h5>Series number:</h5>
+
+                    <p>
+                        {{ publication.series_number }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
+
+            {% if publication.number_of_pages %}
+                <div class="col-md-4">
+                    <h5>Number of pages:</h5>
+
+                    <p>
+                        {{ publication.number_of_pages }}
+                    </p>
+
+                    <br>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
-
-    {% if publication.year %}
-        <div class="col-md-4">
-            <h5>Year:</h5>
-
-            <p>
-                {{ publication.year }}
-            </p>
-        </div>
-    {% endif %}
+    </div>
 </div>
