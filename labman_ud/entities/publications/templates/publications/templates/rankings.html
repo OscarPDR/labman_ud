@@ -1,0 +1,13 @@
+
+{% for ranking in publication.rankings.all %}
+    <br>
+    <div class="row centered">
+        {% if ranking.icon %}
+            <img class="ranking-icon" src="{{ MEDIA_URL }}{{ranking.icon}}" />
+        {% else %}
+            <p class="label label-default ranking-name">
+                {{ ranking.name }}
+            </p>
+        {% endif %}
+    </div>
+{% endfor %}

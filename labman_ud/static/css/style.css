@@ -771,3 +771,13 @@ blockquote footer {
     text-decoration: none;
     color: #2a6496;
 }
+
+.ranking-icon {
+    max-width: 50%;
+    max-height: 100px;
+}
+
+.ranking-name {
+    font-size: 1em;
+    padding: 0.5em 1.25em;
+}
