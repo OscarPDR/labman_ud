@@ -66,6 +66,10 @@ def thesis_path(self, filename):
     return "%s/%s/%s%s" % ("publications", "theses", self.author.slug, os.path.splitext(filename)[-1])
 
 
+def ranking_icon_picture_path(self, filename):
+    return "%s/%s%s" % ("rankings", self.slug, os.path.splitext(filename)[-1])
+
+
 ###########################################################################
 # Model: Publication
 ###########################################################################
@@ -130,6 +134,7 @@ class Publication(BaseModel):
     authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='authors')
     editors = models.ManyToManyField('persons.Person', through='PublicationEditor', related_name='editors')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
+    rankings = models.ManyToManyField('Ranking', through='PublicationRank')
 
     class Meta:
         # abstract = True
@@ -774,6 +779,7 @@ class Thesis(BaseModel):
 
 class ThesisSeeAlso(BaseModel):
     thesis = models.ForeignKey('Thesis')
+
     see_also = models.URLField(
         max_length=512,
     )
@@ -836,3 +842,51 @@ class VivaPanel(BaseModel):
     class Meta:
         verbose_name = u'VIVA panel'
         verbose_name_plural = u'VIVA panels'
+
+
+###########################################################################
+# Model: Ranking
+###########################################################################
+
+class Ranking(BaseModel):
+    name = models.CharField(
+        max_length=50,
+    )
+
+    slug = models.SlugField(
+        max_length=50,
+        blank=True,
+        unique=True,
+    )
+
+    icon = models.ImageField(
+        upload_to=ranking_icon_picture_path,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = u'Ranking'
+        verbose_name_plural = u'Rankings'
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name.encode('utf-8')))
+        super(Ranking, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: PublicationRank
+###########################################################################
+
+class PublicationRank(BaseModel):
+    publication = models.ForeignKey('Publication')
+
+    ranking = models.ForeignKey('Ranking')
+
+    class Meta:
+        verbose_name = u'Publication ranking'
+        verbose_name_plural = u'Publication rankings'
