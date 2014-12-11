@@ -890,3 +890,6 @@ class PublicationRank(BaseModel):
     class Meta:
         verbose_name = u'Publication ranking'
         verbose_name_plural = u'Publication rankings'
+
+    def _child_type(self):
+        return self.publication.child_type

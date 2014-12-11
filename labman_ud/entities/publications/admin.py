@@ -373,6 +373,10 @@ class CoAdvisorAdmin(admin.ModelAdmin):
 class PublicationRankAdmin(admin.ModelAdmin):
     model = PublicationRank
 
+    search_fields = ['publication__slug']
+    list_display = ['publication', '_child_type', 'ranking']
+    list_filter = ['ranking']
+
 
 ###########################################################################
 # Class: RankingAdmin
@@ -380,6 +384,8 @@ class PublicationRankAdmin(admin.ModelAdmin):
 
 class RankingAdmin(admin.ModelAdmin):
     model = Ranking
+
+    exclude = ['slug']
 
 
 ####################################################################################################
