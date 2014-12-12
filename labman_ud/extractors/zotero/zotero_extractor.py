@@ -14,15 +14,12 @@ from labman_setup.models import ZoteroConfiguration
 
 from datetime import datetime
 from dateutil import parser
-from xml.dom import minidom
 from pyzotero import zotero
 
-import json
-import operator
 import os
 import pprint
 import re
-import requests
+
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -175,7 +172,7 @@ def generate_publication(item):
     elif publication_type == 'journalArticle':
         parse_journal_article(item)
     elif publication_type == 'magazineArticle':
-        parse_attachment(item)
+        parse_magazine_article(item)
     elif publication_type == 'attachment':
         pass # this should not happen
     elif publication_type == 'thesis':
@@ -470,7 +467,7 @@ def parse_book(item):
         book.publisher = _assign_if_exists(item, 'publisher')
         book.place = _assign_if_exists(item, 'place')
 
-        book.published = _parse_date(item['date'])
+        book.published = _parse_date(item['data']['date'])
         book.year = book.published.year
 
         book.save()
@@ -478,6 +475,131 @@ def parse_book(item):
     _save_publication_editors(_extract_editors(item), book)
 
     return book
+    
+####################################################################################################
+# def: parse_authored_book()
+####################################################################################################
+
+def parse_authored_book(item):
+    try:
+        book = Book.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        book = Book()
+
+        book.title = item['data']['title']
+        book.short_title = _extract_short_title(item)
+
+        book.abstract = _assign_if_exists(item, 'abstractNote')
+        book.number_of_pages = _assign_if_exists(item, 'numPages')
+        book.edition = _assign_if_exists(item, 'edition')
+        book.doi = _extract_doi(item)
+
+        book.isbn = _assign_if_exists(item, 'ISBN')
+        book.volume = _assign_if_exists(item, 'volume')
+        book.number_of_volumes = _assign_if_exists(item, 'numberOfVolumes')
+        book.series = _assign_if_exists(item, 'series')
+        book.series_number = _assign_if_exists(item, 'seriesNumber')
+        book.publisher = _assign_if_exists(item, 'publisher')
+        book.place = _assign_if_exists(item, 'place')
+
+        book.published = _parse_date(item['data']['date'])
+        book.year = book.published.year
+
+        book.bibtex = _extract_bibtex(item['key'])
+
+        book.save()
+
+    _save_publication_authors(_extract_authors(item), book)
+
+    _extract_tags(item, book)
+    
+    if item.has_key('attachment'):         
+         _save_attachement(item['attachment']['key'], book, item['attachment']['filename'])
+
+    _save_zotero_extractor_log(item, book)
+    
+####################################################################################################
+# def: parse_magazine_article()
+####################################################################################################
+
+def parse_magazine_article(item):
+    try:
+        magazine_article = MagazineArticle.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        magazine_article = MagazineArticle()
+
+        magazine_article.title = item['data']['title']
+        magazine_article.short_title = _extract_short_title(item)
+
+        magazine_article.abstract = _assign_if_exists(item, 'abstractNote')
+        magazine_article.pages = _assign_if_exists(item, 'pages')
+        magazine_article.doi = _extract_doi(item)
+
+        magazine_article.parent_magazine = parse_magazine(item)
+
+        magazine_article.published = _parse_date(item['date'])
+        magazine_article.year = magazine_article.published.year
+
+        magazine_article.bibtex = _extract_bibtex(item['key'])
+
+        magazine_article.save()
+
+    _save_publication_authors(_extract_authors(item), magazine_article)
+
+    _extract_tags(item, magazine_article)
+    
+    if item.has_key('attachment'):         
+         _save_attachement(item['attachment']['key'], magazine_article, item['attachment']['filename'])
+
+    _save_zotero_extractor_log(item, magazine_article)
+
+
+####################################################################################################
+# def: parse_magazine()
+####################################################################################################
+
+def parse_magazine(item):
+    try:
+        magazine = Magazine.objects.get(slug=slugify(item['data']['publicationTitle']))
+
+    except:
+        magazine = Magazine()
+
+        magazine.title = item['data']['publicationTitle']
+
+        magazine.issn = _assign_if_exists(item, 'ISSN')
+        magazine.volume = _assign_if_exists(item, 'volume')
+        magazine.issue = _assign_if_exists(item, 'issue')
+
+        magazine.published = _parse_date(item['date'])
+        magazine.year = magazine.published.year
+
+        magazine.save()
+
+    return magazine
+
+
+
+
+
+####################################################################################################
+# def: parse_thesis()
+####################################################################################################
+
+def parse_thesis(item):
+    author = _extract_authors(item)[0]
+
+    try:
+        Thesis.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        print
+        print '*' * 75
+        print '%s should register his/her thesis using labman\'s admin page' % author
+        print '*' * 75
+        print
 
 ###############################################################################
 ###############################################################################
@@ -732,293 +854,7 @@ def _save_publication_editors(editors, publication):
         )
 
         publication_editor.save()
-
         
-        
-        
-
-
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-# TODO adapt the methods below to pyzotero        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-####################################################################################################
-# def: parse_book_section()
-####################################################################################################
-
-def parse_book_section(json_item, item_key):
-    try:
-        book_section = BookSection.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        book_section = BookSection()
-
-        book_section.title = json_item['title']
-        book_section.short_title = _extract_short_title(json_item)
-
-        book_section.abstract = _assign_if_exists(json_item, 'abstractNote')
-        book_section.pages = _assign_if_exists(json_item, 'pages')
-        book_section.doi = _extract_doi(json_item)
-
-        book_section.parent_book = parse_book(json_item)
-
-        book_section.published = _parse_date(json_item['date'])
-        book_section.year = book_section.published.year
-
-        book_section.bibtex = _extract_bibtex(item_key)
-
-        book_section.save()
-
-    _save_publication_authors(_extract_authors(json_item), book_section)
-
-    _extract_tags(json_item, book_section)
-
-    _save_zotero_extractor_log(json_item, book_section)
-
-
-####################################################################################################
-# def: parse_book()
-####################################################################################################
-
-def parse_book(json_item):
-    try:
-        book = Book.objects.get(slug=slugify(json_item['bookTitle']))
-
-    except:
-        book = Book()
-
-        book.title = json_item['bookTitle']
-
-        book.isbn = _assign_if_exists(json_item, 'ISBN')
-        book.volume = _assign_if_exists(json_item, 'volume')
-        book.series = _assign_if_exists(json_item, 'series')
-        book.publisher = _assign_if_exists(json_item, 'publisher')
-        book.place = _assign_if_exists(json_item, 'place')
-
-        book.published = _parse_date(json_item['date'])
-        book.year = book.published.year
-
-        book.save()
-
-    _save_publication_editors(_extract_editors(json_item), book)
-
-    return book
-
-
-####################################################################################################
-# def: parse_authored_book()
-####################################################################################################
-
-def parse_authored_book(json_item, item_key):
-    try:
-        book = Book.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        book = Book()
-
-        book.title = json_item['title']
-        book.short_title = _extract_short_title(json_item)
-
-        book.abstract = _assign_if_exists(json_item, 'abstractNote')
-        book.number_of_pages = _assign_if_exists(json_item, 'numPages')
-        book.edition = _assign_if_exists(json_item, 'edition')
-        book.doi = _extract_doi(json_item)
-
-        book.isbn = _assign_if_exists(json_item, 'ISBN')
-        book.volume = _assign_if_exists(json_item, 'volume')
-        book.number_of_volumes = _assign_if_exists(json_item, 'numberOfVolumes')
-        book.series = _assign_if_exists(json_item, 'series')
-        book.series_number = _assign_if_exists(json_item, 'seriesNumber')
-        book.publisher = _assign_if_exists(json_item, 'publisher')
-        book.place = _assign_if_exists(json_item, 'place')
-
-        book.published = _parse_date(json_item['date'])
-        book.year = book.published.year
-
-        book.bibtex = _extract_bibtex(item_key)
-
-        book.save()
-
-    _save_publication_authors(_extract_authors(json_item), book)
-
-    _extract_tags(json_item, book)
-
-    _save_zotero_extractor_log(json_item, book)
-
-
-
-
-
-####################################################################################################
-# def: parse_journal()
-####################################################################################################
-
-def parse_journal(json_item):
-    try:
-        journal = Journal.objects.get(slug=slugify(json_item['publicationTitle']))
-
-    except:
-        journal = Journal()
-
-        journal.title = json_item['publicationTitle']
-
-        journal.issn = _assign_if_exists(json_item, 'ISSN')
-        journal.volume = _assign_if_exists(json_item, 'volume')
-        journal.series = _assign_if_exists(json_item, 'series')
-        journal.publisher = _assign_if_exists(json_item, 'publisher')
-        journal.place = _assign_if_exists(json_item, 'place')
-        journal.journal_abbreviation = _assign_if_exists(json_item, 'journalAbbrevation')
-        journal.issue = _assign_if_exists(json_item, 'issue')
-
-        journal.published = _parse_date(json_item['date'])
-        journal.year = journal.published.year
-
-        journal.save()
-
-    return journal
-
-
-####################################################################################################
-# def: parse_magazine_article()
-####################################################################################################
-
-def parse_magazine_article(json_item, item_key):
-    try:
-        magazine_article = MagazineArticle.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        magazine_article = MagazineArticle()
-
-        magazine_article.title = json_item['title']
-        magazine_article.short_title = _extract_short_title(json_item)
-
-        magazine_article.abstract = _assign_if_exists(json_item, 'abstractNote')
-        magazine_article.pages = _assign_if_exists(json_item, 'pages')
-        magazine_article.doi = _extract_doi(json_item)
-
-        magazine_article.parent_magazine = parse_magazine(json_item)
-
-        magazine_article.published = _parse_date(json_item['date'])
-        magazine_article.year = magazine_article.published.year
-
-        magazine_article.bibtex = _extract_bibtex(item_key)
-
-        magazine_article.save()
-
-    _save_publication_authors(_extract_authors(json_item), magazine_article)
-
-    _extract_tags(json_item, magazine_article)
-
-    _save_zotero_extractor_log(json_item, magazine_article)
-
-
-####################################################################################################
-# def: parse_magazine()
-####################################################################################################
-
-def parse_magazine(json_item):
-    try:
-        magazine = Magazine.objects.get(slug=slugify(json_item['publicationTitle']))
-
-    except:
-        magazine = Magazine()
-
-        magazine.title = json_item['publicationTitle']
-
-        magazine.issn = _assign_if_exists(json_item, 'ISSN')
-        magazine.volume = _assign_if_exists(json_item, 'volume')
-        magazine.issue = _assign_if_exists(json_item, 'issue')
-
-        magazine.published = _parse_date(json_item['date'])
-        magazine.year = magazine.published.year
-
-        magazine.save()
-
-    return magazine
-
-
-
-
-
-####################################################################################################
-# def: parse_thesis()
-####################################################################################################
-
-def parse_thesis(json_item):
-    author = _extract_authors(json_item)[0]
-
-    try:
-        Thesis.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        print
-        print '*' * 75
-        print '%s should register his/her thesis using labman\'s admin page' % author
-        print '*' * 75
-        print
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ####################################################################################################
 # def: _determine_if_tag_is_special()
 ####################################################################################################
@@ -1091,4 +927,4 @@ def _determine_if_tag_is_special(tag, publication):
 
     return special
 
-
+        
