@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from extractors.zotero.zotero_extractor import extract_publications_from_zotero, get_last_synchronized_zotero_version
+from extractors.zotero.zotero_extractor import extract_publications_from_zotero, get_last_locally_synchronized_zotero_version
 
 
 ###########################################################################
@@ -14,5 +14,5 @@ def synchronize_zotero():
     print '#' * 80
 
     print '\tExtracting last publications'
-    extract_publications_from_zotero(get_last_synchronized_zotero_version())
+    extract_publications_from_zotero(get_last_locally_synchronized_zotero_version())
     print '\t\tExtraction completed'

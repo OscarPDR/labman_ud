@@ -1,6 +1,5 @@
 
 from django.conf import settings
-from django.db.models import Max
 from django.template.defaultfilters import slugify
 
 from entities.events.models import Event
@@ -9,12 +8,10 @@ from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
 from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
-from labman_setup.models import ZoteroConfiguration
 
 
 from datetime import datetime
 from dateutil import parser
-from pyzotero import zotero
 
 import os
 import pprint
@@ -26,66 +23,10 @@ pp = pprint.PrettyPrinter(indent=4)
 JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
 
 
-####################################################################################################
-# def: get_zotero_variables()
-####################################################################################################
-
-def get_zotero_variables():
-    try:
-        zotero_config = ZoteroConfiguration.objects.get()
-
-        api_key = zotero_config.api_key
-        library_id = zotero_config.library_id
-        library_type = zotero_config.library_type
-
-        return base_url, api_key, library_id, library_type
-
-    except:
-        print "ZoteroConfiguration object not configured in admin panel"
-
-        return '', '', '', ''
-        
-
-####################################################################################################
-# def: get_zotero_connection()
-####################################################################################################        
-def get_zotero_connection():
-    api_key, library_id, library_type = get_zotero_variables()
-    zot = zotero.Zotero(library_id = library_id, library_type=library_type, api_key=api_key)
-    
-    return zot
 
 
-####################################################################################################
-# def: get_last_zotero_version()
-####################################################################################################
-
-def get_last_zotero_version():
-    zot = get_zotero_connection()
-
-    items = zot.items(limit=1)
-    if len(items):
-        latest_version_number = items[0]['version']
-    else:
-        latest_version_number = 0
-
-    return latest_version_number
 
 
-####################################################################################################
-# def: get_last_synchronized_zotero_version()
-####################################################################################################
-
-def get_last_synchronized_zotero_version():
-    try:
-        last_version = ZoteroExtractorLog.objects.all().aggregate(Max('version'))['version__max']
-        if last_version is None:
-            last_version = 0
-
-    except:
-        last_version = 0
-
-    return last_version
 
 
 ####################################################################################################
@@ -118,7 +59,7 @@ def extract_publications_from_zotero(from_version):
         print '%d new items' % len(items)
         print '*' * 50
         print
-        
+
         items_ordered = {}
         attachments = []
         for item in items:
@@ -127,13 +68,13 @@ def extract_publications_from_zotero(from_version):
             else:
                 item_id = item['key']
                 items_ordered[item_id] = item
-                
+
         for a in attachments:
             parent_id = a['data']['parentItem']
             items_ordered[parent_id]['attachment'] = a
-         
+
         print len(items_ordered)
-        
+
         for i_id in items_ordered:
             generate_publication(items_ordered[i_id])
 
@@ -185,13 +126,13 @@ def generate_publication(item):
         print
         pp.pprint(content_json)
         print
-        
+
 ###############################################################################
 ###############################################################################
 # Item parsing
 ###############################################################################
 ###############################################################################
-        
+
 ####################################################################################################
 # def: parse_journal_article()
 ####################################################################################################
@@ -222,13 +163,13 @@ def parse_journal_article(item):
     _save_publication_authors(_extract_authors(item), journal_article)
 
     _extract_tags(item, journal_article)
-    
-    if item.has_key('attachment'):         
+
+    if item.has_key('attachment'):
          _save_attachement(item['attachment']['key'], journal_article, item['attachment']['filename'])
 
-    _save_zotero_extractor_log(item, journal_article)     
-    
-    
+    _save_zotero_extractor_log(item, journal_article)
+
+
 ####################################################################################################
 # def: parse_journal()
 ####################################################################################################
@@ -256,7 +197,7 @@ def parse_journal(item):
         journal.save()
 
     return journal
-    
+
 ####################################################################################################
 # def: parse_conference_paper()
 ####################################################################################################
@@ -288,8 +229,8 @@ def parse_conference_paper(item):
     _save_publication_authors(_extract_authors(item), conference_paper)
 
     _extract_tags(item, conference_paper)
-    
-    if item.has_key('attachment'):         
+
+    if item.has_key('attachment'):
          _save_attachement(item['attachment']['key'], conference_paper, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, conference_paper)
@@ -330,7 +271,7 @@ def parse_proceedings(item):
         proceedings.save()
 
     return proceedings
-    
+
 ####################################################################################################
 # def: parse_conference()
 ####################################################################################################
@@ -410,7 +351,7 @@ def parse_conference(item, proceedings):
 
     else:
         return None
-        
+
 ####################################################################################################
 # def: parse_book_section()
 ####################################################################################################
@@ -441,8 +382,8 @@ def parse_book_section(item):
     _save_publication_authors(_extract_authors(item), book_section)
 
     _extract_tags(item, book_section)
-    
-    if item.has_key('attachment'):         
+
+    if item.has_key('attachment'):
          _save_attachement(item['attachment']['key'], book_section, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, book_section)
@@ -475,7 +416,7 @@ def parse_book(item):
     _save_publication_editors(_extract_editors(item), book)
 
     return book
-    
+
 ####################################################################################################
 # def: parse_authored_book()
 ####################################################################################################
@@ -513,12 +454,12 @@ def parse_authored_book(item):
     _save_publication_authors(_extract_authors(item), book)
 
     _extract_tags(item, book)
-    
-    if item.has_key('attachment'):         
+
+    if item.has_key('attachment'):
          _save_attachement(item['attachment']['key'], book, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, book)
-    
+
 ####################################################################################################
 # def: parse_magazine_article()
 ####################################################################################################
@@ -549,8 +490,8 @@ def parse_magazine_article(item):
     _save_publication_authors(_extract_authors(item), magazine_article)
 
     _extract_tags(item, magazine_article)
-    
-    if item.has_key('attachment'):         
+
+    if item.has_key('attachment'):
          _save_attachement(item['attachment']['key'], magazine_article, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, magazine_article)
@@ -606,7 +547,7 @@ def parse_thesis(item):
 # Common methods
 ###############################################################################
 ###############################################################################
-        
+
 ####################################################################################################
 # def: _extract_short_title()
 ####################################################################################################
@@ -619,8 +560,8 @@ def _extract_short_title(item):
         index = item['data']['title'].find(':')
 
         if index != -1:
-            return item['data']['title'][:index]        
-        
+            return item['data']['title'][:index]
+
 ####################################################################################################
 # def: _assign_if_exists()
 ####################################################################################################
@@ -629,7 +570,7 @@ def _assign_if_exists(item, key):
     if key in item['data'].keys():
         if item['data'][key] != '':
             return item['data'][key]
-            
+
 ####################################################################################################
 # def: _extract_doi()
 ####################################################################################################
@@ -647,13 +588,13 @@ def _extract_doi(item):
             underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
 
             return item['data']['url'][base_url_end_index:underscore_index]
-        
+
 ####################################################################################################
 # def: _parse_date()
 ####################################################################################################
 
 def _parse_date(date_string):
-    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))   
+    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))
 
 ####################################################################################################
 # def: _extract_bibtex()
@@ -661,10 +602,10 @@ def _parse_date(date_string):
 
 def _extract_bibtex(item_key):
     zot = get_zotero_connection()
-    
+
     item = zot.item(item_key, format='bibtex')
     return item
-    
+
 ####################################################################################################
 # def: _extract_authors()
 ####################################################################################################
@@ -710,7 +651,7 @@ def _extract_authors(item):
                 authors.append(author)
 
     return authors
-    
+
 ####################################################################################################
 # def: _save_publication_authors()
 ####################################################################################################
@@ -727,8 +668,8 @@ def _save_publication_authors(authors, publication):
 
         publication_author.save()
 
-        order += 1               
-        
+        order += 1
+
 ####################################################################################################
 # def: _extract_tags()
 ####################################################################################################
@@ -757,8 +698,8 @@ def _extract_tags(item, publication):
                     publication=publication,
                 )
 
-                publication_tag.save()        
-        
+                publication_tag.save()
+
 ####################################################################################################
 # def: _save_zotero_extractor_log()
 ####################################################################################################
@@ -771,8 +712,8 @@ def _save_zotero_extractor_log(item, publication):
     )
 
     zotero_extractor_log.save()
-        
-        
+
+
 ####################################################################################################
 # def: _save_attachement()
 ####################################################################################################
@@ -794,8 +735,8 @@ def _save_attachement(attachment_id, publication, filename):
         pdffile.write(item)
 
     publication.pdf = path
-    publication.save() 
-    
+    publication.save()
+
 ####################################################################################################
 # def: _extract_editors()
 ####################################################################################################
@@ -841,7 +782,7 @@ def _extract_editors(item):
                 editors.append(editor)
 
     return editors
-    
+
 ####################################################################################################
 # def: _save_publication_editors()
 ####################################################################################################
@@ -854,7 +795,7 @@ def _save_publication_editors(editors, publication):
         )
 
         publication_editor.save()
-        
+
 ####################################################################################################
 # def: _determine_if_tag_is_special()
 ####################################################################################################
@@ -927,4 +868,4 @@ def _determine_if_tag_is_special(tag, publication):
 
     return special
 
-        
+
