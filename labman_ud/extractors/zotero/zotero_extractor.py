@@ -11,9 +11,11 @@ from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
 from labman_setup.models import ZoteroConfiguration
 
+
 from datetime import datetime
 from dateutil import parser
 from xml.dom import minidom
+from pyzotero import zotero
 
 import json
 import operator
@@ -35,7 +37,6 @@ def get_zotero_variables():
     try:
         zotero_config = ZoteroConfiguration.objects.get()
 
-        base_url = zotero_config.base_url
         api_key = zotero_config.api_key
         library_id = zotero_config.library_id
         library_type = zotero_config.library_type
@@ -46,6 +47,16 @@ def get_zotero_variables():
         print "ZoteroConfiguration object not configured in admin panel"
 
         return '', '', '', ''
+        
+
+####################################################################################################
+# def: get_zotero_connection()
+####################################################################################################        
+def get_zotero_connection():
+    api_key, library_id, library_type = get_zotero_variables()
+    zot = zotero.Zotero(library_id = library_id, library_type=library_type, api_key=api_key)
+    
+    return zot
 
 
 ####################################################################################################
@@ -53,21 +64,11 @@ def get_zotero_variables():
 ####################################################################################################
 
 def get_last_zotero_version():
-    base_url, api_key, library_id, library_type = get_zotero_variables()
+    zot = get_zotero_connection()
 
-    url = '%s/%ss/%s/items' % (base_url, library_type, library_id)
-
-    headers = {'Zotero-API-Version': 2}
-
-    params = {
-        'key': api_key,
-        'format': 'versions',
-    }
-
-    r = requests.get(url, headers=headers, params=params)
-
-    if len(r.json()):
-        latest_version_number = max(r.json().items(), key=operator.itemgetter(1))[1]
+    items = zot.items(limit=1)
+    if len(items):
+        latest_version_number = items[0]['version']
     else:
         latest_version_number = 0
 
@@ -94,7 +95,7 @@ def get_last_synchronized_zotero_version():
 # def: get_item_keys_since_last_synchronized_version()
 ####################################################################################################
 
-def get_item_keys_since_last_synchronized_version(from_version):
+def extract_publications_from_zotero(from_version):
     last_zotero_version = get_last_zotero_version()
 
     if from_version == last_zotero_version:
@@ -111,29 +112,18 @@ def get_item_keys_since_last_synchronized_version(from_version):
         print 'Getting items since version %d' % (from_version)
         print 'Last version in Zotero is %d' % (last_zotero_version)
 
-        base_url, api_key, library_id, library_type = get_zotero_variables()
+        zot = get_zotero_connection()
 
-        url = '%s/%ss/%s/items' % (base_url, library_type, library_id)
+        items = zot.top(since=last_zotero_version)
 
-        headers = {'Zotero-API-Version': 2}
-
-        params = {
-            'key': api_key,
-            'format': 'keys',
-            'order': 'dateModified',
-            'sort': 'desc',
-            'newer': from_version,
-            'limit': 10000,
-        }
-
-        r = requests.get(url, headers=headers, params=params)
-
-        item_key_list = r.text.split('\n')
-
-        while '' in item_key_list:
-            item_key_list.remove('')
-
-        return item_key_list
+        print
+        print '*' * 50
+        print '%d new items' % len(items)
+        print '*' * 50
+        print
+        
+        for item in items:
+            generate_publication(item)
 
 
 ####################################################################################################
@@ -153,83 +143,31 @@ def clean_database():
     City.objects.all().delete()
 
 
-####################################################################################################
-# def: extract_publications_from_zotero()
-####################################################################################################
-
-def extract_publications_from_zotero(from_version):
-    item_key_list = get_item_keys_since_last_synchronized_version(from_version)
-
-    print
-    print '*' * 50
-    print '%d new items' % len(item_key_list)
-    print '*' * 50
-    print
-
-    non_parsed_items = []
-
-    for index, item_key in enumerate(item_key_list):
-        print '%d/%d\t' % (index, len(item_key_list)),
-
-        try:
-            generate_publication_from_zotero(item_key)
-
-        except:
-            print 'Error retrieving information from Zotero API about item: %s' % item_key
-            non_parsed_items.append(item_key)
-
-    if len(non_parsed_items) > 0:
-        print
-        print 'Re-trying failed item keys retrieval...'
-
-        for item_key in non_parsed_items:
-            try:
-                generate_publication_from_zotero(item_key)
-
-            except:
-                print 'Unable to retrieve information from Zotero API about item: %s' % item_key
-
 
 ####################################################################################################
 # def: generate_publication_from_zotero()
 ####################################################################################################
 
-def generate_publication_from_zotero(item_key):
-    base_url, api_key, library_id, library_type = get_zotero_variables()
+def generate_publication(item):
+    
+    publication_type = item['data']['itemType']
 
-    url = '%s/%ss/%s/items/%s' % (base_url, library_type, library_id, item_key)
-
-    headers = {'Zotero-API-Version': 2}
-
-    params = {
-        'key': api_key,
-        'content': 'json',
-    }
-
-    r = requests.get(url, headers=headers, params=params)
-
-    xmldoc = minidom.parseString(r.text.encode('utf-8').replace("'", ""))
-    content = xmldoc.getElementsByTagName('content')[0].firstChild.nodeValue
-    content_json = json.loads(content)
-
-    publication_type = content_json['itemType']
-
-    print '\t[%s] > %s' % (publication_type.encode('utf-8'), content_json['title'].encode('utf-8'))
+    print '\t[%s] > %s' % (publication_type.encode('utf-8'), item['data']['title'].encode('utf-8'))
 
     if publication_type == 'conferencePaper':
-        parse_conference_paper(content_json, item_key)
+        parse_conference_paper(item)
     elif publication_type == 'bookSection':
-        parse_book_section(content_json, item_key)
+        parse_book_section(itemy)
     elif publication_type == 'book':
-        parse_authored_book(content_json, item_key)
+        parse_authored_book(item)
     elif publication_type == 'journalArticle':
-        parse_journal_article(content_json, item_key)
+        parse_journal_article(item)
     elif publication_type == 'magazineArticle':
-        parse_magazine_article(content_json, item_key)
+        parse_magazine_article(item)
     elif publication_type == 'attachment':
         pass
     elif publication_type == 'thesis':
-        parse_thesis(content_json)
+        parse_thesis(item)
     else:
         print
         print '*' * 50
