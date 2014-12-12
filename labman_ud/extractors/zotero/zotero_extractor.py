@@ -96,59 +96,6 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
-    last_zotero_version = get_last_zotero_version()
-
-    if from_version == last_zotero_version:
-        print 'Labman is updated to the last version in Zotero (%d)' % (last_zotero_version)
-
-        return []
-
-    else:
-        if from_version > last_zotero_version:
-            # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
-            from_version = last_zotero_version - 1
-            print 'Error solved'
-
-        print 'Getting items since version %d' % (from_version)
-        print 'Last version in Zotero is %d' % (last_zotero_version)
-
-        zot = get_zotero_connection()
-
-        items = zot.top(since=last_zotero_version)
-
-        print
-        print '*' * 50
-        print '%d new items' % len(items)
-        print '*' * 50
-        print
-        
-        for item in items:
-            generate_publication(item)
-
-
-####################################################################################################
-# def: clean_database()
-####################################################################################################
-
-def clean_database():
-    Publication.objects.all().delete()
-
-    PublicationAuthor.objects.all().delete()
-    PublicationEditor.objects.all().delete()
-    PublicationTag.objects.all().delete()
-
-    ZoteroExtractorLog.objects.all().delete()
-
-    Event.objects.filter(event_type='Academic event').delete()
-    City.objects.all().delete()
-
-
-
-####################################################################################################
-# def: generate_publication_from_zotero()
-####################################################################################################
-
-def generate_publication(item):
     last_zotero_version = 0
 
     if from_version == last_zotero_version:
@@ -192,6 +139,333 @@ def generate_publication(item):
         
         for i_id in items_ordered:
             generate_publication(items_ordered[i_id])
+
+
+####################################################################################################
+# def: clean_database()
+####################################################################################################
+
+def clean_database():
+    Publication.objects.all().delete()
+
+    PublicationAuthor.objects.all().delete()
+    PublicationEditor.objects.all().delete()
+    PublicationTag.objects.all().delete()
+
+    ZoteroExtractorLog.objects.all().delete()
+
+    Event.objects.filter(event_type='Academic event').delete()
+    City.objects.all().delete()
+
+####################################################################################################
+# def: generate_publication_from_zotero()
+####################################################################################################
+
+def generate_publication(item):
+    publication_type = item['data']['itemType']
+
+    print '\t[%s] > %s' % (publication_type.encode('utf-8'), item['data']['title'].encode('utf-8'))
+
+    if publication_type == 'conferencePaper':
+        parse_conference_paper(item)
+    elif publication_type == 'bookSection':
+        parse_book_section(itemy)
+    elif publication_type == 'book':
+        parse_authored_book(item)
+    elif publication_type == 'journalArticle':
+        parse_journal_article(item)
+    elif publication_type == 'magazineArticle':
+        parse_attachment(item)
+    elif publication_type == 'attachment':
+        pass # this should not happen
+    elif publication_type == 'thesis':
+        parse_thesis(item)
+    else:
+        print
+        print '*' * 50
+        print 'NOT PARSED:\t\tPublication type: %s' % publication_type
+        print '*' * 50
+        print
+        pp.pprint(content_json)
+        print
+        
+###############################################################################
+###############################################################################
+# Item parsing
+###############################################################################
+###############################################################################
+        
+####################################################################################################
+# def: parse_journal_article()
+####################################################################################################
+
+def parse_journal_article(item):
+    try:
+        journal_article = JournalArticle.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        journal_article = JournalArticle()
+
+        journal_article.title = item['data']['title']
+        journal_article.short_title = _extract_short_title(item)
+
+        journal_article.abstract = _assign_if_exists(item, 'abstractNote')
+        journal_article.pages = _assign_if_exists(item, 'pages')
+        journal_article.doi = _extract_doi(item)
+
+        journal_article.parent_journal = parse_journal(item)
+
+        journal_article.published = _parse_date(item['data']['date'])
+        journal_article.year = journal_article.published.year
+
+        journal_article.bibtex = _extract_bibtex(item['key'])
+
+        journal_article.save()
+
+    _save_publication_authors(_extract_authors(item), journal_article)
+
+    _extract_tags(item, journal_article)
+
+    _save_zotero_extractor_log(item, journal_article)     
+    
+    
+####################################################################################################
+# def: parse_journal()
+####################################################################################################
+
+def parse_journal(item):
+    try:
+        journal = Journal.objects.get(slug=slugify(item['data']['publicationTitle']))
+
+    except:
+        journal = Journal()
+
+        journal.title = item['data']['publicationTitle']
+
+        journal.issn = _assign_if_exists(item, 'ISSN')
+        journal.volume = _assign_if_exists(item, 'volume')
+        journal.series = _assign_if_exists(item, 'series')
+        journal.publisher = _assign_if_exists(item, 'publisher')
+        journal.place = _assign_if_exists(item, 'place')
+        journal.journal_abbreviation = _assign_if_exists(item, 'journalAbbrevation')
+        journal.issue = _assign_if_exists(item, 'issue')
+
+        journal.published = _parse_date(item['data']['date'])
+        journal.year = journal.published.year
+
+        journal.save()
+
+    return journal
+
+###############################################################################
+###############################################################################
+# Common methods
+###############################################################################
+###############################################################################
+        
+####################################################################################################
+# def: _extract_short_title()
+####################################################################################################
+
+def _extract_short_title(item):
+    if 'shortTitle' in item['data'].keys() and item['shortTitle'] != '':
+        return item['shortTitle']
+
+    else:
+        index = item['data']['title'].find(':')
+
+        if index != -1:
+            return item['data']['title'][:index]        
+        
+####################################################################################################
+# def: _assign_if_exists()
+####################################################################################################
+
+def _assign_if_exists(item, key):
+    if key in item['data'].keys():
+        if item['data'][key] != '':
+            return item['data'][key]
+            
+####################################################################################################
+# def: _extract_doi()
+####################################################################################################
+
+def _extract_doi(item):
+    DOI_ORG_BASE_URL = 'http://dx.doi.org/'
+
+    if 'DOI' in item['data'].keys():
+        if item['data']['DOI'] != '':
+            return item['data']['DOI']
+
+    elif 'url' in item['data'].keys():
+        if item['data']['url'] != '' and DOI_ORG_BASE_URL in item['data']['url']:
+            base_url_end_index = len(DOI_ORG_BASE_URL)
+            underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
+
+            return item['data']['url'][base_url_end_index:underscore_index]
+        
+####################################################################################################
+# def: _parse_date()
+####################################################################################################
+
+def _parse_date(date_string):
+    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))   
+
+####################################################################################################
+# def: _extract_bibtex()
+####################################################################################################
+
+def _extract_bibtex(item_key):
+    zot = get_zotero_connection()
+    
+    item = zot.item(item_key, format='bibtex')
+    return item
+    
+####################################################################################################
+# def: _extract_authors()
+####################################################################################################
+
+def _extract_authors(item):
+    authors = []
+
+    if 'creators' in item['data'].keys() and len(item['data']['creators']) > 0:
+        for creator_item in item['data']['creators']:
+            creator_type = creator_item['creatorType']
+
+            if creator_type == 'author':
+                if 'name' in creator_item and creator_item['name'] != '':
+                    author_name = str(creator_item['name'].encode('utf-8'))
+                    author_first_surname = author_name.split(' ')[-1]
+                    author_first_name = author_name.replace(' ' + author_first_surname, '')
+
+                else:
+                    author_first_name = creator_item['firstName'].encode('utf-8')
+                    author_first_surname = creator_item['lastName'].encode('utf-8')
+
+                author_slug = slugify('%s %s' % (author_first_name, author_first_surname))
+
+                try:
+                    # Check if author is in DB (comparing by slug)
+                    author = Person.objects.get(slug=author_slug)
+
+                except:
+                    # If it isn't
+                    try:
+                        # Check if author name correspond with any of the posible nicknames of the authors in DB
+                        nick = Nickname.objects.get(slug=author_slug)
+                        author = nick.person
+                    except:
+                        # If there is no reference to that person in the DB, create a new one
+                        author = Person(
+                            first_name=author_first_name,
+                            first_surname=author_first_surname
+                        )
+
+                        author.save()
+
+                authors.append(author)
+
+    return authors
+    
+####################################################################################################
+# def: _save_publication_authors()
+####################################################################################################
+
+def _save_publication_authors(authors, publication):
+    order = 1
+
+    for author in authors:
+        publication_author = PublicationAuthor(
+            author=author,
+            publication=publication,
+            position=order,
+        )
+
+        publication_author.save()
+
+        order += 1               
+        
+####################################################################################################
+# def: _extract_tags()
+####################################################################################################
+
+def _extract_tags(item, publication):
+    if 'tags' in item['data'].keys() and len(item['data']['tags']) > 0:
+        for tag_item in item['data']['tags']:
+            tag_name = tag_item['tag'].encode('utf-8')
+
+            if _determine_if_tag_is_special(tag_name, publication):
+                pass
+
+            else:
+                try:
+                    tag = Tag.objects.get(slug=slugify(tag_name))
+
+                except:
+                    tag = Tag(
+                        name=tag_name,
+                    )
+
+                    tag.save()
+
+                publication_tag = PublicationTag(
+                    tag=tag,
+                    publication=publication,
+                )
+
+                publication_tag.save()        
+        
+####################################################################################################
+# def: _save_zotero_extractor_log()
+####################################################################################################
+
+def _save_zotero_extractor_log(item, publication):
+    zotero_extractor_log = ZoteroExtractorLog(
+        item_key=item['key'],
+        version=item['version'],
+        publication=publication,
+    )
+
+    zotero_extractor_log.save()
+        
+        
+        
+        
+        
+        
+
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+# TODO adapt the methods below to pyzotero        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
 
 
 ####################################################################################################
@@ -451,38 +725,7 @@ def parse_authored_book(json_item, item_key):
     _save_zotero_extractor_log(json_item, book)
 
 
-####################################################################################################
-# def: parse_journal_article()
-####################################################################################################
 
-def parse_journal_article(json_item, item_key):
-    try:
-        journal_article = JournalArticle.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        journal_article = JournalArticle()
-
-        journal_article.title = json_item['title']
-        journal_article.short_title = _extract_short_title(json_item)
-
-        journal_article.abstract = _assign_if_exists(json_item, 'abstractNote')
-        journal_article.pages = _assign_if_exists(json_item, 'pages')
-        journal_article.doi = _extract_doi(json_item)
-
-        journal_article.parent_journal = parse_journal(json_item)
-
-        journal_article.published = _parse_date(json_item['date'])
-        journal_article.year = journal_article.published.year
-
-        journal_article.bibtex = _extract_bibtex(item_key)
-
-        journal_article.save()
-
-    _save_publication_authors(_extract_authors(json_item), journal_article)
-
-    _extract_tags(json_item, journal_article)
-
-    _save_zotero_extractor_log(json_item, journal_article)
 
 
 ####################################################################################################
@@ -651,143 +894,22 @@ def parse_thesis(json_item):
         print
 
 
-####################################################################################################
-# def: _parse_date()
-####################################################################################################
-
-def _parse_date(date_string):
-    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))
 
 
-####################################################################################################
-# def: _assign_if_exists()
-####################################################################################################
-
-def _assign_if_exists(item, key):
-    if key in item.keys():
-        if item[key] != '':
-            return item[key]
 
 
-####################################################################################################
-# def: _extract_doi()
-####################################################################################################
-
-def _extract_doi(item):
-    DOI_ORG_BASE_URL = 'http://dx.doi.org/'
-
-    if 'DOI' in item.keys():
-        if item['DOI'] != '':
-            return item['DOI']
-
-    elif 'url' in item.keys():
-        if item['url'] != '' and DOI_ORG_BASE_URL in item['url']:
-            base_url_end_index = len(DOI_ORG_BASE_URL)
-            underscore_index = item['url'].find('_') if item['url'].find('_') != -1 else len(item['url'])
-
-            return item['url'][base_url_end_index:underscore_index]
 
 
-####################################################################################################
-# def: _extract_bibtex()
-####################################################################################################
-
-def _extract_bibtex(item_key):
-    base_url, api_key, library_id, library_type = get_zotero_variables()
-
-    url = '%s/%ss/%s/items/%s' % (base_url, library_type, library_id, item_key)
-
-    headers = {'Zotero-API-Version': 2}
-
-    params = {
-        'key': api_key,
-        'format': 'bibtex',
-    }
-
-    r = requests.get(url, headers=headers, params=params)
-
-    return r.text.encode('utf-8')[1:]
 
 
-####################################################################################################
-# def: _extract_short_title()
-####################################################################################################
-
-def _extract_short_title(item):
-    if 'shortTitle' in item.keys() and item['shortTitle'] != '':
-        return item['shortTitle']
-
-    else:
-        index = item['title'].find(':')
-
-        if index != -1:
-            return item['title'][:index]
 
 
-####################################################################################################
-# def: _extract_authors()
-####################################################################################################
-
-def _extract_authors(item):
-    authors = []
-
-    if 'creators' in item.keys() and len(item['creators']) > 0:
-        for creator_item in item['creators']:
-            creator_type = creator_item['creatorType']
-
-            if creator_type == 'author':
-                if 'name' in creator_item and creator_item['name'] != '':
-                    author_name = str(creator_item['name'].encode('utf-8'))
-                    author_first_surname = author_name.split(' ')[-1]
-                    author_first_name = author_name.replace(' ' + author_first_surname, '')
-
-                else:
-                    author_first_name = creator_item['firstName'].encode('utf-8')
-                    author_first_surname = creator_item['lastName'].encode('utf-8')
-
-                author_slug = slugify('%s %s' % (author_first_name, author_first_surname))
-
-                try:
-                    # Check if author is in DB (comparing by slug)
-                    author = Person.objects.get(slug=author_slug)
-
-                except:
-                    # If it isn't
-                    try:
-                        # Check if author name correspond with any of the posible nicknames of the authors in DB
-                        nick = Nickname.objects.get(slug=author_slug)
-                        author = nick.person
-                    except:
-                        # If there is no reference to that person in the DB, create a new one
-                        author = Person(
-                            first_name=author_first_name,
-                            first_surname=author_first_surname
-                        )
-
-                        author.save()
-
-                authors.append(author)
-
-    return authors
 
 
-####################################################################################################
-# def: _save_publication_authors()
-####################################################################################################
 
-def _save_publication_authors(authors, publication):
-    order = 1
 
-    for author in authors:
-        publication_author = PublicationAuthor(
-            author=author,
-            publication=publication,
-            position=order,
-        )
 
-        publication_author.save()
 
-        order += 1
 
 
 ####################################################################################################
@@ -851,35 +973,7 @@ def _save_publication_editors(editors, publication):
         publication_editor.save()
 
 
-####################################################################################################
-# def: _extract_tags()
-####################################################################################################
 
-def _extract_tags(item, publication):
-    if 'tags' in item.keys() and len(item['tags']) > 0:
-        for tag_item in item['tags']:
-            tag_name = tag_item['tag'].encode('utf-8')
-
-            if _determine_if_tag_is_special(tag_name, publication):
-                pass
-
-            else:
-                try:
-                    tag = Tag.objects.get(slug=slugify(tag_name))
-
-                except:
-                    tag = Tag(
-                        name=tag_name,
-                    )
-
-                    tag.save()
-
-                publication_tag = PublicationTag(
-                    tag=tag,
-                    publication=publication,
-                )
-
-                publication_tag.save()
 
 
 ####################################################################################################
@@ -955,15 +1049,3 @@ def _determine_if_tag_is_special(tag, publication):
     return special
 
 
-####################################################################################################
-# def: _save_zotero_extractor_log()
-####################################################################################################
-
-def _save_zotero_extractor_log(item, publication):
-    zotero_extractor_log = ZoteroExtractorLog(
-        item_key=item['itemKey'],
-        version=item['itemVersion'],
-        publication=publication,
-    )
-
-    zotero_extractor_log.save()
