@@ -17,13 +17,6 @@ from redactor.fields import RedactorField
 MIN_YEAR_LIMIT = 1950
 MAX_YEAR_LIMIT = 2080
 
-CORE_CHOICES = (
-    ('A', 'Core A'),
-    ('B', 'Core B'),
-    ('C', 'Core C'),
-    (None, 'None'),
-)
-
 QUARTILE_CHOICES = (
     ('Q1', 'Q1'),
     ('Q2', 'Q2'),
@@ -258,25 +251,6 @@ class PartOfCollectionPublication(Publication):
 
 
 ###########################################################################
-# Model: ISIDBLPTags
-###########################################################################
-
-class ISIDBLPTags(PartOfCollectionPublication):
-    isi = models.BooleanField(
-        verbose_name=u'ISI',
-        default=False,
-    )
-
-    dblp = models.BooleanField(
-        verbose_name=u'DBLP',
-        default=False,
-    )
-
-    class Meta:
-        abstract = True
-
-
-###########################################################################
 # Model: Book
 ###########################################################################
 
@@ -342,17 +316,10 @@ class Book(CollectionPublication):
 # Model: BookSection
 ###########################################################################
 
-class BookSection(ISIDBLPTags):
+class BookSection(PartOfCollectionPublication):
     parent_book = models.ForeignKey('Book')
 
     presented_at = models.ForeignKey('events.Event', null=True, blank=True)
-
-    core = models.CharField(
-        max_length=25,
-        choices=CORE_CHOICES,
-        blank=True,
-        null=True,
-    )
 
     class Meta:
         verbose_name = u'Book section'
@@ -422,18 +389,11 @@ class Proceedings(CollectionPublication):
 # Model: ConferencePaper
 ###########################################################################
 
-class ConferencePaper(ISIDBLPTags):
+class ConferencePaper(PartOfCollectionPublication):
     parent_proceedings = models.ForeignKey('Proceedings')
 
     presented_at = models.ForeignKey(
         'events.Event',
-        blank=True,
-        null=True,
-    )
-
-    core = models.CharField(
-        max_length=25,
-        choices=CORE_CHOICES,
         blank=True,
         null=True,
     )
@@ -527,7 +487,7 @@ class Journal(CollectionPublication):
 # Model: JournalArticle
 ###########################################################################
 
-class JournalArticle(ISIDBLPTags):
+class JournalArticle(PartOfCollectionPublication):
     parent_journal = models.ForeignKey('Journal')
 
     individually_published = models.DateField(
@@ -888,6 +848,8 @@ class PublicationRank(BaseModel):
     ranking = models.ForeignKey('Ranking')
 
     class Meta:
+        ordering = ['publication__title']
+        unique_together = ('publication', 'ranking')
         verbose_name = u'Publication ranking'
         verbose_name_plural = u'Publication rankings'
 
