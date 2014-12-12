@@ -149,43 +149,49 @@ def clean_database():
 ####################################################################################################
 
 def generate_publication(item):
-    
-    publication_type = item['data']['itemType']
+    last_zotero_version = 0
 
-    print '\t[%s] > %s' % (publication_type.encode('utf-8'), item['data']['title'].encode('utf-8'))
+    if from_version == last_zotero_version:
+        print 'Labman is updated to the last version in Zotero (%d)' % (last_zotero_version)
 
-    if publication_type == 'conferencePaper':
-        parse_conference_paper(item)
-    elif publication_type == 'bookSection':
-        parse_book_section(itemy)
-    elif publication_type == 'book':
-        parse_authored_book(item)
-    elif publication_type == 'journalArticle':
-        parse_journal_article(item)
-    elif publication_type == 'magazineArticle':
-        parse_magazine_article(item)
-    elif publication_type == 'attachment':
-        pass
-    elif publication_type == 'thesis':
-        parse_thesis(item)
+        return []
+
     else:
+        if from_version > last_zotero_version:
+            # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
+            from_version = last_zotero_version - 1
+            print 'Error solved'
+
+        print 'Getting items since version %d' % (from_version)
+        print 'Last version in Zotero is %d' % (last_zotero_version)
+
+        zot = get_zotero_connection()
+
+        items = zot.items(since=last_zotero_version)
+
         print
         print '*' * 50
-        print 'NOT PARSED:\t\tPublication type: %s' % publication_type
+        print '%d new items' % len(items)
         print '*' * 50
         print
-        pp.pprint(content_json)
-        print
-
-    if publication_type in ['conferencePaper', 'bookSection', 'book', 'journalArticle', 'magazineArticle']:
-        try:
-            number_of_children = int(xmldoc.getElementsByTagName('zapi:numChildren')[0].firstChild.nodeValue)
-
-        except:
-            number_of_children = 0
-
-        if number_of_children > 0:
-            parse_attachment(item_key, publication_type)
+        
+        items_ordered = {}
+        attachments = []
+        for item in items:
+            if item['data']['itemType'] == 'attachment':
+                attachments.append(item)
+            else:
+                item_id = item['key']
+                items_ordered[item_id] = item
+                
+        for a in attachments:
+            parent_id = a['data']['parentItem']
+            items_ordered[parent_id]['attachment'] = a
+         
+        print len(items_ordered)
+        
+        for i_id in items_ordered:
+            generate_publication(items_ordered[i_id])
 
 
 ####################################################################################################
