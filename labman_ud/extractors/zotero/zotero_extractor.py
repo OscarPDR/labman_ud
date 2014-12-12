@@ -288,14 +288,14 @@ def parse_conference_paper(item):
 
         conference_paper.save()
 
-    _save_publication_authors(_extract_authors(json_item), conference_paper)
+    _save_publication_authors(_extract_authors(item), conference_paper)
 
-    _extract_tags(json_item, conference_paper)
+    _extract_tags(item, conference_paper)
     
     if item.has_key('attachment'):         
          _save_attachement(item['attachment']['key'], conference_paper, item['attachment']['filename'])
 
-    _save_zotero_extractor_log(json_item, conference_paper)
+    _save_zotero_extractor_log(item, conference_paper)
 
 
 ####################################################################################################
@@ -413,6 +413,71 @@ def parse_conference(item, proceedings):
 
     else:
         return None
+        
+####################################################################################################
+# def: parse_book_section()
+####################################################################################################
+
+def parse_book_section(item):
+    try:
+        book_section = BookSection.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        book_section = BookSection()
+
+        book_section.title = item['data']['title']
+        book_section.short_title = _extract_short_title(item)
+
+        book_section.abstract = _assign_if_exists(item, 'abstractNote')
+        book_section.pages = _assign_if_exists(item, 'pages')
+        book_section.doi = _extract_doi(item)
+
+        book_section.parent_book = parse_book(item)
+
+        book_section.published = _parse_date(item['data']['date'])
+        book_section.year = book_section.published.year
+
+        book_section.bibtex = _extract_bibtex(item['key'])
+
+        book_section.save()
+
+    _save_publication_authors(_extract_authors(item), book_section)
+
+    _extract_tags(item, book_section)
+    
+    if item.has_key('attachment'):         
+         _save_attachement(item['attachment']['key'], book_section, item['attachment']['filename'])
+
+    _save_zotero_extractor_log(item, book_section)
+
+
+####################################################################################################
+# def: parse_book()
+####################################################################################################
+
+def parse_book(item):
+    try:
+        book = Book.objects.get(slug=slugify(item['data']['bookTitle']))
+
+    except:
+        book = Book()
+
+        book.title = item['data']['bookTitle']
+
+        book.isbn = _assign_if_exists(item, 'ISBN')
+        book.volume = _assign_if_exists(item, 'volume')
+        book.series = _assign_if_exists(item, 'series')
+        book.publisher = _assign_if_exists(item, 'publisher')
+        book.place = _assign_if_exists(item, 'place')
+
+        book.published = _parse_date(item['date'])
+        book.year = book.published.year
+
+        book.save()
+
+    _save_publication_editors(_extract_editors(item), book)
+
+    return book
 
 ###############################################################################
 ###############################################################################
@@ -608,6 +673,66 @@ def _save_attachement(attachment_id, publication, filename):
 
     publication.pdf = path
     publication.save() 
+    
+####################################################################################################
+# def: _extract_editors()
+####################################################################################################
+
+def _extract_editors(item):
+    editors = []
+
+    if 'creators' in item['data'].keys() and len(item['data']['creators']) > 0:
+        for creator_item in item['data']['creators']:
+            creator_type = creator_item['creatorType']
+
+            if creator_type == 'editor':
+                if 'name' in creator_item and creator_item['name'] != '':
+                    editor_name = str(creator_item['name'].encode('utf-8'))
+                    editor_first_surname = editor_name.split(' ')[-1]
+                    editor_first_name = editor_name.replace(' ' + editor_first_surname, '')
+
+                else:
+                    editor_first_name = creator_item['firstName'].encode('utf-8')
+                    editor_first_surname = creator_item['lastName'].encode('utf-8')
+
+                editor_slug = slugify('%s %s' % (editor_first_name, editor_first_surname))
+
+                try:
+                    # Check if editor is in DB (comparing by slug)
+                    editor = Person.objects.get(slug=editor_slug)
+
+                except:
+                    # If it isn't
+                    try:
+                        # Check if editor name correspond with any of the posible nicknames of the authors in DB
+                        nick = Nickname.objects.get(slug=editor_slug)
+                        editor = nick.person
+                    except:
+                        # If there is no reference to that person in the DB, create a new one
+                        editor = Person(
+                            first_name=editor_first_name,
+                            first_surname=editor_first_surname
+                        )
+
+                        editor.save()
+
+                editors.append(editor)
+
+    return editors
+    
+####################################################################################################
+# def: _save_publication_editors()
+####################################################################################################
+
+def _save_publication_editors(editors, publication):
+    for editor in editors:
+        publication_editor = PublicationEditor(
+            editor=editor,
+            publication=publication,
+        )
+
+        publication_editor.save()
+
         
         
         
@@ -886,65 +1011,9 @@ def parse_thesis(json_item):
 
 
 
-####################################################################################################
-# def: _extract_editors()
-####################################################################################################
-
-def _extract_editors(item):
-    editors = []
-
-    if 'creators' in item.keys() and len(item['creators']) > 0:
-        for creator_item in item['creators']:
-            creator_type = creator_item['creatorType']
-
-            if creator_type == 'editor':
-                if 'name' in creator_item and creator_item['name'] != '':
-                    editor_name = str(creator_item['name'].encode('utf-8'))
-                    editor_first_surname = editor_name.split(' ')[-1]
-                    editor_first_name = editor_name.replace(' ' + editor_first_surname, '')
-
-                else:
-                    editor_first_name = creator_item['firstName'].encode('utf-8')
-                    editor_first_surname = creator_item['lastName'].encode('utf-8')
-
-                editor_slug = slugify('%s %s' % (editor_first_name, editor_first_surname))
-
-                try:
-                    # Check if editor is in DB (comparing by slug)
-                    editor = Person.objects.get(slug=editor_slug)
-
-                except:
-                    # If it isn't
-                    try:
-                        # Check if editor name correspond with any of the posible nicknames of the authors in DB
-                        nick = Nickname.objects.get(slug=editor_slug)
-                        editor = nick.person
-                    except:
-                        # If there is no reference to that person in the DB, create a new one
-                        editor = Person(
-                            first_name=editor_first_name,
-                            first_surname=editor_first_surname
-                        )
-
-                        editor.save()
-
-                editors.append(editor)
-
-    return editors
 
 
-####################################################################################################
-# def: _save_publication_editors()
-####################################################################################################
 
-def _save_publication_editors(editors, publication):
-    for editor in editors:
-        publication_editor = PublicationEditor(
-            editor=editor,
-            publication=publication,
-        )
-
-        publication_editor.save()
 
 
 
