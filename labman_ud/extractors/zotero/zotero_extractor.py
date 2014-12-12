@@ -259,6 +259,160 @@ def parse_journal(item):
         journal.save()
 
     return journal
+    
+####################################################################################################
+# def: parse_conference_paper()
+####################################################################################################
+
+def parse_conference_paper(item):
+    try:
+        conference_paper = ConferencePaper.objects.get(slug=slugify(item['data']['title']))
+
+    except:
+        conference_paper = ConferencePaper()
+
+        conference_paper.title = item['data']['title']
+        conference_paper.short_title = _extract_short_title(item)
+
+        conference_paper.abstract = _assign_if_exists(item, 'abstractNote')
+        conference_paper.pages = _assign_if_exists(item, 'pages')
+        conference_paper.doi = _extract_doi(item)
+
+        conference_paper.parent_proceedings = parse_proceedings(item)
+        conference_paper.presented_at = parse_conference(item, conference_paper.parent_proceedings)
+
+        conference_paper.published = _parse_date(item['data']['date'])
+        conference_paper.year = conference_paper.published.year
+
+        conference_paper.bibtex = _extract_bibtex(item['key'])
+
+        conference_paper.save()
+
+    _save_publication_authors(_extract_authors(json_item), conference_paper)
+
+    _extract_tags(json_item, conference_paper)
+    
+    if item.has_key('attachment'):         
+         _save_attachement(item['attachment']['key'], conference_paper, item['attachment']['filename'])
+
+    _save_zotero_extractor_log(json_item, conference_paper)
+
+
+####################################################################################################
+# def: parse_proceedings()
+####################################################################################################
+
+def parse_proceedings(item):
+    if item['data']['proceedingsTitle'] != '':
+        proceedings_title = item['data']['proceedingsTitle']
+
+    else:
+        if item['data']['conferenceName'] != '':
+            proceedings_title = 'Proceedings of conference: %s' % item['data']['conferenceName']
+
+        else:
+            proceedings_title = 'Proceedings for article: %s' % item['data']['title']
+
+    try:
+        proceedings = Proceedings.objects.get(slug=slugify(proceedings_title))
+
+    except:
+        proceedings = Proceedings()
+
+        proceedings.title = proceedings_title
+
+        proceedings.isbn = _assign_if_exists(item, 'ISBN')
+        proceedings.volume = _assign_if_exists(item, 'volume')
+        proceedings.series = _assign_if_exists(item, 'series')
+        proceedings.publisher = _assign_if_exists(item, 'publisher')
+        proceedings.place = _assign_if_exists(item, 'place')
+
+        proceedings.published = _parse_date(item['date'])
+        proceedings.year = proceedings.published.year
+
+        proceedings.save()
+
+    return proceedings
+    
+####################################################################################################
+# def: parse_conference()
+####################################################################################################
+
+def parse_conference(item, proceedings):
+    if 'conferenceName' in item['data'].keys() and item['data']['conferenceName'] != '':
+        try:
+            event = Event.objects.get(slug=slugify(item['data']['conferenceName']))
+
+        except:
+            event = Event()
+
+        event.event_type = 'Academic event'
+
+        event.full_name = item['data']['conferenceName']
+
+        if 'place' in item['data'].keys() and item['data']['place'] != '':
+            places_list = item['data']['place'].split(', ')
+
+            if len(places_list) == 2:
+                city_name = places_list[0]
+                country_name = places_list[1]
+
+                event_location = ''
+
+                if city_name and city_name != '':
+                    try:
+                        city = City.objects.get(slug=slugify(city_name))
+
+                    except:
+                        city = City(
+                            full_name=city_name,
+                        )
+
+                        city.save()
+
+                    event_location = city_name
+
+                else:
+                    city = None
+
+                if country_name and country_name != '':
+                    try:
+                        country = Country.objects.get(slug=slugify(country_name))
+
+                    except:
+                        country = Country(
+                            full_name=country_name,
+                        )
+
+                        country.save()
+
+                    city.country = country
+                    city.save()
+
+                    if city_name and city_name != '':
+                        event_location = '%s (%s)' % (event_location, country_name)
+                    else:
+                        event_location = '(%s)' % country_name
+
+                else:
+                    country = None
+
+                event.host_city = city
+                event.host_country = country
+
+                event.location = event_location
+
+        event.published = _parse_date(item['data']['date'])
+        event.year = event.published.year
+
+        event.proceedings = proceedings
+
+        event.save()
+
+        return event
+
+    else:
+        return None
 
 ###############################################################################
 ###############################################################################
@@ -492,157 +646,10 @@ def _save_attachement(attachment_id, publication, filename):
 
 
 
-####################################################################################################
-# def: parse_conference_paper()
-####################################################################################################
-
-def parse_conference_paper(json_item, item_key):
-    try:
-        conference_paper = ConferencePaper.objects.get(slug=slugify(json_item['title']))
-
-    except:
-        conference_paper = ConferencePaper()
-
-        conference_paper.title = json_item['title']
-        conference_paper.short_title = _extract_short_title(json_item)
-
-        conference_paper.abstract = _assign_if_exists(json_item, 'abstractNote')
-        conference_paper.pages = _assign_if_exists(json_item, 'pages')
-        conference_paper.doi = _extract_doi(json_item)
-
-        conference_paper.parent_proceedings = parse_proceedings(json_item)
-        conference_paper.presented_at = parse_conference(json_item, conference_paper.parent_proceedings)
-
-        conference_paper.published = _parse_date(json_item['date'])
-        conference_paper.year = conference_paper.published.year
-
-        conference_paper.bibtex = _extract_bibtex(item_key)
-
-        conference_paper.save()
-
-    _save_publication_authors(_extract_authors(json_item), conference_paper)
-
-    _extract_tags(json_item, conference_paper)
-
-    _save_zotero_extractor_log(json_item, conference_paper)
 
 
-####################################################################################################
-# def: parse_proceedings()
-####################################################################################################
-
-def parse_proceedings(json_item):
-    if json_item['proceedingsTitle'] != '':
-        proceedings_title = json_item['proceedingsTitle']
-
-    else:
-        if json_item['conferenceName'] != '':
-            proceedings_title = 'Proceedings of conference: %s' % json_item['conferenceName']
-
-        else:
-            proceedings_title = 'Proceedings for article: %s' % json_item['title']
-
-    try:
-        proceedings = Proceedings.objects.get(slug=slugify(proceedings_title))
-
-    except:
-        proceedings = Proceedings()
-
-        proceedings.title = proceedings_title
-
-        proceedings.isbn = _assign_if_exists(json_item, 'ISBN')
-        proceedings.volume = _assign_if_exists(json_item, 'volume')
-        proceedings.series = _assign_if_exists(json_item, 'series')
-        proceedings.publisher = _assign_if_exists(json_item, 'publisher')
-        proceedings.place = _assign_if_exists(json_item, 'place')
-
-        proceedings.published = _parse_date(json_item['date'])
-        proceedings.year = proceedings.published.year
-
-        proceedings.save()
-
-    return proceedings
 
 
-####################################################################################################
-# def: parse_conference()
-####################################################################################################
-
-def parse_conference(json_item, proceedings):
-    if 'conferenceName' in json_item.keys() and json_item['conferenceName'] != '':
-        try:
-            event = Event.objects.get(slug=slugify(json_item['conferenceName']))
-
-        except:
-            event = Event()
-
-        event.event_type = 'Academic event'
-
-        event.full_name = json_item['conferenceName']
-
-        if 'place' in json_item.keys() and json_item['place'] != '':
-            places_list = json_item['place'].split(', ')
-
-            if len(places_list) == 2:
-                city_name = places_list[0]
-                country_name = places_list[1]
-
-                event_location = ''
-
-                if city_name and city_name != '':
-                    try:
-                        city = City.objects.get(slug=slugify(city_name))
-
-                    except:
-                        city = City(
-                            full_name=city_name,
-                        )
-
-                        city.save()
-
-                    event_location = city_name
-
-                else:
-                    city = None
-
-                if country_name and country_name != '':
-                    try:
-                        country = Country.objects.get(slug=slugify(country_name))
-
-                    except:
-                        country = Country(
-                            full_name=country_name,
-                        )
-
-                        country.save()
-
-                    city.country = country
-                    city.save()
-
-                    if city_name and city_name != '':
-                        event_location = '%s (%s)' % (event_location, country_name)
-                    else:
-                        event_location = '(%s)' % country_name
-
-                else:
-                    country = None
-
-                event.host_city = city
-                event.host_country = country
-
-                event.location = event_location
-
-        event.published = _parse_date(json_item['date'])
-        event.year = event.published.year
-
-        event.proceedings = proceedings
-
-        event.save()
-
-        return event
-
-    else:
-        return None
 
 
 ####################################################################################################
