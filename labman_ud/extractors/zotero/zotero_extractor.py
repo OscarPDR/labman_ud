@@ -225,6 +225,9 @@ def parse_journal_article(item):
     _save_publication_authors(_extract_authors(item), journal_article)
 
     _extract_tags(item, journal_article)
+    
+    if item.has_key('attachment'):         
+         _save_attachement(item['attachment']['key'], journal_article, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, journal_article)     
     
@@ -429,7 +432,28 @@ def _save_zotero_extractor_log(item, publication):
     zotero_extractor_log.save()
         
         
-        
+####################################################################################################
+# def: _save_attachement()
+####################################################################################################
+
+def _save_attachement(attachment_id, publication, filename):
+    zot = get_zotero_connection()
+    item = zot.file(item_id)
+
+    publication = Publication.objects.get(publication_id)
+    path = publication_path(publication, filename)
+
+    # If the directory doesn't exist, create it
+    pdf_dir = getattr(settings, 'MEDIA_ROOT', None) + '/' + os.path.dirname(path)
+
+    if not os.path.exists(pdf_dir):
+        os.makedirs(pdf_dir)
+
+    with open(getattr(settings, 'MEDIA_ROOT', None) + '/' + path, 'wb') as pdffile:
+        pdffile.write(item)
+
+    publication.pdf = path
+    publication.save() 
         
         
         
@@ -816,64 +840,7 @@ def parse_magazine(json_item):
     return magazine
 
 
-####################################################################################################
-# def: parse_attachment()
-####################################################################################################
 
-def parse_attachment(item_key, publication_type):
-    base_url, api_key, library_id, library_type = get_zotero_variables()
-
-    url = '%s/%ss/%s/items/%s/children' % (base_url, library_type, library_id, item_key)
-
-    headers = {'Zotero-API-Version': 2}
-
-    params = {
-        'key': api_key,
-        'content': 'json',
-    }
-
-    r = requests.get(url, headers=headers, params=params)
-
-    xmldoc = minidom.parseString(r.text.encode('utf-8').replace("'", ""))
-
-    contents = xmldoc.getElementsByTagName('content')
-
-    for content_item in contents:
-        content = content_item.firstChild.nodeValue
-        content_json = json.loads(content)
-
-        if content_json['contentType'] == 'application/pdf':
-            file_item_key = content_json['itemKey']
-
-            base_url, api_key, library_id, library_type = get_zotero_variables()
-
-            url = '%s/%ss/%s/items/%s/file' % (base_url, library_type, library_id, file_item_key)
-
-            headers = {'Zotero-API-Version': 2}
-
-            params = {
-                'key': api_key,
-            }
-
-            r = requests.get(url, headers=headers, params=params)
-
-            zotero_extractor_log = ZoteroExtractorLog.objects.filter(item_key=item_key).order_by('-timestamp')[0]
-            publication = Publication.objects.get(pk=zotero_extractor_log.publication.id)
-
-            path = publication_path(publication, content_json['filename'])
-
-            # If the directory doesn't exist, create it
-            pdf_dir = getattr(settings, 'MEDIA_ROOT', None) + '/' + os.path.dirname(path)
-
-            if not os.path.exists(pdf_dir):
-                os.makedirs(pdf_dir)
-
-            with open(getattr(settings, 'MEDIA_ROOT', None) + '/' + path, 'wb') as pdffile:
-                pdffile.write(r.content)
-
-            publication.pdf = path
-
-            publication.save()
 
 
 ####################################################################################################
