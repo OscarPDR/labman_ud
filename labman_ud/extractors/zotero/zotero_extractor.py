@@ -133,7 +133,7 @@ def extract_publications_from_zotero(from_version):
             if items_ordered.has_key(parent_id):
                 items_ordered[parent_id]['attachment'] = a
             else:
-                
+                #TODO Only the attachment has been changed
          
         print len(items_ordered)
         
