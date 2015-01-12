@@ -130,7 +130,10 @@ def extract_publications_from_zotero(from_version):
                 
         for a in attachments:
             parent_id = a['data']['parentItem']
-            items_ordered[parent_id]['attachment'] = a
+            if items_ordered.has_key(parent_id):
+                items_ordered[parent_id]['attachment'] = a
+            else:
+                
          
         print len(items_ordered)
         
@@ -197,8 +200,9 @@ def generate_publication(item):
 ####################################################################################################
 
 def parse_journal_article(item):
+    publication_slug = slugify(item['data']['title'])
     try:
-        journal_article = JournalArticle.objects.get(slug=slugify(item['data']['title']))
+        journal_article = JournalArticle.objects.get(slug=publication_slug)
 
     except:
         journal_article = JournalArticle()
@@ -224,7 +228,7 @@ def parse_journal_article(item):
     _extract_tags(item, journal_article)
     
     if item.has_key('attachment'):         
-         _save_attachement(item['attachment']['key'], journal_article, item['attachment']['filename'])
+         _save_attachement(item['attachment']['key'], publication_slug, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, journal_article)     
     
@@ -262,8 +266,9 @@ def parse_journal(item):
 ####################################################################################################
 
 def parse_conference_paper(item):
+    publication_slug = slugify(item['data']['title'])
     try:
-        conference_paper = ConferencePaper.objects.get(slug=slugify(item['data']['title']))
+        conference_paper = ConferencePaper.objects.get(slug=publication_slug)
 
     except:
         conference_paper = ConferencePaper()
@@ -290,7 +295,7 @@ def parse_conference_paper(item):
     _extract_tags(item, conference_paper)
     
     if item.has_key('attachment'):         
-         _save_attachement(item['attachment']['key'], conference_paper, item['attachment']['filename'])
+         _save_attachement(item['attachment']['key'], publication_slug, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, conference_paper)
 
@@ -416,8 +421,9 @@ def parse_conference(item, proceedings):
 ####################################################################################################
 
 def parse_book_section(item):
+    publication_slug = slugify(item['data']['title'])
     try:
-        book_section = BookSection.objects.get(slug=slugify(item['data']['title']))
+        book_section = BookSection.objects.get(slug=publication_slug)
 
     except:
         book_section = BookSection()
@@ -443,7 +449,7 @@ def parse_book_section(item):
     _extract_tags(item, book_section)
     
     if item.has_key('attachment'):         
-         _save_attachement(item['attachment']['key'], book_section, item['attachment']['filename'])
+         _save_attachement(item['attachment']['key'], publication_slug, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, book_section)
 
@@ -481,8 +487,9 @@ def parse_book(item):
 ####################################################################################################
 
 def parse_authored_book(item):
+    publication_slug = slugify(item['data']['title'])
     try:
-        book = Book.objects.get(slug=slugify(item['data']['title']))
+        book = Book.objects.get(slug=publication_slug)
 
     except:
         book = Book()
@@ -515,7 +522,7 @@ def parse_authored_book(item):
     _extract_tags(item, book)
     
     if item.has_key('attachment'):         
-         _save_attachement(item['attachment']['key'], book, item['attachment']['filename'])
+         _save_attachement(item['attachment']['key'], publication_slug, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, book)
     
@@ -524,8 +531,9 @@ def parse_authored_book(item):
 ####################################################################################################
 
 def parse_magazine_article(item):
+    publication_slug = slugify(item['data']['title'])
     try:
-        magazine_article = MagazineArticle.objects.get(slug=slugify(item['data']['title']))
+        magazine_article = MagazineArticle.objects.get(slug=publication_slug)
 
     except:
         magazine_article = MagazineArticle()
@@ -551,7 +559,7 @@ def parse_magazine_article(item):
     _extract_tags(item, magazine_article)
     
     if item.has_key('attachment'):         
-         _save_attachement(item['attachment']['key'], magazine_article, item['attachment']['filename'])
+         _save_attachement(item['attachment']['key'], publication_slug, item['attachment']['filename'])
 
     _save_zotero_extractor_log(item, magazine_article)
 
@@ -777,11 +785,11 @@ def _save_zotero_extractor_log(item, publication):
 # def: _save_attachement()
 ####################################################################################################
 
-def _save_attachement(attachment_id, publication, filename):
+def _save_attachement(attachment_id, publication_slug, filename):
     zot = get_zotero_connection()
-    item = zot.file(item_id)
+    item = zot.file(attachment_id)
 
-    publication = Publication.objects.get(publication_id)
+    publication = Publication.objects.get(slug=publication_slug)
     path = publication_path(publication, filename)
 
     # If the directory doesn't exist, create it
