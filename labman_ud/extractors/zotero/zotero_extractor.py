@@ -134,6 +134,7 @@ def extract_publications_from_zotero(from_version):
                 items_ordered[parent_id]['attachment'] = a
             else:
                 #TODO Only the attachment has been changed
+                pass
          
         print len(items_ordered)
         
