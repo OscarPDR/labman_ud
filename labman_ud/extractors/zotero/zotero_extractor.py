@@ -93,7 +93,7 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
-    last_zotero_version = 0
+    last_zotero_version = get_last_zotero_version()
 
     if from_version == last_zotero_version:
         print 'Labman is updated to the last version in Zotero (%d)' % (last_zotero_version)
