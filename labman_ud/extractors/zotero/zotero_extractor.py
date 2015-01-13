@@ -157,10 +157,12 @@ def clean_database():
 
     ZoteroExtractorLog.objects.all().delete()
 
-    Event.objects.filter(event_type='Academic event').delete()
+    # TODO check this
+    # Are academic events only created by publications?
+    # Event.objects.filter(event_type='Academic event').delete()
     
     # TODO check this, events also has cities
-    # It'r really necesary to delete the unused cities?
+    # It's really necesary to delete the unused cities?
     # City.objects.all().delete()
 
 ####################################################################################################
