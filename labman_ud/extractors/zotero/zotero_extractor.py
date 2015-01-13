@@ -138,7 +138,6 @@ def extract_publications_from_zotero(from_version):
                 publication_slug = slugify(parent_publication['data']['title'])
                 _save_attachement(a['key'], publication_slug, a['filename'])
          
-        print len(items_ordered)
         
         for i_id in items_ordered:
             generate_publication(items_ordered[i_id])
@@ -668,8 +667,8 @@ def _extract_doi(item):
 # def: _parse_date()
 ####################################################################################################
 
-def _parse_date(date_string):
-    return parser.parse(date_string, fuzzy=True, default=datetime(2005, 1, 1))   
+def _parse_date(date_string): 
+    return parser.parse(date_string, fuzzy=True, default=datetime.now())   
 
 ####################################################################################################
 # def: _extract_bibtex()
