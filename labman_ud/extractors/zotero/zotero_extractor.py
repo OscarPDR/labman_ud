@@ -132,9 +132,11 @@ def extract_publications_from_zotero(from_version):
             parent_id = a['data']['parentItem']
             if items_ordered.has_key(parent_id):
                 items_ordered[parent_id]['attachment'] = a
-            else:
-                #TODO Only the attachment has been changed
-                pass
+            else: 
+                #only the attachment has been modified
+                parent_publication = zot.item(parent_id)
+                publication_slug = slugify(parent_publication['data']['title'])
+                _save_attachement(a['key'], publication_slug, a['filename'])
          
         print len(items_ordered)
         
