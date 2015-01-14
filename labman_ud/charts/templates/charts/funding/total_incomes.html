@@ -15,7 +15,7 @@
 
 
     <div id="chart-div" class="centered">
-        <h4>MORElab total incomes</h4>
+        <h4>Total project funds</h4>
 
         <div id="chart_div" style="width: 1000px; height: 500px;"></div>
     </div>
@@ -73,7 +73,11 @@
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var year = data.getValue(item.row, item.column-1);
-                    window.location.replace('/labman/charts/funding/incomes/' + year);
+
+                    var redirect_url = "{% url 'funding_incomes_by_year' '0101' %}";
+                    redirect_url = redirect_url.replace("0101", year);
+
+                    window.location.replace(redirect_url);
                 }
             }
         }

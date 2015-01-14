@@ -18,7 +18,7 @@
     </ul>
 
     <div id="chart-div" class="centered">
-        <h4>MORElab incomes in {{ year }}</h4>
+        <h4>Project funds for {{ year }}</h4>
 
         <div id="chart_div" style="width: 900px; height: 500px;"></div>
     </div>
@@ -67,13 +67,18 @@
 
             // Add selection handler.
             google.visualization.events.addListener(chart, 'select', selectHandler);
+            console.log();
 
             function selectHandler() {
                 var selection = chart.getSelection();
                 for (var i = 0; i < selection.length; i++) {
                     var item = selection[i];
                     var scope = data.getValue(item.row, item.column-1);
-                    window.location.replace('/labman/charts/funding/incomes/{{ year }}/' + scope);
+
+                    var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
+                    redirect_url = redirect_url.replace("scope_to_replace", scope);
+
+                    window.location.replace(redirect_url);
                 }
             }
         }
