@@ -246,8 +246,12 @@ def parse_journal_article(item):
 
 def parse_journal(item):
     try:
-        journal = Journal.objects.get(slug=slugify(item['data']['publicationTitle']))
-
+        journal = Journal.objects.get(
+            slug=slugify(item['data']['publicationTitle']),
+            issue=item['data']['issue'],
+            volume=item['data']['volume']
+        )
+        
     except:
         journal = Journal()
 
@@ -323,7 +327,10 @@ def parse_proceedings(item):
             proceedings_title = 'Proceedings for article: %s' % item['data']['title']
 
     try:
-        proceedings = Proceedings.objects.get(slug=slugify(proceedings_title))
+        proceedings = Proceedings.objects.get(
+            slug=slugify(proceedings_title),
+            date=item['data']['date']
+        )
 
     except:
         proceedings = Proceedings()
@@ -336,7 +343,7 @@ def parse_proceedings(item):
         proceedings.publisher = _assign_if_exists(item, 'publisher')
         proceedings.place = _assign_if_exists(item, 'place')
 
-        proceedings.published = _parse_date(item['date'])
+        proceedings.published = _parse_date(item['data']['date'])
         proceedings.year = proceedings.published.year
 
         proceedings.save()
@@ -348,9 +355,12 @@ def parse_proceedings(item):
 ####################################################################################################
 
 def parse_conference(item, proceedings):
-    if 'conferenceName' in item['data'].keys() and item['data']['conferenceName'] != '':
+    if item['data'].has_key('conferenceName') and item['data']['conferenceName'] != '':
         try:
-            event = Event.objects.get(slug=slugify(item['data']['conferenceName']))
+            event = Event.objects.get(
+                slug=slugify(item['data']['conferenceName']),
+                date=item['data']['date']
+            )
 
         except:
             event = Event()
@@ -359,7 +369,7 @@ def parse_conference(item, proceedings):
 
         event.full_name = item['data']['conferenceName']
 
-        if 'place' in item['data'].keys() and item['data']['place'] != '':
+        if  item['data'].has_key('place') and item['data']['place'] != '':
             places_list = item['data']['place'].split(', ')
 
             if len(places_list) == 2:
@@ -467,7 +477,10 @@ def parse_book_section(item):
 
 def parse_book(item):
     try:
-        book = Book.objects.get(slug=slugify(item['data']['bookTitle']))
+        book = Book.objects.get(
+            slug=slugify(item['data']['bookTitle']),
+            date=item['data']['date']
+        )
 
     except:
         book = Book()
@@ -496,7 +509,10 @@ def parse_book(item):
 def parse_authored_book(item):
     publication_slug = slugify(item['data']['title'])
     try:
-        book = Book.objects.get(slug=publication_slug)
+        book = Book.objects.get(
+            slug=publication_slug,
+            date=item['data']['date']
+        )
 
     except:
         book = Book()
@@ -554,7 +570,7 @@ def parse_magazine_article(item):
 
         magazine_article.parent_magazine = parse_magazine(item)
 
-        magazine_article.published = _parse_date(item['date'])
+        magazine_article.published = _parse_date(item['data']['date'])
         magazine_article.year = magazine_article.published.year
 
         magazine_article.bibtex = _extract_bibtex(item['key'])
@@ -577,7 +593,10 @@ def parse_magazine_article(item):
 
 def parse_magazine(item):
     try:
-        magazine = Magazine.objects.get(slug=slugify(item['data']['publicationTitle']))
+        magazine = Magazine.objects.get(
+            slug=slugify(item['data']['publicationTitle']),
+            date=item['data']['date']
+        )
 
     except:
         magazine = Magazine()
@@ -588,7 +607,7 @@ def parse_magazine(item):
         magazine.volume = _assign_if_exists(item, 'volume')
         magazine.issue = _assign_if_exists(item, 'issue')
 
-        magazine.published = _parse_date(item['date'])
+        magazine.published = _parse_date(item['data']['date'])
         magazine.year = magazine.published.year
 
         magazine.save()
@@ -627,8 +646,8 @@ def parse_thesis(item):
 ####################################################################################################
 
 def _extract_short_title(item):
-    if 'shortTitle' in item['data'].keys() and item['shortTitle'] != '':
-        return item['shortTitle']
+    if item['data'].has_key('shortTitle') and item['shortTitle'] != '':
+        return item['data']['shortTitle']
 
     else:
         index = item['data']['title'].find(':')
@@ -641,7 +660,7 @@ def _extract_short_title(item):
 ####################################################################################################
 
 def _assign_if_exists(item, key):
-    if key in item['data'].keys():
+    if item['data'].has_key(key):
         if item['data'][key] != '':
             return item['data'][key]
             
@@ -652,11 +671,11 @@ def _assign_if_exists(item, key):
 def _extract_doi(item):
     DOI_ORG_BASE_URL = 'http://dx.doi.org/'
 
-    if 'DOI' in item['data'].keys():
+    if item['data'].has_key('DOI'):
         if item['data']['DOI'] != '':
             return item['data']['DOI']
 
-    elif 'url' in item['data'].keys():
+    elif item['data'].has_key('url'):
         if item['data']['url'] != '' and DOI_ORG_BASE_URL in item['data']['url']:
             base_url_end_index = len(DOI_ORG_BASE_URL)
             underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
@@ -687,7 +706,7 @@ def _extract_bibtex(item_key):
 def _extract_authors(item):
     authors = []
 
-    if 'creators' in item['data'].keys() and len(item['data']['creators']) > 0:
+    if  item['data'].has_key('creators') and len(item['data']['creators']) > 0:
         for creator_item in item['data']['creators']:
             creator_type = creator_item['creatorType']
 
@@ -749,7 +768,7 @@ def _save_publication_authors(authors, publication):
 ####################################################################################################
 
 def _extract_tags(item, publication):
-    if 'tags' in item['data'].keys() and len(item['data']['tags']) > 0:
+    if item['data'].has_key('tags') and len(item['data']['tags']) > 0:
         for tag_item in item['data']['tags']:
             tag_name = tag_item['tag'].encode('utf-8')
 
@@ -818,7 +837,7 @@ def _save_attachement(attachment_id, publication_slug, filename):
 def _extract_editors(item):
     editors = []
 
-    if 'creators' in item['data'].keys() and len(item['data']['creators']) > 0:
+    if item['data'].has_key('creators') and len(item['data']['creators']) > 0:
         for creator_item in item['data']['creators']:
             creator_type = creator_item['creatorType']
 
