@@ -708,6 +708,12 @@ class Thesis(BaseModel):
         blank=True,
     )
 
+    special_mention = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
     held_at_university = models.ForeignKey(
         'organizations.Organization',
         blank=True,

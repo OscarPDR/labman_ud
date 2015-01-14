@@ -33,6 +33,10 @@
                     <br>
                     <i class="fa fa-certificate"></i>&emsp;{{ thesis.viva_outcome }}
                     <br>
+                    {% if thesis.special_mention %}
+                        <i class="fa fa-globe"></i>&emsp;{{ thesis.special_mention}}
+                        <br>
+                    {% endif %}
                 </div>
 
                 <br>
