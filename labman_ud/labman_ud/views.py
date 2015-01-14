@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 
 from entities.news.models import News
+from labman_setup.models import AboutSection
 
 
 ####################################################################################################
@@ -38,7 +39,14 @@ def logout_view(request):
 ####################################################################################################
 
 def about(request):
-    return render(request, 'labman_ud/about.html', {'web_title': 'About'})
+    about_sections = AboutSection.objects.all().order_by('order')
+
+    return_dict = {
+        'web_title': u'About',
+        'about_sections': about_sections,
+    }
+
+    return render(request, 'labman_ud/about.html', return_dict)
 
 
 ####################################################################################################

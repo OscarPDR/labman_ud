@@ -781,3 +781,16 @@ blockquote footer {
     font-size: 1em;
     padding: 0.5em 1.25em;
 }
+
+.img-responsive {
+    display: inline;
+}
+
+.collaborations-item {
+    text-align: center;
+}
+
+.collaborations-item > img {
+    width: 45%;
+    margin: 1.5em;
+}
