@@ -296,6 +296,23 @@ def __build_publication_return_dict(publication):
     else:
         bibtex = None
 
+    rankings = set()
+
+    try:
+        for ranking in PublicationRank.objects.filter(publication=publication):
+            rankings.add(ranking)
+
+    except:
+        pass
+
+    if parent_publication:
+        try:
+            for ranking in PublicationRank.objects.filter(publication=parent_publication):
+                rankings.add(ranking)
+
+        except:
+            pass
+
     # dictionary to be returned in render(request, )
     return {
         'authors': authors,
@@ -303,6 +320,7 @@ def __build_publication_return_dict(publication):
         'parent_publication': parent_publication,
         'pdf': pdf,
         'publication': publication,
+        'rankings': list(rankings),
         'related_projects': related_projects,
         'related_publications': related_publications,
         'tag_list': tag_list,
