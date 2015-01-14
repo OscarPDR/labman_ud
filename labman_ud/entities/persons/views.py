@@ -333,22 +333,22 @@ def member_projects(request, person_slug, role_slug=None):
 
     projects = {}
 
-    has_projects = False
-
     if role_slug:
         roles = [get_object_or_404(Role, slug=role_slug)]
     else:
         roles = Role.objects.all()
 
-    for role in roles:
-        projects[role.name] = []
-        project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
-        if project_ids:
-            has_projects = True
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
+    if AssignedPerson.objects.filter(person=member):
+        has_projects = True
 
-        for project in project_objects:
-            projects[role.name].append(project)
+        for role in roles:
+            project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
+            project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
+
+            projects[role.name] = project_objects
+
+    else:
+        has_projects = False
 
     # dictionary to be returned in render(request, )
     return_dict = {
