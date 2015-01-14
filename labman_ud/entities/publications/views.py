@@ -299,7 +299,8 @@ def __build_publication_return_dict(publication):
     rankings = set()
 
     try:
-        for ranking in PublicationRank.objects.filter(publication=publication):
+        for publication_rank in PublicationRank.objects.filter(publication=publication):
+            ranking = Ranking.objects.get(publication_rank.ranking)
             rankings.add(ranking)
 
     except:
@@ -307,7 +308,8 @@ def __build_publication_return_dict(publication):
 
     if parent_publication:
         try:
-            for ranking in PublicationRank.objects.filter(publication=parent_publication):
+            for publication_rank in PublicationRank.objects.filter(publication=parent_publication):
+                ranking = Ranking.objects.get(publication_rank.ranking)
                 rankings.add(ranking)
 
         except:
