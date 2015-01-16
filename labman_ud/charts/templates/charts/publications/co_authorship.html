@@ -10,7 +10,12 @@
 
         <li><a href="{% url 'publication_index' %}">Publications</a></li>
 
-        <li class="active">Co-authorships</li>
+        <li class="active">
+            Co-authorships
+            {% if within_group %}
+             within {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}
+            {% endif %}
+        </li>
     </ul>
 
     <br>

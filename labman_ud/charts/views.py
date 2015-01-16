@@ -40,7 +40,7 @@ PUBLICATION_TYPES = [
 
 
 ####################################################################################################
-### 	chart_index
+###     chart_index
 ####################################################################################################
 
 def chart_index(request):
@@ -48,7 +48,7 @@ def chart_index(request):
 
 
 ####################################################################################################
-### 	funding_total_incomes
+###     funding_total_incomes
 ####################################################################################################
 
 def funding_total_incomes(request):
@@ -79,7 +79,7 @@ def funding_total_incomes(request):
 
 
 ####################################################################################################
-### 	funding_incomes_by_year
+###     funding_incomes_by_year
 ####################################################################################################
 
 def funding_incomes_by_year(request, year):
@@ -109,7 +109,7 @@ def funding_incomes_by_year(request, year):
 
 
 ####################################################################################################
-### 	funding_incomes_by_year_and_scope
+###     funding_incomes_by_year_and_scope
 ####################################################################################################
 
 def funding_incomes_by_year_and_scope(request, year, scope):
@@ -156,7 +156,7 @@ def funding_incomes_by_year_and_scope(request, year, scope):
 
 
 ####################################################################################################
-### 	funding_incomes_by_project_index
+###     funding_incomes_by_project_index
 ####################################################################################################
 
 def funding_incomes_by_project_index(request):
@@ -172,7 +172,7 @@ def funding_incomes_by_project_index(request):
 
 
 ####################################################################################################
-### 	funding_incomes_by_project
+###     funding_incomes_by_project
 ####################################################################################################
 
 def funding_incomes_by_project(request, project_slug):
@@ -193,7 +193,7 @@ def funding_incomes_by_project(request, project_slug):
 
 
 ####################################################################################################
-### 	funding_total_incomes_by_scope
+###     funding_total_incomes_by_scope
 ####################################################################################################
 
 def funding_total_incomes_by_scope(request):
@@ -256,7 +256,7 @@ def funding_total_incomes_by_scope(request):
 
 
 ####################################################################################################
-### 	publications_number_of_publications
+###     publications_number_of_publications
 ####################################################################################################
 
 def publications_number_of_publications(request):
@@ -301,7 +301,7 @@ def publications_number_of_publications(request):
 
 
 ####################################################################################################
-### 	projects_number_of_projects
+###     projects_number_of_projects
 ####################################################################################################
 
 def projects_number_of_projects(request):
@@ -347,73 +347,41 @@ def projects_number_of_projects(request):
     }
 
     return render(request, "charts/projects/number_of_projects.html", return_dict)
-    # return render(request, "charts/publications/number_of_publications.html", return_dict)
 
 
 ####################################################################################################
-### 	publications_coauthorship
+###     publication_coauthorships
 ####################################################################################################
 
-def publications_coauthorship(request, max_position=None):
+def publication_coauthorships(request, max_position=None, within_group=False):
+
     G = nx.Graph()
 
     if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
-    else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position)
 
-    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
+    else:
+        pub_authors = PublicationAuthor.objects.all()
+
+    pub_authors = pub_authors.values("publication_id", "author_id", "author_id__full_name")
+
+    # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)
+
+    if within_group:
+        people = Person.objects.all().values("is_active", "id")
+        active_by_id = {}
+
+        for person in people:
+            active_by_id[person['id']] = person['is_active']
 
     for pub_author in pub_authors:
-        entry = (pub_author['author_id'], pub_author['author_id__full_name'])
-        authors_per_publication[pub_author['publication_id']].append(entry)
+        check_coauthorship = True
 
-    for relations in authors_per_publication.values():
-        for (author_id1, name1), (author_id2, name2) in combinations(relations, 2):
-            G.add_edge(author_id1, author_id2)
+        if within_group and not active_by_id[pub_author['author_id']]:
+            check_coauthorship = False
 
-            try:
-                G[author_id1][author_id2]['weight'] += 1
-            except:
-                G[author_id1][author_id2]['weight'] = 1
-
-            G.node[author_id1]['name'] = name1
-            G.node[author_id2]['name'] = name2
-
-    G = nx_graph.analyze(G)
-
-    data = json_graph.node_link_data(G)
-
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'Publications co-authorship',
-        'data': json.dumps(data),
-    }
-
-    return render(request, "charts/publications/co_authorship.html", return_dict)
-
-
-####################################################################################################
-### 	publications_morelab_coauthorship
-####################################################################################################
-
-def publications_morelab_coauthorship(request, max_position=None):
-    G = nx.Graph()
-
-    if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
-    else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
-
-    people = Person.objects.all().values("is_active", "id")
-    active_by_id = {}
-    for person in people:
-        active_by_id[person['id']] = person['is_active']
-
-    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
-
-    for pub_author in pub_authors:
-        if active_by_id[pub_author['author_id']]:
+        if check_coauthorship:
             entry = (pub_author['author_id'], pub_author['author_id__full_name'])
             authors_per_publication[pub_author['publication_id']].append(entry)
 
@@ -423,6 +391,7 @@ def publications_morelab_coauthorship(request, max_position=None):
 
             try:
                 G[author_id1][author_id2]['weight'] += 1
+
             except:
                 G[author_id1][author_id2]['weight'] = 1
 
@@ -433,17 +402,17 @@ def publications_morelab_coauthorship(request, max_position=None):
 
     data = json_graph.node_link_data(G)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'Group publications co-authorship',
         'data': json.dumps(data),
+        'web_title': u'Publications co-authorship',
+        'within_group': within_group,
     }
 
     return render(request, "charts/publications/co_authorship.html", return_dict)
 
 
 ####################################################################################################
-### 	project_collaborations
+###     project_collaborations
 ####################################################################################################
 
 def project_collaborations(request, exclude_leaders=False, within_group=False):
@@ -500,7 +469,7 @@ def project_collaborations(request, exclude_leaders=False, within_group=False):
 
 
 ####################################################################################################
-### 	publications_egonetwork
+###     publications_egonetwork
 ####################################################################################################
 
 def publications_egonetwork(request, author_slug):
@@ -547,7 +516,7 @@ def publications_egonetwork(request, author_slug):
 
 
 ####################################################################################################
-### 	publications_by_author
+###     publications_by_author
 ####################################################################################################
 
 def publications_by_author(request, author_slug):
@@ -602,7 +571,7 @@ def publications_by_author(request, author_slug):
 
 
 ####################################################################################################
-### 	tags_by_author
+###     tags_by_author
 ####################################################################################################
 
 def tags_by_author(request, author_slug):
@@ -631,7 +600,7 @@ def tags_by_author(request, author_slug):
 
 
 ####################################################################################################
-### 	group_timeline
+###     group_timeline
 ####################################################################################################
 
 def cmp_members_by_start_date(member1, member2):
@@ -810,7 +779,7 @@ def group_timeline(request):
 
 
 ####################################################################################################
-### 	members_position_pie
+###     members_position_pie
 ####################################################################################################
 
 def members_position_pie(request):
@@ -852,7 +821,7 @@ def members_position_pie(request):
 
 
 ####################################################################################################
-### 	person_timeline
+###     person_timeline
 ####################################################################################################
 
 def person_timeline(request, person_slug):
@@ -870,7 +839,7 @@ def person_timeline(request, person_slug):
 
 
 ####################################################################################################
-### 	projects_timeline
+###     projects_timeline
 ####################################################################################################
 
 def projects_timeline(request, person_slug):
@@ -926,7 +895,7 @@ def projects_timeline(request, person_slug):
 
 
 ####################################################################################################
-### 	gender_distribution
+###     gender_distribution
 ####################################################################################################
 
 def gender_distribution(request, organization_slug=None):
@@ -987,7 +956,7 @@ def gender_distribution(request, organization_slug=None):
 
 
 ####################################################################################################
-### 	position_distribution
+###     position_distribution
 ####################################################################################################
 
 def position_distribution(request, organization_slug=None):
@@ -1079,7 +1048,7 @@ def position_distribution(request, organization_slug=None):
 
 
 ####################################################################################################
-### 	related_persons
+###     related_persons
 ####################################################################################################
 
 def _calculate_relation_coefficient(s1, s2):
