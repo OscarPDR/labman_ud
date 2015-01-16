@@ -64,12 +64,12 @@
                     </li>
 
                     <li>
-                        <a href="{% url 'publications_coauthorship' %}">Co-authorship</a>
+                        <a href="{% url 'publication_coauthorships' %}">Co-authorship</a>
                     </li>
 
                     <ul>
                         <li>
-                            <a href="{% url 'publications_morelab_coauthorship' %}">Co-authorship within {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}</a>
+                            <a href="{% url 'publication_coauthorships_within_group' %}">Co-authorship within {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}</a>
                         </li>
                     </ul>
                 </ul>
