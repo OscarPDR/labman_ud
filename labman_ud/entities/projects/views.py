@@ -187,7 +187,7 @@ def project_assigned_persons(request, project_slug):
 
     people_by_role = OrderedDict()
     people_timeline_by_role = []
-    role_colors = set()
+    role_colors = []
 
     assigned_persons = AssignedPerson.objects.filter(project_id=project.id)
     assigned_persons = assigned_persons.order_by(
@@ -220,13 +220,12 @@ def project_assigned_persons(request, project_slug):
                 'end_date': get_person_end_date(assigned_person),
             })
 
-            if assigned_person.role.rgb_color:
-                role_colors.add(str(assigned_person.role.rgb_color))
+            rgb_color = assigned_person.role.rgb_color
+
+            if rgb_color and rgb_color not in role_colors:
+                role_colors.append(str(rgb_color))
 
     role_colors = list(role_colors) if len(role_colors) > 0 else None
-
-    if role_colors:
-        role_colors.reverse()
 
     # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)

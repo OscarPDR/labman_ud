@@ -876,7 +876,7 @@ def projects_timeline(request, person_slug):
     person = get_object_or_404(Person, slug=person_slug)
 
     projects_timeline = []
-    role_colors = set()
+    role_colors = []
 
     assigned_persons = AssignedPerson.objects.filter(
             person=person
@@ -902,8 +902,10 @@ def projects_timeline(request, person_slug):
         if timeline_item['end_date'] > timeline_item['start_date']:
             projects_timeline.append(timeline_item)
 
-        if assigned_person.role.rgb_color:
-                role_colors.add(str(assigned_person.role.rgb_color))
+        rgb_color = assigned_person.role.rgb_color
+
+        if rgb_color and rgb_color not in role_colors:
+            role_colors.append(str(rgb_color))
 
     role_colors = list(role_colors) if len(role_colors) > 0 else None
 
