@@ -12,7 +12,7 @@
             <small>
                 <strong>Directed by:</strong>&emsp;{{ thesis.advisor.full_name }}
 
-                {% if thesis.co_advisors %}
+                {% if has_coadvisors %}
                     &emsp;&emsp;&emsp;
                     <strong>Co-advisor{{ thesis.co_advisors|pluralize }}:</strong>
                     {% for item in thesis.co_advisors.all %}

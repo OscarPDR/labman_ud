@@ -1053,13 +1053,16 @@ def member_phd_dissertation(request, person_slug):
     for thesis_abstract in thesis_abstracts:
         abstracts[thesis_abstract.language.name] = thesis_abstract.abstract
 
+    has_coadvisors = True if len(thesis.co_advisors.all()) > 0 else False
+
     # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'%s - PhD thesis' % member.full_name,
+        'abstracts': abstracts,
+        'has_coadvisors': has_coadvisors,
         'member': member,
         'thesis': thesis,
         'viva_panel': viva_panel,
-        'abstracts': abstracts,
+        'web_title': u'%s - PhD thesis' % member.full_name,
     }
 
     data_dict = __get_job_data(member)
