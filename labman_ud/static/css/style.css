@@ -795,3 +795,7 @@ blockquote footer {
     width: 45%;
     margin: 1.5em;
 }
+
+.employee-item {
+    text-align: center;
+}

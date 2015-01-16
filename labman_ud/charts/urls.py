@@ -25,9 +25,31 @@ urlpatterns = patterns('',
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
 
     # /projects
-    url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
-    url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
     url(r'^projects/total_number/$', 'charts.views.projects_number_of_projects', name='projects_number_of_projects'),
+
+    url(
+        r'^projects/collaborations/exclude_leaders/$',
+        'charts.views.project_collaborations',
+        {'exclude_leaders': True},
+        name='project_collaborations_exclude_leaders',
+    ),
+    url(
+        r'^projects/collaborations/$',
+        'charts.views.project_collaborations',
+        name='project_collaborations',
+    ),
+    url(
+        r'^projects/collaborations_within_group/exclude_leaders/$',
+        'charts.views.project_collaborations',
+        {'exclude_leaders': True, 'within_group': True},
+        name='project_collaborations_within_group_exclude_leaders',
+    ),
+    url(
+        r'^projects/collaborations_within_group/$',
+        'charts.views.project_collaborations',
+        {'within_group': True},
+        name='project_collaborations_within_group',
+    ),
 
     # /people
     url(r'^people/timeline/(?P<person_slug>\S+)$', 'charts.views.person_timeline', name='person_timeline'),

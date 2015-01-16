@@ -7,54 +7,50 @@
 
     <div class="tab-pane active" id="project-assigned-persons">
 
-        {% if project_managers %}
-        <h5>Project manager{{ project_managers|pluralize }}</h5>
+        {% for role_name, people_list in people_by_role.items %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-circle fa-circle-{{ role_name|slugify }}"></i>
+                    &emsp;
+                    <strong>{{ role_name }}{{ people_list|pluralize }}</strong>
 
-        <ul>
-            {% for item in project_managers %}
-                <li>
-                    <a href="{% url 'determine_person_info' item.slug %}">
-                        {{ item.full_name }}
+                    <a href="#panel-{{ role_name|slugify }}" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-{{ role_name|slugify }}">
+                        <span class="badge">
+                            Toggle collapse
+                        </span>
                     </a>
-                </li>
-            {% endfor %}
-        </ul>
+                </div>
+
+                <div id="panel-{{ role_name|slugify }}" class="pannel-collapse collapse in panel-body row">
+
+                    {% for person in people_list %}
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 employee-item">
+                            {% if person.profile_picture_url %}
+                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{{ MEDIA_URL }}{{ person.profile_picture_url }}"/>
+                            {% else %}
+                                {% if person.gender == 'Female' %}
+                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/female.png' %}"/>
+                                {% else %}
+                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/male.png' %}"/>
+                                {% endif %}
+                            {% endif %}
+                            <br>
+                            <span class="member-position">
+                                {{ person.full_name }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <br>
+        {% endfor %}
 
         <br>
-        {% endif %}
 
-        {% if principal_researchers %}
-        <h5>Principal researcher{{ principal_researchers|pluralize }}</h5>
-
-        <ul>
-            {% for item in principal_researchers %}
-                <li>
-                    <a href="{% url 'determine_person_info' item.slug %}">
-                        {{ item.full_name }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-
-        <br>
-        {% endif %}
-
-        {% if researchers %}
-        <h5>Researcher{{ researchers|pluralize }}</h5>
-
-        <ul>
-            {% for item in researchers %}
-                <li>
-                    <a href="{% url 'determine_person_info' item.slug %}">
-                        {{ item.full_name }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        <br>
-        <br>
+        <blockquote class="blockquote-reverse">
+            <p>Employee timeline</p>
+        </blockquote>
 
         <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
     </div>
@@ -64,6 +60,22 @@
 
 
 {% block project_scripts %}
+
+    <script>
+        var employee_item_width = $('.employee-item').width() * 0.7;
+        $('.circular-mini').css('width', employee_item_width);
+        $('.circular-mini').css('height', employee_item_width);
+        $('.circular-mini').css('border-radius', employee_item_width / 2);
+
+        {% for role_name, people_list in people_by_role.items %}
+            {% for role in roles %}
+                {% if role_name == role.name %}
+                    $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
+                    $('.circular-{{ role.slug }}').css('border-color', '#{{ role.rgb_color }}');
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </script>
 
     <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
 
@@ -81,12 +93,13 @@
             var dataTable = new google.visualization.DataTable();
 
             dataTable.addColumn({ type: 'string', id: 'Member' });
+            dataTable.addColumn({ type: 'string', id: 'Role' });
             dataTable.addColumn({ type: 'date', id: 'Start' });
             dataTable.addColumn({ type: 'date', id: 'End' });
 
             var timeline = [];
 
-            {% for person in project_managers %}
+            {% for person in people_timeline_by_role %}
                 var start_year = {{ person.start_date|date:"Y" }};
                 var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
                 var start_day = {{ person.start_date|date:"d" }};
@@ -100,31 +113,20 @@
                 var end_date = new Date(end_year, end_month, end_day);
 
                 if (end_date > start_date) {
-                    timeline.push(["{{ person.full_name }}", start_date, end_date]);
-                }
-            {% endfor %}
-
-            {% for person in researchers %}
-                var start_year = {{ person.start_date|date:"Y" }};
-                var start_month = {{ person.start_date|date:"m" }} - 1;    // JS date object starts months in 0
-                var start_day = {{ person.start_date|date:"d" }};
-
-                var start_date = new Date(start_year, start_month, start_day);
-
-                var end_year = {{ person.end_date|date:"Y" }};
-                var end_month = {{ person.end_date|date:"m" }} - 1;    // JS date object starts months in 0
-                var end_day = {{ person.end_date|date:"d" }};
-
-                var end_date = new Date(end_year, end_month, end_day);
-
-                if (end_date > start_date) {
-                    timeline.push(["{{ person.full_name }}", start_date, end_date]);
+                    timeline.push(["{{ person.full_name }}", "{{ person.role }}", start_date, end_date]);
                 }
             {% endfor %}
 
             dataTable.addRows(timeline);
 
-            chart.draw(dataTable);
+            var options = {
+                timeline: { showBarLabels: false},
+                {% if role_colors %}
+                    colors: {{ role_colors|safe }},
+                {% endif %}
+            };
+
+            chart.draw(dataTable, options);
         }
     </script>
 

@@ -200,12 +200,14 @@ def members(request, organization_slug=None):
 
     return render(request, "members/index.html", return_dict)
 
+
 ###########################################################################
 # View: members_redirect
 ###########################################################################
 
 def members_redirect(request):
     return HttpResponseRedirect(reverse('members'))
+
 
 ###########################################################################
 # View: former_members
@@ -331,31 +333,41 @@ def member_projects(request, person_slug, role_slug=None):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    projects = {}
+    projects = OrderedDict()
 
     if role_slug:
-        roles = [get_object_or_404(Role, slug=role_slug)]
+        roles = [Role.objects.get(slug=role_slug)]
     else:
         roles = Role.objects.all()
 
-    if AssignedPerson.objects.filter(person=member):
+    assigned_persons = AssignedPerson.objects.filter(person=member, role__in=roles)
+
+    if assigned_persons:
         has_projects = True
 
-        for role in roles:
-            project_ids = AssignedPerson.objects.filter(person_id=member.id, role=role.id).values('project_id')
-            project_objects = Project.objects.filter(id__in=project_ids).order_by('-start_year', '-end_year')
+        assigned_persons = assigned_persons.order_by(
+            'role__relevance_order',
+            '-project__start_year',
+            '-project__end_year',
+            'project__slug',
+        )
 
-            projects[role.name] = project_objects
+        for assigned_person in assigned_persons:
+            role_name = assigned_person.role.name
+
+            projects[role_name] = projects.get(role_name, [])
+            projects[role_name].append(assigned_person.project)
 
     else:
         has_projects = False
 
     # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'%s - Projects' % member.full_name,
-        'member': member,
         'has_projects': has_projects,
+        'member': member,
         'projects': projects,
+        'roles': Role.objects.all(),
+        'web_title': u'%s - Projects' % member.full_name,
     }
 
     data_dict = __get_job_data(member)
@@ -552,68 +564,80 @@ def member_awards(request, person_slug):
 
     return render(request, 'members/awards.html', return_dict)
 
+
 ###########################################################################
 # View: __get_award_info
 ###########################################################################
+
 def __get_award_info(award_slug):
     award = get_object_or_404(Award, slug=award_slug)
 
-    recipient_relations = PersonRelatedToAward.objects.filter(award = award).select_related('person').order_by('id')
-    recipients = [ recipient_relation.person for recipient_relation in recipient_relations ]
+    recipient_relations = PersonRelatedToAward.objects.filter(award=award).select_related('person').order_by('id')
+    recipients = [recipient_relation.person for recipient_relation in recipient_relations]
 
-    project_relations = ProjectRelatedToAward.objects.filter(award = award).select_related('project')
-    projects = [ project_relation.project for project_relation in project_relations ]
+    project_relations = ProjectRelatedToAward.objects.filter(award=award).select_related('project')
+    projects = [project_relation.project for project_relation in project_relations]
 
-    publication_relations = PublicationRelatedToAward.objects.filter(award = award).select_related('publication')
-    publications = [ publication_relation.publication for publication_relation in publication_relations ]
+    publication_relations = PublicationRelatedToAward.objects.filter(award=award).select_related('publication')
+    publications = [publication_relation.publication for publication_relation in publication_relations]
 
     # dictionary to be returned in render(request, )
     return_dict = {
         'award': award,
-        'recipients' : recipients,
-        'related_projects' : projects,
-        'related_publications' : publications,
+        'recipients': recipients,
+        'related_projects': projects,
+        'related_publications': publications,
     }
+
     return return_dict, award
 
 
 ###########################################################################
 # View: member_awards
 ###########################################################################
+
 def award_info(request, award_slug):
     return_dict, award = __get_award_info(award_slug)
     return_dict.update({
         'web_title': u'Awards - %s' % award.full_name,
-        'current_link' : 'info',
+        'current_link': 'info',
     })
+
     return render(request, 'awards/info.html', return_dict)
+
 
 ###########################################################################
 # View: award_related_publications
 ###########################################################################
+
 def award_related_publications(request, award_slug):
     return_dict, award = __get_award_info(award_slug)
     return_dict.update({
         'web_title': u'Awards - %s - Related publications' % award.full_name,
-        'current_link' : 'related_publications',
+        'current_link': 'related_publications',
     })
+
     return render(request, 'awards/related_publications.html', return_dict)
+
 
 ###########################################################################
 # View: award_related_projects
 ###########################################################################
+
 def award_related_projects(request, award_slug):
     return_dict, award = __get_award_info(award_slug)
     return_dict.update({
         'web_title': u'Awards - %s - Related projects' % award.full_name,
-        'current_link' : 'related_projects',
+        'current_link': 'related_projects',
     })
+
     return render(request, 'awards/related_projects.html', return_dict)
 
 
 ###########################################################################
 # View: award_index
 ###########################################################################
+
 def award_index(request):
     awards = Award.objects.all().order_by('-date')
     return_dict = {
@@ -621,7 +645,6 @@ def award_index(request):
         'awards': awards,
     }
     return render(request, 'awards/index.html', return_dict)
-
 
 
 ###########################################################################
@@ -893,12 +916,13 @@ def __get_job_data(member):
     except:
         pass
 
-    try:
-        pr_role = Role.objects.get(slug='principal-researcher')
-        project_ids = AssignedPerson.objects.filter(person_id=member.id).exclude(role_id=pr_role.id).values('project_id')
-
-    except:
-        project_ids = AssignedPerson.objects.filter(person_id=member.id).values('project_id')
+    project_ids = AssignedPerson.objects.filter(
+            person_id=member.id
+        ).order_by(
+            'role__relevance_order'
+        ).values(
+            'project_id'
+        )
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values_list('publication_id', flat=True)
 
@@ -924,6 +948,20 @@ def __get_job_data(member):
     ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
 
     items = ord_dict.items()
+
+    assigned_persons = AssignedPerson.objects.filter(
+            person=member
+        ).order_by(
+            'role__relevance_order',
+        ).values_list(
+            'role__name',
+            flat=True
+        )
+
+    role_items = OrderedDict()
+
+    for project_role in assigned_persons:
+        role_items[project_role] = role_items.get(project_role, 0) + 1
 
     if Thesis.objects.filter(author_id=member.id).count():
         has_thesis = True
@@ -964,19 +1002,20 @@ def __get_job_data(member):
         'accounts': accounts,
         'company': company,
         'company_slug': company_slug,
-        'display_bio' : display_bio,
+        'display_bio': display_bio,
         'first_job': first_job,
-        'has_awards' : has_awards,
-        'has_contributions' : has_contributions,
-        'has_news' : has_news,
-        'has_talks' : has_talks,
+        'has_awards': has_awards,
+        'has_contributions': has_contributions,
+        'has_news': has_news,
+        'has_talks': has_talks,
         'has_thesis': has_thesis,
-        'header_rows' : header_rows,
+        'header_rows': header_rows,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': len(publication_ids),
         'position': position,
         'pubtype_info': dict(items),
+        'role_items': role_items,
     }
 
 
