@@ -799,3 +799,8 @@ blockquote footer {
 .employee-item {
     text-align: center;
 }
+
+.blockquote-role {
+    font-size: 85%;
+    color: #777;
+}

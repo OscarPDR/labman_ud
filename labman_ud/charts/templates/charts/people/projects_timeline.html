@@ -13,13 +13,23 @@
         <li class="active">Projects timeline</li>
     </ul>
 
-    <div id="chart-div" class="centered">
-        <h4>
+    <br>
+
+    <blockquote>
+        <p>
             {{ projects_timeline|length }} project{{ projects_timeline|pluralize }} in <a href="{% url 'determine_person_info' person.slug %}">{{ person.full_name }}</a>'s timeline
-        </h4>
+        </p>
 
-        <br>
+        {% for role, value in role_items.items %}
+            &emsp;
+            <i class="fa fa-circle fa-circle-{{ role|slugify }}"></i>
+            &emsp;
+            <span class="blockquote-role">{{ role }}</span>
+            <br>
+        {% endfor %}
+    </blockquote>
 
+    <div id="chart-div" class="centered">
         <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
     </div>
 
@@ -30,6 +40,16 @@
 
 
 {% block scripts %}
+
+    <script>
+        {% for role_name, value in role_items.items %}
+            {% for role in roles %}
+                {% if role_name == role.name %}
+                    $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </script>
 
     <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
 

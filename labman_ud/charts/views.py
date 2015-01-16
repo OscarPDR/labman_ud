@@ -18,7 +18,7 @@ from entities.organizations.models import Organization, Unit
 from entities.persons.models import Person, Job
 from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor, PublicationTag
-from entities.utils.models import GeographicalScope
+from entities.utils.models import GeographicalScope, Role
 
 from entities.projects.utils import *
 
@@ -877,6 +877,7 @@ def projects_timeline(request, person_slug):
 
     projects_timeline = []
     role_colors = []
+    role_items = OrderedDict()
 
     assigned_persons = AssignedPerson.objects.filter(
             person=person
@@ -907,6 +908,8 @@ def projects_timeline(request, person_slug):
         if rgb_color and rgb_color not in role_colors:
             role_colors.append(str(rgb_color))
 
+        role_items[assigned_person.role.name] = role_items.get(assigned_person.role.name, 0) + 1
+
     role_colors = list(role_colors) if len(role_colors) > 0 else None
 
     return_dict = {
@@ -914,6 +917,8 @@ def projects_timeline(request, person_slug):
         'person': person,
         'projects_timeline': projects_timeline,
         'role_colors': role_colors,
+        'role_items': role_items,
+        'roles': Role.objects.all(),
     }
 
     return render(request, 'charts/people/projects_timeline.html', return_dict)
