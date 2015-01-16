@@ -491,8 +491,9 @@ def project_collaborations(request, exclude_leaders=False, within_group=False):
     data = json_graph.node_link_data(G)
 
     return_dict = {
-        'web_title': u'Group collaborations',
         'data': json.dumps(data),
+        'web_title': u'Group collaborations',
+        'within_group': within_group,
     }
 
     return render(request, "charts/projects/collaboration.html", return_dict)

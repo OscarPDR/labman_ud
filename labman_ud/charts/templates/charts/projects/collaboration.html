@@ -10,7 +10,12 @@
 
         <li><a href="{% url 'project_index' %}">Projects</a></li>
 
-        <li class="active">Collaborations</li>
+        <li class="active">
+            Collaborations
+            {% if within_group %}
+             within {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}
+            {% endif %}
+        </li>
     </ul>
 
     <br>
