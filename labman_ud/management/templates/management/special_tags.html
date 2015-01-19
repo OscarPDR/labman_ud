@@ -1,0 +1,90 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <br>
+
+    <p>
+        Those tags under the <strong>Special tags</strong> section will create indicators for the publication, such as the related <em>impact factor</em> of the parent journal, or the <em>rankings</em> where the publication is indexed.
+    </p>
+
+    <p>
+        To establish a relationship between a <em>project</em> and a <em>publication</em>, tag the latter with the tags under the <strong>Project tags</strong> section. Related items will be displayed in info views, such as <em>related publications</em> when consulting information about a project, and viceversa.
+    </p>
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Special tags</h3>
+                </div>
+
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>jcr#.###</dt>
+                        <dd>
+                            JCR index, where the numbers in <em>#</em> indicate the Journal Citation Report.
+                        </dd>
+
+                        <br>
+
+                        <dt>if#.###</dt>
+                        <dd>
+                            Same as previous, but using <em>IF</em> (Impact Factor) initials instead of JCR.
+                        </dd>
+
+                        <br>
+
+                        <dt>q1 / q2 / q3 / q4</dt>
+                        <dd>
+                            Assigns a <em>quartile</em> to the parent journal.
+                        </dd>
+
+                        <br>
+
+                        {% for ranking in rankings %}
+                            <dt>{{ ranking.slug }}</dt>
+                            <dd>
+                                For publications indexed as <em>{{ ranking.name }}</em>.
+                            </dd>
+
+                            <br>
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Project tags</h3>
+                </div>
+
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        {% for project in projects %}
+                            <dt title="{{ project.slug }}">{{ project.slug }}</dt>
+                            <dd>
+                                {{ project.full_name }}
+                            </dd>
+
+                            <br>
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% endblock %}

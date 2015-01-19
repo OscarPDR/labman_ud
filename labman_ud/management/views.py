@@ -18,9 +18,6 @@ import itertools
 from operator import itemgetter
 
 
-# Create your views here.
-
-
 DEFAULT_THRESHOLD_RATIO = getattr(settings, 'DEFAULT_THRESHOLD_RATIO', 60)
 
 
@@ -28,7 +25,6 @@ DEFAULT_THRESHOLD_RATIO = getattr(settings, 'DEFAULT_THRESHOLD_RATIO', 60)
 ###     View: index()
 ####################################################################################################
 
-@login_required
 def index(request):
 
     return_dict = {}
@@ -129,6 +125,23 @@ def ignore_relationship(request, test_person_id, testing_person_id, threshold_ra
 
     else:
         return HttpResponseRedirect(reverse('check_names_similarity', args=[threshold_ratio]))
+
+
+####################################################################################################
+###     available_special_tags()
+####################################################################################################
+
+def available_special_tags(request):
+
+    projects = Project.objects.all().values('slug', 'full_name')
+    rankings = Ranking.objects.all().order_by('slug')
+
+    return_dict = {
+        'projects': projects,
+        'rankings': rankings,
+    }
+
+    return render(request, 'management/special_tags.html', return_dict)
 
 
 ####################################################################################################
