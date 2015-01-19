@@ -284,15 +284,13 @@ def publications_number_of_publications(request):
             publications[publication_type][year] = 0
 
     # all_publications = Publication.objects.all()
-    all_publications = Publication.objects.all().exclude(authors=None)
+    all_publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal').all().exclude(authors=None)
 
     for publication in all_publications:
         pub_type = publication.child_type
         if pub_type == 'JournalArticle':
-            if hasattr(publication, 'parent_journal') and publication.parent_journal.impact_factor:
-                # pub_type = 'JCR'
-                # TODO: It never comes here
-                pass
+            if publication.journalarticle.parent_journal.impact_factor:
+                pub_type = 'JCR'
                 
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
@@ -534,7 +532,7 @@ def publications_by_author(request, author_slug):
     author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-    _publications = Publication.objects.filter(id__in=publication_ids)
+    _publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal').filter(id__in=publication_ids)
 
     min_year = _publications.aggregate(Min('year'))
     max_year = _publications.aggregate(Max('year'))
@@ -562,10 +560,8 @@ def publications_by_author(request, author_slug):
     for publication in _publications:
         pub_type = publication.child_type
         if pub_type == 'JournalArticle':
-            if hasattr(publication, 'parent_journal') and publication.parent_journal.impact_factor:
-                # pub_type = 'JCR'
-                # TODO: It never comes here
-                pass
+            if publication.journalarticle.parent_journal.impact_factor:
+                pub_type = 'JCR'
 
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
