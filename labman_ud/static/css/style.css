@@ -699,6 +699,7 @@ footer h4 {
     text-align: center;
     font-style: italic;
     color: #666;
+    height: 3.5em;
 }
 
 .donut-chart-percentage {
@@ -780,4 +781,26 @@ blockquote footer {
 .ranking-name {
     font-size: 1em;
     padding: 0.5em 1.25em;
+}
+
+.img-responsive {
+    display: inline;
+}
+
+.collaborations-item {
+    text-align: center;
+}
+
+.collaborations-item > img {
+    width: 45%;
+    margin: 1.5em;
+}
+
+.employee-item {
+    text-align: center;
+}
+
+.blockquote-role {
+    font-size: 85%;
+    color: #777;
 }

@@ -2,7 +2,6 @@
 
 import threading
 import weakref
-from datetime import date
 from inflection import titleize
 
 from django.core.urlresolvers import reverse
@@ -13,15 +12,14 @@ from django.contrib.syndication.views import Feed
 
 from .forms import ProjectSearchForm
 from .models import *
+from .utils import *
 
 from entities.funding_programs.models import FundingProgram, FundingProgramLogo
-from entities.persons.models import Person, Job
+from entities.persons.models import Person
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
 from collections import OrderedDict, Counter
-
-# Create your views here.
 
 
 ###########################################################################
@@ -187,82 +185,58 @@ def project_funding_details(request, project_slug):
 def project_assigned_persons(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
 
-    principal_researchers = []
-    project_managers = []
-    researchers = []
+    people_by_role = OrderedDict()
+    people_timeline_by_role = []
+    role_colors = []
 
     assigned_persons = AssignedPerson.objects.filter(project_id=project.id)
+    assigned_persons = assigned_persons.order_by(
+        'role__relevance_order',
+        'start_date',
+        'end_date',
+        'person__slug',
+    )
 
     for assigned_person in assigned_persons:
-        role = Role.objects.get(id=assigned_person.role.id)
-        person = Person.objects.get(id=assigned_person.person_id)
+        role_name = assigned_person.role.name
+        person = assigned_person.person
+        description = assigned_person.description
 
-        person_item = {
-            'description': assigned_person.description,
+        people_by_role[role_name] = people_by_role.get(role_name, [])
+        people_by_role[role_name].append({
             'full_name': person.full_name,
-            'is_active': person.is_active,
             'slug': person.slug,
-        }
+            'id': person.id,
+            'gender': person.gender,
+            'profile_picture_url': person.profile_picture,
+            'description': description,
+        })
 
-        person_start_date = assigned_person.start_date
-        try:
-            first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
-            person_first_job = first_job.start_date
-        except:
-            person_first_job = None
-        project_start_date = date(int(project.start_year), int(project.start_month), 1)
+        if not assigned_person.role.exclude_from_charts:
+            people_timeline_by_role.append({
+                'role': assigned_person.role.name,
+                'full_name': person.full_name,
+                'start_date': get_person_start_date(assigned_person),
+                'end_date': get_person_end_date(assigned_person),
+            })
 
-        start_dates = []
+            rgb_color = assigned_person.role.rgb_color
 
-        if person_start_date:
-            start_dates.append(person_start_date)
-        if person_first_job:
-            start_dates.append(person_first_job)
-        if project_start_date:
-            start_dates.append(project_start_date)
+            if rgb_color and rgb_color not in role_colors:
+                role_colors.append(str(rgb_color))
 
-        person_item['start_date'] = max(start_dates)
-
-        person_end_date = assigned_person.end_date
-        try:
-            last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
-            person_last_job = last_job.end_date
-        except:
-            person_last_job = None
-        project_end_date = date(int(project.end_year), int(project.end_month), 1)
-        today = date.today()
-
-        end_dates = []
-
-        if person_end_date:
-            end_dates.append(person_end_date)
-        if person_last_job:
-            end_dates.append(person_last_job)
-        if project_end_date:
-            end_dates.append(project_end_date)
-        if today:
-            end_dates.append(today)
-
-        person_item['end_date'] = min(end_dates)
-
-        if role.slug == 'principal-researcher':
-            principal_researchers.append(person_item)
-
-        if role.slug == 'project-manager':
-            project_managers.append(person_item)
-
-        if role.slug == 'researcher':
-            researchers.append(person_item)
+    role_colors = list(role_colors) if len(role_colors) > 0 else None
 
     # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
-        'web_title': u'%s - Assigned persons' % project.full_name,
-        'principal_researchers': principal_researchers,
-        'project_managers': project_managers,
-        'researchers': researchers,
+        'chart_height': (len(people_timeline_by_role) + 1) * 45,
+        'people_by_role': people_by_role,
+        'people_timeline_by_role': people_timeline_by_role,
         'project': project,
-        'chart_height': (len(project_managers) + len(researchers) + 1) * 45,
+        'role_colors': role_colors,
+        'roles': Role.objects.all(),
+        'web_title': u'%s - Assigned persons' % project.full_name,
     })
 
     return render(request, "projects/assigned_persons.html", return_dict)

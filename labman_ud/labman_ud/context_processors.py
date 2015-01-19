@@ -4,6 +4,10 @@ from django.conf import settings
 from labman_setup.models import *
 
 
+####################################################################################################
+###     global_vars()
+####################################################################################################
+
 def global_vars(request):
 
     try:
@@ -53,16 +57,16 @@ def global_vars(request):
         social_profile_width = 1
 
     return_dict = {
-        'RESEARCH_GROUP_SETTINGS': _settings,
-        'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', '') + '/',
-        'ENABLE_RDF_PUBLISHING': getattr(settings, 'ENABLE_RDF_PUBLISHING', False),
-        'FOOTER_DIVISIONS_WIDTH': footer_divisions_width,
         'ADDRESS_DETAILS': address_details,
         'CONTACT_DETAILS': contact_details,
-        'SOCIAL_DETAILS': social_details,
-        'SOCIAL_PROFILES': social_profiles,
-        'SOCIAL_PROFILE_WIDTH': social_profile_width,
+        'ENABLE_RDF_PUBLISHING': getattr(settings, 'ENABLE_RDF_PUBLISHING', False),
+        'FOOTER_DIVISIONS_WIDTH': footer_divisions_width,
+        'RDF_URI': getattr(settings, 'GRAPH_BASE_URL', '') + '/',
+        'RESEARCH_GROUP_SETTINGS': _settings,
         'SEO_AND_ANALYTICS': seo_and_analytics,
+        'SOCIAL_DETAILS': social_details,
+        'SOCIAL_PROFILE_WIDTH': social_profile_width,
+        'SOCIAL_PROFILES': social_profiles,
     }
 
     return return_dict

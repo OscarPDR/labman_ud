@@ -6,75 +6,72 @@
 {% block content %}
 
     <div class="row tabbable">
-
         <div class="col-md-3">
             <ul id="about-tabs" class="nav nav-pills nav-stacked">
-                <li class="about active">
-                    <a href="{% url 'about' %}">
-                        <i class="fa fa-info fa-large"></i>&emsp;MORElab
-                    </a>
-                </li>
 
-                <li class="about_collaborations">
-                    <a href="{% url 'about_collaborations' %}">
-                        <i class="fa fa-comments fa-large"></i>&emsp;Collaborations
-                    </a>
-                </li>
+                {% for about_section in about_sections %}
+                    <li class="{{ about_section.slug }}{% if forloop.first %} active{% endif %}">
+                        <a href="#{{ about_section.slug }}" aria-controls="{{ about_section.slug }}" role="tab" data-toggle="pill">
+                            {% if about_section.icon_class %}
+                                <i class="fa {{ about_section.icon_class }} fa-large"></i>
+                            {% endif %}
+                            &emsp;{{ about_section.title }}
+                        </a>
+                    </li>
+                {% endfor %}
 
-                <li class="about_prototyping">
-                    <a href="{% url 'about_prototyping' %}">
-                        <i class="fa fa-cogs fa-large"></i>&emsp;Rapid prototyping services
+                <li class="collaborations">
+                    <a href="#collaborations" aria-controls="collaborations" role="tab" data-toggle="pill">
+                        <i class="fa fa-link fa-large"></i>
+                        &emsp;Collaborations
                     </a>
                 </li>
-            </ul> <!-- end #about-tabs -->
-        </div> <!-- end .col-md-3 about section sidebar -->
+            </ul>
+        </div>
 
         <div class="col-md-9">
             <div id="about-tab-content" class="tab-content">
 
-                {% block about_content %}
-                    <div class="tab-pane active" id="about-tab-pane">
-                        <h3>User-centered Intelligent Services for Anything, Anywhere at Anytime</h3>
+                {% for about_section in about_sections %}
+                    <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="{{ about_section.slug }}">
+                        {{ about_section.content|safe }}
+                    </div>
+                {% endfor %}
 
+                <div role="tabpanel" class="tab-pane" id="collaborations">
+
+                    <div class="row">
                         <br>
 
-                        <p>
-                            Broadly, <em>DeustoTech-Internet</em> undertakes basic and applied research on the topics of Human-Environment (mobile-mediated) Interaction, Middleware supported by Semantic Web technologies for Wireless Embedded Devices, Applied Artificial Intelligence for User Behaviour Learning and Environment Reaction, Physical World Object Instrumentation and Internet Computing: Web 3.0 and beyond, Ubiquitous Web, Linked Data.
-                        </p>
+                        <div class="col-md-4 col-md-offset-1">
+                            <div class="thumbnail">
+                                <a class="collaborations-item" href="{% url 'organization_index' %}">
+                                    <img src="{% static 'img/handshake.png' %}" />
 
-                        <br>
+                                    <p class="caption">
+                                        Full list of <strong>organizations</strong> we have collaborated with.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
 
-                        <p>
-                            Our main research areas are:
-                        </p>
+                        <div class="col-md-4 col-md-offset-2">
+                            <div class="thumbnail">
+                                <a class="collaborations-item" href="{% url 'person_index' %}">
+                                    <img src="{% static 'img/meeting.png' %}" />
 
-                        <ul>
-                            <li>Context-aware Mobile Computing for Enhanced User-Environment Interaction</li>
-                            <li>Semantic Middleware for Embedded Wirelessly-connected Devices</li>
-                            <li>Smart Environments of Augmented Internet-connected Objects</li>
-                            <li>Ambient Assisted Living (AAL): adaptive accessible interfaces and social robotics</li>
-                            <li>Future Internet: Internet of Services, Internet of Things and Semantic Web</li>
-                        </ul>
+                                    <p class="caption">
+                                        Full list of <strong>people</strong> we have worked or published with.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        <br>
-
-                        <p>
-                            Should you be interested in any kind of collaboration with our research group, please contact:
-                        </p>
-
-                        <p>
-                            &emsp;&emsp;<strong>Dr. Diego López de Ipiña</strong>
-                            <br>
-                            &emsp;&emsp;<em>Principal Researcher at DeustoTech-INTERNET</em>
-                            <br>
-                            &emsp;&emsp;dipina [AT] deusto [DOT] es
-                        </p>
-                    </div> <!-- end #about-tab-pane -->
-                {% endblock %}
-
-            </div> <!-- end #about-tab-content -->
+            </div>
         </div>
-    </div> <!-- end .row .tabbable -->
+    </div>
 
 {% endblock %}
 
@@ -85,7 +82,5 @@
     <script>
         $('#about-nav').addClass('active');
     </script>
-
-    {% block about_scripts %}{% endblock %}
 
 {% endblock %}

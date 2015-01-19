@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/feeds/news/$', FeedWrapper(LatestUserNewsFeed()), name='member_feeds_news'),
     url(r'^members/(?P<person_slug>\S+)/feeds/publications/$', FeedWrapper(LatestUserPublicationFeed()), name='member_feeds_publications'),
     url(r'^members/(?P<person_slug>\S+)/news/$', 'entities.persons.views.member_news', name='member_news'),
+    url(r'^members/(?P<person_slug>\S+)/cvn/$', 'entities.persons.views.member_spanish_cvn', name='member_spanish_cvn'),
     # Awards
     url(r'^members/(?P<person_slug>\S+)/awards/$', 'entities.persons.views.member_awards', name='member_awards'),
     url(r'^awards/(?P<award_slug>\S+)/related_projects/$', 'entities.persons.views.award_related_projects', name='award_related_projects'),

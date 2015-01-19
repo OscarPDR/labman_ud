@@ -20,6 +20,8 @@ from entities.projects.models import Project, FundingAmount, Funding, AssignedPe
 from entities.publications.models import Publication, PublicationAuthor, PublicationTag
 from entities.utils.models import GeographicalScope, Role
 
+from entities.projects.utils import *
+
 import json
 import networkx as nx
 import numpy as np
@@ -37,17 +39,17 @@ PUBLICATION_TYPES = [
 ]
 
 
-###########################################################################
-# View: chart_index
-###########################################################################
+####################################################################################################
+###     chart_index
+####################################################################################################
 
 def chart_index(request):
     return render(request, 'charts/index.html', {'web_title': 'Charts'})
 
 
-###########################################################################
-# View: funding_total_incomes
-###########################################################################
+####################################################################################################
+###     funding_total_incomes
+####################################################################################################
 
 def funding_total_incomes(request):
     min_year = FundingAmount.objects.aggregate(Min('year'))
@@ -76,9 +78,9 @@ def funding_total_incomes(request):
     return render(request, "charts/funding/total_incomes.html", return_dict)
 
 
-###########################################################################
-# View: funding_incomes_by_year
-###########################################################################
+####################################################################################################
+###     funding_incomes_by_year
+####################################################################################################
 
 def funding_incomes_by_year(request, year):
     incomes = {}
@@ -106,9 +108,9 @@ def funding_incomes_by_year(request, year):
     return render(request, "charts/funding/incomes_by_year.html", return_dict)
 
 
-###########################################################################
-# View: funding_incomes_by_year_and_scope
-###########################################################################
+####################################################################################################
+###     funding_incomes_by_year_and_scope
+####################################################################################################
 
 def funding_incomes_by_year_and_scope(request, year, scope):
     project_incomes = []
@@ -153,9 +155,9 @@ def funding_incomes_by_year_and_scope(request, year, scope):
     return render(request, "charts/funding/incomes_by_year_and_scope.html", return_dict)
 
 
-###########################################################################
-# View: funding_incomes_by_project_index
-###########################################################################
+####################################################################################################
+###     funding_incomes_by_project_index
+####################################################################################################
 
 def funding_incomes_by_project_index(request):
     projects = Project.objects.all().order_by('slug')
@@ -169,9 +171,9 @@ def funding_incomes_by_project_index(request):
     return render(request, "charts/funding/incomes_by_project_index.html", return_dict)
 
 
-###########################################################################
-# View: funding_incomes_by_project
-###########################################################################
+####################################################################################################
+###     funding_incomes_by_project
+####################################################################################################
 
 def funding_incomes_by_project(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -190,72 +192,69 @@ def funding_incomes_by_project(request, project_slug):
     return render(request, "charts/funding/incomes_by_project.html", return_dict)
 
 
-###########################################################################
-# View: funding_total_incomes_by_scope
-###########################################################################
+####################################################################################################
+###     funding_total_incomes_by_scope
+####################################################################################################
 
 def funding_total_incomes_by_scope(request):
-    incomes = {}
 
-    geographical_scopes = GeographicalScope.objects.all()
+    geographical_scopes = GeographicalScope.objects.all().order_by('slug')
 
-    for geographical_scope in geographical_scopes:
-        incomes[geographical_scope.name] = 0
+    geographical_scope_names = []
 
-    funding_amounts = FundingAmount.objects.all()
+    for scope in geographical_scopes:
+        geographical_scope_names.append(str(scope.name))
 
-    min_year = FundingAmount.objects.aggregate(Min('year'))
-    max_year = FundingAmount.objects.aggregate(Max('year'))
-
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
+    min_year = FundingAmount.objects.aggregate(Min('year')).get('year__min')
+    max_year = FundingAmount.objects.aggregate(Max('year')).get('year__max')
+    current_year = date.today().year
 
     incomes = {}
 
     for year in range(min_year, max_year + 1):
         incomes[year] = {}
+
         for scope in geographical_scopes:
             incomes[year][scope.name] = 0
 
-    for funding_amount in funding_amounts:
-        funding = Funding.objects.get(id=funding_amount.funding_id)
-        funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
-        scope = funding_program.geographical_scope.name
-        incomes[funding_amount.year][scope] = incomes[funding_amount.year][scope] + funding_amount.own_amount
+    for funding_amount in FundingAmount.objects.all():
+        scope = funding_amount.funding.funding_program.geographical_scope.name
+
+        if funding_amount.year in range(min_year, max_year + 1):
+            incomes[funding_amount.year][scope] = incomes[funding_amount.year][scope] + funding_amount.own_amount
 
     total_incomes = []
 
-    current_year = date.today().year
-
     for year in range(min_year, max_year + 1):
-        euskadi = int(incomes[year]['Euskadi'])
-        spain = int(incomes[year]['Spain'])
-        europe = int(incomes[year]['Europe'])
-        certainty = False if (year >= current_year) else True
-        # total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe), certainty])
-        total_incomes.append({
-            'year': year,
-            'euskadi': euskadi,
-            'spain': spain,
-            'europe': europe,
-            'total': (euskadi+spain+europe),
-            'certainty': certainty,
-        })
+        income_item = [str(year)]
 
-    # dictionary to be returned in render(request, )
+        total = 0
+        certainty = False if (year >= current_year) else True
+
+        for scope in geographical_scopes:
+            income_for_year_and_scope = int(incomes[year][str(scope.name)])
+            income_item.append(income_for_year_and_scope)
+            income_item.append(certainty)
+
+            total += income_for_year_and_scope
+
+        income_item.append(total)
+        income_item.append(certainty)
+
+        total_incomes.append(income_item)
+
     return_dict = {
         'web_title': u'Total incomes by scope',
-        'incomes': incomes,
         'total_incomes': total_incomes,
-        'year': year,
+        'geographical_scope_names': geographical_scope_names,
     }
 
     return render(request, "charts/funding/total_incomes_by_scope.html", return_dict)
 
 
-###########################################################################
-# View: publications_number_of_publications
-###########################################################################
+####################################################################################################
+###     publications_number_of_publications
+####################################################################################################
 
 def publications_number_of_publications(request):
     publications = {}
@@ -298,9 +297,9 @@ def publications_number_of_publications(request):
     return render(request, "charts/publications/number_of_publications.html", return_dict)
 
 
-###########################################################################
-# View: projects_number_of_projects
-###########################################################################
+####################################################################################################
+###     projects_number_of_projects
+####################################################################################################
 
 def projects_number_of_projects(request):
     geographical_scopes = GeographicalScope.objects.all()
@@ -345,73 +344,41 @@ def projects_number_of_projects(request):
     }
 
     return render(request, "charts/projects/number_of_projects.html", return_dict)
-    # return render(request, "charts/publications/number_of_publications.html", return_dict)
 
 
-###########################################################################
-# View: publications_coauthorship
-###########################################################################
+####################################################################################################
+###     publication_coauthorships
+####################################################################################################
 
-def publications_coauthorship(request, max_position=None):
+def publication_coauthorships(request, max_position=None, within_group=False):
+
     G = nx.Graph()
 
     if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
-    else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
+        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position)
 
-    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
+    else:
+        pub_authors = PublicationAuthor.objects.all()
+
+    pub_authors = pub_authors.values("publication_id", "author_id", "author_id__full_name")
+
+    # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
+    authors_per_publication = defaultdict(list)
+
+    if within_group:
+        people = Person.objects.all().values("is_active", "id")
+        active_by_id = {}
+
+        for person in people:
+            active_by_id[person['id']] = person['is_active']
 
     for pub_author in pub_authors:
-        entry = (pub_author['author_id'], pub_author['author_id__full_name'])
-        authors_per_publication[pub_author['publication_id']].append(entry)
+        check_coauthorship = True
 
-    for relations in authors_per_publication.values():
-        for (author_id1, name1), (author_id2, name2) in combinations(relations, 2):
-            G.add_edge(author_id1, author_id2)
+        if within_group and not active_by_id[pub_author['author_id']]:
+            check_coauthorship = False
 
-            try:
-                G[author_id1][author_id2]['weight'] += 1
-            except:
-                G[author_id1][author_id2]['weight'] = 1
-
-            G.node[author_id1]['name'] = name1
-            G.node[author_id2]['name'] = name2
-
-    G = nx_graph.analyze(G)
-
-    data = json_graph.node_link_data(G)
-
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'Publications co-authorship',
-        'data': json.dumps(data),
-    }
-
-    return render(request, "charts/publications/co_authorship.html", return_dict)
-
-
-###########################################################################
-# View: publications_morelab_coauthorship
-###########################################################################
-
-def publications_morelab_coauthorship(request, max_position=None):
-    G = nx.Graph()
-
-    if max_position and int(max_position) > 1:
-        pub_authors = PublicationAuthor.objects.exclude(position__gt=max_position).values("publication_id", "author_id", "author_id__full_name")
-    else:
-        pub_authors = PublicationAuthor.objects.all().values("publication_id", "author_id", "author_id__full_name")
-
-    people = Person.objects.all().values("is_active", "id")
-    active_by_id = {}
-    for person in people:
-        active_by_id[person['id']] = person['is_active']
-
-    authors_per_publication = defaultdict(list)  # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
-
-    for pub_author in pub_authors:
-        if active_by_id[pub_author['author_id']]:
+        if check_coauthorship:
             entry = (pub_author['author_id'], pub_author['author_id__full_name'])
             authors_per_publication[pub_author['publication_id']].append(entry)
 
@@ -421,6 +388,7 @@ def publications_morelab_coauthorship(request, max_position=None):
 
             try:
                 G[author_id1][author_id2]['weight'] += 1
+
             except:
                 G[author_id1][author_id2]['weight'] = 1
 
@@ -431,86 +399,56 @@ def publications_morelab_coauthorship(request, max_position=None):
 
     data = json_graph.node_link_data(G)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'Group publications co-authorship',
         'data': json.dumps(data),
+        'web_title': u'Publications co-authorship',
+        'within_group': within_group,
     }
 
     return render(request, "charts/publications/co_authorship.html", return_dict)
 
 
-###########################################################################
-# View: projects_collaborations
-###########################################################################
+####################################################################################################
+###     project_collaborations
+####################################################################################################
 
-def projects_collaborations(request):
+def project_collaborations(request, exclude_leaders=False, within_group=False):
+
     G = nx.Graph()
 
     projects = Project.objects.all()
 
-    try:
-        pr_role = Role.objects.get(slug='principal-researcher')
-
-    except:
-        pr_role = None
-
     for project in projects:
-        if pr_role:
-            person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
+        if exclude_leaders:
+            person_ids = AssignedPerson.objects.filter(
+                    project=project
+                ).exclude(
+                    role__exclude_from_charts=True
+                ).values_list('person_id', flat=True)
         else:
-            person_ids = AssignedPerson.objects.filter(project_id=project.id).values('person_id')
+            person_ids = AssignedPerson.objects.filter(
+                    project=project
+                ).values_list('person_id', flat=True)
 
         if person_ids:
-            _list = [person_id['person_id'] for person_id in person_ids]
-            for pos, person_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
+            for pos, person_id in enumerate(person_ids):
+                for i in range(pos+1, len(person_ids)):
                     person1 = Person.objects.get(id=person_id)
-                    person2 = Person.objects.get(id=_list[i])
-                    G.add_edge(person1.id, person2.id)
-                    try:
-                        G[person1.id][person2.id]['weight'] += 1
-                    except:
-                        G[person1.id][person2.id]['weight'] = 1
-                    G.node[person1.id]['name'] = person1.full_name
-                    G.node[person2.id]['name'] = person2.full_name
+                    person2 = Person.objects.get(id=person_ids[i])
 
-    G = nx_graph.analyze(G)
+                    add_node = True
 
-    data = json_graph.node_link_data(G)
+                    if within_group and (not person1.is_active or not person2.is_active):
+                        add_node = False
 
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'Collaborations',
-        'data': json.dumps(data),
-    }
-
-    return render(request, "charts/projects/collaboration.html", return_dict)
-
-
-###########################################################################
-# View: projects_morelab_collaborations
-###########################################################################
-
-def projects_morelab_collaborations(request):
-    G = nx.Graph()
-
-    projects = Project.objects.all()
-    pr_role = Role.objects.get(slug='principal-researcher')
-    for project in projects:
-        person_ids = AssignedPerson.objects.filter(project_id=project.id).exclude(role_id=pr_role.id).values('person_id')
-        if person_ids:
-            _list = [person_id['person_id'] for person_id in person_ids]
-            for pos, person_id in enumerate(_list):
-                for i in range(pos+1, len(_list)):
-                    person1 = Person.objects.get(id=person_id)
-                    person2 = Person.objects.get(id=_list[i])
-                    if person1.is_active and person2.is_active:
+                    if add_node:
                         G.add_edge(person1.id, person2.id)
+
                         try:
                             G[person1.id][person2.id]['weight'] += 1
                         except:
                             G[person1.id][person2.id]['weight'] = 1
+
                         G.node[person1.id]['name'] = person1.full_name
                         G.node[person2.id]['name'] = person2.full_name
 
@@ -518,18 +456,18 @@ def projects_morelab_collaborations(request):
 
     data = json_graph.node_link_data(G)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'Group collaborations',
         'data': json.dumps(data),
+        'web_title': u'Group collaborations',
+        'within_group': within_group,
     }
 
-    return render(request, "charts/projects/collaboration_morelab.html", return_dict)
+    return render(request, "charts/projects/collaboration.html", return_dict)
 
 
-###########################################################################
-# View: publications_egonetwork
-###########################################################################
+####################################################################################################
+###     publications_egonetwork
+####################################################################################################
 
 def publications_egonetwork(request, author_slug):
     author = get_object_or_404(Person, slug=author_slug)
@@ -574,9 +512,9 @@ def publications_egonetwork(request, author_slug):
     return render(request, "charts/publications/egonetwork.html", return_dict)
 
 
-###########################################################################
-# View: publications_by_author
-###########################################################################
+####################################################################################################
+###     publications_by_author
+####################################################################################################
 
 def publications_by_author(request, author_slug):
     publications = {}
@@ -600,8 +538,6 @@ def publications_by_author(request, author_slug):
         min_year = max_year - 7
 
     years = []
-
-    print min_year, max_year
 
     for year in range(min_year, max_year + 1):
         years.append(year)
@@ -629,9 +565,9 @@ def publications_by_author(request, author_slug):
     return render(request, "charts/publications/number_of_publications_by_author.html", return_dict)
 
 
-###########################################################################
-# View: tags_by_author
-###########################################################################
+####################################################################################################
+###     tags_by_author
+####################################################################################################
 
 def tags_by_author(request, author_slug):
     tag_dict = {}
@@ -658,9 +594,9 @@ def tags_by_author(request, author_slug):
     return render(request, 'charts/publications/tags_by_author.html', return_dict)
 
 
-###########################################################################
-# View: group_timeline
-###########################################################################
+####################################################################################################
+###     group_timeline
+####################################################################################################
 
 def cmp_members_by_start_date(member1, member2):
     for field in 'start_year', 'start_month', 'end_year', 'end_month':
@@ -837,9 +773,9 @@ def group_timeline(request):
     return render(request, 'charts/people/group_timeline.html', return_dict)
 
 
-###########################################################################
-# View: members_position_pie
-###########################################################################
+####################################################################################################
+###     members_position_pie
+####################################################################################################
 
 def members_position_pie(request):
     organizations = Organization.objects.filter(slug__in=UNIT_ORGANIZATION_IDS)
@@ -874,14 +810,12 @@ def members_position_pie(request):
         'positions': positions,
     }
 
-    import pprint
-    pprint.pprint(positions_per_organization)
     return render(request, 'charts/people/pie.html', return_dict)
 
 
-###########################################################################
-# View: person_timeline
-###########################################################################
+####################################################################################################
+###     person_timeline
+####################################################################################################
 
 def person_timeline(request, person_slug):
     person = get_object_or_404(Person, slug=person_slug)
@@ -897,83 +831,65 @@ def person_timeline(request, person_slug):
     return render(request, 'charts/people/person_timeline.html', return_dict)
 
 
-###########################################################################
-# View: projects_timeline
-###########################################################################
+####################################################################################################
+###     projects_timeline
+####################################################################################################
 
 def projects_timeline(request, person_slug):
     person = get_object_or_404(Person, slug=person_slug)
 
-    timeline = []
+    projects_timeline = []
+    role_colors = []
+    role_items = OrderedDict()
 
-    assigned_persons = AssignedPerson.objects.filter(person_id=person.id).order_by('project__start_year', 'project__start_month', 'project__end_year', 'project__end_month')
+    assigned_persons = AssignedPerson.objects.filter(
+            person=person
+        ).exclude(
+            role__exclude_from_charts=True,
+        ).order_by(
+            'project__start_year',
+            'project__start_month',
+            'project__end_year',
+            'project__end_month'
+        )
 
     for assigned_person in assigned_persons:
-        if assigned_person.role.slug != 'principal-researcher':
-            project = Project.objects.get(id=assigned_person.project_id)
+        project = assigned_person.project
 
-            timeline_item = {
-                'project_full_name': project.full_name,
-                'project_short_name': project.short_name,
-                'project_slug': project.slug,
-            }
+        timeline_item = {
+            'short_name': project.short_name,
+            'start_date': get_person_start_date(assigned_person),
+            'end_date': get_person_end_date(assigned_person),
+            'role': assigned_person.role.name,
+        }
 
-            person_start_date = assigned_person.start_date
-            try:
-                first_job = Job.objects.filter(person_id=person.id).order_by('start_date')[0]
-                person_first_job = first_job.start_date
-            except:
-                person_first_job = None
-            project_start_date = date(int(project.start_year), int(project.start_month), 1)
+        if timeline_item['end_date'] > timeline_item['start_date']:
+            projects_timeline.append(timeline_item)
 
-            start_dates = []
+        rgb_color = assigned_person.role.rgb_color
 
-            if person_start_date:
-                start_dates.append(person_start_date)
-            if person_first_job:
-                start_dates.append(person_first_job)
-            if project_start_date:
-                start_dates.append(project_start_date)
+        if rgb_color and rgb_color not in role_colors:
+            role_colors.append(str(rgb_color))
 
-            timeline_item['start_date'] = max(start_dates)
+        role_items[assigned_person.role.name] = role_items.get(assigned_person.role.name, 0) + 1
 
-            person_end_date = assigned_person.end_date
-            try:
-                last_job = Job.objects.filter(person_id=person.id).order_by('-end_date')[0]
-                person_last_job = last_job.end_date
-            except:
-                person_last_job = None
-            project_end_date = date(int(project.end_year), int(project.end_month), 1)
-            today = date.today()
-
-            end_dates = []
-
-            if person_end_date:
-                end_dates.append(person_end_date)
-            if person_last_job:
-                end_dates.append(person_last_job)
-            if project_end_date:
-                end_dates.append(project_end_date)
-            if today:
-                end_dates.append(today)
-
-            timeline_item['end_date'] = min(end_dates)
-
-            if timeline_item['end_date'] > timeline_item['start_date']:
-                timeline.append(timeline_item)
+    role_colors = list(role_colors) if len(role_colors) > 0 else None
 
     return_dict = {
+        'chart_height': (len(projects_timeline) + 1) * 50,
         'person': person,
-        'timeline': timeline,
-        'chart_height': (len(timeline) + 1) * 50,
+        'projects_timeline': projects_timeline,
+        'role_colors': role_colors,
+        'role_items': role_items,
+        'roles': Role.objects.all(),
     }
 
     return render(request, 'charts/people/projects_timeline.html', return_dict)
 
 
-###########################################################################
-# View: gender_distribution
-###########################################################################
+####################################################################################################
+###     gender_distribution
+####################################################################################################
 
 def gender_distribution(request, organization_slug=None):
 
@@ -1032,9 +948,9 @@ def gender_distribution(request, organization_slug=None):
     return render(request, 'charts/people/gender_distribution.html', return_dict)
 
 
-###########################################################################
-# View: position_distribution
-###########################################################################
+####################################################################################################
+###     position_distribution
+####################################################################################################
 
 def position_distribution(request, organization_slug=None):
 
@@ -1112,8 +1028,6 @@ def position_distribution(request, organization_slug=None):
 
         position_distribution_array.append(array_row)
 
-    print position_distribution_array
-
     return_dict = {
         'position_distribution_array': position_distribution_array,
         'max_persons': max_persons,
@@ -1124,9 +1038,9 @@ def position_distribution(request, organization_slug=None):
     return render(request, 'charts/people/position_distribution.html', return_dict)
 
 
-###########################################################################
-# View: related_persons
-###########################################################################
+####################################################################################################
+###     related_persons
+####################################################################################################
 
 def _calculate_relation_coefficient(s1, s2):
     inter_len = float(len(s1.intersection(s2)))
