@@ -543,12 +543,9 @@ def parse_book(item):
 ####################################################################################################
 
 def parse_authored_book(item):
-    publication_slug = slugify(item['data']['title'])
+    publication_slug = nslugify(item['data']['title'], _parse_date(item['data']['date']), item['data']['volume'], item['data']['series'])
     try:
-        book = Book.objects.get(
-            slug=publication_slug,
-            published=_parse_date(item['data']['date'])
-        )
+        book = Book.objects.get(slug=publication_slug)
 
     except ObjectDoesNotExist:
         book = Book()
