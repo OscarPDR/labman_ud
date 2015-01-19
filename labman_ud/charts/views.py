@@ -31,13 +31,18 @@ import numpy as np
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
-PUBLICATION_TYPES = [
-    'BookSection', 'Book',
-    'ConferencePaper', 'Proceedings',
-    'JournalArticle', 'Journal',
-    'MagazineArticle', 'Magazine',
-    'Thesis'
-]
+PUBLICATION_TYPES = {
+    'BookSection' : 'Book section', 
+    'Book' : 'Book',
+    'ConferencePaper' : 'Conference paper', 
+    'Proceedings' : 'Proceedings',
+    'JournalArticle' : 'Journal article', 
+    'JCR' : 'JCR indexed journal article', 
+    'Journal' : 'Journal',
+    'MagazineArticle' : 'Magazine article', 
+    'Magazine' : 'Magazine',
+    'Thesis' : 'PhD dissertation'
+}
 
 
 ####################################################################################################
@@ -283,6 +288,12 @@ def publications_number_of_publications(request):
 
     for publication in all_publications:
         pub_type = publication.child_type
+        if pub_type == 'JournalArticle':
+            if hasattr(publication, 'parent_journal') and publication.parent_journal.impact_factor:
+                # pub_type = 'JCR'
+                # TODO: It never comes here
+                pass
+                
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
@@ -550,6 +561,12 @@ def publications_by_author(request, author_slug):
 
     for publication in _publications:
         pub_type = publication.child_type
+        if pub_type == 'JournalArticle':
+            if hasattr(publication, 'parent_journal') and publication.parent_journal.impact_factor:
+                # pub_type = 'JCR'
+                # TODO: It never comes here
+                pass
+
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
