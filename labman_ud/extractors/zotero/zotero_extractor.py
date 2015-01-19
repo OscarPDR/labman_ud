@@ -1,3 +1,4 @@
+import time
 import pickle
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,6 +19,7 @@ from entities.publications.models import QUARTILE_CHOICES, Ranking, PublicationR
 from datetime import datetime
 from dateutil import parser
 from pyzotero import zotero
+from pyzotero.zotero_errors import HTTPError
 
 import os
 import pprint
@@ -727,8 +729,20 @@ def _parse_date(date_string):
 
 def _extract_bibtex(item_key):
     zot = get_zotero_connection()
-    
-    item = zot.item(item_key, format='bibtex')
+
+    counter = 4
+    while counter >= 0:
+        counter -= 1
+        try:
+            item = zot.item(item_key, format='bibtex')
+        except HTTPError as e:
+            print "Error %s. Retrying in 5 seconds" % e
+            time.sleep(5)
+            if counter == 0:
+                raise
+        else:
+            break
+
     return item
     
 ####################################################################################################
@@ -845,7 +859,18 @@ def _save_zotero_extractor_log(item, publication):
 
 def _save_attachment(attachment_id, publication_slug, filename):
     zot = get_zotero_connection()
-    item = zot.file(attachment_id)
+    counter = 4
+    while counter >= 0:
+        counter -= 1
+        try:
+            item = zot.file(attachment_id)
+        except HTTPError as e:
+            print "Error %s. Retrying in 5 seconds" % e
+            time.sleep(5)
+            if counter == 0:
+                raise
+        else:
+            break
 
     publication = Publication.objects.get(slug=publication_slug)
     path = publication_path(publication, filename)
