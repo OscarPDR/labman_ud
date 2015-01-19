@@ -14,8 +14,7 @@ from entities.persons.models import Person
 from entities.projects.models import Project
 from entities.publications.models import Publication
 
-
-# Create your views here.
+from labman_setup.models import *
 
 
 ###########################################################################
@@ -87,8 +86,11 @@ class LatestNewsFeed(Feed):
         super(LatestNewsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title = "MORElab news"
-    description = "MORElab news"
+    _settings = LabmanDeployGeneralSettings.objects.get()
+    research_group_short_name = _settings.research_group_short_name
+
+    title = u'%s news' % research_group_short_name
+    description = u'%s news' % research_group_short_name
 
     def get_object(self, request):
         self.__request.request = weakref.proxy(request)
