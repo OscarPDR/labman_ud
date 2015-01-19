@@ -183,15 +183,19 @@ def extract_publications_from_zotero(from_version):
             else:
                 print a['data'].get('title', 'The user did not even added a title'), "did not have a parentItem"
         
+        number_of_items = len(items_ordered)
         print
         print '*' * 50
-        print '%d items (%s attachments)' % (len(items_ordered), attachment_number)
+        print '%d items (%s attachments)' % (number_of_items, attachment_number)
         print '*' * 50
         print
 
         
-        for i_id in items_ordered:
-            generate_publication(items_ordered[i_id])
+        for pos, i_id in enumerate(items_ordered):
+            item = items_ordered[i_id]
+            publication_type = item['data']['itemType']
+            print '\t[%s/%s][%s] > %s' % (pos + 1, number_of_items, publication_type.encode('utf-8'), item['data'].get('title','No title').encode('utf-8'))
+            generate_publication(item)
 
 
 ####################################################################################################
@@ -213,8 +217,6 @@ def clean_database():
 
 def generate_publication(item):
     publication_type = item['data']['itemType']
-
-    print '\t[%s] > %s' % (publication_type.encode('utf-8'), item['data'].get('title','No title').encode('utf-8'))
 
     if publication_type == 'conferencePaper':
         parse_conference_paper(item)
