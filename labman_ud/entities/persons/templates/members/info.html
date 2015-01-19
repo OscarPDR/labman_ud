@@ -68,8 +68,10 @@
             <div id="contact-member">
                 {% if member.is_active %}
                     {% if member.email %}
-                        &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>
-                        &emsp;<span class="emailuser">{{ member.email_user }}</span> <span class="emaildomain">[at] {{ member.email_domain }}</span>
+                        &emsp;<i class="fa fa-envelope-o fa-large" style="color: #999;"></i>&emsp;
+                        <a href="mailto:{{ member.email }}">
+                            <span class="emailuser">{{ member.email_user }}</span> <span class="emaildomain">[at] {{ member.email_domain }}</span>
+                        </a>
                         <br>
                     {% endif %}
 
@@ -260,14 +262,6 @@
 
     <script>
         $('#members-nav').addClass('active');
-
-        $(".emailuser").each(function(index) {
-            var addr = $(this).text().replace(/\n/g,"").replace(/ /g,"");
-            $(this).html('<a href="mailto:'+addr+'@deusto.es" >'+ addr +'@deusto.es</a>');
-        });
-        $(".emaildomain").each(function(index) {
-            $(this).hide();
-        });
     </script>
 
     <script src="{% static 'js/konami.js' %}"></script>
