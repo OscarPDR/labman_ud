@@ -487,7 +487,8 @@ def member_publications(request, person_slug, publication_type_slug=None):
         'member': member,
         'publications': publications,
         'has_publications': has_publications,
-        'thesis' : all_thesis
+        'thesis' : all_thesis,
+        'inside_category' : publication_type_slug is not None,
     }
 
     data_dict = __get_job_data(member)
