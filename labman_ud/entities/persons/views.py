@@ -1069,3 +1069,21 @@ def member_phd_dissertation(request, person_slug):
     return_dict.update(data_dict)
 
     return render(request, "members/phd_dissertation.html", return_dict)
+
+###########################################################################
+# View: member_spanish_cvn
+###########################################################################
+
+def member_spanish_cvn(request, person_slug):
+
+    member = get_object_or_404(Person, slug=person_slug)
+
+    return_dict = {
+        'web_title': u'%s - Spanish CVN' % member.full_name,
+        'member': member,
+    }
+
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render(request, "members/cvn.html", return_dict)
