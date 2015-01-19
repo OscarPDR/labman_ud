@@ -31,3 +31,4 @@ requests==2.4.3
 scipy==0.14.0
 six==1.8.0
 sqlparse==0.1.13
+Pyzotero==1.1.0

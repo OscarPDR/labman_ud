@@ -1,5 +1,6 @@
-
+import traceback
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.template.defaultfilters import slugify
 
@@ -38,12 +39,12 @@ def get_zotero_variables():
         library_id = zotero_config.library_id
         library_type = zotero_config.library_type
 
-        return base_url, api_key, library_id, library_type
+        return api_key, library_id, library_type
 
-    except:
+    except ObjectDoesNotExist:
         print "ZoteroConfiguration object not configured in admin panel"
 
-        return '', '', '', ''
+        return '', '', ''
         
 
 ####################################################################################################
@@ -110,8 +111,8 @@ def extract_publications_from_zotero(from_version):
         print 'Last version in Zotero is %d' % (last_zotero_version)
 
         zot = get_zotero_connection()
-
-        items = zot.items(since=last_zotero_version)
+        
+        items = zot.items(since=from_version)
 
         print
         print '*' * 50
@@ -646,9 +647,8 @@ def parse_thesis(item):
 ####################################################################################################
 
 def _extract_short_title(item):
-    if item['data'].has_key('shortTitle') and item['shortTitle'] != '':
+    if item['data'].get('shortTitle'):
         return item['data']['shortTitle']
-
     else:
         index = item['data']['title'].find(':')
 
@@ -660,9 +660,8 @@ def _extract_short_title(item):
 ####################################################################################################
 
 def _assign_if_exists(item, key):
-    if item['data'].has_key(key):
-        if item['data'][key] != '':
-            return item['data'][key]
+    if item['data'].get(key):
+        return item['data'][key]
             
 ####################################################################################################
 # def: _extract_doi()
