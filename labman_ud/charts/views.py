@@ -197,59 +197,56 @@ def funding_incomes_by_project(request, project_slug):
 ####################################################################################################
 
 def funding_total_incomes_by_scope(request):
-    incomes = {}
 
-    geographical_scopes = GeographicalScope.objects.all()
+    geographical_scopes = GeographicalScope.objects.all().order_by('slug')
 
-    for geographical_scope in geographical_scopes:
-        incomes[geographical_scope.name] = 0
+    geographical_scope_names = []
 
-    funding_amounts = FundingAmount.objects.all()
+    for scope in geographical_scopes:
+        geographical_scope_names.append(str(scope.name))
 
-    min_year = FundingAmount.objects.aggregate(Min('year'))
-    max_year = FundingAmount.objects.aggregate(Max('year'))
-
-    min_year = min_year.get('year__min')
-    max_year = max_year.get('year__max')
+    min_year = FundingAmount.objects.aggregate(Min('year')).get('year__min')
+    max_year = FundingAmount.objects.aggregate(Max('year')).get('year__max')
+    current_year = date.today().year
 
     incomes = {}
 
     for year in range(min_year, max_year + 1):
         incomes[year] = {}
+
         for scope in geographical_scopes:
             incomes[year][scope.name] = 0
 
-    for funding_amount in funding_amounts:
-        funding = Funding.objects.get(id=funding_amount.funding_id)
-        funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
-        scope = funding_program.geographical_scope.name
-        incomes[funding_amount.year][scope] = incomes[funding_amount.year][scope] + funding_amount.own_amount
+    for funding_amount in FundingAmount.objects.all():
+        scope = funding_amount.funding.funding_program.geographical_scope.name
+
+        if funding_amount.year in range(min_year, max_year + 1):
+            incomes[funding_amount.year][scope] = incomes[funding_amount.year][scope] + funding_amount.own_amount
 
     total_incomes = []
 
-    current_year = date.today().year
-
     for year in range(min_year, max_year + 1):
-        euskadi = int(incomes[year]['Euskadi'])
-        spain = int(incomes[year]['Spain'])
-        europe = int(incomes[year]['Europe'])
-        certainty = False if (year >= current_year) else True
-        # total_incomes.append([year, euskadi, spain, europe, (euskadi+spain+europe), certainty])
-        total_incomes.append({
-            'year': year,
-            'euskadi': euskadi,
-            'spain': spain,
-            'europe': europe,
-            'total': (euskadi+spain+europe),
-            'certainty': certainty,
-        })
+        income_item = [str(year)]
 
-    # dictionary to be returned in render(request, )
+        total = 0
+        certainty = False if (year >= current_year) else True
+
+        for scope in geographical_scopes:
+            income_for_year_and_scope = int(incomes[year][str(scope.name)])
+            income_item.append(income_for_year_and_scope)
+            income_item.append(certainty)
+
+            total += income_for_year_and_scope
+
+        income_item.append(total)
+        income_item.append(certainty)
+
+        total_incomes.append(income_item)
+
     return_dict = {
         'web_title': u'Total incomes by scope',
-        'incomes': incomes,
         'total_incomes': total_incomes,
-        'year': year,
+        'geographical_scope_names': geographical_scope_names,
     }
 
     return render(request, "charts/funding/total_incomes_by_scope.html", return_dict)
@@ -542,8 +539,6 @@ def publications_by_author(request, author_slug):
 
     years = []
 
-    print min_year, max_year
-
     for year in range(min_year, max_year + 1):
         years.append(year)
 
@@ -815,8 +810,6 @@ def members_position_pie(request):
         'positions': positions,
     }
 
-    import pprint
-    pprint.pprint(positions_per_organization)
     return render(request, 'charts/people/pie.html', return_dict)
 
 
@@ -1034,8 +1027,6 @@ def position_distribution(request, organization_slug=None):
             array_row.append(position_distribution[year][slugify(position)])
 
         position_distribution_array.append(array_row)
-
-    print position_distribution_array
 
     return_dict = {
         'position_distribution_array': position_distribution_array,
