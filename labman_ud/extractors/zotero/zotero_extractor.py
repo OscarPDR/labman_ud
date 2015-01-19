@@ -1,5 +1,7 @@
 import time
 import pickle
+import socket
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
@@ -732,7 +734,7 @@ def _extract_bibtex(item_key):
         counter -= 1
         try:
             item = zot.item(item_key, format='bibtex')
-        except HTTPError as e:
+        except (HTTPError, socket.error) as e:
             print "Error %s. Retrying in 5 seconds" % e
             time.sleep(5)
             if counter == 0:
@@ -861,7 +863,7 @@ def _save_attachment(attachment_id, publication_slug, filename):
         counter -= 1
         try:
             item = zot.file(attachment_id)
-        except HTTPError as e:
+        except (HTTPError, socket.error) as e:
             print "Error %s. Retrying in 5 seconds" % e
             time.sleep(5)
             if counter == 0:
