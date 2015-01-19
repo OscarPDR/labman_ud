@@ -16,9 +16,9 @@ from entities.persons.models import Person
 from entities.projects.models import Project, RelatedPublication
 from entities.utils.models import Tag
 
-from collections import OrderedDict, Counter
+from labman_setup.models import *
 
-# Create your views here.
+from collections import OrderedDict, Counter
 
 
 ###########################################################################
@@ -358,8 +358,11 @@ class LatestPublicationsFeed(Feed):
         super(LatestPublicationsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title = "MORElab publications"
-    description = "MORElab publications"
+    _settings = LabmanDeployGeneralSettings.objects.get()
+    research_group_short_name = _settings.research_group_short_name
+
+    title = u'%s publications' % research_group_short_name
+    description = u'%s publications' % research_group_short_name
 
     def get_object(self, request):
         self.__request.request = weakref.proxy(request)

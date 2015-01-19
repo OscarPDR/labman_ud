@@ -304,7 +304,7 @@ class FundingAmount(BaseModel):
     )
 
     def __unicode__(self):
-        return u'Year %s - %s € Deusto' % (self.year, self.own_amount)
+        return u'Year %s - %s € (own amount)' % (self.year, self.own_amount)
 
     def save(self, *args, **kwargs):
         # Publish RDF data

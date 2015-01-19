@@ -19,6 +19,8 @@ from entities.persons.models import Person
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
+from labman_setup.models import *
+
 from collections import OrderedDict, Counter
 
 
@@ -337,8 +339,11 @@ class LatestProjectsFeed(Feed):
         super(LatestProjectsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    title = "MORElab projects"
-    description = "MORElab projects"
+    _settings = LabmanDeployGeneralSettings.objects.get()
+    research_group_short_name = _settings.research_group_short_name
+
+    title = u'%s projects' % research_group_short_name
+    description = u'%s projects' % research_group_short_name
 
     def get_object(self, request):
         self.__request.request = weakref.proxy(request)

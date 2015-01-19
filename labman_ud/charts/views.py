@@ -22,11 +22,12 @@ from entities.utils.models import GeographicalScope, Role
 
 from entities.projects.utils import *
 
+from labman_setup.models import *
+
 import json
 import networkx as nx
 import numpy as np
 
-# Create your views here.
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
