@@ -391,7 +391,15 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    publications = {}
+    JCR_TITLE = 'JCR indexed journal article'
+
+    publications = OrderedDict()
+    publications[JCR_TITLE] = []
+    publications['conference-paper'] = []
+    publications['book'] = []
+    publications['book-section'] = []
+    publications['journal-article'] = []
+    publications['magazine-article'] = []
 
     if publication_type_slug:
         publication_type = titleize(publication_type_slug).replace(' ', '')
@@ -458,10 +466,20 @@ def member_publications(request, person_slug, publication_type_slug=None):
             'parent_title': parent_title,
         }
 
-        if not publication_item.child_type in publications.keys():
-            publications[publication_item.child_type] = []
+        if publication_item.child_type == 'JournalArticle':
+            if journal_article.parent_journal.impact_factor is not None:
+                child_type = 'JCR indexed journal article'
+            else:
+                child_type = 'JournalArticle'
+        else:
+            child_type = publication_item.child_type
 
-        publications[publication_item.child_type].append(publication_dict)
+        if not child_type in publications.keys():
+            publications[child_type] = []
+
+        publications[child_type].append(publication_dict)
+    
+    all_thesis = Thesis.objects.filter(author_id=member.id).all()
 
     # dictionary to be returned in render(request, )
     return_dict = {
@@ -469,6 +487,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         'member': member,
         'publications': publications,
         'has_publications': has_publications,
+        'thesis' : all_thesis
     }
 
     data_dict = __get_job_data(member)
@@ -998,6 +1017,11 @@ def __get_job_data(member):
     else:
         display_bio = True
 
+    if has_thesis:
+        number_of_publications = len(publication_ids) + 1
+    else:
+        number_of_publications = len(publciation_ids)
+
     return {
         'accounts': accounts,
         'company': company,
@@ -1012,7 +1036,7 @@ def __get_job_data(member):
         'header_rows': header_rows,
         'last_job': last_job,
         'number_of_projects': len(project_ids),
-        'number_of_publications': len(publication_ids),
+        'number_of_publications': number_of_publications,
         'position': position,
         'pubtype_info': dict(items),
         'role_items': role_items,
