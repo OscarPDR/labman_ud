@@ -6,6 +6,15 @@ from .models import *
 
 
 ###########################################################################
+# Class: PublicationRankInline
+###########################################################################
+
+class PublicationRankInline(admin.TabularInline):
+    model = PublicationRank
+    extra = 1
+
+
+###########################################################################
 # Class: VivaPanelInline
 ###########################################################################
 
@@ -111,6 +120,7 @@ class PublicationAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
@@ -143,6 +153,10 @@ class ThesisAdmin(admin.ModelAdmin):
 
 class VivaPanelAdmin(admin.ModelAdmin):
     model = VivaPanel
+
+    search_fields = ['person__full_name']
+    list_display = ['thesis', 'person', 'role']
+    list_filter = ['thesis', 'role']
 
 
 ###########################################################################
@@ -193,6 +207,7 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
@@ -212,6 +227,7 @@ class BookSectionAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
@@ -231,6 +247,7 @@ class ProceedingsAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationEditorInline,
@@ -250,6 +267,7 @@ class ConferencePaperAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
@@ -268,6 +286,7 @@ class JournalAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
@@ -286,6 +305,7 @@ class JournalArticleAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
@@ -304,6 +324,7 @@ class MagazineAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
@@ -322,6 +343,7 @@ class MagazineArticleAdmin(admin.ModelAdmin):
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
+        PublicationRankInline,
         PublicationSeeAlsoInline,
         PublicationAuthorInline,
         PublicationTagInline,
@@ -342,6 +364,28 @@ class ThesisAbstractAdmin(admin.ModelAdmin):
 
 class CoAdvisorAdmin(admin.ModelAdmin):
     model = CoAdvisor
+
+
+###########################################################################
+# Class: PublicationRankAdmin
+###########################################################################
+
+class PublicationRankAdmin(admin.ModelAdmin):
+    model = PublicationRank
+
+    search_fields = ['publication__slug']
+    list_display = ['publication', '_child_type', 'ranking']
+    list_filter = ['ranking']
+
+
+###########################################################################
+# Class: RankingAdmin
+###########################################################################
+
+class RankingAdmin(admin.ModelAdmin):
+    model = Ranking
+
+    exclude = ['slug']
 
 
 ####################################################################################################
@@ -367,6 +411,9 @@ admin.site.register(ThesisAbstract, ThesisAbstractAdmin)
 admin.site.register(CoAdvisor, CoAdvisorAdmin)
 admin.site.register(VivaPanel, VivaPanelAdmin)
 
+admin.site.register(Ranking, RankingAdmin)
+
 admin.site.register(PublicationAuthor, PublicationAuthorAdmin)
 admin.site.register(PublicationEditor, PublicationEditorAdmin)
 admin.site.register(PublicationTag, PublicationTagAdmin)
+admin.site.register(PublicationRank, PublicationRankAdmin)

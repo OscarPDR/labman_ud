@@ -48,6 +48,7 @@ PROJECT_TYPES = (
     ('Innovation project', 'Innovation project'),
     ('Internal project', 'Internal project'),
     ('Project', 'Project'),
+    ('Research contract', 'Research contract'),
     ('Research project', 'Research project'),
 )
 

@@ -3,12 +3,9 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 
-# Create the form class.
-
-
-###########################################################################
-# Class: LoginForm
-###########################################################################
+####################################################################################################
+###     LoginForm
+####################################################################################################
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -19,6 +16,7 @@ class LoginForm(AuthenticationForm):
             'placeholder': 'username',
         })
     )
+
     password = forms.CharField(
         max_length=50,
         widget=forms.PasswordInput(attrs={

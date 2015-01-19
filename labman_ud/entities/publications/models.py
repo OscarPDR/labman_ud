@@ -17,13 +17,6 @@ from redactor.fields import RedactorField
 MIN_YEAR_LIMIT = 1950
 MAX_YEAR_LIMIT = 2080
 
-CORE_CHOICES = (
-    ('A', 'Core A'),
-    ('B', 'Core B'),
-    ('C', 'Core C'),
-    (None, 'None'),
-)
-
 QUARTILE_CHOICES = (
     ('Q1', 'Q1'),
     ('Q2', 'Q2'),
@@ -64,6 +57,10 @@ def publication_path(self, filename):
 
 def thesis_path(self, filename):
     return "%s/%s/%s%s" % ("publications", "theses", self.author.slug, os.path.splitext(filename)[-1])
+
+
+def ranking_icon_picture_path(self, filename):
+    return "%s/%s%s" % ("rankings", self.slug, os.path.splitext(filename)[-1])
 
 
 ###########################################################################
@@ -130,10 +127,13 @@ class Publication(BaseModel):
     authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='authors')
     editors = models.ManyToManyField('persons.Person', through='PublicationEditor', related_name='editors')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
+    rankings = models.ManyToManyField('Ranking', through='PublicationRank')
 
     class Meta:
         # abstract = True
         ordering = ['-slug']
+        verbose_name = u'Publication'
+        verbose_name_plural = u'Publications'
 
     def display_all_fields(self):
         all_fields = [
@@ -251,25 +251,6 @@ class PartOfCollectionPublication(Publication):
 
 
 ###########################################################################
-# Model: ISIDBLPTags
-###########################################################################
-
-class ISIDBLPTags(PartOfCollectionPublication):
-    isi = models.BooleanField(
-        verbose_name=u'ISI',
-        default=False,
-    )
-
-    dblp = models.BooleanField(
-        verbose_name=u'DBLP',
-        default=False,
-    )
-
-    class Meta:
-        abstract = True
-
-
-###########################################################################
 # Model: Book
 ###########################################################################
 
@@ -308,6 +289,10 @@ class Book(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Book'
+        verbose_name_plural = u'Books'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -331,17 +316,14 @@ class Book(CollectionPublication):
 # Model: BookSection
 ###########################################################################
 
-class BookSection(ISIDBLPTags):
+class BookSection(PartOfCollectionPublication):
     parent_book = models.ForeignKey('Book')
 
     presented_at = models.ForeignKey('events.Event', null=True, blank=True)
 
-    core = models.CharField(
-        max_length=25,
-        choices=CORE_CHOICES,
-        blank=True,
-        null=True,
-    )
+    class Meta:
+        verbose_name = u'Book section'
+        verbose_name_plural = u'Book sections'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -380,6 +362,10 @@ class Proceedings(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Proceedings item'
+        verbose_name_plural = u'Proceedings'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -403,7 +389,7 @@ class Proceedings(CollectionPublication):
 # Model: ConferencePaper
 ###########################################################################
 
-class ConferencePaper(ISIDBLPTags):
+class ConferencePaper(PartOfCollectionPublication):
     parent_proceedings = models.ForeignKey('Proceedings')
 
     presented_at = models.ForeignKey(
@@ -412,12 +398,9 @@ class ConferencePaper(ISIDBLPTags):
         null=True,
     )
 
-    core = models.CharField(
-        max_length=25,
-        choices=CORE_CHOICES,
-        blank=True,
-        null=True,
-    )
+    class Meta:
+        verbose_name = u'Conference paper'
+        verbose_name_plural = u'Conference papers'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -477,6 +460,10 @@ class Journal(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Journal'
+        verbose_name_plural = u'Journals'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -500,13 +487,17 @@ class Journal(CollectionPublication):
 # Model: JournalArticle
 ###########################################################################
 
-class JournalArticle(ISIDBLPTags):
+class JournalArticle(PartOfCollectionPublication):
     parent_journal = models.ForeignKey('Journal')
 
     individually_published = models.DateField(
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'Journal article'
+        verbose_name_plural = u'Journal articles'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -545,6 +536,10 @@ class Magazine(CollectionPublication):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Magazine'
+        verbose_name_plural = u'Magazines'
+
     def save(self, *args, **kwargs):
         # Publish RDF data
         if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
@@ -570,6 +565,10 @@ class Magazine(CollectionPublication):
 
 class MagazineArticle(PartOfCollectionPublication):
     parent_magazine = models.ForeignKey('Magazine')
+
+    class Meta:
+        verbose_name = u'Magazine article'
+        verbose_name_plural = u'Magazine articles'
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -599,6 +598,10 @@ class PublicationTag(BaseModel):
     publication = models.ForeignKey('publications.Publication')
 
     class Meta:
+        verbose_name = u'Publication tag'
+        verbose_name_plural = u'Publication tags'
+
+    class Meta:
         ordering = ['tag__slug']
 
     def __unicode__(self):
@@ -619,6 +622,10 @@ class PublicationAuthor(BaseModel):
         null=True,
     )
 
+    class Meta:
+        verbose_name = u'Publication author'
+        verbose_name_plural = u'Publication authors'
+
     def __unicode__(self):
         return u'%s has written: %s as author #%d' % (self.author.full_name, self.publication.title, self.position)
 
@@ -631,6 +638,10 @@ class PublicationEditor(BaseModel):
     editor = models.ForeignKey('persons.Person')
 
     publication = models.ForeignKey('publications.Publication')
+
+    class Meta:
+        verbose_name = u'Publication editor'
+        verbose_name_plural = u'Publication editors'
 
     def __unicode__(self):
         return u'%s has edited: %s' % (self.editor.full_name, self.publication.title)
@@ -697,6 +708,12 @@ class Thesis(BaseModel):
         blank=True,
     )
 
+    special_mention = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
     held_at_university = models.ForeignKey(
         'organizations.Organization',
         blank=True,
@@ -711,6 +728,8 @@ class Thesis(BaseModel):
 
     class Meta:
         ordering = ['slug']
+        verbose_name = u'Thesis'
+        verbose_name_plural = u'Theses'
 
     def __unicode__(self):
         return u'%s' % (self.title)
@@ -726,6 +745,7 @@ class Thesis(BaseModel):
 
 class ThesisSeeAlso(BaseModel):
     thesis = models.ForeignKey('Thesis')
+
     see_also = models.URLField(
         max_length=512,
     )
@@ -747,6 +767,10 @@ class ThesisAbstract(BaseModel):
         blank=True,
     )
 
+    class Meta:
+        verbose_name = u'Thesis abstract'
+        verbose_name_plural = u'Thesis abstracts'
+
     def __unicode__(self):
         return u'Abstract in %s for: %s' % (self.language.name, self.thesis.title)
 
@@ -758,6 +782,10 @@ class ThesisAbstract(BaseModel):
 class CoAdvisor(BaseModel):
     thesis = models.ForeignKey('Thesis')
     co_advisor = models.ForeignKey('persons.Person')
+
+    class Meta:
+        verbose_name = u'Co-advisor'
+        verbose_name_plural = u'Co-advisors'
 
     def __unicode__(self):
         return u'%s has co-advised the thesis: %s' % (self.co_advisor.full_name, self.thesis.title)
@@ -776,3 +804,60 @@ class VivaPanel(BaseModel):
         max_length=150,
         choices=VIVA_PANEL_ROLES,
     )
+
+    class Meta:
+        verbose_name = u'VIVA panel'
+        verbose_name_plural = u'VIVA panels'
+
+
+###########################################################################
+# Model: Ranking
+###########################################################################
+
+class Ranking(BaseModel):
+    name = models.CharField(
+        max_length=50,
+    )
+
+    slug = models.SlugField(
+        max_length=50,
+        blank=True,
+        unique=True,
+    )
+
+    icon = models.ImageField(
+        upload_to=ranking_icon_picture_path,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = u'Ranking'
+        verbose_name_plural = u'Rankings'
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self.name.encode('utf-8')))
+        super(Ranking, self).save(*args, **kwargs)
+
+
+###########################################################################
+# Model: PublicationRank
+###########################################################################
+
+class PublicationRank(BaseModel):
+    publication = models.ForeignKey('Publication')
+
+    ranking = models.ForeignKey('Ranking')
+
+    class Meta:
+        ordering = ['publication__title']
+        unique_together = ('publication', 'ranking')
+        verbose_name = u'Publication ranking'
+        verbose_name_plural = u'Publication rankings'
+
+    def _child_type(self):
+        return self.publication.child_type

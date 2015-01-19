@@ -56,15 +56,8 @@
             {% endif %}
 
             <ul id="publication-tabs" class="nav nav-pills nav-stacked">
-                {% if indicators_list %}
-                    <div class="centered">
-                        {% for indicator in indicators_list %}
-                            <br>
-                            <img class="indicator-image" src="{{ STATIC_URL }}img/indicators/{{ indicator }}.png"/>
-                            <br>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+
+                {% include 'publications/templates/rankings.html' %}
 
                 {% if publication.bibtex %}
                     <br>

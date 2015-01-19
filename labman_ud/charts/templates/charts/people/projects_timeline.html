@@ -13,11 +13,23 @@
         <li class="active">Projects timeline</li>
     </ul>
 
+    <br>
+
+    <blockquote>
+        <p>
+            {{ projects_timeline|length }} project{{ projects_timeline|pluralize }} in <a href="{% url 'determine_person_info' person.slug %}">{{ person.full_name }}</a>'s timeline
+        </p>
+
+        {% for role, value in role_items.items %}
+            &emsp;
+            <i class="fa fa-circle fa-circle-{{ role|slugify }}"></i>
+            &emsp;
+            <span class="blockquote-role">{{ role }}</span>
+            <br>
+        {% endfor %}
+    </blockquote>
+
     <div id="chart-div" class="centered">
-        <h4><a href="{% url 'determine_person_info' person.slug %}">{{ person.full_name }}</a>'s projects timeline</h4>
-
-        <br>
-
         <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
     </div>
 
@@ -28,6 +40,16 @@
 
 
 {% block scripts %}
+
+    <script>
+        {% for role_name, value in role_items.items %}
+            {% for role in roles %}
+                {% if role_name == role.name %}
+                    $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </script>
 
     <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
 
@@ -42,22 +64,23 @@
             var dataTable = new google.visualization.DataTable();
 
             dataTable.addColumn({ type: 'string', id: 'Member' });
+            dataTable.addColumn({ type: 'string', id: 'Role' });
             dataTable.addColumn({ type: 'date', id: 'Start' });
             dataTable.addColumn({ type: 'date', id: 'End' });
 
-            var timeline = [];
+            var projects_timeline = [];
 
-            {% for item in timeline %}
-                var start_year = {{ item.start_date|date:"Y" }};
-                var start_month = {{ item.start_date|date:"m" }} - 1;    // JS date object starts months in 0
-                var start_day = {{ item.start_date|date:"d" }};
+            {% for project in projects_timeline %}
+                var start_year = {{ project.start_date|date:"Y" }};
+                var start_month = {{ project.start_date|date:"m" }} - 1;    // JS date object starts months in 0
+                var start_day = {{ project.start_date|date:"d" }};
 
                 var start_date = new Date(start_year, start_month, start_day);
 
-                {% if item.end_date %}
-                    var end_year = {{ item.end_date|date:"Y" }};
-                    var end_month = {{ item.end_date|date:"m" }} - 1;    // JS date object starts months in 0
-                    var end_day = {{ item.end_date|date:"d" }};
+                {% if project.end_date %}
+                    var end_year = {{ project.end_date|date:"Y" }};
+                    var end_month = {{ project.end_date|date:"m" }} - 1;    // JS date object starts months in 0
+                    var end_day = {{ project.end_date|date:"d" }};
                 {% else %}
                     var end_year = new Date().getFullYear();
                     var end_month = new Date().getMonth();
@@ -66,12 +89,19 @@
 
                 var end_date = new Date(end_year, end_month, end_day);
 
-                timeline.push(["{{ item.project_short_name }}", start_date, end_date]);
+                projects_timeline.push(["{{ project.short_name }}", "{{ project.role }}", start_date, end_date]);
             {% endfor %}
 
-            dataTable.addRows(timeline);
+            dataTable.addRows(projects_timeline);
 
-            chart.draw(dataTable);
+            var options = {
+                timeline: { showBarLabels: false},
+                {% if role_colors %}
+                    colors: {{ role_colors|safe }},
+                {% endif %}
+            };
+
+            chart.draw(dataTable, options);
         }
     </script>
 

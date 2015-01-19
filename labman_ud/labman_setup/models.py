@@ -3,6 +3,8 @@ from django.db import models
 from redactor.fields import RedactorField
 from django.template.defaultfilters import slugify
 
+from redactor.fields import RedactorField
+
 import os
 
 
@@ -231,3 +233,41 @@ class SEOAndAnalytics(models.Model):
         blank=True,
         null=True,
     )
+
+
+####################################################################################################
+###     Model: AboutSection
+####################################################################################################
+
+class AboutSection(models.Model):
+
+    title = models.CharField(
+        max_length=50,
+    )
+
+    slug = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    icon_class = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
+    order = models.PositiveSmallIntegerField(
+        unique=True,
+    )
+
+    content = RedactorField()
+
+    class Meta:
+        ordering = ['order']
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title.encode('utf-8'))
+
+        self.content = self.content.replace("<img src=", "<img class='img-responsive' src=")
+
+        super(AboutSection, self).save(*args, **kwargs)

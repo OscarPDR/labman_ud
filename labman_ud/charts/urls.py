@@ -1,8 +1,7 @@
-from django.conf.urls import patterns, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-urlpatterns = patterns('',
+from django.conf.urls import url
 
+urlpatterns = [
     url(r'^$', 'charts.views.chart_index', name='chart_index'),
 
     # /funding
@@ -18,16 +17,57 @@ urlpatterns = patterns('',
     url(r'^publications/total_number/(?P<author_slug>\S+)$', 'charts.views.publications_by_author', name='publications_by_author'),
     url(r'^publications/tags/(?P<author_slug>\S+)$', 'charts.views.tags_by_author', name='tags_by_author'),
 
-    url(r'^publications/coauthorship/(?P<max_position>\d)$', 'charts.views.publications_coauthorship', name='publications_coauthorship_max_position'),
-    url(r'^publications/coauthorship/$', 'charts.views.publications_coauthorship', name='publications_coauthorship'),
-    url(r'^publications/morelab_coauthorship/(?P<max_position>\d)$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship_max_position'),
-    url(r'^publications/morelab_coauthorship/$', 'charts.views.publications_morelab_coauthorship', name='publications_morelab_coauthorship'),
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
 
+    url(
+        r'^publications/coauthorships/(?P<max_position>\d)/$',
+        'charts.views.publication_coauthorships',
+        name='publication_coauthorships_max_position',
+    ),
+    url(
+        r'^publications/coauthorships/$',
+        'charts.views.publication_coauthorships',
+        name='publication_coauthorships',
+    ),
+    url(
+        r'^publications/coauthorships_within_group/(?P<max_position>\d)/$',
+        'charts.views.publication_coauthorships',
+        {'within_group': True},
+        name='publication_coauthorships_within_group_max_position',
+    ),
+    url(
+        r'^publications/coauthorships_within_group/$',
+        'charts.views.publication_coauthorships',
+        {'within_group': True},
+        name='publication_coauthorships_within_group',
+    ),
+
     # /projects
-    url(r'^projects/collaborations/$', 'charts.views.projects_collaborations', name='projects_collaborations'),
-    url(r'^projects/morelab_collaborations/$', 'charts.views.projects_morelab_collaborations', name='projects_morelab_collaborations'),
     url(r'^projects/total_number/$', 'charts.views.projects_number_of_projects', name='projects_number_of_projects'),
+
+    url(
+        r'^projects/collaborations/exclude_leaders/$',
+        'charts.views.project_collaborations',
+        {'exclude_leaders': True},
+        name='project_collaborations_exclude_leaders',
+    ),
+    url(
+        r'^projects/collaborations/$',
+        'charts.views.project_collaborations',
+        name='project_collaborations',
+    ),
+    url(
+        r'^projects/collaborations_within_group/exclude_leaders/$',
+        'charts.views.project_collaborations',
+        {'exclude_leaders': True, 'within_group': True},
+        name='project_collaborations_within_group_exclude_leaders',
+    ),
+    url(
+        r'^projects/collaborations_within_group/$',
+        'charts.views.project_collaborations',
+        {'within_group': True},
+        name='project_collaborations_within_group',
+    ),
 
     # /people
     url(r'^people/timeline/(?P<person_slug>\S+)$', 'charts.views.person_timeline', name='person_timeline'),
@@ -40,6 +80,4 @@ urlpatterns = patterns('',
     url(r'^people/gender_distribution/$', 'charts.views.gender_distribution', name='gender_distribution'),
     url(r'^people/position_distribution/(?P<organization_slug>\S+)/$', 'charts.views.position_distribution', name='position_distribution'),
     url(r'^people/position_distribution/$', 'charts.views.position_distribution', name='position_distribution'),
-)
-
-urlpatterns += staticfiles_urlpatterns()
+]

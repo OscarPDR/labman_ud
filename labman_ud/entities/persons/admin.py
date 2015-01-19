@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+from django.conf import settings
 from django.contrib import admin
 
 from .linked_data import *
@@ -24,7 +25,8 @@ class PersonSeeAlsoAdmin(admin.ModelAdmin):
 
     def delete_model(modeladmin, request, queryset):
         for obj in queryset:
-            delete_person_see_also_rdf(obj)
+            if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+                delete_person_see_also_rdf(obj)
             obj.delete()
 
     list_display = ['person', 'see_also']
@@ -72,7 +74,8 @@ class PersonAdmin(admin.ModelAdmin):
 
     def delete_model(modeladmin, request, queryset):
         for obj in queryset:
-            delete_person_rdf(obj)
+            if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+                delete_person_rdf(obj)
             obj.delete()
 
     search_fields = ['full_name', 'slug']
@@ -103,7 +106,8 @@ class AccountProfileAdmin(admin.ModelAdmin):
 
     def delete_model(modeladmin, request, queryset):
         for obj in queryset:
-            delete_account_profile_rdf(obj)
+            if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+                delete_account_profile_rdf(obj)
             obj.delete()
 
     actions = [
@@ -120,7 +124,8 @@ class NicknameAdmin(admin.ModelAdmin):
 
     def delete_model(modeladmin, request, queryset):
         for obj in queryset:
-            delete_nickname_rdf(obj)
+            if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
+                delete_nickname_rdf(obj)
             obj.delete()
 
     search_fields = ['nickname', 'slug']

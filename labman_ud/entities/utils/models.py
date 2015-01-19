@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 
 import os
 
@@ -9,8 +8,6 @@ from entities.core.models import BaseModel
 
 from redactor.fields import RedactorField
 from .linked_data import *
-
-# Create your models here.
 
 
 def network_icon_path(self, filename):
@@ -206,6 +203,7 @@ class GeographicalScopeSeeAlso(BaseModel):
 class Role(BaseModel):
     name = models.CharField(
         max_length=100,
+        unique=True,
     )
 
     slug = models.SlugField(
@@ -218,8 +216,23 @@ class Role(BaseModel):
         blank=True,
     )
 
+    exclude_from_charts = models.BooleanField(
+        default=False,
+    )
+
+    relevance_order = models.PositiveSmallIntegerField(
+        default=0,
+    )
+
+    rgb_color = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True,
+        verbose_name=u'RGB color (#)'
+    )
+
     class Meta:
-        ordering = ['slug']
+        ordering = ['relevance_order']
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -410,6 +423,13 @@ class PhDProgram(BaseModel):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = u'PhD program'
+        verbose_name_plural = 'PhD programs'
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
 
 ###########################################################################

@@ -83,22 +83,4 @@
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <strong>Citation</strong>
-    </div>
-
-    <div class="panel-body">
-        <p>
-            {% for author in authors %}
-                {{ author.full_name }}{% if not forloop.last %}, {% else %}.{% endif %}
-            {% endfor %}
-            {% if parent_publication.year %} ({{ parent_publication.year }}){% endif %}
-             "<em>{{ publication.title }}</em>"
-             In {{ parent_publication.title }}.
-            {% if parent_publication.volume %} vol. {{ parent_publication.volume }}.{% endif %}
-            {% if publication.pages %} p. {{ publication.pages }}.{% endif %}
-            {% if publication.doi %} DOI: {{ publication.doi }}.{% endif %}
-        </p>
-    </div>
-</div>
+{% include 'publications/templates/citation.html' %}

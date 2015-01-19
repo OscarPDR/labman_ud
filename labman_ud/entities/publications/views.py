@@ -260,49 +260,6 @@ def __build_publication_return_dict(publication):
     tag_ids = PublicationTag.objects.filter(publication=publication.id).values('tag_id')
     tag_list = Tag.objects.filter(id__in=tag_ids).order_by('name')
 
-    indicators_list = []
-
-    # Check for indicators
-
-    if (publication.child_type == 'JournalArticle'):
-        publication = JournalArticle.objects.get(slug=publication.slug)
-        parent_publication = Journal.objects.get(id=publication.parent_journal.id)
-
-        if publication.isi:
-            indicators_list.append('isi')
-
-        # if publication.dblp:
-        #     indicators_list.append('dblp')
-
-        if parent_publication.quartile:
-            indicators_list.append(parent_publication.quartile.lower())
-            if 'isi' in indicators_list:
-                indicators_list.remove('isi')
-
-    if (publication.child_type == 'BookSection'):
-        publication = BookSection.objects.get(slug=publication.slug)
-
-        if publication.isi:
-            indicators_list.append('isi')
-
-        # if publication.dblp:
-        #     indicators_list.append('dblp')
-
-        if publication.core:
-            indicators_list.append('core' + publication.core.lower())
-
-    if (publication.child_type == 'ConferencePaper'):
-        publication = ConferencePaper.objects.get(slug=publication.slug)
-
-        if publication.isi:
-            indicators_list.append('isi')
-
-        # if publication.dblp:
-        #     indicators_list.append('dblp')
-
-        if publication.core:
-            indicators_list.append('core' + publication.core.lower())
-
     try:
         pdf = publication.pdf
     except:
@@ -327,6 +284,10 @@ def __build_publication_return_dict(publication):
             publication = BookSection.objects.get(slug=publication.slug)
             parent_publication = Book.objects.get(id=publication.parent_book.id)
 
+        if publication.child_type == 'Book':
+            publication = Book.objects.get(slug=publication.slug)
+            parent_publication = None
+
     except:
         pass
 
@@ -335,14 +296,31 @@ def __build_publication_return_dict(publication):
     else:
         bibtex = None
 
+    rankings = set()
+
+    try:
+        for publication_rank in PublicationRank.objects.filter(publication=publication):
+            rankings.add(publication_rank.ranking)
+
+    except:
+        pass
+
+    if parent_publication:
+        try:
+            for publication_rank in PublicationRank.objects.filter(publication=parent_publication):
+                rankings.add(publication_rank.ranking)
+
+        except:
+            pass
+
     # dictionary to be returned in render(request, )
     return {
         'authors': authors,
         'bibtex': bibtex,
-        'indicators_list': indicators_list,
         'parent_publication': parent_publication,
         'pdf': pdf,
         'publication': publication,
+        'rankings': list(rankings),
         'related_projects': related_projects,
         'related_publications': related_publications,
         'tag_list': tag_list,
