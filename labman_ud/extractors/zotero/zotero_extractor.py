@@ -194,7 +194,7 @@ def extract_publications_from_zotero(from_version):
         for pos, i_id in enumerate(items_ordered):
             item = items_ordered[i_id]
             publication_type = item['data']['itemType']
-            print '\t[%s/%s][%s] > %s' % (pos + 1, number_of_items, publication_type.encode('utf-8'), item['data'].get('title','No title').encode('utf-8'))
+            print '\t[%s/%s][%s][%s] > %s' % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title','No title').encode('utf-8'))
             generate_publication(item)
 
 
