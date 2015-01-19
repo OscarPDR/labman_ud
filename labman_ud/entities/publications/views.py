@@ -394,7 +394,7 @@ def phd_dissertations_index(request):
 
     phd_dissertations = []
 
-    theses = Thesis.objects.filter(author__is_active=True).order_by('-viva_date', 'author__full_name')
+    theses = Thesis.objects.order_by('-viva_date', 'author__full_name')
 
     for thesis in theses:
         phd_dissertation = {}

@@ -42,12 +42,10 @@
 
                             {% if phd_dissertation.co_advisors %}
                                 &emsp;
-                                <small>
-                                    <strong>Co-advisors:</strong>
-                                    {% for co_advisor in phd_dissertation.co_advisors %}
-                                        &emsp;{{ co_advisor }}
-                                    {% endfor %}
-                                </small>
+                                <strong>Co-advisors:</strong>
+                                {% for co_advisor in phd_dissertation.co_advisors %}
+                                    &emsp;{{ co_advisor }}
+                                {% endfor %}
                             {% endif %}
                         </p>
 
