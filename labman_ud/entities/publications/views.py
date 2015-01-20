@@ -135,7 +135,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         # Filter by publication
         if special_tokens:
-            sql_query = Publication.objects.all()
+            sql_query = Publication.objects.exclude(authors=None).all()
 
             for year in NUMERIC_FILTERS['year:']:
                 sql_query = sql_query.filter(year=int(year))
@@ -153,7 +153,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=author).select_related('author').values('author__id')
                     sql_query = sql_query.filter(authors__id__in=author_ids)
         else:
-            sql_query = Publication.objects.all()
+            sql_query = Publication.objects.exclude(authors=None).all()
 
         sql_query = sql_query.select_related('authors__author', 'tags__tag').prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
         publication_strings = [(publication, publication.display_all_fields().lower()) for publication in sql_query]
