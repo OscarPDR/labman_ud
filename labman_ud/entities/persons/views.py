@@ -405,24 +405,12 @@ def member_publications(request, person_slug, publication_type_slug=None):
         publication_type = titleize(publication_type_slug).replace(' ', '')
         publication_ids = member.publications.filter(child_type=publication_type).values_list('id', flat=True)
 
-        if publication_type_slug == 'conference-paper':
-            objects = ConferencePaper.objects
-        elif publication_type_slug == 'book-section':
-            objects = BookSection.objects
-        elif publication_type_slug == 'book':
-            objects = Book.objects
-        elif publication_type_slug == 'magazine-article':
-            objects = MagazineArticle.objects
-        elif publication_type_slug == 'journal-article':
-            objects = JournalArticle.objects
-        else:
+        if not publication_ids:
             raise Http404
-
     else:
         publication_ids = member.publications.all().values_list('id', flat=True)
-        objects = Publication.objects
-
-    publication_items = objects.prefetch_related('publicationauthor_set__author').select_related('conferencepaper','conferencepaper__parent_proceedings','booksection','booksection__parent_book','journalarticle','journalarticle__parent_journal','magazinearticle','magazinearticle__parent_magazine').filter(id__in=publication_ids).order_by('-published', 'title')
+    
+    publication_items = Publication.objects.select_related('conferencepaper','conferencepaper__parent_proceedings','booksection','booksection__parent_book','journalarticle','journalarticle__parent_journal','magazinearticle','magazinearticle__parent_magazine').prefetch_related('publicationauthor_set__author').filter(id__in=publication_ids).order_by('-published', 'title')
 
     has_publications = True if publication_ids else False
 
