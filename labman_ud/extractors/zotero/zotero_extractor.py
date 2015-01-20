@@ -958,6 +958,10 @@ def _extract_editors(item):
 ####################################################################################################
 
 def _save_publication_editors(editors, publication):
+    existing_editors = PublicationEditor.objects.filter(publication=publication).all()
+    for existing_editor in existing_editors:
+        existing_editor.delete()
+
     for editor in editors:
         publication_editor = PublicationEditor(
             editor=editor,
