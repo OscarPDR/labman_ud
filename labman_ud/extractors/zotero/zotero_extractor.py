@@ -70,11 +70,12 @@ def get_zotero_connection():
 def get_last_zotero_version():
     zot = get_zotero_connection()
 
-    items = zot.items(limit=1)
-    if len(items):
-        latest_version_number = items[0]['version']
+    NEW_ZOTERO = False
+    if NEW_ZOTERO:
+        latest_version_number = zot.last_modified_version()
     else:
-        latest_version_number = 0
+        items = zot.items(limit=1)
+        latest_version_number = int(zot.request.headers.get('last-modified-version', 0))
 
     return latest_version_number
 
@@ -799,6 +800,10 @@ def _extract_authors(item):
 def _save_publication_authors(authors, publication):
     order = 1
 
+    existing_authors = PublicationAuthor.objects.filter(publication = publication).all()
+    for existing_author in existing_authors:
+        existing_author.delete()
+
     for author in authors:
         publication_author = PublicationAuthor(
             author=author,
@@ -815,6 +820,20 @@ def _save_publication_authors(authors, publication):
 ####################################################################################################
 
 def _extract_tags(item, publication):
+
+    # Clean ranking and projects so as to ensure that it's correctly synchronized
+    existing_rankings = PublicationRank.objects.filter(publication = publication).all()
+    for existing_ranking in existing_rankings:
+        existing_ranking.delete()
+
+    existing_projects = RelatedPublication.objects.filter(publication = publication).all()
+    for existing_project in existing_projects:
+        existing_project.delete()
+
+    existing_tags = PublicationTag.objects.filter(publication = publication).all()
+    for existing_tag in existing_tags:
+        existing_tag.delete()
+
     if item['data'].has_key('tags') and len(item['data']['tags']) > 0:
         for tag_item in item['data']['tags']:
             tag_name = tag_item['tag'].encode('utf-8')
