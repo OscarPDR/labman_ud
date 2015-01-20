@@ -406,25 +406,23 @@ def member_publications(request, person_slug, publication_type_slug=None):
         publication_ids = member.publications.filter(child_type=publication_type).values_list('id', flat=True)
 
         if publication_type_slug == 'conference-paper':
-            publication_items = ConferencePaper.objects.filter(id__in=publication_ids).order_by('-published', 'title')
-
+            objects = ConferencePaper.objects
         elif publication_type_slug == 'book-section':
-            publication_items = BookSection.objects.filter(id__in=publication_ids).order_by('-published', 'title')
-
+            objects = BookSection.objects
         elif publication_type_slug == 'book':
-            publication_items = Book.objects.filter(id__in=publication_ids).order_by('-published', 'title')
-
+            objects = Book.objects
         elif publication_type_slug == 'magazine-article':
-            publication_items = MagazineArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
-
+            objects = MagazineArticle.objects
         elif publication_type_slug == 'journal-article':
-            publication_items = JournalArticle.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+            objects = JournalArticle.objects
         else:
             raise Http404
+
     else:
         publication_ids = member.publications.all().values_list('id', flat=True)
+        objects = Publication.objects
 
-        publication_items = Publication.objects.filter(id__in=publication_ids).order_by('-published', 'title')
+    publication_items = objects.prefetch_related('publicationauthor_set__author').select_related('conferencepaper','conferencepaper__parent_proceedings','booksection','booksection__parent_book','journalarticle','journalarticle__parent_journal','magazinearticle','magazinearticle__parent_magazine').filter(id__in=publication_ids).order_by('-published', 'title')
 
     has_publications = True if publication_ids else False
 
@@ -434,23 +432,26 @@ def member_publications(request, person_slug, publication_type_slug=None):
         bibtex = publication_item.bibtex
         year = publication_item.year
         pdf = publication_item.pdf if publication_item.pdf else None
-        author_list = PublicationAuthor.objects.filter(publication=publication_item).values_list('author__full_name', flat=True).order_by('position')
+
+        publication_authors = publication_item.publicationauthor_set.all()
+        sorted_publication_authors = sorted(publication_authors, lambda x, y : cmp(x.position, y.position))
+        author_list = [ pubauthor.author.full_name for pubauthor in sorted_publication_authors ]
         authors = ', '.join(author_list)
 
         if publication_item.child_type == 'ConferencePaper':
-            conference_paper = ConferencePaper.objects.get(id=publication_item.id)
+            conference_paper = publication_item.conferencepaper
             parent_title = conference_paper.parent_proceedings.title if conference_paper.parent_proceedings else ''
 
         elif publication_item.child_type == 'BookSection':
-            book_section = BookSection.objects.get(id=publication_item.id)
+            book_section = publication_item.booksection
             parent_title = book_section.parent_book.title if book_section.parent_book else ''
 
         elif publication_item.child_type == 'JournalArticle':
-            journal_article = JournalArticle.objects.get(id=publication_item.id)
+            journal_article = publication_item.journalarticle
             parent_title = journal_article.parent_journal.title if journal_article.parent_journal else ''
 
         elif publication_item.child_type == 'MagazineArticle':
-            magazine_article = MagazineArticle.objects.get(id=publication_item.id)
+            magazine_article = publication_item.magazinearticle
             parent_title = magazine_article.parent_magazine.title if magazine_article.parent_magazine else ''
 
         else:
@@ -1021,7 +1022,7 @@ def __get_job_data(member):
     if has_thesis:
         number_of_publications = len(publication_ids) + 1
     else:
-        number_of_publications = len(publciation_ids)
+        number_of_publications = len(publication_ids)
 
     return {
         'accounts': accounts,
