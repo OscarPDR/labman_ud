@@ -274,8 +274,8 @@ def parse_publications(request):
 
     return_dict = {
         'form': form,
-        'last_zotero_version': get_last_zotero_version(),
-        'last_synchronized_zotero_version': get_last_synchronized_zotero_version(),
+        'last_zotero_version': get_last_zotero_library_version(),
+        'last_synchronized_zotero_version': get_last_locally_synchronized_zotero_version(),
     }
 
     return render(request, 'management/parse_publications.html', return_dict)

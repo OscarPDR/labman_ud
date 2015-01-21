@@ -124,6 +124,56 @@
 
                 {% endif %}
             {% endfor %}
+            {% if has_thesis and not inside_category %}
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        {{ thesis|length }} PhD dissertation{{ thesis|pluralize }}
+                    </div>
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <th>Title</th>
+
+                            <th>Year</th>
+
+                            <th><i class="fa fa-download"></i></th>
+                        </thead>
+
+                        <tbody>
+                            {% for item in thesis %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'member_phd_dissertation' member.slug %}">
+                                            &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ item.title }}
+                                        </a>
+                                        <br>
+                                        &emsp;<small>
+                                            {{ item.author }}.
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        {{ item.year }}
+                                    </td>
+
+                                    <td>
+                                        {% if item.pdf %}
+                                            <a target="_blank" href="{{ MEDIA_URL }}{{ item.pdf }}">
+                                                <i class="fa fa-file-text fa-2x"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+
+            {% endif %}
         {% else %}
             <p>
                 {{ member.full_name }} has not published anything yet.
