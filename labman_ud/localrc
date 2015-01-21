@@ -1,0 +1,3 @@
+# Run user@machine:~$ . localrc
+# To be able to run the manage.py without explicitly saying "--settings=..."
+export DJANGO_SETTINGS_MODULE=labman_ud.settings.local
