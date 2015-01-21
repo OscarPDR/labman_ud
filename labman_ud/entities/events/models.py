@@ -3,8 +3,8 @@
 import os
 
 from django.db import models
-from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
+from labman_ud.util import nslugify
 
 from .linked_data import *
 
@@ -122,7 +122,7 @@ class Event(BaseModel):
         if not self.short_name:
             self.short_name = self.full_name
 
-        self.slug = slugify(self.short_name)
+        self.slug = nslugify(self.short_name, self.year)
         super(Event, self).save(*args, **kwargs)
 
         # Publish RDF data

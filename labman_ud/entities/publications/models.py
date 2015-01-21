@@ -7,6 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from entities.core.models import BaseModel
+from labman_ud.util import nslugify
 
 from .linked_data import *
 
@@ -153,10 +154,13 @@ class Publication(BaseModel):
     def __unicode__(self):
         return u'%s' % (self.title)
 
+    def _generate_slug(self):
+        return slugify(self.title.encode('utf-8'))
+
     def save(self, *args, **kwargs):
         old_slug = self.slug
 
-        self.slug = slugify(str(self.title.encode('utf-8')))
+        self.slug = self._generate_slug()
 
         if self.child_type == '':
             self.child_type = self.__class__.__name__
@@ -225,6 +229,9 @@ class CollectionPublication(Publication):
         null=True,
     )
 
+    def _generate_slug(self):
+        return nslugify(self.title, self.year, self.volume)
+
     class Meta:
         abstract = True
 
@@ -288,6 +295,9 @@ class Book(CollectionPublication):
         blank=True,
         null=True,
     )
+
+    def _generate_slug(self):
+        return nslugify(self.title, self.year, self.volume, self.series)
 
     class Meta:
         verbose_name = u'Book'
@@ -460,6 +470,9 @@ class Journal(CollectionPublication):
         null=True,
     )
 
+    def _generate_slug(self):
+        return nslugify(self.title, self.year, self.volume, self.issue)
+
     class Meta:
         verbose_name = u'Journal'
         verbose_name_plural = u'Journals'
@@ -535,6 +548,9 @@ class Magazine(CollectionPublication):
         blank=True,
         null=True,
     )
+
+    def _generate_slug(self):
+        return nslugify(self.title, self.year, self.volume, self.issue)
 
     class Meta:
         verbose_name = u'Magazine'

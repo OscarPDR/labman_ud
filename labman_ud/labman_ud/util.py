@@ -35,3 +35,9 @@ def unique_slugify(instance, name_field = "name", slug_field="slug", failure = T
     
     if failure:
         raise Exception("Error generating unique slug for %s" % instance)
+
+def nslugify(*values):
+    slugified_values = [ slugify(unicode(value if value is not None else '').encode('utf8')) 
+                         for value in values ]
+    return '-'.join(slugified_values)
+
