@@ -287,9 +287,5 @@ def parse_publications(request):
 
 @login_required
 def synchronize_publications(request, from_version=0):
-    item_key_list = extract_publications_from_zotero(from_version)
-
-    for item_key in item_key_list[:25]:
-        generate_publication(item_key)
-
+    extract_publications_from_zotero(from_version)
     return HttpResponseRedirect(reverse('parse_publications'))
