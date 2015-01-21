@@ -260,21 +260,21 @@ def parse_journal_article(item):
     except ObjectDoesNotExist:
         journal_article = JournalArticle()
 
-        journal_article.title = item['data']['title']
-        journal_article.short_title = _extract_short_title(item)
+    journal_article.title = item['data']['title']
+    journal_article.short_title = _extract_short_title(item)
 
-        journal_article.abstract = _assign_if_exists(item, 'abstractNote')
-        journal_article.pages = _assign_if_exists(item, 'pages')
-        journal_article.doi = _extract_doi(item)
+    journal_article.abstract = _assign_if_exists(item, 'abstractNote')
+    journal_article.pages = _assign_if_exists(item, 'pages')
+    journal_article.doi = _extract_doi(item)
 
-        journal_article.parent_journal = parse_journal(item)
+    journal_article.parent_journal = parse_journal(item)
 
-        journal_article.published = _parse_date(item['data']['date'])
-        journal_article.year = journal_article.published.year
+    journal_article.published = _parse_date(item['data']['date'])
+    journal_article.year = journal_article.published.year
 
-        journal_article.bibtex = _extract_bibtex(item['key'])
+    journal_article.bibtex = _extract_bibtex(item['key'])
 
-        journal_article.save()
+    journal_article.save()
 
     _save_publication_authors(_extract_authors(item), journal_article)
 
@@ -298,19 +298,19 @@ def parse_journal(item):
     except ObjectDoesNotExist:
         journal = Journal()
 
-        journal.title = item['data']['publicationTitle']
+    journal.title = item['data']['publicationTitle']
 
-        journal.issn = _assign_if_exists(item, 'ISSN')
-        journal.volume = _assign_if_exists(item, 'volume')
-        journal.publisher = _assign_if_exists(item, 'publisher')
-        journal.place = _assign_if_exists(item, 'place')
-        journal.journal_abbreviation = _assign_if_exists(item, 'journalAbbrevation')
-        journal.issue = _assign_if_exists(item, 'issue')
+    journal.issn = _assign_if_exists(item, 'ISSN')
+    journal.volume = _assign_if_exists(item, 'volume')
+    journal.publisher = _assign_if_exists(item, 'publisher')
+    journal.place = _assign_if_exists(item, 'place')
+    journal.journal_abbreviation = _assign_if_exists(item, 'journalAbbrevation')
+    journal.issue = _assign_if_exists(item, 'issue')
 
-        journal.published = _parse_date(item['data']['date'])
-        journal.year = journal.published.year
+    journal.published = _parse_date(item['data']['date'])
+    journal.year = journal.published.year
 
-        journal.save()
+    journal.save()
 
     return journal
     
@@ -326,22 +326,22 @@ def parse_conference_paper(item):
     except ObjectDoesNotExist:
         conference_paper = ConferencePaper()
 
-        conference_paper.title = item['data']['title']
-        conference_paper.short_title = _extract_short_title(item)
+    conference_paper.title = item['data']['title']
+    conference_paper.short_title = _extract_short_title(item)
 
-        conference_paper.abstract = _assign_if_exists(item, 'abstractNote')
-        conference_paper.pages = _assign_if_exists(item, 'pages')
-        conference_paper.doi = _extract_doi(item)
+    conference_paper.abstract = _assign_if_exists(item, 'abstractNote')
+    conference_paper.pages = _assign_if_exists(item, 'pages')
+    conference_paper.doi = _extract_doi(item)
 
-        conference_paper.parent_proceedings = parse_proceedings(item)
-        conference_paper.presented_at = parse_conference(item, conference_paper.parent_proceedings)
+    conference_paper.parent_proceedings = parse_proceedings(item)
+    conference_paper.presented_at = parse_conference(item, conference_paper.parent_proceedings)
 
-        conference_paper.published = _parse_date(item['data']['date'])
-        conference_paper.year = conference_paper.published.year
+    conference_paper.published = _parse_date(item['data']['date'])
+    conference_paper.year = conference_paper.published.year
 
-        conference_paper.bibtex = _extract_bibtex(item['key'])
+    conference_paper.bibtex = _extract_bibtex(item['key'])
 
-        conference_paper.save()
+    conference_paper.save()
 
     _save_publication_authors(_extract_authors(item), conference_paper)
 
@@ -377,18 +377,18 @@ def parse_proceedings(item):
     except ObjectDoesNotExist:
         proceedings = Proceedings()
 
-        proceedings.title = proceedings_title
+    proceedings.title = proceedings_title
 
-        proceedings.isbn = _assign_if_exists(item, 'ISBN')
-        proceedings.volume = _assign_if_exists(item, 'volume')
-        proceedings.series = _assign_if_exists(item, 'series')
-        proceedings.publisher = _assign_if_exists(item, 'publisher')
-        proceedings.place = _assign_if_exists(item, 'place')
+    proceedings.isbn = _assign_if_exists(item, 'ISBN')
+    proceedings.volume = _assign_if_exists(item, 'volume')
+    proceedings.series = _assign_if_exists(item, 'series')
+    proceedings.publisher = _assign_if_exists(item, 'publisher')
+    proceedings.place = _assign_if_exists(item, 'place')
 
-        proceedings.published = _parse_date(item['data']['date'])
-        proceedings.year = proceedings.published.year
+    proceedings.published = _parse_date(item['data']['date'])
+    proceedings.year = proceedings.published.year
 
-        proceedings.save()
+    proceedings.save()
 
     return proceedings
     
@@ -486,21 +486,21 @@ def parse_book_section(item):
     except ObjectDoesNotExist:
         book_section = BookSection()
 
-        book_section.title = item['data']['title']
-        book_section.short_title = _extract_short_title(item)
+    book_section.title = item['data']['title']
+    book_section.short_title = _extract_short_title(item)
 
-        book_section.abstract = _assign_if_exists(item, 'abstractNote')
-        book_section.pages = _assign_if_exists(item, 'pages')
-        book_section.doi = _extract_doi(item)
+    book_section.abstract = _assign_if_exists(item, 'abstractNote')
+    book_section.pages = _assign_if_exists(item, 'pages')
+    book_section.doi = _extract_doi(item)
 
-        book_section.parent_book = parse_book(item)
+    book_section.parent_book = parse_book(item)
 
-        book_section.published = _parse_date(item['data']['date'])
-        book_section.year = book_section.published.year
+    book_section.published = _parse_date(item['data']['date'])
+    book_section.year = book_section.published.year
 
-        book_section.bibtex = _extract_bibtex(item['key'])
+    book_section.bibtex = _extract_bibtex(item['key'])
 
-        book_section.save()
+    book_section.save()
 
     _save_publication_authors(_extract_authors(item), book_section)
 
@@ -526,18 +526,18 @@ def parse_book(item):
     except ObjectDoesNotExist:
         book = Book()
 
-        book.title = item['data']['bookTitle']
+    book.title = item['data']['bookTitle']
 
-        book.isbn = _assign_if_exists(item, 'ISBN')
-        book.volume = _assign_if_exists(item, 'volume')
-        book.series = _assign_if_exists(item, 'series')
-        book.publisher = _assign_if_exists(item, 'publisher')
-        book.place = _assign_if_exists(item, 'place')
+    book.isbn = _assign_if_exists(item, 'ISBN')
+    book.volume = _assign_if_exists(item, 'volume')
+    book.series = _assign_if_exists(item, 'series')
+    book.publisher = _assign_if_exists(item, 'publisher')
+    book.place = _assign_if_exists(item, 'place')
 
-        book.published = _parse_date(item['data']['date'])
-        book.year = book.published.year
+    book.published = _parse_date(item['data']['date'])
+    book.year = book.published.year
 
-        book.save()
+    book.save()
 
     _save_publication_editors(_extract_editors(item), book)
 
@@ -555,28 +555,28 @@ def parse_authored_book(item):
     except ObjectDoesNotExist:
         book = Book()
 
-        book.title = item['data']['title']
-        book.short_title = _extract_short_title(item)
+    book.title = item['data']['title']
+    book.short_title = _extract_short_title(item)
 
-        book.abstract = _assign_if_exists(item, 'abstractNote')
-        book.number_of_pages = _assign_if_exists(item, 'numPages')
-        book.edition = _assign_if_exists(item, 'edition')
-        book.doi = _extract_doi(item)
+    book.abstract = _assign_if_exists(item, 'abstractNote')
+    book.number_of_pages = _assign_if_exists(item, 'numPages')
+    book.edition = _assign_if_exists(item, 'edition')
+    book.doi = _extract_doi(item)
 
-        book.isbn = _assign_if_exists(item, 'ISBN')
-        book.volume = _assign_if_exists(item, 'volume')
-        book.number_of_volumes = _assign_if_exists(item, 'numberOfVolumes')
-        book.series = _assign_if_exists(item, 'series')
-        book.series_number = _assign_if_exists(item, 'seriesNumber')
-        book.publisher = _assign_if_exists(item, 'publisher')
-        book.place = _assign_if_exists(item, 'place')
+    book.isbn = _assign_if_exists(item, 'ISBN')
+    book.volume = _assign_if_exists(item, 'volume')
+    book.number_of_volumes = _assign_if_exists(item, 'numberOfVolumes')
+    book.series = _assign_if_exists(item, 'series')
+    book.series_number = _assign_if_exists(item, 'seriesNumber')
+    book.publisher = _assign_if_exists(item, 'publisher')
+    book.place = _assign_if_exists(item, 'place')
 
-        book.published = _parse_date(item['data']['date'])
-        book.year = book.published.year
+    book.published = _parse_date(item['data']['date'])
+    book.year = book.published.year
 
-        book.bibtex = _extract_bibtex(item['key'])
+    book.bibtex = _extract_bibtex(item['key'])
 
-        book.save()
+    book.save()
 
     _save_publication_authors(_extract_authors(item), book)
 
@@ -599,21 +599,21 @@ def parse_magazine_article(item):
     except ObjectDoesNotExist:
         magazine_article = MagazineArticle()
 
-        magazine_article.title = item['data']['title']
-        magazine_article.short_title = _extract_short_title(item)
+    magazine_article.title = item['data']['title']
+    magazine_article.short_title = _extract_short_title(item)
 
-        magazine_article.abstract = _assign_if_exists(item, 'abstractNote')
-        magazine_article.pages = _assign_if_exists(item, 'pages')
-        magazine_article.doi = _extract_doi(item)
+    magazine_article.abstract = _assign_if_exists(item, 'abstractNote')
+    magazine_article.pages = _assign_if_exists(item, 'pages')
+    magazine_article.doi = _extract_doi(item)
 
-        magazine_article.parent_magazine = parse_magazine(item)
+    magazine_article.parent_magazine = parse_magazine(item)
 
-        magazine_article.published = _parse_date(item['data']['date'])
-        magazine_article.year = magazine_article.published.year
+    magazine_article.published = _parse_date(item['data']['date'])
+    magazine_article.year = magazine_article.published.year
 
-        magazine_article.bibtex = _extract_bibtex(item['key'])
+    magazine_article.bibtex = _extract_bibtex(item['key'])
 
-        magazine_article.save()
+    magazine_article.save()
 
     _save_publication_authors(_extract_authors(item), magazine_article)
 
@@ -639,16 +639,16 @@ def parse_magazine(item):
     except ObjectDoesNotExist:
         magazine = Magazine()
 
-        magazine.title = item['data']['publicationTitle']
+    magazine.title = item['data']['publicationTitle']
 
-        magazine.issn = _assign_if_exists(item, 'ISSN')
-        magazine.volume = _assign_if_exists(item, 'volume')
-        magazine.issue = _assign_if_exists(item, 'issue')
+    magazine.issn = _assign_if_exists(item, 'ISSN')
+    magazine.volume = _assign_if_exists(item, 'volume')
+    magazine.issue = _assign_if_exists(item, 'issue')
 
-        magazine.published = _parse_date(item['data']['date'])
-        magazine.year = magazine.published.year
+    magazine.published = _parse_date(item['data']['date'])
+    magazine.year = magazine.published.year
 
-        magazine.save()
+    magazine.save()
 
     return magazine
 
