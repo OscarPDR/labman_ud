@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import redactor.fields
-import datetime
 
 
 class Migration(migrations.Migration):
@@ -22,8 +21,6 @@ class Migration(migrations.Migration):
             name='TalkOrCourse',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('title', models.CharField(max_length=250)),
                 ('slug', models.SlugField(max_length=250, null=True, blank=True)),
                 ('description', redactor.fields.RedactorField()),
@@ -40,8 +37,6 @@ class Migration(migrations.Migration):
             name='Award',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('full_name', models.CharField(max_length=250)),
                 ('short_name', models.CharField(max_length=250, null=True, blank=True)),
                 ('slug', models.SlugField(max_length=250, null=True, blank=True)),
@@ -59,8 +54,6 @@ class Migration(migrations.Migration):
             name='AwardSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('award', models.ForeignKey(to='utils.Award')),
             ],
@@ -73,8 +66,6 @@ class Migration(migrations.Migration):
             name='CitySeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('city', models.ForeignKey(to='utils.City')),
             ],
@@ -87,8 +78,6 @@ class Migration(migrations.Migration):
             name='ContributionSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
             ],
@@ -101,8 +90,6 @@ class Migration(migrations.Migration):
             name='CountrySeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('country', models.ForeignKey(to='utils.Country')),
             ],
@@ -115,8 +102,6 @@ class Migration(migrations.Migration):
             name='FileItemRelatedToContribution',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
                 ('file_item', models.ForeignKey(to='utils.FileItem')),
             ],
@@ -129,8 +114,6 @@ class Migration(migrations.Migration):
             name='FileItemRelatedToTalkOrCourse',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('file_item', models.ForeignKey(to='utils.FileItem')),
             ],
             options={
@@ -142,8 +125,6 @@ class Migration(migrations.Migration):
             name='GeographicalScopeSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('geographical_scope', models.ForeignKey(to='utils.GeographicalScope')),
             ],
@@ -156,8 +137,6 @@ class Migration(migrations.Migration):
             name='LanguageSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('language', models.ForeignKey(to='utils.Language')),
             ],
@@ -170,8 +149,6 @@ class Migration(migrations.Migration):
             name='LicenseSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('license', models.ForeignKey(to='utils.License')),
             ],
@@ -184,8 +161,6 @@ class Migration(migrations.Migration):
             name='NetworkSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('network', models.ForeignKey(to='utils.Network')),
             ],
@@ -198,8 +173,6 @@ class Migration(migrations.Migration):
             name='PersonRelatedToAward',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('award', models.ForeignKey(to='utils.Award')),
                 ('person', models.ForeignKey(to='persons.Person')),
             ],
@@ -212,8 +185,6 @@ class Migration(migrations.Migration):
             name='PersonRelatedToContribution',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
                 ('person', models.ForeignKey(to='persons.Person')),
             ],
@@ -226,8 +197,6 @@ class Migration(migrations.Migration):
             name='PhDProgramSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('phd_program', models.ForeignKey(to='utils.PhDProgram')),
             ],
@@ -240,8 +209,6 @@ class Migration(migrations.Migration):
             name='ProjectRelatedToAward',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('award', models.ForeignKey(to='utils.Award')),
                 ('project', models.ForeignKey(to='projects.Project')),
             ],
@@ -254,8 +221,6 @@ class Migration(migrations.Migration):
             name='ProjectRelatedToContribution',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
                 ('project', models.ForeignKey(to='projects.Project')),
             ],
@@ -268,8 +233,6 @@ class Migration(migrations.Migration):
             name='PublicationRelatedToAward',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('award', models.ForeignKey(to='utils.Award')),
                 ('publication', models.ForeignKey(to='publications.Publication')),
             ],
@@ -282,8 +245,6 @@ class Migration(migrations.Migration):
             name='PublicationRelatedToContribution',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
                 ('publication', models.ForeignKey(to='publications.Publication')),
             ],
@@ -296,8 +257,6 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('name', models.CharField(max_length=75)),
                 ('slug', models.SlugField(unique=True, max_length=75, blank=True)),
                 ('sub_tag_of', models.ForeignKey(blank=True, to='utils.Tag', null=True)),
@@ -311,8 +270,6 @@ class Migration(migrations.Migration):
             name='TagRelatedToContribution',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('contribution', models.ForeignKey(to='utils.Contribution')),
                 ('tag', models.ForeignKey(to='utils.Tag')),
             ],
@@ -325,8 +282,6 @@ class Migration(migrations.Migration):
             name='TagRelatedToTalkOrCourse',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('tag', models.ForeignKey(to='utils.Tag')),
             ],
             options={
@@ -338,8 +293,6 @@ class Migration(migrations.Migration):
             name='TagSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('tag', models.ForeignKey(to='utils.Tag')),
             ],
@@ -352,8 +305,6 @@ class Migration(migrations.Migration):
             name='TalkOrCourseSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('talk_or_course', models.ForeignKey(to='utils.TalkOrCourse')),
             ],

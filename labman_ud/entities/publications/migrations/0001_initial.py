@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import redactor.fields
-import datetime
 import django.core.validators
 import entities.publications.models
 
@@ -18,8 +17,6 @@ class Migration(migrations.Migration):
             name='CoAdvisor',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'verbose_name': 'Co-advisor',
@@ -31,8 +28,6 @@ class Migration(migrations.Migration):
             name='Publication',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('title', models.CharField(max_length=250)),
                 ('slug', models.SlugField(unique=True, max_length=250, blank=True)),
                 ('abstract', models.TextField(max_length=2500, null=True, blank=True)),
@@ -54,8 +49,6 @@ class Migration(migrations.Migration):
             name='PublicationAuthor',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('position', models.PositiveIntegerField(null=True, blank=True)),
             ],
             options={
@@ -68,8 +61,6 @@ class Migration(migrations.Migration):
             name='PublicationEditor',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'verbose_name': 'Publication editor',
@@ -81,8 +72,6 @@ class Migration(migrations.Migration):
             name='PublicationRank',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'ordering': ['publication__title'],
@@ -95,8 +84,6 @@ class Migration(migrations.Migration):
             name='PublicationSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
             ],
             options={
@@ -108,8 +95,6 @@ class Migration(migrations.Migration):
             name='PublicationTag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'ordering': ['tag__slug'],
@@ -120,8 +105,6 @@ class Migration(migrations.Migration):
             name='Ranking',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('name', models.CharField(max_length=50)),
                 ('slug', models.SlugField(unique=True, blank=True)),
                 ('icon', models.ImageField(null=True, upload_to=entities.publications.models.ranking_icon_picture_path, blank=True)),
@@ -137,8 +120,6 @@ class Migration(migrations.Migration):
             name='Thesis',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('title', models.CharField(max_length=1000)),
                 ('slug', models.SlugField(unique=True, max_length=255, blank=True)),
                 ('registration_date', models.DateField(null=True, blank=True)),
@@ -160,8 +141,6 @@ class Migration(migrations.Migration):
             name='ThesisAbstract',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('abstract', redactor.fields.RedactorField(max_length=5000, blank=True)),
             ],
             options={

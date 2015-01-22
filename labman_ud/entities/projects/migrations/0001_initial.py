@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import datetime
 import entities.projects.models
 import django.core.validators
 
@@ -17,8 +16,6 @@ class Migration(migrations.Migration):
             name='AssignedPerson',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('start_date', models.DateField(null=True, blank=True)),
                 ('end_date', models.DateField(null=True, blank=True)),
                 ('description', models.TextField(max_length=1500, blank=True)),
@@ -32,8 +29,6 @@ class Migration(migrations.Migration):
             name='AssignedPersonTag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'abstract': False,
@@ -44,8 +39,6 @@ class Migration(migrations.Migration):
             name='ConsortiumMember',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'abstract': False,
@@ -56,8 +49,6 @@ class Migration(migrations.Migration):
             name='Funding',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('project_code', models.CharField(max_length=150, null=True, blank=True)),
                 ('total_funds', models.DecimalField(null=True, max_digits=10, decimal_places=2, blank=True)),
                 ('slug', models.SlugField(max_length=500, blank=True)),
@@ -71,8 +62,6 @@ class Migration(migrations.Migration):
             name='FundingAmount',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('own_amount', models.DecimalField(max_digits=10, decimal_places=2)),
                 ('year', models.IntegerField(validators=[django.core.validators.MinValueValidator(1950), django.core.validators.MaxValueValidator(2080)])),
             ],
@@ -85,8 +74,6 @@ class Migration(migrations.Migration):
             name='FundingSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
             ],
             options={
@@ -98,8 +85,6 @@ class Migration(migrations.Migration):
             name='Project',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('project_type', models.CharField(default=b'Project', max_length=50, choices=[(b'Applied research project', b'Applied research project'), (b'Development project', b'Development project'), (b'External project', b'External project'), (b'Innovation project', b'Innovation project'), (b'Internal project', b'Internal project'), (b'Project', b'Project'), (b'Research contract', b'Research contract'), (b'Research project', b'Research project')])),
                 ('full_name', models.CharField(max_length=250)),
                 ('short_name', models.CharField(max_length=250, blank=True)),
@@ -124,8 +109,6 @@ class Migration(migrations.Migration):
             name='ProjectSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
             ],
             options={
@@ -137,8 +120,6 @@ class Migration(migrations.Migration):
             name='ProjectTag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271519), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 40, 42, 271567), auto_now=True)),
             ],
             options={
                 'abstract': False,

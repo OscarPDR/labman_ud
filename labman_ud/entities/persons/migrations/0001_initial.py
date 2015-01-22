@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import redactor.fields
-import datetime
 import entities.persons.models
 
 
@@ -19,8 +18,6 @@ class Migration(migrations.Migration):
             name='AccountProfile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('profile_id', models.CharField(max_length=150)),
                 ('network', models.ForeignKey(to='utils.Network')),
             ],
@@ -33,8 +30,6 @@ class Migration(migrations.Migration):
             name='Nickname',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('nickname', models.CharField(max_length=150)),
                 ('slug', models.SlugField(max_length=150, blank=True)),
             ],
@@ -47,8 +42,6 @@ class Migration(migrations.Migration):
             name='Person',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('first_name', models.CharField(max_length=25)),
                 ('first_surname', models.CharField(max_length=50)),
                 ('second_surname', models.CharField(max_length=50, null=True, blank=True)),
@@ -78,8 +71,6 @@ class Migration(migrations.Migration):
             name='PersonSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('person', models.ForeignKey(related_name='see_also_links', to='persons.Person')),
             ],
@@ -92,8 +83,6 @@ class Migration(migrations.Migration):
             name='PhDProgramFollowedByPerson',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('person', models.ForeignKey(to='persons.Person')),
                 ('phd_program', models.ForeignKey(to='utils.PhDProgram')),
             ],
@@ -106,8 +95,6 @@ class Migration(migrations.Migration):
             name='ThesisRegisteredByPerson',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416201), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 14, 41, 41, 416252), auto_now=True)),
                 ('person', models.ForeignKey(to='persons.Person')),
                 ('thesis', models.ForeignKey(to='publications.Thesis')),
             ],

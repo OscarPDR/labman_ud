@@ -21,8 +21,6 @@ class Migration(migrations.Migration):
             name='EventRelatedToNews',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('event', models.ForeignKey(to='events.Event')),
             ],
             options={
@@ -34,8 +32,6 @@ class Migration(migrations.Migration):
             name='News',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('post_tweet', models.BooleanField(default=False)),
                 ('tweet_cc', models.CharField(max_length=70, null=True, blank=True)),
                 ('title', models.CharField(max_length=250)),
@@ -54,8 +50,6 @@ class Migration(migrations.Migration):
             name='NewsTag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('news', models.ForeignKey(to='news.News')),
                 ('tag', models.ForeignKey(to='utils.Tag')),
             ],
@@ -68,8 +62,6 @@ class Migration(migrations.Migration):
             name='PersonRelatedToNews',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('news', models.ForeignKey(to='news.News')),
                 ('person', models.ForeignKey(to='persons.Person')),
             ],
@@ -82,8 +74,6 @@ class Migration(migrations.Migration):
             name='ProjectRelatedToNews',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('news', models.ForeignKey(to='news.News')),
                 ('project', models.ForeignKey(to='projects.Project')),
             ],
@@ -96,8 +86,6 @@ class Migration(migrations.Migration):
             name='PublicationRelatedToNews',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88804), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 42, 3, 88868), auto_now=True)),
                 ('news', models.ForeignKey(to='news.News')),
                 ('publication', models.ForeignKey(to='publications.Publication')),
             ],

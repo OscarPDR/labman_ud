@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import datetime
 import entities.events.models
 
 
@@ -19,8 +18,6 @@ class Migration(migrations.Migration):
             name='Event',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491229), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491279), auto_now=True)),
                 ('event_type', models.CharField(default=b'Generic event', max_length=75, choices=[(b'Academic event', b'Academic event'), (b'Generic event', b'Generic event'), (b'Hackathon', b'Hackathon'), (b'Project meeting', b'Project meeting')])),
                 ('full_name', models.CharField(max_length=250)),
                 ('short_name', models.CharField(max_length=250, blank=True)),
@@ -48,8 +45,6 @@ class Migration(migrations.Migration):
             name='EventSeeAlso',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491229), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491279), auto_now=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('event', models.ForeignKey(to='events.Event')),
             ],
@@ -62,8 +57,6 @@ class Migration(migrations.Migration):
             name='PersonRelatedToEvent',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('log_created', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491229), auto_now_add=True)),
-                ('log_modified', models.DateTimeField(default=datetime.datetime(2015, 1, 21, 15, 48, 49, 491279), auto_now=True)),
                 ('event', models.ForeignKey(to='events.Event')),
                 ('person', models.ForeignKey(to='persons.Person')),
             ],
