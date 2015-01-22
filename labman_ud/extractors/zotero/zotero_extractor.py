@@ -179,8 +179,8 @@ def extract_publications_from_zotero(from_version):
                 else: 
                     #only the attachment has been modified
                     parent_publication = zot.item(parent_id)
-                    publication_slug = slugify(parent_publication['data']['title'])
-                    _save_attachment(a['key'], publication_slug, a['data']['filename'])
+                    for publication in Publication.objects.filter(zotero_key = parent_publication['key']).all():
+                        _save_attachment(a['key'], publication.slug, a['data']['filename'])
             else:
                 print a['data'].get('title', 'The user did not even added a title'), "did not have a parentItem"
         
@@ -290,7 +290,7 @@ def parse_journal_article(item):
     _extract_tags(item, journal_article)
     
     if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], publication_slug, item['attachment']['data']['filename'])
+         _save_attachment(item['attachment']['key'], journal_article.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, journal_article)     
     
@@ -354,7 +354,7 @@ def parse_conference_paper(item):
     _extract_tags(item, conference_paper)
     
     if 'attachment' in item:
-        _save_attachment(item['attachment']['key'], publication_slug, item['attachment']['data']['filename'])
+        _save_attachment(item['attachment']['key'], conference_paper.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, conference_paper)
 
@@ -510,7 +510,7 @@ def parse_book_section(item):
     _extract_tags(item, book_section)
     
     if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], publication_slug, item['attachment']['data']['filename'])
+         _save_attachment(item['attachment']['key'], book_section.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book_section)
 
@@ -583,7 +583,7 @@ def parse_authored_book(item):
     _extract_tags(item, book)
     
     if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], publication_slug, item['attachment']['data']['filename'])
+         _save_attachment(item['attachment']['key'], book.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book)
     
@@ -617,7 +617,7 @@ def parse_magazine_article(item):
     _extract_tags(item, magazine_article)
     
     if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], publication_slug, item['attachment']['data']['filename'])
+         _save_attachment(item['attachment']['key'], magazine_article.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, magazine_article)
 
