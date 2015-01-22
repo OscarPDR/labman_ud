@@ -380,7 +380,7 @@ class LatestPublicationsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
-        return Publication.objects.order_by('-log_created')[:30]
+        return Publication.objects.order_by('-id')[:30]
 
     def item_title(self, item):
         return item.title

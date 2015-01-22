@@ -350,7 +350,7 @@ class LatestProjectsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
-        return Project.objects.order_by('-log_created')[:30]
+        return Project.objects.order_by('-id')[:30]
 
     def item_title(self, item):
         return item.full_name
