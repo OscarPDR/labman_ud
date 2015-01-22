@@ -73,6 +73,12 @@ class Publication(BaseModel):
         max_length=250,
     )
 
+    zotero_key = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+    )
+
     slug = models.SlugField(
         max_length=250,
         blank=True,

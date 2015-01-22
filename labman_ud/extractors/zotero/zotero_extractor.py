@@ -206,6 +206,8 @@ def extract_publications_from_zotero(from_version):
 def clean_database():
     Publication.objects.all().delete()
 
+    RelatedPublication.objects.all().delete()
+    PublicationRank.objects.all().delete()
     PublicationAuthor.objects.all().delete()
     PublicationEditor.objects.all().delete()
     PublicationTag.objects.all().delete()
@@ -218,6 +220,16 @@ def clean_database():
 
 def generate_publication(item):
     publication_type = item['data']['itemType']
+
+    existing_publications = Publication.objects.filter(zotero_key = item['key']).all()
+    for existing_publication in existing_publications:
+        # There should 0 or 1 publication for that zotero key but just in case we run a "for"
+        PublicationAuthor.objects.filter(publication = existing_publication).all().delete()
+        PublicationEditor.objects.filter(publication = existing_publication).all().delete()
+        PublicationTag.objects.filter(publication = existing_publication).all().delete()
+        PublicationRank.objects.filter(publication = existing_publication).all().delete()
+        RelatedPublication.objects.filter(publication = existing_publication).all().delete()
+        existing_publication.delete()
 
     if publication_type == 'conferencePaper':
         parse_conference_paper(item)
@@ -253,12 +265,9 @@ def generate_publication(item):
 ####################################################################################################
 
 def parse_journal_article(item):
-    publication_slug = slugify(item['data']['title'])
-    try:
-        journal_article = JournalArticle.objects.get(slug=publication_slug)
+    journal_article = JournalArticle()
 
-    except ObjectDoesNotExist:
-        journal_article = JournalArticle()
+    journal_article.zotero_key = item['key']
 
     journal_article.title = item['data']['title']
     journal_article.short_title = _extract_short_title(item)
@@ -319,12 +328,9 @@ def parse_journal(item):
 ####################################################################################################
 
 def parse_conference_paper(item):
-    publication_slug = slugify(item['data']['title'])
-    try:
-        conference_paper = ConferencePaper.objects.get(slug=publication_slug)
-
-    except ObjectDoesNotExist:
-        conference_paper = ConferencePaper()
+    conference_paper = ConferencePaper()
+    
+    conference_paper.zotero_key = item['key']
 
     conference_paper.title = item['data']['title']
     conference_paper.short_title = _extract_short_title(item)
@@ -479,12 +485,9 @@ def parse_conference(item, proceedings):
 ####################################################################################################
 
 def parse_book_section(item):
-    publication_slug = slugify(item['data']['title'])
-    try:
-        book_section = BookSection.objects.get(slug=publication_slug)
+    book_section = BookSection()
 
-    except ObjectDoesNotExist:
-        book_section = BookSection()
+    book_section.zotero_key = item['key']
 
     book_section.title = item['data']['title']
     book_section.short_title = _extract_short_title(item)
@@ -548,12 +551,9 @@ def parse_book(item):
 ####################################################################################################
 
 def parse_authored_book(item):
-    publication_slug = nslugify(item['data']['title'], _parse_date(item['data']['date']).year, item['data']['volume'], item['data']['series'])
-    try:
-        book = Book.objects.get(slug=publication_slug)
+    book = Book()
 
-    except ObjectDoesNotExist:
-        book = Book()
+    book.zotero_key = item['key']
 
     book.title = item['data']['title']
     book.short_title = _extract_short_title(item)
@@ -592,12 +592,9 @@ def parse_authored_book(item):
 ####################################################################################################
 
 def parse_magazine_article(item):
-    publication_slug = slugify(item['data']['title'])
-    try:
-        magazine_article = MagazineArticle.objects.get(slug=publication_slug)
+    magazine_article = MagazineArticle()
 
-    except ObjectDoesNotExist:
-        magazine_article = MagazineArticle()
+    magazine_article.zotero_key = item['key']
 
     magazine_article.title = item['data']['title']
     magazine_article.short_title = _extract_short_title(item)
@@ -800,9 +797,7 @@ def _extract_authors(item):
 def _save_publication_authors(authors, publication):
     order = 1
 
-    existing_authors = PublicationAuthor.objects.filter(publication = publication).all()
-    for existing_author in existing_authors:
-        existing_author.delete()
+    PublicationAuthor.objects.filter(publication = publication).all().delete()
 
     for author in authors:
         publication_author = PublicationAuthor(
@@ -822,17 +817,9 @@ def _save_publication_authors(authors, publication):
 def _extract_tags(item, publication):
 
     # Clean ranking and projects so as to ensure that it's correctly synchronized
-    existing_rankings = PublicationRank.objects.filter(publication = publication).all()
-    for existing_ranking in existing_rankings:
-        existing_ranking.delete()
-
-    existing_projects = RelatedPublication.objects.filter(publication = publication).all()
-    for existing_project in existing_projects:
-        existing_project.delete()
-
-    existing_tags = PublicationTag.objects.filter(publication = publication).all()
-    for existing_tag in existing_tags:
-        existing_tag.delete()
+    PublicationRank.objects.filter(publication = publication).all().delete()
+    RelatedPublication.objects.filter(publication = publication).all().delete()
+    PublicationTag.objects.filter(publication = publication).all().delete()
 
     if item['data'].has_key('tags') and len(item['data']['tags']) > 0:
         for tag_item in item['data']['tags']:
@@ -958,9 +945,7 @@ def _extract_editors(item):
 ####################################################################################################
 
 def _save_publication_editors(editors, publication):
-    existing_editors = PublicationEditor.objects.filter(publication=publication).all()
-    for existing_editor in existing_editors:
-        existing_editor.delete()
+    PublicationEditor.objects.filter(publication=publication).all().delete()
 
     for editor in editors:
         publication_editor = PublicationEditor(
