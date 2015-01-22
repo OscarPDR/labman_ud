@@ -3,7 +3,6 @@
 import os
 
 from django.db import models
-from entities.core.models import BaseModel
 from labman_ud.util import nslugify
 
 from .linked_data import *
@@ -27,7 +26,7 @@ def event_logo_path(self, filename):
 # Model: Event
 ###########################################################################
 
-class Event(BaseModel):
+class Event(models.Model):
     event_type = models.CharField(
         max_length=75,
         choices=EVENT_TYPES,
@@ -142,7 +141,7 @@ class Event(BaseModel):
 # Model: EventSeeAlso
 ###########################################################################
 
-class EventSeeAlso(BaseModel):
+class EventSeeAlso(models.Model):
     event = models.ForeignKey('Event')
     see_also = models.URLField(
         max_length=512,
@@ -174,7 +173,7 @@ class EventSeeAlso(BaseModel):
 # Model: PersonRelatedToEvent
 ###########################################################################
 
-class PersonRelatedToEvent(BaseModel):
+class PersonRelatedToEvent(models.Model):
     person = models.ForeignKey('persons.Person')
     event = models.ForeignKey('Event')
 

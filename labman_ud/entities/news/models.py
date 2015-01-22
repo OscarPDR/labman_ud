@@ -1,7 +1,6 @@
 
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 
 from datetime import datetime
 from redactor.fields import RedactorField
@@ -16,7 +15,7 @@ from management.post_tweet import post_tweet
 ###     Model: News
 ####################################################################################################
 
-class News(BaseModel):
+class News(models.Model):
     post_tweet = models.BooleanField(
         default=False,
     )
@@ -78,7 +77,7 @@ class News(BaseModel):
 ###     Model: NewsTag
 ####################################################################################################
 
-class NewsTag(BaseModel):
+class NewsTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
     news = models.ForeignKey('News')
 
@@ -90,7 +89,7 @@ class NewsTag(BaseModel):
 ###     Model: ProjectRelatedToNews
 ####################################################################################################
 
-class ProjectRelatedToNews(BaseModel):
+class ProjectRelatedToNews(models.Model):
     project = models.ForeignKey('projects.Project')
     news = models.ForeignKey('News')
 
@@ -102,7 +101,7 @@ class ProjectRelatedToNews(BaseModel):
 ###     Model: PublicationRelatedToNews
 ####################################################################################################
 
-class PublicationRelatedToNews(BaseModel):
+class PublicationRelatedToNews(models.Model):
     publication = models.ForeignKey('publications.Publication')
     news = models.ForeignKey('News')
 
@@ -114,7 +113,7 @@ class PublicationRelatedToNews(BaseModel):
 ###     Model: PersonRelatedToNews
 ####################################################################################################
 
-class PersonRelatedToNews(BaseModel):
+class PersonRelatedToNews(models.Model):
     person = models.ForeignKey('persons.Person')
     news = models.ForeignKey('News')
 
@@ -126,7 +125,7 @@ class PersonRelatedToNews(BaseModel):
 ###     Model: EventRelatedToNews
 ####################################################################################################
 
-class EventRelatedToNews(BaseModel):
+class EventRelatedToNews(models.Model):
     event = models.ForeignKey('events.Event')
     news = models.ForeignKey('News')
 

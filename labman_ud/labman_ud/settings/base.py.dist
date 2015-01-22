@@ -166,7 +166,6 @@ INSTALLED_APPS = (
     'redactor',
 
     # Custom applications with data models
-    'entities.core',
     'entities.events',
     'entities.funding_programs',
     'entities.news',

@@ -4,7 +4,6 @@ import os
 
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 
 from .linked_data import *
 
@@ -30,7 +29,7 @@ def organization_logo_path(self, filename):
 # Model: Organization
 ###########################################################################
 
-class Organization(BaseModel):
+class Organization(models.Model):
     organization_type = models.CharField(
         max_length=75,
         choices=ORGANIZATION_TYPES,
@@ -115,7 +114,7 @@ class Organization(BaseModel):
 # Model: OrganizationSeeAlso
 ###########################################################################
 
-class OrganizationSeeAlso(BaseModel):
+class OrganizationSeeAlso(models.Model):
     organization = models.ForeignKey('Organization', related_name='see_also_links')
 
     see_also = models.URLField(
@@ -148,7 +147,7 @@ class OrganizationSeeAlso(BaseModel):
 # Model: Unit
 ###########################################################################
 
-class Unit(BaseModel):
+class Unit(models.Model):
     organization = models.ForeignKey('Organization', related_name='unit')
 
     head = models.ForeignKey('persons.Person', null=True, blank=True)
