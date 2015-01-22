@@ -20,6 +20,7 @@ from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 
 from labman_setup.models import *
+from labman_ud.util import *
 
 from collections import OrderedDict, Counter
 
@@ -81,13 +82,9 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     projects_length = len(projects)
 
-    if (projects_length > 0):
-        last_created = Project.objects.order_by('-log_created')[0]
-        last_modified = Project.objects.order_by('-log_modified')[0]
+    project_model_list = ['Project']
 
-    else:
-        last_created = None
-        last_modified = None
+    last_entry = get_last_model_update_log_entry('projects', project_model_list)
 
     project_types = Project.objects.all().values_list('project_type', flat=True)
 
@@ -98,11 +95,9 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'Projects',
         'clean_index': clean_index,
         'form': form,
-        'last_created': last_created,
-        'last_modified': last_modified,
+        'last_entry': last_entry,
         'project_type': project_type,
         'project_type_info': dict(items),
         'projects': projects,
@@ -110,6 +105,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'query_string': query_string,
         'status': status,
         'tag': tag,
+        'web_title': u'Projects',
     }
 
     return render(request, "projects/index.html", return_dict)
