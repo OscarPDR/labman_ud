@@ -131,15 +131,12 @@
 
                         <br>
 
-                        {% if project.description != "-" %}
+                        <h5>Description:</h5>
+                        <p>
+                            {{ project.description|safe }}
+                        </p>
 
-                            <h5>Description:</h5>
-                            <p>
-                                {{ project.description }}
-                            </p>
-
-                            <br>
-                        {% endif %}
+                        <br>
 
                     </div>
                 {% endblock %}

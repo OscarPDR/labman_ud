@@ -8,11 +8,8 @@ from redactor.fields import RedactorField
 from management.post_tweet import post_tweet
 
 
-# Create your models here.
-
-
 ####################################################################################################
-###     Model: News
+###     News
 ####################################################################################################
 
 class News(models.Model):
@@ -70,11 +67,13 @@ class News(models.Model):
         if self.post_tweet:
             post_tweet(self)
 
+        self.content = self.content.replace("<img src=", "<img class='img-responsive' src=")
+
         super(News, self).save(*args, **kwargs)
 
 
 ####################################################################################################
-###     Model: NewsTag
+###     NewsTag
 ####################################################################################################
 
 class NewsTag(models.Model):
@@ -86,7 +85,7 @@ class NewsTag(models.Model):
 
 
 ####################################################################################################
-###     Model: ProjectRelatedToNews
+###     ProjectRelatedToNews
 ####################################################################################################
 
 class ProjectRelatedToNews(models.Model):
@@ -98,7 +97,7 @@ class ProjectRelatedToNews(models.Model):
 
 
 ####################################################################################################
-###     Model: PublicationRelatedToNews
+###     PublicationRelatedToNews
 ####################################################################################################
 
 class PublicationRelatedToNews(models.Model):
@@ -110,7 +109,7 @@ class PublicationRelatedToNews(models.Model):
 
 
 ####################################################################################################
-###     Model: PersonRelatedToNews
+###     PersonRelatedToNews
 ####################################################################################################
 
 class PersonRelatedToNews(models.Model):
@@ -122,7 +121,7 @@ class PersonRelatedToNews(models.Model):
 
 
 ####################################################################################################
-###     Model: EventRelatedToNews
+###     EventRelatedToNews
 ####################################################################################################
 
 class EventRelatedToNews(models.Model):

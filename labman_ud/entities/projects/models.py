@@ -1,14 +1,12 @@
-# -*- encoding: utf-8 -*-
 
 import os
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
+from redactor.fields import RedactorField
 
 from .linked_data import *
-
-# Create your models here.
 
 
 def project_logo_path(self, filename):
@@ -80,9 +78,10 @@ class Project(models.Model):
         unique=True,
     )
 
-    description = models.TextField(
+    description = RedactorField()(
         max_length=3000,
         blank=True,
+        null=True,
     )
 
     homepage = models.URLField(
@@ -150,6 +149,8 @@ class Project(models.Model):
 
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
+
+        self.description = self.description.replace("<img src=", "<img class='img-responsive' src=")
 
         self.slug = slugify(self.short_name.encode('utf-8'))
         super(Project, self).save(*args, **kwargs)
