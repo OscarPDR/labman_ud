@@ -97,6 +97,11 @@ class LabmanDeployGeneralSettings(models.Model):
         null=True,
     )
 
+    google_search_script = RedactorField(
+        blank=True,
+        null=True,
+    )
+
     def save(self, *args, **kwargs):
         if not self.research_group_short_name:
             self.research_group_short_name = self.research_group_full_name

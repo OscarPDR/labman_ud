@@ -7,6 +7,12 @@
 
     <div class="centered text-muted">
         <h1>Ups... item not found</h1>
+
+        {% if RESEARCH_GROUP_SETTINGS.google_search_script %}
+            <br>
+            {{ RESEARCH_GROUP_SETTINGS.google_search_script|safe }}
+            <br>
+        {% endif %}
     </div>
 
 {% endblock %}
