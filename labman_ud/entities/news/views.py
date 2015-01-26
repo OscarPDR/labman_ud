@@ -86,8 +86,12 @@ class LatestNewsFeed(Feed):
         super(LatestNewsFeed, self).__init__(*args, **kwargs)
         self.__request = threading.local()
 
-    _settings = LabmanDeployGeneralSettings.objects.get()
-    research_group_short_name = _settings.research_group_short_name
+    try:
+        _settings = LabmanDeployGeneralSettings.objects.get()
+        research_group_short_name = _settings.research_group_short_name
+
+    except:
+        research_group_short_name = u'Our'
 
     title = u'%s news' % research_group_short_name
     description = u'%s news' % research_group_short_name
