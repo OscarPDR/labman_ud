@@ -35,7 +35,7 @@ TITLES = (
 
 
 ###########################################################################
-# Model: Person
+###     Person
 ###########################################################################
 
 class Person(models.Model):
@@ -204,7 +204,7 @@ class Person(models.Model):
 
 
 ###########################################################################
-# Model: PersonSeeAlso
+###     PersonSeeAlso
 ###########################################################################
 
 class PersonSeeAlso(models.Model):
@@ -237,7 +237,7 @@ class PersonSeeAlso(models.Model):
 
 
 ###########################################################################
-# Model: AccountProfile
+###     AccountProfile
 ###########################################################################
 
 class AccountProfile(models.Model):
@@ -272,7 +272,7 @@ class AccountProfile(models.Model):
 
 
 ###########################################################################
-# Model: Nickname
+###     Nickname
 ###########################################################################
 
 class Nickname(models.Model):
@@ -315,7 +315,7 @@ class Nickname(models.Model):
 
 
 ###########################################################################
-# Model: Job
+###     Job
 ###########################################################################
 
 class Job(models.Model):
@@ -365,7 +365,7 @@ class Job(models.Model):
 
 
 ###########################################################################
-# Model: PhDProgramFollowedByPerson
+###     PhDProgramFollowedByPerson
 ###########################################################################
 
 class PhDProgramFollowedByPerson(models.Model):
@@ -374,7 +374,7 @@ class PhDProgramFollowedByPerson(models.Model):
 
 
 ###########################################################################
-# Model: ThesisRegisteredByPerson
+###     ThesisRegisteredByPerson
 ###########################################################################
 
 class ThesisRegisteredByPerson(models.Model):
