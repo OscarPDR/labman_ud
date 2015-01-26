@@ -1,3 +1,4 @@
+# coding=utf-8
 
 import os
 
@@ -78,7 +79,7 @@ class Project(models.Model):
         unique=True,
     )
 
-    description = RedactorField()(
+    description = RedactorField(
         max_length=3000,
         blank=True,
         null=True,
