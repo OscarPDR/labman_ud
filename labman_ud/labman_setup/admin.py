@@ -59,6 +59,14 @@ class AboutSectionAdmin(admin.ModelAdmin):
 
 
 ####################################################################################################
+# Class: TwitterCardsConfigurationAdmin
+####################################################################################################
+
+class TwitterCardsConfigurationAdmin(admin.ModelAdmin):
+    model = TwitterCardsConfiguration
+
+
+####################################################################################################
 ####################################################################################################
 ###   Register classes
 ####################################################################################################
@@ -71,3 +79,4 @@ admin.site.register(SEOAndAnalytics, SEOAndAnalyticsAdmin)
 admin.site.register(TweetPonyConfiguration, TweetPonyConfigurationAdmin)
 admin.site.register(ZoteroConfiguration, ZoteroConfigurationAdmin)
 admin.site.register(AboutSection, AboutSectionAdmin)
+admin.site.register(TwitterCardsConfiguration, TwitterCardsConfigurationAdmin)

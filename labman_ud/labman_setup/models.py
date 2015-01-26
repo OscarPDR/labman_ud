@@ -3,12 +3,7 @@ from django.db import models
 from redactor.fields import RedactorField
 from django.template.defaultfilters import slugify
 
-from redactor.fields import RedactorField
-
 import os
-
-
-# Create your models here.
 
 
 def team_picture_path(self, filename):
@@ -25,6 +20,10 @@ def official_network_picture_path(self, filename):
 
 def favicon_picture_path(self, filename):
     return "%s/%s%s" % ('research_group', 'favicon', os.path.splitext(filename)[-1])
+
+
+def twitter_card_picture_path(self, filename):
+    return "%s/%s%s" % ('research_group', 'twitter_card_image', os.path.splitext(filename)[-1])
 
 
 ####################################################################################################
@@ -271,3 +270,35 @@ class AboutSection(models.Model):
         self.content = self.content.replace("<img src=", "<img class='img-responsive' src=")
 
         super(AboutSection, self).save(*args, **kwargs)
+
+
+####################################################################################################
+###     Model: TwitterCardsConfiguration
+####################################################################################################
+
+class TwitterCardsConfiguration(models.Model):
+
+    site_account = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
+    card_title = models.CharField(
+        max_length=70,
+    )
+
+    card_description = models.CharField(
+        max_length=200,
+    )
+
+    card_image = models.ImageField(
+        upload_to=twitter_card_picture_path,
+        blank=True,
+        null=True,
+    )
+
+    base_url = models.URLField(
+        blank=True,
+        null=True,
+    )

@@ -1,0 +1,9 @@
+
+{% if TWITTER_CARD %}
+    <meta name="twitter:card" content="summary" />
+    {% if TWITTER_CARD.site_account %}<meta name="twitter:site" content="{{ TWITTER_CARD.site_account }}" />{% endif %}
+    <meta name="twitter:title" content="{{ TWITTER_CARD.card_title }}" />
+    <meta name="twitter:description" content="{{ TWITTER_CARD.card_description }}" />
+    {% if TWITTER_CARD.base_url %}<meta name="twitter:url" content="{{ TWITTER_CARD.base_url }}" />{% elif BASE_URL %}<meta name="twitter:url" content="{{ BASE_URL }}" />{% endif %}
+    {% if TWITTER_CARD_IMAGE %}<meta name="twitter:image" content="{{ TWITTER_CARD_IMAGE }}" />{% endif %}
+{% endif %}

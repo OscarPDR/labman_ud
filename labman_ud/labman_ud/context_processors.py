@@ -56,8 +56,29 @@ def global_vars(request):
     else:
         social_profile_width = 1
 
+    try:
+        twitter_card = TwitterCardsConfiguration.objects.get()
+
+    except:
+        twitter_card = None
+
+    twitter_card_image_url = request.build_absolute_uri()
+
+    if twitter_card and twitter_card.card_image:
+        twitter_card_image_url += twitter_card.card_image.url
+
+    elif _settings.research_group_official_logo:
+        twitter_card_image_url += _settings.research_group_official_logo.url
+
+    else:
+        twitter_card_image_url = None
+
+    if twitter_card_image_url:
+        twitter_card_image_url = twitter_card_image_url.replace("//", "/")
+
     return_dict = {
         'ADDRESS_DETAILS': address_details,
+        'BASE_URL': getattr(settings, 'BASE_URL', None),
         'CONTACT_DETAILS': contact_details,
         'ENABLE_RDF_PUBLISHING': getattr(settings, 'ENABLE_RDF_PUBLISHING', False),
         'FOOTER_DIVISIONS_WIDTH': footer_divisions_width,
@@ -67,6 +88,8 @@ def global_vars(request):
         'SOCIAL_DETAILS': social_details,
         'SOCIAL_PROFILE_WIDTH': social_profile_width,
         'SOCIAL_PROFILES': social_profiles,
+        'TWITTER_CARD': twitter_card,
+        'TWITTER_CARD_IMAGE': twitter_card_image_url,
     }
 
     return return_dict
