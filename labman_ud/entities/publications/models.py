@@ -124,6 +124,12 @@ class Publication(models.Model):
         blank=True,
     )
 
+    zotero_key = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+    )
+
     authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='authors')
     editors = models.ManyToManyField('persons.Person', through='PublicationEditor', related_name='editors')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
