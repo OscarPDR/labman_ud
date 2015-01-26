@@ -17,6 +17,7 @@ from entities.projects.models import Project, RelatedPublication
 from entities.utils.models import Tag
 
 from labman_setup.models import *
+from labman_ud.util import *
 
 from collections import OrderedDict, Counter
 
@@ -175,13 +176,20 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     publications_length = len(publications)
 
-    if (publications_length > 0):
-        last_created = Publication.objects.order_by('-log_created')[0]
-        last_modified = Publication.objects.order_by('-log_modified')[0]
+    publication_model_list = [
+        'Book',
+        'BookSection',
+        'ConferencePaper',
+        'Journal',
+        'JournalArticle',
+        'Magazine',
+        'MagazineArticle',
+        'Proceedings',
+        'Publication',
+        'Thesis',
+    ]
 
-    else:
-        last_created = None
-        last_modified = None
+    last_entry = get_last_model_update_log_entry('publications', publication_model_list)
 
     publication_types = Publication.objects.all().exclude(authors=None).values_list('child_type', flat=True)
 
@@ -198,18 +206,17 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'Publications',
         'clean_index': clean_index,
         'form': form,
-        'last_created': last_created,
-        'last_modified': last_modified,
-        'publications': publications,
+        'last_entry': last_entry,
         'publication_type': publication_type,
+        'publications': publications,
         'publications_length': publications_length,
+        'pubtype_info': dict(items),
         'query_string': query_string,
         'tag': tag,
-        'pubtype_info': dict(items),
         'theses': theses,
+        'web_title': u'Publications',
     }
 
     return render(request, 'publications/index.html', return_dict)
@@ -373,7 +380,7 @@ class LatestPublicationsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
-        return Publication.objects.order_by('-log_created')[:30]
+        return Publication.objects.order_by('-id')[:30]
 
     def item_title(self, item):
         return item.title

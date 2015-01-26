@@ -4,7 +4,6 @@ import os
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 
 from redactor.fields import RedactorField
 from .linked_data import *
@@ -22,7 +21,7 @@ def file_path(self, filename):
 # Model: City
 ###########################################################################
 
-class City(BaseModel):
+class City(models.Model):
     full_name = models.CharField(
         max_length=150,
     )
@@ -77,7 +76,7 @@ class City(BaseModel):
 # Model: CitySeeAlso
 ###########################################################################
 
-class CitySeeAlso(BaseModel):
+class CitySeeAlso(models.Model):
     city = models.ForeignKey('City')
     see_also = models.URLField(
         max_length=512,
@@ -91,7 +90,7 @@ class CitySeeAlso(BaseModel):
 # Model: Country
 ###########################################################################
 
-class Country(BaseModel):
+class Country(models.Model):
     full_name = models.CharField(
         max_length=150,
     )
@@ -133,7 +132,7 @@ class Country(BaseModel):
 # Model: CountrySeeAlso
 ###########################################################################
 
-class CountrySeeAlso(BaseModel):
+class CountrySeeAlso(models.Model):
     country = models.ForeignKey('Country')
     see_also = models.URLField(
         max_length=512,
@@ -147,7 +146,7 @@ class CountrySeeAlso(BaseModel):
 # Model: GeographicalScope
 ###########################################################################
 
-class GeographicalScope(BaseModel):
+class GeographicalScope(models.Model):
     name = models.CharField(
         max_length=100,
         verbose_name=u'Name',
@@ -186,7 +185,7 @@ class GeographicalScope(BaseModel):
 # Model: GeographicalScopeSeeAlso
 ###########################################################################
 
-class GeographicalScopeSeeAlso(BaseModel):
+class GeographicalScopeSeeAlso(models.Model):
     geographical_scope = models.ForeignKey('GeographicalScope')
     see_also = models.URLField(
         max_length=512,
@@ -200,7 +199,7 @@ class GeographicalScopeSeeAlso(BaseModel):
 # Model: Role
 ###########################################################################
 
-class Role(BaseModel):
+class Role(models.Model):
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -246,7 +245,7 @@ class Role(BaseModel):
 # Model: Tag
 ###########################################################################
 
-class Tag(BaseModel):
+class Tag(models.Model):
     name = models.CharField(
         max_length=75,
     )
@@ -290,7 +289,7 @@ class Tag(BaseModel):
 # Model: TagSeeAlso
 ###########################################################################
 
-class TagSeeAlso(BaseModel):
+class TagSeeAlso(models.Model):
     tag = models.ForeignKey('Tag')
     see_also = models.URLField(
         max_length=512,
@@ -304,7 +303,7 @@ class TagSeeAlso(BaseModel):
 # Model: Language
 ###########################################################################
 
-class Language(BaseModel):
+class Language(models.Model):
     name = models.CharField(
         max_length=50,
     )
@@ -329,7 +328,7 @@ class Language(BaseModel):
 # Model: LanguageSeeAlso
 ###########################################################################
 
-class LanguageSeeAlso(BaseModel):
+class LanguageSeeAlso(models.Model):
     language = models.ForeignKey('Language')
     see_also = models.URLField(
         max_length=512,
@@ -343,7 +342,7 @@ class LanguageSeeAlso(BaseModel):
 # Model: Network
 ###########################################################################
 
-class Network(BaseModel):
+class Network(models.Model):
     name = models.CharField(
         max_length=150,
     )
@@ -380,7 +379,7 @@ class Network(BaseModel):
 # Model: NetworkSeeAlso
 ###########################################################################
 
-class NetworkSeeAlso(BaseModel):
+class NetworkSeeAlso(models.Model):
     network = models.ForeignKey('Network')
     see_also = models.URLField(
         max_length=512,
@@ -394,7 +393,7 @@ class NetworkSeeAlso(BaseModel):
 # Model: PhDProgram
 ###########################################################################
 
-class PhDProgram(BaseModel):
+class PhDProgram(models.Model):
     name = models.CharField(
         max_length=500,
     )
@@ -436,7 +435,7 @@ class PhDProgram(BaseModel):
 # Model: PhDProgramSeeAlso
 ###########################################################################
 
-class PhDProgramSeeAlso(BaseModel):
+class PhDProgramSeeAlso(models.Model):
     phd_program = models.ForeignKey('PhDProgram')
     see_also = models.URLField(
         max_length=512,
@@ -450,7 +449,7 @@ class PhDProgramSeeAlso(BaseModel):
 # Model: ContributionType
 ###########################################################################
 
-class ContributionType(BaseModel):
+class ContributionType(models.Model):
     name = models.CharField(
         max_length=100,
     )
@@ -481,7 +480,7 @@ class ContributionType(BaseModel):
 # Model: Contribution
 ###########################################################################
 
-class Contribution(BaseModel):
+class Contribution(models.Model):
     title = models.CharField(
         max_length=250,
     )
@@ -517,7 +516,7 @@ class Contribution(BaseModel):
 # Model: ContributionSeeAlso
 ###########################################################################
 
-class ContributionSeeAlso(BaseModel):
+class ContributionSeeAlso(models.Model):
     contribution = models.ForeignKey('Contribution')
     see_also = models.URLField(
         max_length=512,
@@ -531,7 +530,7 @@ class ContributionSeeAlso(BaseModel):
 # Model: PersonRelatedToContribution
 ###########################################################################
 
-class PersonRelatedToContribution(BaseModel):
+class PersonRelatedToContribution(models.Model):
     person = models.ForeignKey('persons.Person')
     contribution = models.ForeignKey('Contribution')
 
@@ -543,7 +542,7 @@ class PersonRelatedToContribution(BaseModel):
 # Model: ProjectRelatedToContribution
 ###########################################################################
 
-class ProjectRelatedToContribution(BaseModel):
+class ProjectRelatedToContribution(models.Model):
     project = models.ForeignKey('projects.Project')
     contribution = models.ForeignKey('Contribution')
 
@@ -555,7 +554,7 @@ class ProjectRelatedToContribution(BaseModel):
 # Model: PublicationRelatedToContribution
 ###########################################################################
 
-class PublicationRelatedToContribution(BaseModel):
+class PublicationRelatedToContribution(models.Model):
     publication = models.ForeignKey('publications.Publication')
     contribution = models.ForeignKey('Contribution')
 
@@ -567,7 +566,7 @@ class PublicationRelatedToContribution(BaseModel):
 # Model: TagRelatedToContribution
 ###########################################################################
 
-class TagRelatedToContribution(BaseModel):
+class TagRelatedToContribution(models.Model):
     tag = models.ForeignKey('Tag')
     contribution = models.ForeignKey('Contribution')
 
@@ -579,7 +578,7 @@ class TagRelatedToContribution(BaseModel):
 # Model: FileItemRelatedToContribution
 ###########################################################################
 
-class FileItemRelatedToContribution(BaseModel):
+class FileItemRelatedToContribution(models.Model):
     file_item = models.ForeignKey('FileItem')
     contribution = models.ForeignKey('Contribution')
 
@@ -591,7 +590,7 @@ class FileItemRelatedToContribution(BaseModel):
 # Model: FileItem
 ###########################################################################
 
-class FileItem(BaseModel):
+class FileItem(models.Model):
     name = models.CharField(
         max_length=250,
     )
@@ -626,7 +625,7 @@ class FileItem(BaseModel):
 # Model: License
 ###########################################################################
 
-class License(BaseModel):
+class License(models.Model):
     full_name = models.CharField(
         max_length=150,
     )
@@ -661,7 +660,7 @@ class License(BaseModel):
 # Model: LicenseSeeAlso
 ###########################################################################
 
-class LicenseSeeAlso(BaseModel):
+class LicenseSeeAlso(models.Model):
     license = models.ForeignKey('License')
     see_also = models.URLField(
         max_length=512,
@@ -675,7 +674,7 @@ class LicenseSeeAlso(BaseModel):
 # Model: TalkOrCourse
 ###########################################################################
 
-class TalkOrCourse(BaseModel):
+class TalkOrCourse(models.Model):
     title = models.CharField(
         max_length=250,
     )
@@ -717,7 +716,7 @@ class TalkOrCourse(BaseModel):
 # Model: TalkOrCourseSeeAlso
 ###########################################################################
 
-class TalkOrCourseSeeAlso(BaseModel):
+class TalkOrCourseSeeAlso(models.Model):
     talk_or_course = models.ForeignKey('TalkOrCourse')
     see_also = models.URLField(
         max_length=512,
@@ -731,7 +730,7 @@ class TalkOrCourseSeeAlso(BaseModel):
 # Model: PersonRelatedToTalkOrCourse
 ###########################################################################
 
-class PersonRelatedToTalkOrCourse(BaseModel):
+class PersonRelatedToTalkOrCourse(models.Model):
     person = models.ForeignKey('persons.Person')
     talk_or_course = models.ForeignKey('TalkOrCourse')
 
@@ -743,7 +742,7 @@ class PersonRelatedToTalkOrCourse(BaseModel):
 # Model: ProjectRelatedToTalkOrCourse
 ###########################################################################
 
-class ProjectRelatedToTalkOrCourse(BaseModel):
+class ProjectRelatedToTalkOrCourse(models.Model):
     project = models.ForeignKey('projects.Project')
     talk_or_course = models.ForeignKey('TalkOrCourse')
 
@@ -755,7 +754,7 @@ class ProjectRelatedToTalkOrCourse(BaseModel):
 # Model: TagRelatedToTalkOrCourse
 ###########################################################################
 
-class TagRelatedToTalkOrCourse(BaseModel):
+class TagRelatedToTalkOrCourse(models.Model):
     tag = models.ForeignKey('Tag')
     talk_or_course = models.ForeignKey('TalkOrCourse')
 
@@ -767,7 +766,7 @@ class TagRelatedToTalkOrCourse(BaseModel):
 # Model: FileItemRelatedToTalkOrCourse
 ###########################################################################
 
-class FileItemRelatedToTalkOrCourse(BaseModel):
+class FileItemRelatedToTalkOrCourse(models.Model):
     file_item = models.ForeignKey('FileItem')
     talk_or_course = models.ForeignKey('TalkOrCourse')
 
@@ -779,7 +778,7 @@ class FileItemRelatedToTalkOrCourse(BaseModel):
 # Model: Award
 ###########################################################################
 
-class Award(BaseModel):
+class Award(models.Model):
     full_name = models.CharField(
         max_length=250,
     )
@@ -831,7 +830,7 @@ class Award(BaseModel):
 # Model: AwardSeeAlso
 ###########################################################################
 
-class AwardSeeAlso(BaseModel):
+class AwardSeeAlso(models.Model):
     award = models.ForeignKey('Award')
     see_also = models.URLField(
         max_length=512,
@@ -845,7 +844,7 @@ class AwardSeeAlso(BaseModel):
 # Model: PersonRelatedToAward
 ###########################################################################
 
-class PersonRelatedToAward(BaseModel):
+class PersonRelatedToAward(models.Model):
     person = models.ForeignKey('persons.Person')
     award = models.ForeignKey('Award')
 
@@ -857,7 +856,7 @@ class PersonRelatedToAward(BaseModel):
 # Model: ProjectRelatedToAward
 ###########################################################################
 
-class ProjectRelatedToAward(BaseModel):
+class ProjectRelatedToAward(models.Model):
     project = models.ForeignKey('projects.Project')
     award = models.ForeignKey('Award')
 
@@ -869,7 +868,7 @@ class ProjectRelatedToAward(BaseModel):
 # Model: PublicationRelatedToAward
 ###########################################################################
 
-class PublicationRelatedToAward(BaseModel):
+class PublicationRelatedToAward(models.Model):
     publication = models.ForeignKey('publications.Publication')
     award = models.ForeignKey('Award')
 

@@ -5,7 +5,6 @@ import os
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 from django.utils.html import strip_tags
 
 from .linked_data import *
@@ -39,7 +38,7 @@ TITLES = (
 # Model: Person
 ###########################################################################
 
-class Person(BaseModel):
+class Person(models.Model):
     first_name = models.CharField(
         max_length=25,
     )
@@ -208,7 +207,7 @@ class Person(BaseModel):
 # Model: PersonSeeAlso
 ###########################################################################
 
-class PersonSeeAlso(BaseModel):
+class PersonSeeAlso(models.Model):
     person = models.ForeignKey('Person', related_name='see_also_links')
 
     see_also = models.URLField(
@@ -241,7 +240,7 @@ class PersonSeeAlso(BaseModel):
 # Model: AccountProfile
 ###########################################################################
 
-class AccountProfile(BaseModel):
+class AccountProfile(models.Model):
     person = models.ForeignKey('Person')
 
     network = models.ForeignKey('utils.Network')
@@ -276,7 +275,7 @@ class AccountProfile(BaseModel):
 # Model: Nickname
 ###########################################################################
 
-class Nickname(BaseModel):
+class Nickname(models.Model):
     person = models.ForeignKey('Person', related_name='nicknames')
 
     nickname = models.CharField(
@@ -319,7 +318,7 @@ class Nickname(BaseModel):
 # Model: Job
 ###########################################################################
 
-class Job(BaseModel):
+class Job(models.Model):
     person = models.ForeignKey('Person')
     organization = models.ForeignKey('organizations.Organization')
 
@@ -369,7 +368,7 @@ class Job(BaseModel):
 # Model: PhDProgramFollowedByPerson
 ###########################################################################
 
-class PhDProgramFollowedByPerson(BaseModel):
+class PhDProgramFollowedByPerson(models.Model):
     person = models.ForeignKey('Person')
     phd_program = models.ForeignKey('utils.PhDProgram')
 
@@ -378,6 +377,6 @@ class PhDProgramFollowedByPerson(BaseModel):
 # Model: ThesisRegisteredByPerson
 ###########################################################################
 
-class ThesisRegisteredByPerson(BaseModel):
+class ThesisRegisteredByPerson(models.Model):
     person = models.ForeignKey('Person')
     thesis = models.ForeignKey('publications.Thesis')

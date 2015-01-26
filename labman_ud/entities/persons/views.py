@@ -409,7 +409,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
             raise Http404
     else:
         publication_ids = member.publications.all().values_list('id', flat=True)
-    
+
     publication_items = Publication.objects.select_related('conferencepaper','conferencepaper__parent_proceedings','booksection','booksection__parent_book','journalarticle','journalarticle__parent_journal','magazinearticle','magazinearticle__parent_magazine').prefetch_related('publicationauthor_set__author').filter(id__in=publication_ids).order_by('-published', 'title')
 
     has_publications = True if publication_ids else False
@@ -467,7 +467,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
             publications[child_type] = []
 
         publications[child_type].append(publication_dict)
-    
+
     all_thesis = Thesis.objects.filter(author_id=member.id).all()
 
     # dictionary to be returned in render(request, )
@@ -717,7 +717,7 @@ class LatestUserPublicationFeed(Feed):
         return "Publications where %s is coauthor" % obj.full_name
 
     def items(self, obj):
-        return PublicationAuthor.objects.filter(author=obj).select_related('publication').order_by('-publication__log_created')[:30]
+        return PublicationAuthor.objects.filter(author=obj).select_related('publication').order_by('-publication__id')[:30]
 
     def item_title(self, item):
         return item.publication.title

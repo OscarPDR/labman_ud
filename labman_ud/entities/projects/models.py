@@ -5,7 +5,6 @@ import os
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 
 from .linked_data import *
 
@@ -57,7 +56,7 @@ PROJECT_TYPES = (
 # Model: Project
 ###########################################################################
 
-class Project(BaseModel):
+class Project(models.Model):
     project_leader = models.ForeignKey('organizations.Organization')
 
     project_type = models.CharField(
@@ -172,7 +171,7 @@ class Project(BaseModel):
 # Model: ProjectSeeAlso
 ###########################################################################
 
-class ProjectSeeAlso(BaseModel):
+class ProjectSeeAlso(models.Model):
     project = models.ForeignKey('Project')
     see_also = models.URLField(
         max_length=512,
@@ -204,7 +203,7 @@ class ProjectSeeAlso(BaseModel):
 # Model: Funding
 ###########################################################################
 
-class Funding(BaseModel):
+class Funding(models.Model):
     project = models.ForeignKey('Project')
 
     funding_program = models.ForeignKey('funding_programs.FundingProgram')
@@ -258,7 +257,7 @@ class Funding(BaseModel):
 # Model: FundingSeeAlso
 ###########################################################################
 
-class FundingSeeAlso(BaseModel):
+class FundingSeeAlso(models.Model):
     funding = models.ForeignKey('Funding')
 
     see_also = models.URLField(
@@ -291,7 +290,7 @@ class FundingSeeAlso(BaseModel):
 # Model: FundingAmount
 ###########################################################################
 
-class FundingAmount(BaseModel):
+class FundingAmount(models.Model):
     funding = models.ForeignKey('Funding')
 
     own_amount = models.DecimalField(
@@ -329,7 +328,7 @@ class FundingAmount(BaseModel):
 # Model: AssignedPerson
 ###########################################################################
 
-class AssignedPerson(BaseModel):
+class AssignedPerson(models.Model):
     project = models.ForeignKey('Project')
 
     person = models.ForeignKey('persons.Person')
@@ -379,7 +378,7 @@ class AssignedPerson(BaseModel):
 # Model: AssignedPersonTag
 ###########################################################################
 
-class AssignedPersonTag(BaseModel):
+class AssignedPersonTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
     assigned_person = models.ForeignKey('AssignedPerson')
 
@@ -391,7 +390,7 @@ class AssignedPersonTag(BaseModel):
 # Model: ConsortiumMember
 ###########################################################################
 
-class ConsortiumMember(BaseModel):
+class ConsortiumMember(models.Model):
     project = models.ForeignKey('Project')
 
     organization = models.ForeignKey('organizations.Organization')
@@ -404,7 +403,7 @@ class ConsortiumMember(BaseModel):
 # Model: ProjectTag
 ###########################################################################
 
-class ProjectTag(BaseModel):
+class ProjectTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
     project = models.ForeignKey('Project')
 
@@ -416,7 +415,7 @@ class ProjectTag(BaseModel):
 # Model: RelatedPublication
 ###########################################################################
 
-class RelatedPublication(BaseModel):
+class RelatedPublication(models.Model):
     project = models.ForeignKey('Project')
     publication = models.ForeignKey('publications.Publication', related_name='projects')
 

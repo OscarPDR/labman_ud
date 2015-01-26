@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
-from entities.core.models import BaseModel
 from labman_ud.util import nslugify
 
 from .linked_data import *
@@ -68,7 +67,7 @@ def ranking_icon_picture_path(self, filename):
 # Model: Publication
 ###########################################################################
 
-class Publication(BaseModel):
+class Publication(models.Model):
     title = models.CharField(
         max_length=250,
     )
@@ -131,6 +130,12 @@ class Publication(BaseModel):
         blank=True,
     )
 
+    zotero_key = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+    )
+
     authors = models.ManyToManyField('persons.Person', through='PublicationAuthor', related_name='authors')
     editors = models.ManyToManyField('persons.Person', through='PublicationEditor', related_name='editors')
     tags = models.ManyToManyField('utils.Tag', through='PublicationTag')
@@ -183,7 +188,7 @@ class Publication(BaseModel):
 # Model: PublicationSeeAlso
 ###########################################################################
 
-class PublicationSeeAlso(BaseModel):
+class PublicationSeeAlso(models.Model):
     publication = models.ForeignKey('Publication')
 
     see_also = models.URLField(
@@ -615,7 +620,7 @@ class MagazineArticle(PartOfCollectionPublication):
 # Model: PublicationTag
 ###########################################################################
 
-class PublicationTag(BaseModel):
+class PublicationTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
     publication = models.ForeignKey('publications.Publication')
 
@@ -634,7 +639,7 @@ class PublicationTag(BaseModel):
 # Model: PublicationAuthor
 ###########################################################################
 
-class PublicationAuthor(BaseModel):
+class PublicationAuthor(models.Model):
     author = models.ForeignKey('persons.Person')
 
     publication = models.ForeignKey('publications.Publication')
@@ -656,7 +661,7 @@ class PublicationAuthor(BaseModel):
 # Model: PublicationEditor
 ###########################################################################
 
-class PublicationEditor(BaseModel):
+class PublicationEditor(models.Model):
     editor = models.ForeignKey('persons.Person')
 
     publication = models.ForeignKey('publications.Publication')
@@ -673,7 +678,7 @@ class PublicationEditor(BaseModel):
 # Model: Thesis
 ###########################################################################
 
-class Thesis(BaseModel):
+class Thesis(models.Model):
     title = models.CharField(
         max_length=1000,
     )
@@ -765,7 +770,7 @@ class Thesis(BaseModel):
 # Model: ThesisSeeAlso
 ###########################################################################
 
-class ThesisSeeAlso(BaseModel):
+class ThesisSeeAlso(models.Model):
     thesis = models.ForeignKey('Thesis')
 
     see_also = models.URLField(
@@ -780,7 +785,7 @@ class ThesisSeeAlso(BaseModel):
 # Model: ThesisAbstract
 ###########################################################################
 
-class ThesisAbstract(BaseModel):
+class ThesisAbstract(models.Model):
     thesis = models.ForeignKey('Thesis')
     language = models.ForeignKey('utils.Language')
 
@@ -801,7 +806,7 @@ class ThesisAbstract(BaseModel):
 # Model: CoAdvisor
 ###########################################################################
 
-class CoAdvisor(BaseModel):
+class CoAdvisor(models.Model):
     thesis = models.ForeignKey('Thesis')
     co_advisor = models.ForeignKey('persons.Person')
 
@@ -817,7 +822,7 @@ class CoAdvisor(BaseModel):
 # Model: VivaPanel
 ###########################################################################
 
-class VivaPanel(BaseModel):
+class VivaPanel(models.Model):
     thesis = models.ForeignKey('Thesis')
 
     person = models.ForeignKey('persons.Person')
@@ -836,7 +841,7 @@ class VivaPanel(BaseModel):
 # Model: Ranking
 ###########################################################################
 
-class Ranking(BaseModel):
+class Ranking(models.Model):
     name = models.CharField(
         max_length=50,
     )
@@ -870,7 +875,7 @@ class Ranking(BaseModel):
 # Model: PublicationRank
 ###########################################################################
 
-class PublicationRank(BaseModel):
+class PublicationRank(models.Model):
     publication = models.ForeignKey('Publication')
 
     ranking = models.ForeignKey('Ranking')
