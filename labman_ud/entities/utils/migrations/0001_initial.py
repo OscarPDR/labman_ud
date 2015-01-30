@@ -135,34 +135,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='PersonRelatedToTalkOrCourse',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('person', models.ForeignKey(to='persons.Person')),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='PhDProgram',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=500)),
-                ('homepage', models.URLField(max_length=250)),
-                ('start_date', models.DateField(null=True, blank=True)),
-                ('end_date', models.DateField(null=True, blank=True)),
-                ('faculty', models.ForeignKey(related_name='faculty_holding_a_phd_program', blank=True, to='organizations.Organization')),
-                ('university', models.ForeignKey(related_name='university_holding_a_phd_program', to='organizations.Organization')),
-            ],
-            options={
-                'verbose_name': 'PhD program',
-                'verbose_name_plural': 'PhD programs',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
             name='ProjectRelatedToTalkOrCourse',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

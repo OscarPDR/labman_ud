@@ -8,28 +8,29 @@ import redactor.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '__first__'),
         ('projects', '0003_auto'),
         ('publications', '0002_auto'),
         ('persons', '__first__'),
         ('utils', '0001_initial'),
         ('events', '__first__'),
+        ('organizations', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TalkOrCourse',
+            name='PhDProgram',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=250)),
-                ('slug', models.SlugField(max_length=250, null=True, blank=True)),
-                ('description', redactor.fields.RedactorField()),
+                ('name', models.CharField(max_length=500)),
+                ('homepage', models.URLField(max_length=250)),
                 ('start_date', models.DateField(null=True, blank=True)),
                 ('end_date', models.DateField(null=True, blank=True)),
-                ('event', models.ForeignKey(blank=True, to='events.Event', null=True)),
+                ('faculty', models.ForeignKey(related_name='faculty_holding_a_phd_program', blank=True, to='organizations.Organization')),
+                ('university', models.ForeignKey(related_name='university_holding_a_phd_program', to='organizations.Organization')),
             ],
             options={
-                'abstract': False,
+                'verbose_name': 'PhD program',
+                'verbose_name_plural': 'PhD programs',
             },
             bases=(models.Model,),
         ),
@@ -44,6 +45,33 @@ class Migration(migrations.Migration):
                 ('date', models.DateField(null=True, blank=True)),
                 ('event', models.ForeignKey(blank=True, to='events.Event', null=True)),
                 ('supporting_organization', models.ForeignKey(blank=True, to='organizations.Organization', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='PersonRelatedToTalkOrCourse',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('person', models.ForeignKey(to='persons.Person')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='TalkOrCourse',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=250)),
+                ('slug', models.SlugField(max_length=250, null=True, blank=True)),
+                ('description', redactor.fields.RedactorField()),
+                ('start_date', models.DateField(null=True, blank=True)),
+                ('end_date', models.DateField(null=True, blank=True)),
+                ('event', models.ForeignKey(blank=True, to='events.Event', null=True)),
             ],
             options={
                 'abstract': False,

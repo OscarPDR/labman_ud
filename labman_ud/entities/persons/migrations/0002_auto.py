@@ -9,9 +9,22 @@ class Migration(migrations.Migration):
     dependencies = [
         ('persons', '0001_initial'),
         ('organizations', '0001_initial'),
+        ('utils', '0002_auto'),
     ]
 
     operations = [
+        migrations.CreateModel(
+            name='PhDProgramFollowedByPerson',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('person', models.ForeignKey(to='persons.Person')),
+                ('phd_program', models.ForeignKey(to='utils.PhDProgram')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='Job',
             fields=[

@@ -9,7 +9,7 @@ import entities.persons.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('utils', '__first__'),
+        ('utils', '0001_initial'),
         ('publications', '__first__'),
     ]
 
@@ -73,18 +73,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('see_also', models.URLField(max_length=512)),
                 ('person', models.ForeignKey(related_name='see_also_links', to='persons.Person')),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='PhDProgramFollowedByPerson',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('person', models.ForeignKey(to='persons.Person')),
-                ('phd_program', models.ForeignKey(to='utils.PhDProgram')),
             ],
             options={
                 'abstract': False,
