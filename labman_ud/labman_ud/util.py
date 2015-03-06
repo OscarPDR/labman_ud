@@ -60,4 +60,9 @@ def get_last_model_update_log_entry(app_label, model_name_list=None):
                 app_label=app_label,
             ).values_list('id', flat=True)
 
-    return LogEntry.objects.filter(content_type_id__in=model_ids).order_by('-action_time')[:1].get()
+    logentries = LogEntry.objects.filter(content_type_id__in=model_ids).order_by('-action_time')
+
+    if len(logentries) > 0:
+        return logentries[:1].get()
+    else:
+        return None
