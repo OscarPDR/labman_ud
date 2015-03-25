@@ -292,7 +292,7 @@ class LanguageAdmin(admin.ModelAdmin):
     model = Language
 
     search_fields = ['name']
-    list_display = ['name']
+    list_display = ['name', 'language_tag']
     exclude = ['slug']
 
 

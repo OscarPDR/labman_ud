@@ -308,6 +308,12 @@ class Language(models.Model):
         max_length=50,
     )
 
+    language_tag = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+
     slug = models.SlugField(
         max_length=50,
         blank=True,
