@@ -31,6 +31,7 @@
 
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
         <link rel="stylesheet" href="{% static 'css/justified-nav.css' %}" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
 
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
@@ -46,7 +47,89 @@
         <div id="wrap">
             <div class="container">
 
-                <div class="masthead">
+
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button id="coll-btn" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsible-navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="{% url 'home' %}">
+                            {% if RESEARCH_GROUP_SETTINGS.research_group_official_logo %}
+                                <img id="brand-logo" alt="MORElab-icon" src="{{ RESEARCH_GROUP_SETTINGS.research_group_official_logo.url }}"/>
+                            {% endif %}
+
+                            <span id="brand-text">
+                                {{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}
+                            </span>
+                        </a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="collapsible-navbar">
+                        <ul class="nav navbar-nav">
+                            <li id="news-nav">
+                                <a href="{% url 'news_index' %}">
+                                    <i class="fa fa-newspaper-o fa-grey"></i>
+                                    News
+                                </a>
+                            </li>
+
+                            <li id="projects-nav">
+                                <a href="{% url 'project_index' %}">
+                                    <i class="fa fa-gears fa-grey"></i>
+                                    Projects
+                                </a>
+                            </li>
+
+                            <li id="publications-nav">
+                                <a href="{% url 'publication_index' %}">
+                                    <i class="fa fa-book fa-grey"></i>
+                                    Publications
+                                </a>
+                            </li>
+
+                            <li id="members-nav">
+                                <a href="{% url 'members' %}">
+                                    <i class="fa fa-users fa-grey"></i>
+                                    Members
+                                </a>
+                            </li>
+
+                            <li id="charts-nav">
+                                <a href="{% url 'chart_index' %}">
+                                    <i class="fa fa-bar-chart fa-grey"></i>
+                                    Charts
+                                </a>
+                            </li>
+
+                            <li id="about-nav">
+                                <a href="{% url 'about' %}">
+                                    <i class="fa fa-info-circle fa-grey"></i>
+                                    About
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+               <!-- <div class="masthead">
                     <div class="registered-user">
                         {% if user.is_authenticated %}
                             <span>
@@ -118,9 +201,9 @@
                                 &emsp;About
                             </a>
                         </li>
-                    </ul> <!-- end .nav .nav-justified -->
+                    </ul>
 
-                </div> <!-- end .masthead -->
+                </div> -->
 
                 <div id="main-container" class="container">
                     {% block content %}{% endblock %}
@@ -137,6 +220,28 @@
 
         <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+        <script>
+            var new_width = ($('#brand-logo').width() * 48) / $('#brand-logo').height();
+
+            $('#brand-logo').height('48px');
+            $('#brand-logo').width(new_width + 'px');
+
+            $('#brand-text').css("padding-left", 10 + new_width + "px");
+        </script>
+
+        <script>
+            $(window).resize(function() {
+                if ($('#coll-btn').is(":visible")) {
+                    $('#brand-text').text('{{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}');
+                }
+                else {
+                    $('#brand-text').text('{{ RESEARCH_GROUP_SETTINGS.research_group_full_name }}');
+                };
+            });
+        </script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 
         {% if SEO_AND_ANALYTICS.google_analytics_account %}
             <script>
