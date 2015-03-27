@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles sanitize_types %}
 
 <!DOCTYPE html>
     <head>
@@ -31,7 +31,6 @@
 
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
         <link rel="stylesheet" href="{% static 'css/justified-nav.css' %}" />
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
 
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
@@ -78,18 +77,74 @@
                                 </a>
                             </li>
 
-                            <li id="projects-nav">
-                                <a href="{% url 'project_index' %}">
+                            <li id="projects-nav" class="dropdown">
+                                <a href="{% url 'project_index' %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-gears fa-grey"></i>
-                                    Projects
+                                    Projects <span class="caret"></span>
                                 </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{% url 'project_index' %}">
+                                            {{ NUMBER_OF_PROJECTS }} projects
+                                        </a>
+                                    </li>
+
+                                    <li class="divider"></li>
+
+                                    {% for type, number in PROJECT_TYPES.items %}
+                                        <li>
+                                            <a href="{% url 'view_project_type' type|slugify %}">
+                                                {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             </li>
 
-                            <li id="publications-nav">
-                                <a href="{% url 'publication_index' %}">
-                                    <i class="fa fa-book fa-grey"></i>
-                                    Publications
+                            <li id="publications-nav" class="dropdown">
+                                <a href="{% url 'publication_index' %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <i class="fa fa-book fa-grey"></i>
+                                    Publications <span class="caret"></span>
                                 </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{% url 'publication_index' %}">
+                                            {{ NUMBER_OF_PUBLICATIONS }} publications
+                                        </a>
+                                    </li>
+
+                                    <li class="divider"></li>
+
+                                    {% for type, number in PUBLICATION_TYPES.items %}
+                                        <li>
+                                            <a href="{% url 'view_publication_type' type %}">
+                                                {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+
+                                    {% if THESES %}
+                                        <li class="divider"></li>
+
+                                        <li>
+                                            <a href="{% url 'phd_dissertations_index' %}">
+                                                {{ THESES|length }} PhD dissertation{{ THESES|pluralize}}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="divider"></li>
+
+                                    <li class="rss-link">
+                                        <span>
+                                            <a href="{% url 'publication_feed' %}">
+                                                <i class="fa fa-rss"></i>&emsp;Subscribe
+                                            </a>
+                                        </span>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li id="members-nav">
@@ -113,6 +168,30 @@
                                 </a>
                             </li>
                         </ul>
+
+                        <div class="login-box">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout_view' %}" title="Sign out" type="button" class="btn btn-labeled btn-danger btn-xs pull-right">
+                                    <i class="fa fa-user"></i>
+                                    &nbsp;
+                                    {% if user.first_name %}
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    {% else %}
+                                        {{ user.username }}
+                                    {% endif %}
+                                    <span class="btn-label btn-label-right">
+                                        <i class="fa fa-sign-out"></i>
+                                    </span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login_view' %}" type="button" class="btn btn-labeled btn-primary btn-xs pull-right">
+                                    Sign in
+                                    <span class="btn-label btn-label-right">
+                                        <i class="fa fa-sign-in"></i>
+                                    </span>
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -240,8 +319,6 @@
                 };
             });
         </script>
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 
         {% if SEO_AND_ANALYTICS.google_analytics_account %}
             <script>

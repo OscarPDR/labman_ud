@@ -2,6 +2,10 @@
 from django.conf import settings
 
 from labman_setup.models import *
+from entities.publications.models import *
+from entities.projects.models import *
+
+from collections import OrderedDict, Counter
 
 
 ####################################################################################################
@@ -76,6 +80,22 @@ def global_vars(request):
     if twitter_card_image_url:
         twitter_card_image_url = twitter_card_image_url.replace("//", "/")
 
+    publication_types = Publication.objects.all().exclude(authors=None).values_list('child_type', flat=True)
+    publication_counter = Counter(publication_types)
+    publication_dict = OrderedDict(sorted(publication_counter.items(), key=lambda t: t[1]))
+    publication_items = publication_dict.items()
+
+    try:
+        theses = Thesis.objects.all()
+
+    except:
+        theses = None
+
+    project_types = Project.objects.all().values_list('project_type', flat=True)
+    project_counter = Counter(project_types)
+    project_dict = OrderedDict(sorted(project_counter.items(), key=lambda t: t[1]))
+    project_items = project_dict.items()
+
     return_dict = {
         'ADDRESS_DETAILS': address_details,
         'BASE_URL': getattr(settings, 'BASE_URL', None),
@@ -90,6 +110,11 @@ def global_vars(request):
         'SOCIAL_PROFILES': social_profiles,
         'TWITTER_CARD': twitter_card,
         'TWITTER_CARD_IMAGE': twitter_card_image_url,
+        'NUMBER_OF_PUBLICATIONS': len(publication_types),
+        'PUBLICATION_TYPES': dict(publication_items),
+        'NUMBER_OF_PROJECTS': len(project_types),
+        'PROJECT_TYPES': dict(project_items),
+        'THESES': theses,
     }
 
     return return_dict

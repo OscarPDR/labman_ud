@@ -174,8 +174,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         clean_index = False
 
-    publications_length = len(publications)
-
     publication_model_list = [
         'Book',
         'BookSection',
@@ -191,13 +189,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     last_entry = get_last_model_update_log_entry('publications', publication_model_list)
 
-    publication_types = Publication.objects.all().exclude(authors=None).values_list('child_type', flat=True)
-
-    counter = Counter(publication_types)
-    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
-
-    items = ord_dict.items()
-
     try:
         theses = Thesis.objects.all()
 
@@ -211,8 +202,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'last_entry': last_entry,
         'publication_type': publication_type,
         'publications': publications,
-        'publications_length': publications_length,
-        'pubtype_info': dict(items),
+        'publications_length': len(publications),
         'query_string': query_string,
         'tag': tag,
         'theses': theses,

@@ -1,0 +1,13 @@
+
+<div class="publication-authors">
+    <p>
+        <span class="badge">
+            <i class="fa fa-users"></i>
+            {{ publication.publicationauthor_set.all|length }}
+        </span>
+
+        {% for author in publication.publicationauthor_set.all|dictsort:'position' %}
+            {{ author.author.full_name }}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    </p>
+</div>
