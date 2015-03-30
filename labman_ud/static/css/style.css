@@ -788,9 +788,11 @@ footer h4 {
     margin: 0.5em;
 }
 
-.highlight {
+.highlight, .publication-authors p span.highlight {
     background-color: yellow;
     font-weight: bold;
+    border: none;
+    margin: 0;
 }
 
 .dl-horizontal > .day-number {
