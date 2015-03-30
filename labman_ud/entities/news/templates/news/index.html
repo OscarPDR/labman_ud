@@ -4,36 +4,66 @@
 
 
 {% block header_css %}
+
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="{% url 'news_feed' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
+
 {% endblock %}
 
 
 
 {% block content %}
 
-    <blockquote>
-        <p><a href="{% url 'news_feed' %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
-    </blockquote>
+    <div class="rss-link pull-left">
+        <a href="{% url 'news_feed' %}">
+            <i class="fa fa-rss"></i>&emsp;Subscribe
+        </a>
+    </div>
 
-    {% for key, value in news.items %}
-        <blockquote>
-            <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+    <table class="table table-condensed table-bordered table-striped table-responsive" data-toggle="table" data-search="true" data-pagination="true">
+        <thead>
+            <th data-field="date" data-sortable="true">Date</th>
+            <th>Title</th>
+        </thead>
 
-            <dl class="dl-horizontal">
-                {% for item in value %}
-                    <dt class="day-number">{{ item.created|date:"d" }}</dt>
-                    <dd class="news-title"><a href="{% url 'view_news' item.slug %}">{{ item.title }}</a></dd>
-                {% endfor %}
-            </dl>
-        </blockquote>
-    {% endfor %}
+        <tbody>
+            {% for item in news %}
+                <tr>
+                    <td>{{ item.created|date:"d M, Y" }}</td>
+                    <td>
+                        <a href="{% url 'view_news' item.slug %}">
+                            {{ item.title }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
 
 
 
 {% block scripts %}
+
     <script>
         $('#news-nav').addClass('active');
     </script>
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+
+        $('ul.pagination').addClass('pagination-sm');
+    </script>
+
 {% endblock %}

@@ -2,7 +2,6 @@
 
 import threading
 import weakref
-from collections import OrderedDict
 
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
@@ -22,15 +21,7 @@ from labman_setup.models import *
 ###########################################################################
 
 def news_index(request):
-    _news = News.objects.all().order_by('-created', 'title')
-
-    news = OrderedDict()
-
-    for news_piece in _news:
-        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
-        if not year_month in news:
-            news[year_month] = []
-        news[year_month].append(news_piece)
+    news = News.objects.all().order_by('-created', 'title')
 
     # dictionary to be returned in render(request, )
     return_dict = {
