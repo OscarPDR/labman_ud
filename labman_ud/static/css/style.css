@@ -44,6 +44,17 @@ h5, h6 {
     margin: 0;
 }
 
+#author-list {
+    display: block;
+    color: #777;
+    font-weight: bold;
+    padding-bottom: 1em;
+}
+
+#author-list i {
+    margin-left: 1em;
+}
+
 .project-code {
     margin-left: 1.5em;
     font-weight: bold;
@@ -164,28 +175,20 @@ h4 {
     list-style-type: none;
 }
 
-#document_download {
+#document-download {
     margin: 0.5em;
-}
-
-#document_download > img {
-    margin-bottom: 1em;
+    max-width: 75px;
 }
 
 #publication-type {
     float: right
 }
 
-#document-download-button {
-    margin-top: 0.7em;
-    margin-bottom: 0.5em;
-}
-
 #publication-abstract {
     text-align: justify;
 }
 
-#project-tag-cloud {
+#project-tag-cloud, #publication-tag-cloud {
     border: 1px solid #ccc;
     border-radius: 0.75em;
 }
@@ -896,9 +899,19 @@ blockquote footer {
     color: #2a6496;
 }
 
+#pub-child-type-infobox > dd {
+    padding-bottom: 0.75em;
+    padding-left: 0.5em;
+}
+
+#rankings {
+    padding-bottom: 1em;
+}
+
 .ranking-icon {
     max-width: 50%;
     max-height: 100px;
+    margin-bottom: 0.5em;
 }
 
 .ranking-name {

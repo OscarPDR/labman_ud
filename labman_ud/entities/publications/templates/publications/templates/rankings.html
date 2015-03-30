@@ -1,13 +1,19 @@
 
-{% for ranking in rankings %}
-    <br>
-    <div class="row centered">
-        {% if ranking.icon %}
-            <img class="ranking-icon" src="{{ MEDIA_URL }}{{ranking.icon}}" />
-        {% else %}
-            <p class="label label-default ranking-name">
-                {{ ranking.name }}
-            </p>
-        {% endif %}
-    </div>
-{% endfor %}
+<div id="rankings">
+    <span id="author-list">
+        <i class="fa fa-certificate"></i>
+        Ranked in
+    </span>
+
+    {% for ranking in rankings %}
+        <div class="row centered">
+            {% if ranking.icon %}
+                <img class="ranking-icon" src="{{ MEDIA_URL }}{{ranking.icon}}" />
+            {% else %}
+                <p class="label label-default ranking-name">
+                    {{ ranking.name }}
+                </p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

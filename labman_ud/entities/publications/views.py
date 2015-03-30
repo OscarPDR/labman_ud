@@ -216,26 +216,30 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 # View: publication_info
 ###########################################################################
 
-def publication_info(request, slug):
-    publication = get_object_or_404(Publication, slug=slug)
+def publication_info(request, publication_slug):
+    publication = get_object_or_404(Publication, slug=publication_slug)
     return_dict = __build_publication_return_dict(publication)
-    return_dict['current_tab'] = u'info'
     return_dict['web_title'] = publication.title
     return render(request, 'publications/info.html', return_dict)
 
 
-def publication_related_projects(request, slug):
-    publication = get_object_or_404(Publication, slug=slug)
+def publication_ext_info(request, publication_slug):
+    publication = get_object_or_404(Publication, slug=publication_slug)
     return_dict = __build_publication_return_dict(publication)
-    return_dict['current_tab'] = 'projects'
+    return_dict['web_title'] = publication.title
+    return render(request, 'publications/extended_info.html', return_dict)
+
+
+def publication_related_projects(request, publication_slug):
+    publication = get_object_or_404(Publication, slug=publication_slug)
+    return_dict = __build_publication_return_dict(publication)
     return_dict['web_title'] = u'%s - Related projects' % publication.title
     return render(request, 'publications/related_projects.html', return_dict)
 
 
-def publication_related_publications(request, slug):
-    publication = get_object_or_404(Publication, slug=slug)
+def publication_related_publications(request, publication_slug):
+    publication = get_object_or_404(Publication, slug=publication_slug)
     return_dict = __build_publication_return_dict(publication)
-    return_dict['current_tab'] = 'publications'
     return_dict['web_title'] = u'%s - Related publications' % publication.title
     return render(request, 'publications/related_publications.html', return_dict)
 
