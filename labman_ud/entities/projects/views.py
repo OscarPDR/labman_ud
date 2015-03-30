@@ -122,14 +122,7 @@ def project_info(request, project_slug):
     return_dict = __build_project_information(project)
     return_dict['web_title'] = project.full_name
 
-    if project.project_type == 'Internal project':
-        return render(request, "projects/info_internal_project.html", return_dict)
-
-    elif project.project_type == 'External project':
-        return render(request, "projects/info_external_project.html", return_dict)
-
-    else:
-        return render(request, "projects/info.html", return_dict)
+    return render(request, "projects/info.html", return_dict)
 
 
 ###########################################################################
@@ -312,13 +305,9 @@ def __build_project_information(project):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
-    internal_project = project.project_type == 'Internal project'
-    external_project = project.project_type == 'External project'
-
     # dictionary to be returned in render(request, )
     return {
-        'is_internal': internal_project,
-        'is_external': external_project,
+        'is_internal': project.project_type in ['Internal project', 'External project'],
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,

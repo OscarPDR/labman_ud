@@ -65,12 +65,6 @@
                 {% for publication in publications %}
                     <tr class="vertical-alignment">
                         <td class="col-md-8">
-                            {% if ENABLE_RDF_PUBLISHING %}
-                                <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
-                                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
-                                </a>
-                            {% endif %}
-
                             <a href="{% url 'publication_info' publication.slug %}">
                                 {{ publication.title }}
                             </a>
@@ -120,18 +114,6 @@
 
     <script>
         $('.pagination').addClass('pagination-sm');
-    </script>
-
-    <script>
-        function queryParams() {
-            return {
-                type: 'owner',
-                sort: 'updated',
-                direction: 'desc',
-                per_page: 100,
-                page: 1
-            };
-        }
     </script>
 
     {% if query_string %}

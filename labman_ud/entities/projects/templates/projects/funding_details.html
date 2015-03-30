@@ -5,136 +5,93 @@
 
 {% block project_content %}
 
-    <div class="tab-pane active" id="project-funding-details">
-
     {% for funding in fundings %}
-        <div class="panel panel-primary">
+        {% with forloop.counter as funding_loop %}
+        {% for funding_program in funding_programs %}
+            {% if funding_program.id == funding.funding_program.id %}
 
-            {% with forloop.counter as funding_loop %}
-
-            {% for funding_program in funding_programs %}
-                {% if funding_program.id == funding.funding_program.id %}
-
-                    <div class="panel-heading">
+                <blockquote>
+                    <p>
                         {{ funding_program.full_name }}
+
+                        <a href="{% url 'funding_program_info' funding_program.slug %}">
+                            <i class="fa fa-external-link"></i>
+                        </a>
+
+                        {% if funding.project_code %}
+                            <span class="project-code" title="Project code">
+                                {{ funding.project_code }}
+                            </span>
+                        {% endif %}
+                    </p>
+
+                    <footer>
+                        {{ funding_program.organization.full_name }}
+
+                        {% if funding_program.organization.sub_organization_of %}
+                            ({{ funding_program.organization.sub_organization_of.full_name }})
+                        {% endif %}
+                    </footer>
+                </blockquote>
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Funds</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for funding_amount in funding_amounts %}
+                                    {% if funding_amount.funding.id = funding.id %}
+
+                                        <tr>
+                                            <td style="text-align: right;">
+                                                {{ funding_amount.year }}
+                                            </td>
+
+                                            <td style="text-align: right;">
+                                                {{ funding_amount.own_amount|intcomma|intword }} €
+                                            </td>
+                                        </tr>
+
+                                    {% endif %}
+                            {% endfor %}
+
+                            {% if total_funds %}
+                                <tr class="info">
+                                    <td>
+                                        <strong>Total funds</strong>
+                                    </td>
+
+                                    <td style="text-align: right;">
+                                        <strong>{{ total_funds|intcomma|intword }} €</strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        <div id="donut-chart_{{ funding_loop }}" class="donut-chart"></div>
                     </div>
 
-                    <div class="panel-body">
-
-                        <div class="row">
-
-                            <div class="col-md-6">
-                                <h5>Supported by:</h5>
-                                <p>
-                                    <a href="{% url 'funding_program_info' funding_program.slug %}">{{ funding_program.short_name }}</a> - {{ funding_program.organization.full_name }}
-                                    {% if funding_program.organization.sub_organization_of %}
-                                        ({{ funding_program.organization.sub_organization_of.full_name }})
-                                    {% endif %}
-                                </p>
-
-                                <br>
-
-                                <h5>Project code:</h5>
-                                <p>
-                                    {% if funding.project_code %}
-                                        {{ funding.project_code }}
-                                    {% else %}
-                                        No information available
-                                    {% endif %}
-                                </p>
-
-                                <br>
-
-                                <h5>Duration:</h5>
-                                <p>
-                                    {% if project.start_year %}
-                                        Funding conceeded to fund the {{ project.start_year }} - {{ project.end_year }} period.
-                                    {% else %}
-                                        No information available
-                                    {% endif %}
-                                </p>
-
-                                <br>
-                            </div> <!-- end .col-md-6 -->
-
-                            {% if funding_program_logos %}
-                                <div class="col-md-6 centered">
-                                    {% for logo in funding_program_logos %}
-                                        <img class="funding-program-logo" src="{{ MEDIA_URL }}{{ logo.logo }}" />
-                                        <br>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div> <!-- end .row -->
-
-                        {% if funding_amounts %}
-
+                    <div class="col-md-6 centered">
+                        {% for logo_item in funding_program_logos %}
+                            <img class="funding-program-logo" src="{{ MEDIA_URL }}{{ logo_item.logo }}" title="{{ logo_item.name }}"/>
                             <br>
-
-                            <div class="row funding-row">
-
-                                <div class="col-md-6">
-                                    <h5>Amounts:</h5>
-
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Year</th>
-                                                <th>Funds</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {% for funding_amount in funding_amounts %}
-                                                {% if funding_amount.funding.id = funding.id %}
-
-                                                    <tr>
-                                                        <td>{{ funding_amount.year }}</td>
-                                                        <td>{{ funding_amount.own_amount|intcomma|intword }} €</td>
-                                                    </tr>
-
-                                                {% endif %}
-                                        {% endfor %}
-
-                                        {% if total_funds %}
-                                            <tr class="info">
-                                                <td>
-                                                    <strong>Total funds</strong>
-                                                </td>
-
-                                                <td>
-                                                    <strong>{{ total_funds|intcomma|intword }} €</strong>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                        </tbody>
-                                    </table>
-                                </div> <!-- end .col-md-6 -->
-
-                                <div class="col-md-6 donut-chart">
-                                    <div id="donut-chart_{{ funding_loop }}"></div>
-                                </div>
-                            </div> <!-- end .row .funding-row -->
-
-                        {% else %}
-                            <div class="row">
-                                <p>
-                                    No detailed funding information available
-                                </p>
-                            </div>
-                        {% endif %}
-
-                    </div> <!-- end .panel-body -->
-
-                {% endif %} <!-- funding_program.id == funding.funding_program.id -->
-            {% endfor %} <!-- funding_program in funding_programs -->
-
-            {% endwith %}
-
-        </div> <!-- end .panel .panel-primary -->
-    {% endfor %} <!-- funding in fundings -->
-
-    </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% endwith %}
+    {% endfor %}
 
 {% endblock %}
 
@@ -142,27 +99,30 @@
 
 {% block project_scripts %}
 
+    <script>
+        $('#project_funding').addClass('active');
+    </script>
+
     <script src="{% static 'js/d3.min.js' %}"></script>
 
     <script>
-        var donut_chart_width = $('#project-funding-details').width() / 2;
+        var donut_chart_width = $('.donut-chart').width() - 25;
 
         var width = donut_chart_width,
             height = 225,
             radius = Math.min(width, height) / 2;
-
-        var color = d3.scale.category10();
 
         {% for funding in fundings %}
             {% with forloop.counter as funding_loop %}
                 var forloop_counter = {{ funding_loop }};
                 var funding_id = {{ funding.id }};
 
-                drawChart(forloop_counter, funding_id);
+                drawChart(forloop_counter, funding_id, width, height, radius)
             {% endwith %}
         {% endfor %}
 
-        function drawChart(forloop_counter, funding_id) {
+        function drawChart(forloop_counter, funding_id, width, height, radius) {
+            var color = d3.scale.category10();
             var data = [];
 
             {% for funding_amount in funding_amounts %}
@@ -185,7 +145,7 @@
 
             var svg = d3.select("#donut-chart_" + forloop_counter).append("svg")
                 .attr("width", width)
-                .attr("height", height +10)
+                .attr("height", height + 10)
                 .append("g")
                     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -222,12 +182,6 @@
                     .style("text-anchor", "middle")
                     .text(function(d) { return d.data.year; });
         };
-
-    </script>
-
-    <script>
-        $('.project_info').removeClass('active');
-        $('.project_funding_details').addClass('active');
     </script>
 
 {% endblock %}

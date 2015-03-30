@@ -1,6 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load staticfiles %}
-{% load sanitize_types %}
+{% load staticfiles sanitize_types rdf_link %}
 
 
 
@@ -8,12 +7,7 @@
 
     <div id="member-name">
         <h1 id="member-name">
-            {% if ENABLE_RDF_PUBLISHING %}
-                <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">
-                    <img class="rdf-icon" alt="rdf-icon" title="RDF description" width="32" src="{% static 'img/rdf.png' %}"/>
-                </a>
-            {% endif %}
-            &emsp;
+            {% rdf_icon member %}
             {% if member.title %}
                 {{ member.title }}
             {% endif %}
@@ -63,7 +57,7 @@
                 {% endif %}
             </div>
 
-            <div class="soften-limited"></div>
+            <div class="soften"></div>
 
             <div id="contact-member">
                 {% if member.is_active %}

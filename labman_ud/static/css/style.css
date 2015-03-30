@@ -13,6 +13,7 @@ html, body {
 
 body {
     padding-top: 65px;
+    background-color: #f0f0f0;
 }
 
 h5, h6 {
@@ -43,6 +44,13 @@ h5, h6 {
     margin: 0;
 }
 
+.project-code {
+    margin-left: 1.5em;
+    font-weight: bold;
+    font-size: 0.75em;
+    color: #777;
+}
+
 .rss-link {
     text-align: center;
     margin-bottom: 9px;
@@ -60,6 +68,21 @@ h5, h6 {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25em;
+}
+
+.status-not-started {
+    color: #999;
+    margin-left: 0.75em;
+}
+
+.status-ongoing {
+    color: #5cb85c;
+    margin-left: 0.75em;
+}
+
+.status-finished {
+    color: #f22;
+    margin-left: 0.75em;
 }
 
 #brand-logo {
@@ -162,13 +185,61 @@ h4 {
     text-align: justify;
 }
 
-.project-tag {
-    display: block;
-    margin: 0.25em 0;
+#project-tag-cloud {
+    border: 1px solid #ccc;
+    border-radius: 0.75em;
 }
 
 #project-type {
     float: right
+}
+
+#entity-title {
+    padding-bottom: 1.5em;
+    margin-left: 1.5em;
+}
+
+.entity-info-nav {
+    text-align: center;
+    padding: 0.75em 0;
+}
+
+.entity-info-nav > a {
+    margin: 0.5em;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.entity-info-nav > a:hover {
+    background-color: #ebebeb;
+    border-color: #adadad;
+}
+
+.entity-info-nav > a.active {
+    color: #fff;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}
+
+.entity-info-nav > a > span {
+    margin-left: 0.75em;
+}
+
+.entity-info-content {
+    margin: 0 0.5em;
+}
+
+.entity-metadata {
+    padding-bottom: 1em;
+}
+
+.entity-metadata i {
+    margin-right: 1em;
 }
 
 table > tbody > tr.vertical-alignment > td {
@@ -183,10 +254,11 @@ table > tbody > tr.vertical-alignment > td {
     height: 500px;
 }
 
-#funding_program_full_name {
-    padding-top: 0em;
-    padding-left: 7.5em;
-    font-weight: normal;
+i.fa.fa-external-link {
+    font-size: 0.6em;
+    position: relative;
+    bottom: 0.6em;
+
 }
 
 .organization-logo {
@@ -202,6 +274,8 @@ table > tbody > tr.vertical-alignment > td {
 #main-container {
     display: block;
     min-height: 500px;
+    padding: 0.5em;
+    background-color: white;
 }
 
 .container {
@@ -286,14 +360,23 @@ ul.nav.nav-tabs {
     text-align: justify;
 }
 
+.overview-header {
+    padding-bottom: 1.5em;
+}
+
+#project-description {
+    padding: 0 15px;
+    margin: 1em;
+    border-left: 5px solid #eee;
+    text-align: justify;
+}
+
 #project-header {
     display: block;
 }
 
-.project-logo {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 1.5em;
+#project-logo {
+    max-height: 125px;
 }
 
 .project-logo > .img-responsive {
@@ -407,6 +490,8 @@ ul.nav.nav-tabs {
     margin-left: 3px;
     margin-top: -3px;
     margin-right: 5px;
+    width: 16px;
+    height: 16px;
 }
 
 .semantic-searcher-results li a {
@@ -438,6 +523,7 @@ footer {
     width: 100%;
     min-height: 2.5em;
     margin: 0 auto;
+    background-color: white;
 }
 
 footer > a {
@@ -624,17 +710,8 @@ footer h4 {
 
 .soften {
     height: 5px;
-    margin: 3em 0 1.5em 0;
-    background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    border: 0;
-}
-
-.soften-limited {
-    height: 5px;
-    margin: 1em 0;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
     background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
     background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
     background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);

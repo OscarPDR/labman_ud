@@ -1,150 +1,127 @@
 {% extends "labman_ud/base.html" %}
-{% load staticfiles %}
+{% load staticfiles rdf_link rand_int %}
 
 
 
 {% block content %}
 
-    <div id="project-header">
-        <div class="row">
-            <div class="col-md-9">
-                <h3>
-                    <a href="{% url 'project_index' %}"><img width="32" src="{% static 'img/back.png' %}" /></a>
-                    {{ project.full_name }}
-                </h3>
-            </div> <!-- end .col-md-9 -->
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'project_index' %}">Projects</a>
+        </li>
 
-            <div class="col-md-3">
-                {% if ENABLE_RDF_PUBLISHING %}
-                    <div class="centered">
-                        <a target="_blank" href="{{ RDF_URI }}projects/{{ project.slug }}">
-                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{% static 'img/rdf.png' %}"/>
-                        </a>
+        <li>
+            <a href="{% url 'view_project_type' project.project_type|slugify %}">
+                {{ project.project_type }}
+            </a>
+        </li>
+
+        <li class="active">
+            {% rdf_icon project %}
+            {{ project.full_name }}
+        </li>
+    </ol>
+
+    <div class="entity-info-nav">
+        <a id="project_overview" class="active" href="{% url 'project_info' project.slug %}">
+            <i class="fa fa-eye"></i>
+            <span class="hidden-xs hidden-sm">
+                Overview
+            </span>
+        </a>
+
+        {% if not is_internal %}
+            <a id="project_funding" href="{% url 'project_funding_details' project.slug %}">
+                <i class="fa fa-money"></i>
+                <span class="hidden-xs hidden-sm">
+                    Funding
+                </span>
+            </a>
+        {% endif %}
+
+        <a id="project_people" href="{% url 'project_assigned_persons' project.slug %}">
+            <i class="fa fa-group"></i>
+            <span class="hidden-xs hidden-sm">
+                {% if is_internal %}
+                    Developers
+                {% else %}
+                    Employees
+                {% endif %}
+            </span>
+        </a>
+
+        {% if not is_internal %}
+            <a id="project_consortium" href="{% url 'project_consortium_members' project.slug %}">
+                <i class="fa fa-sitemap"></i>
+                <span class="hidden-xs hidden-sm">
+                    Consortium members
+                </span>
+            </a>
+        {% endif %}
+
+        {% if related_publications %}
+            <a id="project_related_pubs" href="{% url 'project_related_publications' project.slug %}">
+                <i class="fa fa-file-text"></i>
+                <span class="hidden-xs hidden-sm">
+                    {{ related_publications|length }} publication{{ related_publications|pluralize }}
+                </span>
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="soften"></div>
+
+    <div class="entity-info-content">
+        {% block project_content %}
+
+            <h3 id="entity-title">
+                <i class="fa fa-quote-left"></i>
+                {{ project.full_name }}
+                <i class="fa fa-quote-right"></i>
+            </h3>
+
+            <div class="row entity-metadata">
+                {% if logo %}
+                    <div class="col-md-3 centered">
+                        <img id="project-logo" class="img-responsive" src="{{ MEDIA_URL }}{{ logo }}"/>
                     </div>
+                {% endif %}
 
+                <div class="col-md-3">
                     <br>
-                {% endif %}
 
-                <blockquote id="project-type" class="pull-left">
-                    <p>
-                        <a href="{% url 'view_project_type' project.project_type|slugify %}">
-                            {{ project.project_type }}
+                    <i class="fa fa-calendar"></i>
+                    {{ project.start_year }} - {{ project.end_year }}
+                    <a href="{% url 'view_project_status' project.status|slugify %}">
+                        <i title="{{ project.status }}" class="fa fa-circle status-{{ project.status|slugify }}"></i>
+                    </a>
+
+                    {% if project.homepage %}
+                        <br>
+                        <br>
+
+                        <a target="_blank" href="{{ project.homepage }}">
+                            <i class="fa fa-globe"></i>Homepage
                         </a>
-                    </p>
-                </blockquote>
-
-            </div>
-        </div> <!-- end .row -->
-    </div> <!-- end #project-header -->
-
-    <div class="tabbable">
-
-        <div class="col-md-3">
-            {% if logo %}
-                <div class="project-logo">
-                    <img class="img-responsive" src="{{ MEDIA_URL }}{{ logo }}"/>
+                    {% endif %}
                 </div>
-            {% endif %}
 
-            <ul id="project-tabs" class="nav nav-pills nav-stacked">
-                <li class="project_info active">
-                    <a href="{% url 'project_info' project.slug %}">
-                        <i class="fa fa-info fa-large"></i>&emsp;General information
-                    </a>
-                </li>
-
-                {% if not is_internal and not is_external %}
-                <li class="project_funding_details">
-                    <a href="{% url 'project_funding_details' project.slug %}">
-                        <i class="fa fa-money fa-large"></i>&emsp;Funding details
-                    </a>
-                </li>
-                {% endif %}
-
-                <li class="project_assigned_persons">
-                    <a href="{% url 'project_assigned_persons' project.slug %}">
-                        <i class="fa fa-group fa-large"></i>&emsp;{% if is_internal or is_external %}Developers{% else %}Employees{% endif %}
-                    </a>
-                </li>
-
-                {% if not is_internal and not is_external %}
-                <li class="project_consortium_members">
-                    <a href="{% url 'project_consortium_members' project.slug %}">
-                        <i class="fa fa-sitemap fa-large"></i>&emsp;Consortium members
-                    </a>
-                </li>
-                {% endif %}
-
-                {% if related_publications %}
-                    <li class="project_related_publications">
-                        <a href="{% url 'project_related_publications' project.slug %}">
-                            <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
-                        </a>
-                    </li>
-                {% endif %}
-            </ul> <!-- end #project-tabs -->
-
-            <br>
-
-            <div>
-                <h6>Tags</h6>
-
-                {% for tag in tags %}
-                    <a href="{% url 'view_project_tag' tag.slug %}">
-                        <span class="label label-info">{{ tag.name }}</span>
-                    </a>
-                {% endfor %}
+                <div id="tag-cloud-container" class="col-md-6">
+                    <div id="project-tag-cloud" style="width: 100px; height: 50px;"></div>
+                </div>
             </div>
-        </div> <!-- end .col-md-3 project's info sidebar -->
 
-        <div class="col-md-9">
+            <blockquote>
+                <p>
+                    Description
+                </p>
 
-            <div id="project-tab-content" class="tab-content project-template">
+                <footer>
+                    {{ project.description|safe }}
+                </footer>
+            </blockquote>
 
-                {% block project_content %}
-                    <div class="tab-pane active" id="project-info">
-
-                        {% if project.homepage %}
-                            <h5>Homepage:</h5>
-                            <p>
-                                <a target="_blank" href="{{ project.homepage }}">
-                                    {{ project.homepage }}
-                                </a>
-                            </p>
-                            <br>
-                        {% endif %}
-
-                        <h5>Duration:</h5>
-                        <p>
-                            {{ project.start_year }} - {{ project.end_year }}
-                            &emsp;
-                            {% ifequal project.status 'Not started' %}
-                                <span class="label label-default">{{ project.status }}</span>
-                            {% endifequal %}
-                            {% ifequal project.status 'Ongoing' %}
-                                <span class="label label-info">{{ project.status }}</span>
-                            {% endifequal %}
-                            {% ifequal project.status 'Finished' %}
-                                <span class="label label-success">{{ project.status }}</span>
-                            {% endifequal %}
-                        </p>
-
-                        <br>
-
-                        <h5>Description:</h5>
-                        <p>
-                            {{ project.description|safe }}
-                        </p>
-
-                        <br>
-
-                    </div>
-                {% endblock %}
-
-            </div> <!-- end #project-tab-content -->
-
-        </div>
-
+        {% endblock %}
     </div>
 
 {% endblock %}
@@ -157,6 +134,44 @@
         $('#projects-nav').addClass('active');
     </script>
 
-    {% block project_scripts %}{% endblock %}
+    <script>
+        $('#project_overview').removeClass('active');
+        $('#project_funding').removeClass('active');
+        $('#project_people').removeClass('active');
+        $('#project_consortium').removeClass('active');
+        $('#project_related_pubs').removeClass('active');
+    </script>
+
+    <script>
+        $('#project-tag-cloud').width($('#tag-cloud-container').width() + 'px');
+        var custom_height = $('#project-tag-cloud').width() * 0.5;
+
+        if (custom_height > 125) {
+            custom_height = 125;
+        }
+
+        $('#tag-cloud-container').height(custom_height + 'px');
+        $('#project-tag-cloud').height(custom_height + 'px');
+    </script>
+
+    <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
+
+    <script>
+        var word_array = [
+            {% for tag in tags %}
+                {text: "{{ tag }}", weight: "{% randInt 2 8 %}", link:"{% url 'view_project_tag' tag.slug %}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            $("#project-tag-cloud").jQCloud(word_array);
+        });
+    </script>
+
+    {% block project_scripts %}
+         <script>
+            $('#project_overview').addClass('active');
+        </script>
+    {% endblock %}
 
 {% endblock %}

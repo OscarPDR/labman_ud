@@ -5,54 +5,53 @@
 
 {% block project_content %}
 
-    <div class="tab-pane active" id="project-assigned-persons">
+    {% for role_name, people_list in people_by_role.items %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-circle fa-circle-{{ role_name|slugify }}"></i>
+                &emsp;
+                <strong>{{ role_name }}{{ people_list|pluralize }}</strong>
 
-        {% for role_name, people_list in people_by_role.items %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-circle fa-circle-{{ role_name|slugify }}"></i>
-                    &emsp;
-                    <strong>{{ role_name }}{{ people_list|pluralize }}</strong>
-
-                    <a href="#panel-{{ role_name|slugify }}" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-{{ role_name|slugify }}">
-                        <span class="badge">
-                            Toggle collapse
-                        </span>
-                    </a>
-                </div>
-
-                <div id="panel-{{ role_name|slugify }}" class="pannel-collapse collapse in panel-body row">
-
-                    {% for person in people_list %}
-                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 employee-item">
-                            {% if person.profile_picture_url %}
-                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{{ MEDIA_URL }}{{ person.profile_picture_url }}"/>
-                            {% else %}
-                                {% if person.gender == 'Female' %}
-                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/female.png' %}"/>
-                                {% else %}
-                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/male.png' %}"/>
-                                {% endif %}
-                            {% endif %}
-                            <br>
-                            <span class="member-position">
-                                {{ person.full_name }}
-                            </span>
-                        </div>
-                    {% endfor %}
-                </div>
+                <a href="#panel-{{ role_name|slugify }}" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-{{ role_name|slugify }}">
+                    <span class="badge">
+                        Toggle collapse
+                    </span>
+                </a>
             </div>
 
-            <br>
-        {% endfor %}
+            <div id="panel-{{ role_name|slugify }}" class="pannel-collapse collapse in panel-body row">
 
+                {% for person in people_list %}
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 employee-item">
+                        {% if person.profile_picture_url %}
+                            <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{{ MEDIA_URL }}{{ person.profile_picture_url }}"/>
+                        {% else %}
+                            {% if person.gender == 'Female' %}
+                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/female.png' %}"/>
+                            {% else %}
+                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/male.png' %}"/>
+                            {% endif %}
+                        {% endif %}
+                        <br>
+                        <span class="member-position">
+                            {{ person.full_name }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <br>
+    {% endfor %}
+
+    <div class="hidden-xs hidden-sm">
         <br>
 
         <blockquote class="blockquote-reverse">
             <p>Employee timeline</p>
         </blockquote>
 
-        <div id="chart_div" style="width: 1000px; height: {{ chart_height }}px;"></div>
+        <div id="chart_div" style="width: 100px; height: {{ chart_height }}px;"></div>
     </div>
 
 {% endblock %}
@@ -62,27 +61,40 @@
 {% block project_scripts %}
 
     <script>
-        var employee_item_width = $('.employee-item').width() * 0.7;
-        $('.circular-mini').css('width', employee_item_width);
-        $('.circular-mini').css('height', employee_item_width);
-        $('.circular-mini').css('border-radius', employee_item_width / 2);
-
-        {% for role_name, people_list in people_by_role.items %}
-            {% for role in roles %}
-                {% if role_name == role.name %}
-                    $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
-                    $('.circular-{{ role.slug }}').css('border-color', '#{{ role.rgb_color }}');
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
+        $('#project_people').addClass('active');
     </script>
 
-    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"></script>
+    <script>
+        resizeVisualElements();
+
+        $(window).resize(function() {
+            resizeVisualElements();
+        });
+
+        function resizeVisualElements() {
+            var item_width = $("#project-assigned-persons").width();
+            $("#chart_div").width(item_width)
+
+            var employee_item_width = $('.employee-item').width() * 0.7;
+            $('.circular-mini').css('width', employee_item_width);
+            $('.circular-mini').css('height', employee_item_width);
+            $('.circular-mini').css('border-radius', employee_item_width / 2);
+
+            {% for role_name, people_list in people_by_role.items %}
+                {% for role in roles %}
+                    {% if role_name == role.name %}
+                        $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
+                        $('.circular-{{ role.slug }}').css('border-color', '#{{ role.rgb_color }}');
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        };
+    </script>
+
+    <script src="{% static 'js/google-charts.js' %}"></script>
 
     <script>
-        var item_width = $("#project-assigned-persons").width();
-        $("#chart_div").width(item_width)
-
+        google.load("visualization", "1", {packages:["timeline"]});
         google.setOnLoadCallback(drawChart);
 
         function drawChart() {
@@ -128,11 +140,6 @@
 
             chart.draw(dataTable, options);
         }
-    </script>
-
-    <script>
-        $('.project_info').removeClass('active');
-        $('.project_assigned_persons').addClass('active');
     </script>
 
 {% endblock %}

@@ -30,7 +30,6 @@
         {% include 'labman_ud/twitter_card.html' %}
 
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'css/justified-nav.css' %}" />
 
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
@@ -99,6 +98,16 @@
                                             </a>
                                         </li>
                                     {% endfor %}
+
+                                    <li class="divider"></li>
+
+                                    <li class="rss-link">
+                                        <span>
+                                            <a href="{% url 'project_feed' %}">
+                                                <i class="fa fa-rss"></i>&emsp;Subscribe
+                                            </a>
+                                        </span>
+                                    </li>
                                 </ul>
                             </li>
 
