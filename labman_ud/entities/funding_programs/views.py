@@ -5,16 +5,13 @@ from django.template.defaultfilters import slugify
 
 from django.db.models import Sum, Min, Max
 
-from .models import FundingProgram
-from .forms import FundingProgramSearchForm
+from .models import *
+from .forms import *
 
-from entities.projects.models import Project, Funding, FundingAmount
-
-# Create your views here.
+from entities.projects.models import *
 
 
-###########################################################################
-# View: funding_program_index
+###     funding_program_index()
 ###########################################################################
 
 def funding_program_index(request):
@@ -45,6 +42,9 @@ def funding_program_index(request):
 
     return render(request, "funding_programs/index.html", return_dict)
 
+
+###     funding_program_info(slug)
+###########################################################################
 
 def funding_program_info(request, slug):
     funding_program = get_object_or_404(FundingProgram, slug=slug)
@@ -78,14 +78,18 @@ def funding_program_info(request, slug):
 
         datum.append([year, number_of_projects[year], incomes[year]])
 
-    projects = Project.objects.filter(id__in=fundings.values('project_id')).order_by('start_year', 'full_name')
+    projects = Project.objects.filter(id__in=fundings.values('project_id'))
+    projects = projects.order_by('-start_year', '-end_year', 'full_name')
+
+    funding_program_logos = FundingProgramLogo.objects.filter(funding_program=funding_program)
 
     return_dict = {
-        'funding_program': funding_program,
-        'projects': projects,
         'datum': datum,
-        'min_year': min_year,
+        'funding_program': funding_program,
+        'funding_program_logos': funding_program_logos,
         'max_year': max_year,
+        'min_year': min_year,
+        'projects': projects,
     }
 
     return render(request, "funding_programs/info.html", return_dict)

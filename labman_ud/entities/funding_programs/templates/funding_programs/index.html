@@ -3,27 +3,41 @@
 
 
 
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
+
+{% endblock %}
+
+
+
 {% block content %}
 
-    <div class="centered">
-        <h2>{{ funding_programs_length }} funding program{{ funding_programs|pluralize }}</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <h2>{{ funding_programs_length }} funding program{{ funding_programs|pluralize }}</h2>
+        </div>
+
+        <div class="col-md-4">
+            {% autopaginate funding_programs %}
+
+            {% paginate %}
+        </div>
     </div>
 
-    <br>
-
     <div class="row">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover table-responsive" data-toggle="table" data-search="true">
             <thead>
                 <tr>
-                    <th class="col-md-6">Short name</th>
-                    <th class="col-md-6">Funded by</th>
+                    <th class="col-md-8" data-field="name" data-sortable="true">Name</th>
+                    <th class="col-md-4" data-field="funded_by" data-sortable="true">Funded by</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for funding_program in funding_programs %}
-                    <tr>
-                        <td class="col-md-6">
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
                             <a href="{% url 'funding_program_info' funding_program.slug %}" data-toggle="tooltip" data-placement="bottom" title="{{ funding_program.full_name }}">
                                 {{ funding_program.short_name }}
                             </a>
@@ -33,7 +47,7 @@
                             {% endif %}
                         </td>
 
-                        <td class="col-md-6">
+                        <td class="col-md-4">
                             <a href="{% url 'organization_info' funding_program.organization.slug %}">
                                 {{ funding_program.organization.full_name }}
 
@@ -50,5 +64,26 @@
 
 {% endblock %}
 
+
+
 {% block scripts %}
+
+    <script>
+        $('.pagination').addClass('pagination-sm');
+    </script>
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+    </script>
+
 {% endblock %}
