@@ -1,38 +1,41 @@
 {% extends "labman_ud/base.html" %}
-{% load staticfiles %}
+{% load staticfiles rdf_link %}
 
 
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-md-9">
-            <h2>
-                <a href="{% url 'organization_index' %}"><img width="32" src="{% static 'img/back.png' %}" /></a>
-                {{ organization.full_name}}
-            </h2>
-        </div>
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'organization_index' %}">Organizations</a>
+        </li>
 
-        <div class="col-md-3">
+        <li>
+            <a href="{% url 'view_organization_type' organization.organization_type|slugify %}">
+                {{ organization.organization_type }}
+            </a>
+        </li>
 
-            {% if logo %}
-                <div class="centered">
-                    <img class="organization-logo" src="{{ MEDIA_URL }}{{ logo }}" />
-                </div>
+        <li class="active">
+            {% rdf_icon organization %}
+            {{ organization.short_name }}
+        </li>
+    </ol>
+
+    <div class="entity-info-content">
+        <blockquote>
+            <p>
+                {{ organization.full_name }}
+            </p>
+
+            {% if organization.homepage %}
+                <footer>
+                    <a target="_blank" href="{{ organization.homepage }}">
+                        {{ organization.homepage }}
+                    </a>
+                </footer>
             {% endif %}
-
-            <div class="centered">
-                <a class="btn btn-primary" target="_blank" href="{{ organization.homepage }}">
-                    <i class="fa fa-globe fa-large"></i>&emsp;Visit homepage
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <br>
-    <br>
-
-    <div class="row">
+        </blockquote>
 
         {% if projects_leaded %}
 
@@ -41,36 +44,32 @@
                     Project leader in {{ projects_leaded|length }} project{{ projects_leaded|pluralize }}
                 </div>
 
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover table-condensed">
                     <thead>
-                        <th class="col-md-8">Project name</th>
-                        <th class="col-md-2">Start year</th>
-                        <th class="col-md-2">End year</th>
+                        <th class="col-md-10">Project name</th>
+                        <th class="col-md-2">Period</th>
                     </thead>
 
                     <tbody>
                         {% for project in projects_leaded %}
                             <tr>
-                                <td class="col-md-8">
+                                <td class="col-md-10">
                                     <a href="{% url 'project_info' project.slug %}">
-                                        &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ project.full_name }}
+                                        &emsp;{{ project.full_name }}
                                     </a>
                                 </td>
 
                                 <td class="col-md-2">
-                                    {{ project.start_year }}
-                                </td>
-
-                                <td class="col-md-2">
-                                    {{ project.end_year }}
+                                    {{ project.start_year }} - {{ project.end_year }}
+                                    <a href="{% url 'view_project_status' project.status|slugify %}">
+                                        <i title="{{ project.status }}" class="fa fa-circle status-{{ project.status|slugify }}"></i>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-
-            <br>
 
         {% endif %}
 
@@ -81,28 +80,26 @@
                     Consortium member in {{ projects|length }} project{{ projects|pluralize }}
                 </div>
 
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover table-condensed">
                     <thead>
-                        <th class="col-md-8">Project name</th>
-                        <th class="col-md-2">Start year</th>
-                        <th class="col-md-2">End year</th>
+                        <th class="col-md-10">Project name</th>
+                        <th class="col-md-2">Period</th>
                     </thead>
 
                     <tbody>
                         {% for project in projects %}
                             <tr>
-                                <td class="col-md-8">
+                                <td class="col-md-10">
                                     <a href="{% url 'project_info' project.slug %}">
-                                        &emsp;<i class="fa fa-chevron-right"></i>&emsp;{{ project.full_name }}
+                                        &emsp;{{ project.full_name }}
                                     </a>
                                 </td>
 
                                 <td class="col-md-2">
-                                    {{ project.start_year }}
-                                </td>
-
-                                <td class="col-md-2">
-                                    {{ project.end_year }}
+                                    {{ project.start_year }} - {{ project.end_year }}
+                                    <a href="{% url 'view_project_status' project.status|slugify %}">
+                                        <i title="{{ project.status }}" class="fa fa-circle status-{{ project.status|slugify }}"></i>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -111,8 +108,8 @@
             </div>
 
         {% endif %}
-
     </div>
+
 
 {% endblock %}
 
