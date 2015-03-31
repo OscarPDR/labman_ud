@@ -13,10 +13,7 @@ urlpatterns = [
     url(r'login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html', 'authentication_form': LoginForm}, name='login_view'),
     url(r'^logout/$', 'labman_ud.views.logout_view', name='logout_view'),
 
-    # Unit deploy-specific views
-    url(r'^about/collaborations/$', 'labman_ud.views.about_collaborations', name='about_collaborations'),
-    url(r'^about/prototyping/$', 'labman_ud.views.about_prototyping', name='about_prototyping'),
-    url(r'^about/$', 'labman_ud.views.about', name='about'),
+    url(r'^about/(?P<about_page_slug>\S+)/$', 'labman_ud.views.about_info', name='about_info'),
 
     # Entities urls
     url(r'^funding_programs/', include('entities.funding_programs.urls')),

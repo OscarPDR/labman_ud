@@ -7,7 +7,6 @@ from entities.news.models import News
 from labman_setup.models import AboutSection
 
 
-####################################################################################################
 ###     home()
 ####################################################################################################
 
@@ -24,7 +23,6 @@ def home(request):
         return render(request, 'labman_ud/index.html', return_dict)
 
 
-####################################################################################################
 ###     logout_view()
 ####################################################################################################
 
@@ -34,38 +32,29 @@ def logout_view(request):
     return redirect('home')
 
 
-####################################################################################################
-###     about()
+###     about_info(about_page_slug)
 ####################################################################################################
 
-def about(request):
-    about_sections = AboutSection.objects.all().order_by('order')
+def about_info(request, about_page_slug):
+    if about_page_slug == u'collaborations':
+        about_section = None
+        title = u'Collaborations'
+        collaborations = True
+
+    else:
+        about_section = AboutSection.objects.get(slug=about_page_slug)
+        title = about_section.title
+        collaborations = False
 
     return_dict = {
-        'web_title': u'About',
-        'about_sections': about_sections,
+        'about_section': about_section,
+        'collaborations': collaborations,
+        'web_title': u'About - %s' % title,
     }
 
-    return render(request, 'labman_ud/about.html', return_dict)
+    return render(request, 'labman_ud/about_info.html', return_dict)
 
 
-####################################################################################################
-###     about_collaborations()
-####################################################################################################
-
-def about_collaborations(request):
-    return render(request, 'labman_ud/about/collaborations.html', {'web_title': 'Collaborations'})
-
-
-####################################################################################################
-###     about_prototyping()
-####################################################################################################
-
-def about_prototyping(request):
-    return render(request, 'labman_ud/about/prototyping.html', {'web_title': 'Prototyping'})
-
-
-####################################################################################################
 ###     view404()
 ####################################################################################################
 

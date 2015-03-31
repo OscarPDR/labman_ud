@@ -335,14 +335,12 @@ ul.nav.nav-tabs {
     margin-left: 2em;
 }
 
-#about-tab-content > .tab-pane {
-    border: 1px solid #999;
-    border-radius: 0.5em;
-    padding: 1.5em;
+#about-tabs {
+    margin: 1em;
 }
 
-#about-tab-content > .tab-pane > p {
-    text-align: justify;
+#about-section {
+    margin: 1.5em;
 }
 
 .publication-template {

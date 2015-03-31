@@ -96,6 +96,8 @@ def global_vars(request):
     project_dict = OrderedDict(sorted(project_counter.items(), key=lambda t: t[1]))
     project_items = project_dict.items()
 
+    about_section_titles = AboutSection.objects.all().order_by('order').values_list('title', flat=True)
+
     return_dict = {
         'ADDRESS_DETAILS': address_details,
         'BASE_URL': getattr(settings, 'BASE_URL', None),
@@ -115,6 +117,7 @@ def global_vars(request):
         'NUMBER_OF_PROJECTS': len(project_types),
         'PROJECT_TYPES': dict(project_items),
         'THESES': theses,
+        'ABOUT_SECTION_TITLES': about_section_titles,
     }
 
     return return_dict
