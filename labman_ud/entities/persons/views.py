@@ -26,7 +26,6 @@ from entities.utils.models import Role, Network, PersonRelatedToAward, Award, Pr
 
 from charts.views import PUBLICATION_TYPES
 
-# Create your views here.
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
@@ -811,35 +810,13 @@ def person_info(request, person_slug):
 
     person = get_object_or_404(Person, slug=person_slug)
 
-    projects = {}
-
-    roles = Role.objects.all()
-
-    for role in roles:
-        projects[role.name] = []
-        project_ids = AssignedPerson.objects.filter(person_id=person.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
-
-        for project in project_objects:
-            projects[role.name].append(project)
-
     publication_ids = PublicationAuthor.objects.filter(author=person.id).values('publication_id')
-    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
-
-    publications = {}
-
-    for publication_type in PUBLICATION_TYPES:
-        publications[publication_type] = []
-
-    for publication in _publications:
-        pub_type = publication.child_type
-        publications[pub_type].append(publication)
+    publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
     # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': person.full_name,
         'person': person,
-        'projects': projects,
         'publications': publications,
     }
 
