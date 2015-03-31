@@ -51,7 +51,7 @@
             <p>Employee timeline</p>
         </blockquote>
 
-        <div id="chart_div" style="width: 100px; height: {{ chart_height }}px;"></div>
+        <div id="chart_div" style="height: {{ chart_height }}px;"></div>
     </div>
 
 {% endblock %}
@@ -65,30 +65,24 @@
     </script>
 
     <script>
-        resizeVisualElements();
+        var item_width = $("#project-assigned-persons").width();
+        $("#chart_div").width(item_width);
 
-        $(window).resize(function() {
-            resizeVisualElements();
-        });
+        console.log('resizeVisualElements');
 
-        function resizeVisualElements() {
-            var item_width = $("#project-assigned-persons").width();
-            $("#chart_div").width(item_width)
+        var employee_item_width = $('.employee-item').width() * 0.7;
+        $('.circular-mini').css('width', employee_item_width);
+        $('.circular-mini').css('height', employee_item_width);
+        $('.circular-mini').css('border-radius', employee_item_width / 2);
 
-            var employee_item_width = $('.employee-item').width() * 0.7;
-            $('.circular-mini').css('width', employee_item_width);
-            $('.circular-mini').css('height', employee_item_width);
-            $('.circular-mini').css('border-radius', employee_item_width / 2);
-
-            {% for role_name, people_list in people_by_role.items %}
-                {% for role in roles %}
-                    {% if role_name == role.name %}
-                        $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
-                        $('.circular-{{ role.slug }}').css('border-color', '#{{ role.rgb_color }}');
-                    {% endif %}
-                {% endfor %}
+        {% for role_name, people_list in people_by_role.items %}
+            {% for role in roles %}
+                {% if role_name == role.name %}
+                    $('.fa-circle-{{ role.slug }}').css('color', '#{{ role.rgb_color }}');
+                    $('.circular-{{ role.slug }}').css('border-color', '#{{ role.rgb_color }}');
+                {% endif %}
             {% endfor %}
-        };
+        {% endfor %}
     </script>
 
     <script src="{% static 'js/google-charts.js' %}"></script>
@@ -130,6 +124,8 @@
             {% endfor %}
 
             dataTable.addRows(timeline);
+
+            console.log(timeline);
 
             var options = {
                 timeline: { showBarLabels: false},
