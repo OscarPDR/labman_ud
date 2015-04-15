@@ -589,6 +589,8 @@ def __get_award_info(award_slug):
     publication_relations = PublicationRelatedToAward.objects.filter(award=award).select_related('publication')
     publications = [publication_relation.publication for publication_relation in publication_relations]
 
+    print publications
+
     # dictionary to be returned in render(request, )
     return_dict = {
         'award': award,
@@ -600,58 +602,30 @@ def __get_award_info(award_slug):
     return return_dict, award
 
 
-###########################################################################
-# View: member_awards
-###########################################################################
+###     award_info(award_slug)
+####################################################################################################
 
 def award_info(request, award_slug):
     return_dict, award = __get_award_info(award_slug)
+
     return_dict.update({
         'web_title': u'Awards - %s' % award.full_name,
-        'current_link': 'info',
     })
 
     return render(request, 'awards/info.html', return_dict)
 
 
-###########################################################################
-# View: award_related_publications
-###########################################################################
-
-def award_related_publications(request, award_slug):
-    return_dict, award = __get_award_info(award_slug)
-    return_dict.update({
-        'web_title': u'Awards - %s - Related publications' % award.full_name,
-        'current_link': 'related_publications',
-    })
-
-    return render(request, 'awards/related_publications.html', return_dict)
-
-
-###########################################################################
-# View: award_related_projects
-###########################################################################
-
-def award_related_projects(request, award_slug):
-    return_dict, award = __get_award_info(award_slug)
-    return_dict.update({
-        'web_title': u'Awards - %s - Related projects' % award.full_name,
-        'current_link': 'related_projects',
-    })
-
-    return render(request, 'awards/related_projects.html', return_dict)
-
-
-###########################################################################
-# View: award_index
-###########################################################################
+###     award_index()
+####################################################################################################
 
 def award_index(request):
     awards = Award.objects.all().order_by('-date')
+
     return_dict = {
         'web_title': u'Awards',
         'awards': awards,
     }
+
     return render(request, 'awards/index.html', return_dict)
 
 

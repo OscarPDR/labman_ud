@@ -33,8 +33,6 @@ urlpatterns = patterns('',
     url(r'^members/(?P<person_slug>\S+)/cvn/$', 'entities.persons.views.member_spanish_cvn', name='member_spanish_cvn'),
     # Awards
     url(r'^members/(?P<person_slug>\S+)/awards/$', 'entities.persons.views.member_awards', name='member_awards'),
-    url(r'^awards/(?P<award_slug>\S+)/related_projects/$', 'entities.persons.views.award_related_projects', name='award_related_projects'),
-    url(r'^awards/(?P<award_slug>\S+)/related_publications/$', 'entities.persons.views.award_related_publications', name='award_related_publications'),
     url(r'^awards/(?P<award_slug>\S+)/$', 'entities.persons.views.award_info', name='award_info'),
     url(r'^awards/$', 'entities.persons.views.award_index', name='award_index'),
     # list of publications by type

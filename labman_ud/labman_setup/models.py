@@ -38,6 +38,12 @@ class LabmanDeployGeneralSettings(models.Model):
         null=True,
     )
 
+    background_color = models.CharField(
+        max_length=25,
+        blank=True,
+        null=True,
+    )
+
     research_group_full_name = models.CharField(
         max_length=75,
     )

@@ -154,11 +154,34 @@
                                     </ul>
                                 </li>
 
-                                <li id="members-nav">
-                                    <a href="{% url 'members' %}">
+                                <li id="members-nav" class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                         <i class="fa fa-users fa-grey"></i>
-                                        Members
+                                        Members <span class="caret"></span>
                                     </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+
+                                        <li>
+                                            <a href="{% url 'members' %}">
+                                                Members
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'former_members' %}">
+                                                Former members
+                                            </a>
+                                        </li>
+
+                                        <li class="divider"></li>
+
+                                        <li>
+                                            <a href="{% url 'award_index' %}">
+                                                Awards
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
 
                                 <li id="charts-nav">
@@ -183,6 +206,8 @@
                                                 </a>
                                             </li>
                                         {% endfor %}
+
+                                        <li class="divider"></li>
 
                                         <li>
                                             <a href="{% url 'about_info' 'collaborations' %}">
@@ -236,12 +261,33 @@
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
         <script>
-            var new_width = ($('#brand-logo').width() * 48) / $('#brand-logo').height();
+            {% if BACKGROUND_COLOR %}
+                $('body').css('background-color', '{{ BACKGROUND_COLOR }}');
+            {% endif %}
+        </script>
 
-            $('#brand-logo').height('48px');
-            $('#brand-logo').width(new_width + 'px');
+        <script>
+            function sleep(milliseconds, callback) {
+                setTimeout(function() {
+                    if(typeof callback == 'function') {
+                        callback();
+                    }
+                }
+                , milliseconds);
+            };
+        </script>
 
-            $('#brand-text').css("padding-left", 10 + new_width + "px");
+        <script>
+            sleep(250, function() {
+                var new_width = ($('#brand-logo').width() * 48) / $('#brand-logo').height();
+
+                $('#brand-logo').height('48px');
+                $('#brand-logo').width(new_width + 'px');
+
+                console.log(new_width);
+
+                $('#brand-text').css("padding-left", 10 + new_width + "px");
+            });
         </script>
 
         <script>

@@ -118,6 +118,7 @@ def global_vars(request):
         'PROJECT_TYPES': dict(project_items),
         'THESES': theses,
         'ABOUT_SECTION_TITLES': about_section_titles,
+        'BACKGROUND_COLOR': _settings.background_color,
     }
 
     return return_dict

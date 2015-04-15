@@ -1,103 +1,89 @@
 {% extends "labman_ud/base.html" %}
+{% load staticfiles sanitize_types %}
 
-{% block content %}
 
-        <div class="row">
-            <h3>
-                <a href="{% url 'award_index' %}">
-                    <img width="32" src="{{ STATIC_URL }}img/back.png" />
-                </a>
 
-                {{ award.full_name }}
-            </h3>
-        </div>
+{% block header_css %}
 
-        <br>
-        <br>
-
-        <div class="row">
-            <div class="col-md-3">
-                <ul id="project-tabs" class="nav nav-pills nav-stacked">
-                    <li {% if current_link = 'info' %}class="active"{% endif %}>
-                        <a href="{% url 'award_info' award.slug %}">
-                            <i class="fa fa-info fa-large"></i>&emsp;General information
-                        </a>
-                    </li>
-
-                    {% if related_projects %}
-                        <li {% if current_link = 'related_projects' %}class="active"{% endif %}>
-                            <a href="{% url 'award_related_projects' award.slug %}">
-                                <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_projects|length }} project{{ related_projects|pluralize }}
-                            </a>
-                        </li>
-                    {% endif %}
-
-                    {% if related_publications %}
-                        <li {% if current_link = 'related_publications' %}class="active"{% endif %}>
-                            <a href="{% url 'award_related_publications' award.slug %}">
-                                <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} publication{{ related_publications|pluralize }}
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-
-            <div class="col-md-9">
-                <div id="publication-tab-content" class="tab-content publication-template">
-                    <div class="tab-pane active">
-                        {% block award_contents %}
-                            <h5>Recipients:</h5>
-
-                            {% for recipient in recipients %}
-                                &emsp;
-                                {% if recipient.is_active %}
-                                    <a href="{% url 'member_info' recipient.slug %}">
-                                        {{ recipient.full_name }}{% if not forloop.last %},{% endif %}
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'person_info' recipient.slug %}">
-                                        {{ recipient.full_name }}{% if not forloop.last %},{% endif %}
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-
-                            <br>
-                            <br>
-
-                            <div class="row">
-                                {% if award.date %}
-                                    <div class="col-md-2">
-                                        <h5>Date</h5>
-                                        {{ award.date }}
-                                    </div>
-                                {% endif %}
-
-                                {% if award.supporting_organization %}
-                                    <div class="col-md-5">
-                                        <h5>Entity</h5>
-                                        {{ award.supporting_organization }}
-                                    </div>
-                                {% endif %}
-
-                                {% if award.event %}
-                                    <div class="col-md-5">
-                                        <h5>Event</h5>
-                                        {{ award.event.full_name }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <br>
-
-                            <h5>Description:</h5>
-                            {{ award.description|safe }}
-                        {% endblock %}
-                    </div>
-                </div>
-            </div>
-        </div>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
 
 {% endblock %}
 
 
 
+{% block content %}
+
+
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'award_index' %}">Awards</a>
+        </li>
+
+        <li class="active">
+            {{ award.short_name }}
+        </li>
+    </ol>
+
+    <div class="entity-info-content">
+        <blockquote>
+            <p>
+                {{ award.full_name }}
+            </p>
+
+            <footer>
+                {% if award.date %}
+                    <strong>Date:</strong>&nbsp;
+                    {{ award.date }}
+                    <br>
+                {% endif %}
+
+                {% if award.supporting_organization %}
+                    <strong>Entity:</strong>
+                    <a href="{% url 'organization_info' award.supporting_organization.slug %}">
+                        {{ award.supporting_organization }}
+                    </a>
+                    <br>
+                {% endif %}
+
+                {% if award.event %}
+                    <strong>Event:</strong>&nbsp;
+                    {{ award.event.full_name }}
+                    <br>
+                {% endif %}
+            </footer>
+        </blockquote>
+
+        <br>
+
+        <div class="row">
+            {{ award.description|safe }}
+        </div>
+
+        <br>
+
+        {% if related_publications %}
+            {% include 'publications/generic_related_publications_template.html' %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+    </script>
+
+{% endblock %}

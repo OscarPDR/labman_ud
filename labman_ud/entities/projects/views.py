@@ -262,6 +262,8 @@ def project_related_publications(request, project_slug):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
+    print related_publications
+
     # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({

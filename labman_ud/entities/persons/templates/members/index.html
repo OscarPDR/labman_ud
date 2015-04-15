@@ -6,7 +6,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h2 id="member-count">
                 {% if is_active_members %}
                     {{ members_length }} member{{ members_length|pluralize }}
@@ -55,16 +55,6 @@
                     </li>
                 </ul>
             </div>
-        {% endif %}
-
-        {% if is_active_members %}
-            <a class="btn btn-primary col-md-2" href="{% url 'former_members' %}">
-                <i class="fa fa-step-backward"></i>&emsp;Former members
-            </a>
-        {% else %}
-            <a class="btn btn-primary col-md-2" href="{% url 'members' %}">
-                Active members
-            </a>
         {% endif %}
     </div>
 

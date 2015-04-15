@@ -1,4 +1,4 @@
-{% extends "projects/info.html" %}
+{% extends 'publications/info.html' %}
 {% load staticfiles sanitize_types %}
 
 
@@ -11,7 +11,7 @@
 
 
 
-{% block project_content %}
+{% block publication_content %}
 
     {% include 'publications/generic_related_publications_template.html' %}
 
@@ -19,10 +19,10 @@
 
 
 
-{% block project_scripts %}
+{% block publication_scripts %}
 
     <script>
-        $('#project_related_pubs').addClass('active');
+        $('#publication_related_pubs').addClass('active');
     </script>
 
     <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
@@ -37,6 +37,8 @@
                 page: 1
             };
         };
+
+        $('ul.pagination').addClass('pagination-sm');
     </script>
 
 {% endblock %}
