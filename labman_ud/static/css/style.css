@@ -99,10 +99,15 @@ h5, h6 {
     position: absolute;
     top: 1px;
     left: 10px;
+    visibility: hidden;
 }
 
 #brand-text {
     font-weight: bold;
+}
+
+.breadcrumb > li.active > a {
+    color: #999;
 }
 
 .login-box {
@@ -719,18 +724,19 @@ footer h4 {
     border: 0;
 }
 
-.latest-news {
-    margin: 1.5em;
+.well.latest-news {
+    padding: 1em 0.75em 0.5em;
 }
 
-.latest-news > .soften {
-    margin-top: 1.5em;
+.latest-news {
+    margin: 1.5em;
 }
 
 .latest-news > p {
     font-size: 0.8em;
     text-align: right;
     margin-top: 1.5em;
+    margin-bottom: 0;
 }
 
 .medals-layout img {

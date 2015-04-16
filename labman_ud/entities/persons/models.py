@@ -132,6 +132,7 @@ class Person(models.Model):
     )
 
     publications = models.ManyToManyField('publications.Publication', through='publications.PublicationAuthor')
+    projects = models.ManyToManyField('projects.Project', through='projects.AssignedPerson')
 
     class Meta:
         ordering = ['slug']

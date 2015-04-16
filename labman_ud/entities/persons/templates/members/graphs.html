@@ -22,7 +22,9 @@
                 <div class="panel-body">
                     <dl class="dl-horizontal">
                         <dt>
-                            <a href="{% url 'publications_egonetwork' member.slug %}">Egonetwork</a>
+                            <a href="{% url 'publications_egonetwork' member.slug %}">
+                                Egonetwork
+                            </a>
                         </dt>
                         <dd>
                             Shows the graph relationship between {{ member.full_name }} and {% if member.gender == 'Female' %} her {% else %} his {% endif %} co-authors.
@@ -31,7 +33,9 @@
                         <br>
 
                         <dt>
-                            <a href="{% url 'publications_by_author' member.slug %}">Number of publications</a>
+                            <a href="{% url 'publications_by_author' member.slug %}">
+                                Number of publications
+                            </a>
                         </dt>
                         <dd>
                             Timeline with the number of publications (by type and total amount) authored by {{ member.full_name }} through the years.
@@ -40,7 +44,9 @@
                         <br>
 
                         <dt>
-                            <a href="{% url 'tags_by_author' member.slug %}">Tag cloud</a>
+                            <a href="{% url 'topics_by_person' 'publications' member.slug %}">
+                                Tag cloud
+                            </a>
                         </dt>
                         <dd>
                             Weighed list of the topics used in the publications authored by {{ member.full_name }}, visually represented as a cloud.
@@ -49,7 +55,9 @@
                         <br>
 
                         <dt>
-                            <a href="{% url 'related_persons' member.slug %}">Similar people</a>
+                            <a href="{% url 'related_persons' member.slug %}">
+                                Similar people
+                            </a>
                         </dt>
                         <dd>
                             Performs an analysis based on the topics used by {{ member.full_name }}, looking for similar people having published in those topics. The greatest the overlap, the strongest the similarity between them.
@@ -78,6 +86,17 @@
                         </dt>
                         <dd>
                             Displays the projects in which {{ member.full_name }} has been involved through the years.
+                        </dd>
+
+                        <br>
+
+                        <dt>
+                            <a href="{% url 'topics_by_person' 'projects' member.slug %}">
+                                Tag cloud
+                            </a>
+                        </dt>
+                        <dd>
+                            Weighed list of the topics used in the projects {{ member.full_name }} has worked in, visually represented as a cloud.
                         </dd>
                     </dl>
                 </div>

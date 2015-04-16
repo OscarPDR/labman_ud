@@ -1,0 +1,83 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles sanitize_types %}
+
+
+
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/jqcloud.css' %}"/>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'chart_index' %}">
+                Charts
+            </a>
+        </li>
+
+        {% if entity_slug and not person %}
+            <li class="active">
+                <a href="{% url 'topics_by_entity' entity_slug %}">
+                    {{ entity_slug|sanitize }} topic cloud
+                </a>
+            </li>
+        {% endif %}
+
+        {% if person %}
+            <li>
+                <a href="{% url 'topics_by_entity' entity_slug %}">
+                    {{ entity_slug|sanitize }} topic cloud
+                </a>
+            </li>
+
+            <li class="active">
+                <a href="{% url 'topics_by_person' entity_slug person.slug %}">
+                    {{ person.full_name }}
+                </a>
+            </li>
+        {% endif %}
+    </ol>
+
+    <div id="tag-cloud-container" class="centered">
+        <div id="tag-cloud" style="width: 100px; height: 50px;"></div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#tag-cloud').width($('#tag-cloud-container').width() + 'px');
+        var custom_height = $('#tag-cloud').width() * 0.5;
+
+        $('#tag-cloud-container').height(custom_height + 'px');
+        $('#tag-cloud').height(custom_height + 'px');
+    </script>
+
+    <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
+
+    <script>
+        var word_array = [
+            {% for key, value in tag_dict.items %}
+             {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_project_tag' key|slugify %}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+            $("#tag-cloud").jQCloud(word_array);
+        });
+    </script>
+
+    <script>
+        $('#charts-nav').addClass('active');
+    </script>
+
+{% endblock %}

@@ -4,6 +4,12 @@ from django.conf.urls import url
 urlpatterns = [
     url(r'^$', 'charts.views.chart_index', name='chart_index'),
 
+    ### topic_clouds
+    ###########################################################################
+
+    url(r'^topics/(?P<entity_slug>\S+)/(?P<person_slug>\S+)/$', 'charts.views.topic_cloud', name='topics_by_person'),
+    url(r'^topics/(?P<entity_slug>\S+)/$', 'charts.views.topic_cloud', name='topics_by_entity'),
+
     # /funding
     url(r'^funding/total_incomes/$', 'charts.views.funding_total_incomes', name='funding_total_incomes'),
     url(r'^funding/total_incomes_by_scope/$', 'charts.views.funding_total_incomes_by_scope', name='funding_total_incomes_by_scope'),
@@ -15,7 +21,6 @@ urlpatterns = [
     # /publications
     url(r'^publications/egonetwork/(?P<author_slug>\S+)$', 'charts.views.publications_egonetwork', name='publications_egonetwork'),
     url(r'^publications/total_number/(?P<author_slug>\S+)$', 'charts.views.publications_by_author', name='publications_by_author'),
-    url(r'^publications/tags/(?P<author_slug>\S+)$', 'charts.views.tags_by_author', name='tags_by_author'),
 
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
 

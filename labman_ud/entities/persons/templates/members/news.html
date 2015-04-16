@@ -3,30 +3,54 @@
 
 
 
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
+
+{% endblock %}
+
+
+
 {% block member_content %}
 
-    <blockquote>
-        <p><a href="{% url 'member_feeds_news' member.slug %}"><i class="fa fa-rss"></i>&emsp;Subscribe</a></p>
-    </blockquote>
+    <div class="tab-pane active">
 
-    {% if news %}
-        {% for key, value in news.items %}
-            <blockquote>
-                <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+        <div class="rss-link pull-left">
+            <a href="{% url 'member_feeds_news' member.slug %}">
+                <i class="fa fa-rss"></i>&emsp;Subscribe
+            </a>
+        </div>
 
-                <dl class="dl-horizontal">
-                    {% for item in value %}
-                        <dt class="day-number">{{ item.created|date:"d" }}</dt>
-                        <dd class="news-title"><a href="{% url 'view_news' item.slug %}">{{ item.title }}</a></dd>
+        {% if news %}
+            <table class="table table-condensed table-bordered table-striped table-responsive" data-toggle="table" data-search="true" data-pagination="true">
+                <thead>
+                    <th data-field="date" data-sortable="true">Date</th>
+                    <th>Title</th>
+                </thead>
+
+                <tbody>
+                    {% for item in news %}
+                        <tr>
+                            <td>{{ item.created|date:"d M, Y" }}</td>
+                            <td>
+                                <a href="{% url 'view_news' item.slug %}">
+                                    {{ item.title }}
+                                </a>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </dl>
-            </blockquote>
-        {% endfor %}
-    {% else %}
-        <p>
-            {{ member.full_name }} does not have any News item yet.
-        </p>
-    {% endif %}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>
+                {{ member.full_name }} does not have any News item yet.
+            </p>
+
+        {% endif %}
+
+    </div>
 
 {% endblock %}
 
@@ -40,6 +64,22 @@
 
         $('.member_news').removeClass('btn-default');
         $('.member_news').addClass('btn-primary');
+    </script>
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+
+        $('ul.pagination').addClass('pagination-sm');
     </script>
 
 {% endblock %}

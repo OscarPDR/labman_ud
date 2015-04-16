@@ -159,6 +159,26 @@
                                 </a>
                             </li>
                         {% endfor %}
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <span>
+                                <a class="btn btn-default btn-xs" href="{% url 'member_bibtex' member.slug %}">
+                                    <i class="fa fa-files-o"></i>&emsp;Full BibTeX
+                                </a>
+                            </span>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li class="rss-link">
+                            <span>
+                                <a href="{% url 'member_feeds_publications' member.slug %}">
+                                    <i class="fa fa-rss"></i>&emsp;Subscribe
+                                </a>
+                            </span>
+                        </li>
                     </ul>
                 </div>
                 {% endif %}

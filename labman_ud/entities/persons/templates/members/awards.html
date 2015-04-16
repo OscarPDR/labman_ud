@@ -5,24 +5,28 @@
 
 {% block member_content %}
 
-    {% if awards %}
-        {% for key, value in awards.items %}
-            <blockquote>
-                <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+    <div class="tab-pane active">
 
-                <dl class="dl-horizontal">
-                    {% for item in value %}
-                        <dt class="day-number">{{ item.date|date:"d" }}</dt>
-                        <dd class="news-title"><a href="{% url 'award_info' item.slug %}">{{ item.full_name }}</a></dd>
-                    {% endfor %}
-                </dl>
-            </blockquote>
-        {% endfor %}
-    {% else %}
-        <p>
-            {{ member.full_name }} does not have any award yet.
-        </p>
-    {% endif %}
+        {% if awards %}
+            {% for key, value in awards.items %}
+                <blockquote>
+                    <p><i class="fa fa-calendar"></i>&emsp;{{ key }}</p>
+
+                    <dl class="dl-horizontal">
+                        {% for item in value %}
+                            <dt class="day-number">{{ item.date|date:"d" }}</dt>
+                            <dd class="news-title"><a href="{% url 'award_info' item.slug %}">{{ item.full_name }}</a></dd>
+                        {% endfor %}
+                    </dl>
+                </blockquote>
+            {% endfor %}
+        {% else %}
+            <p>
+                {{ member.full_name }} does not have any award yet.
+            </p>
+        {% endif %}
+
+    </div>
 
 {% endblock %}
 

@@ -345,6 +345,8 @@ def publication_tag_cloud(request):
     return_dict = {
         'web_title': u'Publications tag cloud',
         'tag_dict': dict(items),
+        'number_of_tags': len(tags),
+        'number_of_publications': Publication.objects.all().count(),
     }
 
     return render(request, 'publications/tag_cloud.html', return_dict)

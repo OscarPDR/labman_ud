@@ -17,14 +17,12 @@ from collections import OrderedDict, Counter
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
 
-from entities.news.models import PersonRelatedToNews
+from entities.news.models import News, PersonRelatedToNews
 from entities.organizations.models import Organization, Unit
-from entities.projects.models import Project, AssignedPerson
+from entities.projects.models import AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
 from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
-
-from charts.views import PUBLICATION_TYPES
 
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
@@ -523,15 +521,13 @@ def member_publication_bibtex_download(request, person_slug):
 
 def member_news(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
-    person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__created')
-    news = OrderedDict()
+    person_news_ids = PersonRelatedToNews.objects.filter(person=member).values_list('id', flat=True)
 
-    for news_person in person_news:
-        news_piece = news_person.news
-        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
-        if not year_month in news:
-            news[year_month] = []
-        news[year_month].append(news_piece)
+    if person_news_ids != []:
+        news = News.objects.filter(id__in=person_news_ids).order_by('-created')
+
+    else:
+        news = None
 
     # dictionary to be returned in render(request, )
     return_dict = {
