@@ -28,7 +28,7 @@ def rdf_icon(entity_object):
         entity_path = u'organizations'
 
     rdf_resource_uri = u'%s/%s/%s' % (
-        getattr(settings, 'RDF_URI', ''),
+        getattr(settings, 'GRAPH_BASE_URL', ''),
         entity_path,
         entity_object.slug,
     )
