@@ -4,21 +4,18 @@
 from generators.rdf.rdf_management import empty_graph
 
 from entities.events.models import *
-from entities.funding_programs.models import *
-from entities.news.models import *
 from entities.organizations.models import *
 from entities.persons.models import *
 from entities.projects.models import *
 from entities.publications.models import *
-from entities.utils.models import *
 
 
-###########################################################################
-# def: republish_all_data_as_rdf()
-###########################################################################
+###     republish_all_data_as_rdf()
+#####################################################################################################
 
 def republish_all_data_as_rdf():
 
+    print
     print '#' * 80
     print 'Re-publishing all the information as Linked Open Data...'
     print '#' * 80
@@ -27,52 +24,21 @@ def republish_all_data_as_rdf():
     print 'Cleaning SPARQL graph...'
     empty_graph()
     print 'Graph is now empty'
+    print
 
+    _publish_module('Event', Event.objects.all())
     _publish_module('Organization', Organization.objects.all())
     _publish_module('Person', Person.objects.all())
-    _publish_module('Event', Event.objects.all())
     _publish_module('Project', Project.objects.all())
 
-    print '\tRe-publishing publications module'
-    for publication in Publication.objects.all():
-
-        try:
-            if publication.child_type == 'Book':
-                book = Book.objects.get(slug=publication.slug)
-                book.save()
-
-            elif publication.child_type == 'BookSection':
-                book_section = BookSection.objects.get(slug=publication.slug)
-                book_section.save()
-
-            elif publication.child_type == 'ConferencePaper':
-                conference_paper = ConferencePaper.objects.get(slug=publication.slug)
-                conference_paper.save()
-
-            elif publication.child_type == 'Proceedings':
-                proceedings = Proceedings.objects.get(slug=publication.slug)
-                proceedings.save()
-
-            if publication.child_type == 'JournalArticle':
-                journal_article = JournalArticle.objects.get(slug=publication.slug)
-                journal_article.save()
-
-            if publication.child_type == 'Journal':
-                journal = Journal.objects.get(slug=publication.slug)
-                journal.save()
-
-            if publication.child_type == 'MagazineArticle':
-                magazine_article = MagazineArticle.objects.get(slug=publication.slug)
-                magazine_article.save()
-
-            if publication.child_type == 'Magazine':
-                magazine = Magazine.objects.get(slug=publication.slug)
-                magazine.save()
-
-        except:
-            print 'Error while publishing: %s' % publication.title
-    print '\t\Module re-published'
-    print
+    _publish_module('Book', Book.objects.all())
+    _publish_module('BookSection', BookSection.objects.all())
+    _publish_module('Proceedings', Proceedings.objects.all())
+    _publish_module('ConferencePaper', ConferencePaper.objects.all())
+    _publish_module('Journal', Journal.objects.all())
+    _publish_module('JournalArticle', JournalArticle.objects.all())
+    _publish_module('Magazine', Magazine.objects.all())
+    _publish_module('MagazineArticle', MagazineArticle.objects.all())
 
 
 ###     _publish_module(module_name, module_item_set)
@@ -90,14 +56,15 @@ def _publish_module(module_name, module_item_set):
 
         except:
             failed_items.append(item)
-            print '\tError while publishing: (%d) %s' % (item.id, item)
+            print '\tError while publishing item with ID (%d): %s' % (item.id, item)
 
     print 'First loop finished'
-    print
 
     if len(failed_items) > 0:
+        print
+
         for item in failed_items:
-            print u'\tTrying to re-publish: (%d) %s' % (item.id, item)
+            print u'\tTrying to re-publish item with ID (%d): %s' % (item.id, item)
 
             try:
                 print '\t\tSuccess'

@@ -5,8 +5,7 @@ import os
 from django.db import models
 from django.template.defaultfilters import slugify
 
-
-# Create your models here.
+from .linked_data import *
 
 
 def funding_program_logo_path(self, filename):
