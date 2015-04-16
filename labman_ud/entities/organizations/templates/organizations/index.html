@@ -5,91 +5,81 @@
 
 {% block content %}
 
-    <div class="centered">
-        {% if clean_index %}
-            <h2>{{ organizations_length }} organization{{ organizations|pluralize }}</h2>
-        {% else %}
-            {% if organization_type %}
-                <h2>{{ organizations_length }} {{ organization_type|lower }}{{ organizations|pluralize }}</em>
-            {% elif query_string %}
-                <h2>{{ organizations_length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
-            {% endif %}
-            &emsp;<small><a id="clean-filters" href="{% url 'organization_index' %}">Clean filters</a></small></h2>
-        {% endif %}
-    </div>
-
-    <br>
-
-    <div class="row">
+    <div id="form-section">
         <form class="form-search" action="" method="post">
             {% csrf_token %}
-            <div class="col-md-4">
-                {{ form.text }}
-            </div>
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Search organizations</button>
+            <div class="input-group">
+                {{ form.text }}
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
             </div>
         <form>
     </div>
 
-    {% autopaginate organizations %}
+    <div class="row">
+        <div class="col-md-8">
+            {% if clean_index %}
+                <h2>{{ organizations_length }} organization{{ organizations|pluralize }}</h2>
+            {% else %}
+                {% if organization_type %}
+                    <h2>{{ organizations_length }} {{ organization_type|lower }}{{ organizations|pluralize }}</em>
+                {% elif query_string %}
+                    <h2>{{ organizations_length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% endif %}
+                &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'organization_index' %}">Clean filters</a></small></h2>
+            {% endif %}
+        </div>
 
-    {% paginate %}
+        <div class="col-md-4">
+            {% autopaginate organizations %}
 
-    <br>
+            {% paginate %}
+        </div>
+    </div>
 
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th class="col-md-6">Name</th>
-                <th class="col-md-2">Country</th>
-                <th class="col-md-3">Type</th>
-                <th class="col-md-1">Homepage</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for organization in organizations %}
+    <div class="row">
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <thead>
                 <tr>
-                    <td class="col-md-6">
-                        {% if ENABLE_RDF_PUBLISHING %}
-                            <a target="_blank" href="{{ RDF_URI }}organizations/{{ organization.slug }}">
-                                <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
-                            </a>
-                        {% endif %}
-                        &emsp;
-                        <a href="{% url 'organization_info' organization.slug %}">
-                            {{ organization.full_name }}
-                            {% if organization.short_name != organization.short_name %}
-                            : {{ organization.full_name }}
-                            {% endif %}
-                        </a>
-                    </td>
-
-                    <td class="col-md-2">
-                        {% if organization.country %}
-                            {{ organization.country.full_name }}
-                        {% endif %}
-                    </td>
-
-                    <td class="col-md-3">
-                        <a href="{% url 'view_organization_type' organization.organization_type|slugify %}">
-                            {{ organization.organization_type }}
-                        </a>
-                    </td>
-
-                    <td class="col-md-1 centered">
-                        {% if organization.homepage %}
-                            <a target="_blank" href="{{ organization.homepage }}">
-                                <i class="fa fa-globe"></i>
-                            </a>
-                        {% endif %}
-                    </td>
+                    <th class="col-md-8">Name</th>
+                    <th class="col-md-2">Type</th>
+                    <th class="col-md-2">Country</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                {% for organization in organizations %}
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
+                            <a href="{% url 'organization_info' organization.slug %}">
+                                {{ organization.full_name }}
+                                {% if organization.short_name != organization.short_name %}
+                                : {{ organization.full_name }}
+                                {% endif %}
+                            </a>
+                        </td>
+
+                        <td class="col-md-2">
+                            <a href="{% url 'view_organization_type' organization.organization_type|slugify %}">
+                                {{ organization.organization_type }}
+                            </a>
+                        </td>
+
+                        <td class="col-md-2">
+                            {% if organization.country %}
+                                {{ organization.country.full_name }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
 
@@ -97,11 +87,16 @@
 
 {% block scripts %}
 
+    <script>
+        $('.pagination').addClass('pagination-sm');
+    </script>
+
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');
+            $('#id_text').attr('placeholder', '{{ query_string }}');
         </script>
     {% endif %}
 

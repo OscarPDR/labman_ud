@@ -10,7 +10,7 @@
             <div class="well chart-section">
                 <h4><i class="fa fa-money fa-grey"></i>&emsp;Funding</h4>
 
-                <div class="soften-limited"></div>
+                <div class="soften"></div>
 
                 <ul>
                     <li>
@@ -32,9 +32,13 @@
             <div class="well chart-section">
                 <h4><i class="fa fa-gears fa-grey"></i>&emsp;Projects</h4>
 
-                <div class="soften-limited"></div>
+                <div class="soften"></div>
 
                 <ul>
+                    <li>
+                        <a href="{% url 'topics_by_entity' 'projects' %}">Topics cloud</a>
+                    </li>
+
                     <li>
                         <a href="{% url 'projects_number_of_projects' %}">Number of projects</a>
                     </li>
@@ -56,9 +60,13 @@
             <div class="well chart-section">
                 <h4><i class="fa fa-book fa-grey"></i>&emsp;Publications</h4>
 
-                <div class="soften-limited"></div>
+                <div class="soften"></div>
 
                 <ul>
+                    <li>
+                        <a href="{% url 'topics_by_entity' 'publications' %}">Topics cloud</a>
+                    </li>
+
                     <li>
                         <a href="{% url 'publications_number_of_publications' %}">Number of publications</a>
                     </li>
@@ -80,7 +88,7 @@
             <div class="well chart-section">
                 <h4><i class="fa fa-users fa-grey"></i>&emsp;People</h4>
 
-                <div class="soften-limited"></div>
+                <div class="soften"></div>
 
                 <ul>
                     <li>

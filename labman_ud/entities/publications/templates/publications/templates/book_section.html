@@ -1,74 +1,52 @@
 
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
-        <strong>Published in:</strong>&emsp;{{ parent_publication.title }}
+        <h3 class="panel-title">
+            <strong>Parent book:</strong>&emsp;{{ parent_publication.title }}
+        </h3>
     </div>
 
     <div class="panel-body">
-        <div class="row">
+        <dl id="pub-child-type-infobox" class="dl-horizontal">
             {% if parent_publication.publisher %}
-                <div class="col-md-6">
-                    <h5>Publisher:</h5>
+                <dt>Publisher</dt>
 
-                    <p>
-                        {{ parent_publication.publisher }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.publisher }}
+                </dd>
             {% endif %}
 
             {% if parent_publication.isbn %}
-                <div class="col-md-6">
-                    <h5>ISBN:</h5>
+                <dt>ISBN</dt>
 
-                    <p>
-                        {{ parent_publication.isbn }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.isbn }}
+                </dd>
             {% endif %}
-        </div>
 
-        <div class="row">
             {% if parent_publication.volume %}
-                <div class="col-md-4">
-                    <h5>Volume:</h5>
+                <dt>Volume</dt>
 
-                    <p>
-                        {{ parent_publication.volume }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.volume }}
+                </dd>
             {% endif %}
 
             {% if publication.pages %}
-                <div class="col-md-4">
-                    <h5>Pages:</h5>
+                <dt>Pages</dt>
 
-                    <p>
-                        {{ publication.pages }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ publication.pages }}
+                </dd>
             {% endif %}
 
             {% if publication.year %}
-                <div class="col-md-4">
-                    <h5>Year:</h5>
+                <dt>Year</dt>
 
-                    <p>
-                        {{ publication.year }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ publication.year }}
+                </dd>
             {% endif %}
-        </div>
+        </dl>
     </div>
 </div>
-
-{% include 'publications/templates/citation.html' %}

@@ -1,262 +1,154 @@
 {% extends "labman_ud/base.html" %}
-{% load static %}
-{% load sanitize_types %}
+{% load static sanitize_types rdf_link rand_int %}
 
 
 
 {% block content %}
 
-    <div id="publication-header">
-        <div class="row">
-            <div class="col-md-9">
-                <h3>
-                    <a href="{% url 'publication_index' %}{{ from_page }}">
-                        <img width="32" src="{{ STATIC_URL }}img/back.png" />
-                    </a>
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'publication_index' %}">Publications</a>
+        </li>
 
-                    {{ publication.title }}
-                </h3>
-            </div> <!-- end .col-md-9 -->
+        <li>
+            <a href="{% url 'view_publication_type' publication.child_type %}">
+                {{ publication.child_type|sanitize }}
+            </a>
+        </li>
 
-            <div class="col-md-3">
-                {% if ENABLE_RDF_PUBLISHING %}
-                    <div class="centered">
-                        <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
-                            <img class="rdf-icon" alt="RDF description" title="RDF description" width="32" src="{{ STATIC_URL }}img/rdf.png"/>
-                        </a>
-                    </div>
+        <li class="active">
+            {% rdf_icon publication %}
+            {{ publication.title }}
+        </li>
+    </ol>
 
-                    <br>
-                {% endif %}
+    <div class="entity-info-nav">
+        <a id="publication_overview" class="active" href="{% url 'publication_info' publication.slug %}">
+            <i class="fa fa-eye"></i>
+            <span class="hidden-xs hidden-sm">
+                Overview
+            </span>
+        </a>
 
-                <blockquote id="publication-type" class="pull-left">
-                    <p>
-                        <a href="{% url 'view_publication_type' publication.child_type %}">
-                            {{ publication.child_type|sanitize }}
-                        </a>
-                    </p>
-                </blockquote>
+        <a id="publication_ext_info" class="active" href="{% url 'publication_ext_info' publication.slug %}">
+            <i class="fa fa-info"></i>
+            <span class="hidden-xs hidden-sm">
+                Extended information
+            </span>
+        </a>
 
-            </div>
-        </div> <!-- end .row -->
-    </div> <!-- end #project-header -->
+        {% if related_publications %}
+            <a id="publication_related_pubs" href="{% url 'publication_related_publications' publication.slug %}">
+                <i class="fa fa-file-text"></i>
+                <span class="hidden-xs hidden-sm">
+                    {{ related_publications|length }} publication{{ related_publications|pluralize }}
+                </span>
+            </a>
+        {% endif %}
 
-    <div class="tabbable">
+        {% if related_projects %}
+            <a id="publication_related_projects" href="{% url 'publication_related_projects' publication.slug %}">
+                <i class="fa fa-gears"></i>
+                <span class="hidden-xs hidden-sm">
+                    {{ related_projects|length }} project{{ related_projects|pluralize }}
+                </span>
+            </a>
+        {% endif %}
+    </div>
 
-        <div class="col-md-3">
-            {% if pdf %}
-                <div class="well centered">
-                    <a id="document_download" target="_blank" href="{{ MEDIA_URL }}{{ pdf }}">
-                        <img src="{{ STATIC_URL }}img/document_download.png"/>
-                        <button class="btn btn-primary" id="document-download-button">View document</button>
-                        <br>
-                        (&asymp; {{ pdf.size|filesizeformat }})
-                    </a>
+    <div class="soften"></div>
+
+    <div class="entity-info-content">
+        {% block publication_content %}
+
+            <h3 id="entity-title">
+                <i class="fa fa-quote-left"></i>
+                {{ publication.title }}
+                <i class="fa fa-quote-right"></i>
+            </h3>
+
+            <div class="row entity-metadata">
+                <div class="col-md-3">
+                    <span id="author-list">
+                        <i class="fa fa-users"></i>
+                        Author{{ authors|pluralize }}
+                    </span>
+
+                    <ol>
+                        {% for author in authors %}
+                            <li>
+                                <a href="{% url 'determine_person_info' author.slug %}">
+                                    {{ author.full_name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ol>
                 </div>
-            {% endif %}
 
-            <ul id="publication-tabs" class="nav nav-pills nav-stacked">
+                <div class="col-md-3">
+                    {% if pdf %}
+                        <div class="centered">
+                            <img id="document-download" src="{{ STATIC_URL }}img/document_download.png"/>
+                            <br>
+                            <a target="_blank" class="btn btn-default btn-xs" href="{{ MEDIA_URL }}{{ pdf }}">
+                                <i class="fa fa-download"></i>
+                                &nbsp;&asymp; {{ pdf.size|filesizeformat }}
+                            </a>
+                        </div>
+                    {% endif %}
 
-                {% include 'publications/templates/rankings.html' %}
+                    {% if publication.bibtex %}
+                        <div class="centered">
+                            <a data-toggle="modal" href="#bibtex-modal" class="btn btn-default bibtex-button">
+                                <img src="{{ STATIC_URL }}img/bibtex.png" width="50" />
+                            </a>
 
-                {% if publication.bibtex %}
-                    <br>
-                    <div class="centered">
-                        <a data-toggle="modal" href="#myModal" class="btn btn-default bibtex-button">
-                            <img src="{{ STATIC_URL }}img/bibtex.png" width="75" />
-                        </a>
+                            <div class="modal fade" id="bibtex-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"><img src="{{ STATIC_URL }}img/bibtex.png" width="150" /></h4>
+                                        </div>
 
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title"><img src="{{ STATIC_URL }}img/bibtex.png" width="150" /></h4>
-                                </div>
-
-                                <div class="modal-body">
-                                <pre style="text-align: left;">
+                                        <div class="modal-body">
+                                        <pre style="text-align: left;">
 {{ publication.bibtex }}
-                                </pre>
+                                        </pre>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-                    </div>
-                {% endif %}
-
-                {% if tag_list %}
-                    <br>
-
-                    <h6>Tags</h6>
-
-                    {% for tag in tag_list %}
-                        <a href="{% url 'view_publication_tag' tag.slug %}">
-                            <span class="label label-info">{{ tag.name }}</span>
-                        </a>
-                    {% endfor %}
-                {% endif %}
-            </ul>
-
-        </div>
-
-        <div class="col-md-9">
-
-            {% if related_publications or related_projects %}
-            <div class="centered">
-                <a href="{% url 'publication_info' publication.slug %}" class="btn {% if current_tab == 'info' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
-                    <i class="fa fa-info fa-large"></i>&emsp;Overview
-                </a>
-                {% if related_publications %}
-                <a href="{% url 'publication_related_publications' publication.slug %}" class="btn {% if current_tab == 'publications' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
-                    <i class="fa fa-file-text-o fa-large"></i>&emsp;{{ related_publications|length }} Related publication{{ related_publications|pluralize }}
-                </a>
-                {% endif %}
-                {% if related_projects %}
-                <a href="{% url 'publication_related_projects' publication.slug %}" class="btn {% if current_tab == 'projects' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_biography">
-                    <i class="fa fa-gears fa-large"></i>&emsp;{{ related_projects|length }} Related project{{ related_projects|pluralize }}
-                </a>
-                {% endif %}
-            </div>
-            <br>
-            {% endif %}
-
-            <div id="publication-tab-content" class="tab-content publication-template">
-                <div class="tab-pane active">
-                {% block publication_contents %}
-                    <h5>Authors:</h5>
-
-                    {% for author in authors %}
-                        {% if author.is_active %}
-                            <a href="{% url 'member_info' author.slug %}">
-                                {{ author.full_name }}{% if not forloop.last %},{% endif %}
-                            </a>
-                        {% else %}
-                            <a href="{% url 'person_info' author.slug %}">
-                                {{ author.full_name }}{% if not forloop.last %},{% endif %}
-                            </a>
-                        {% endif %}
-                        &emsp;
-                    {% endfor %}
-
-                    <br>
-                    <br>
-
-                    <h5>Abstract:</h5>
-
-                    <p id="publication-abstract">
-                        {% if publication.abstract %}
-                            {{ publication.abstract }}
-                        {% else %}
-                            No abstract available.
-                        {% endif %}
-                    </p>
-
-                    <br>
-                    <br>
-
-                    {% if publication.child_type == 'ConferencePaper' %}
-                        {% include 'publications/templates/conference_paper.html' %}
-                    {% endif %}
-
-                    {% if publication.child_type == 'JournalArticle' %}
-                        {% include 'publications/templates/journal_article.html' %}
-                    {% endif %}
-
-                    {% if publication.child_type == 'BookSection' %}
-                        {% include 'publications/templates/book_section.html' %}
-                    {% endif %}
-
-                    {% if publication.child_type == 'Book' %}
-                        {% include 'publications/templates/book.html' %}
-                    {% endif %}
-
-                    {% if publication.child_type == 'MagazineArticle' %}
-                        {% include 'publications/templates/magazine_article.html' %}
-                    {% endif %}
-
-                </div> <!-- end tab-pane #overview_tab -->
-
-                <div class="tab-pane" id="related_tab">
-
-                    {% if related_projects %}
-
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                {{ related_projects|length }} related project{{ related_projects|pluralize }}
                             </div>
-
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <th>Title</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                </thead>
-
-                                <tbody>
-                                    {% for project in related_projects %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'project_info' project.slug %}">
-                                                    <i class="fa fa-chevron-right"></i> {{ project.full_name }}
-                                                </a>
-                                            </td>
-
-                                            <td>{{ project.start_year }}</td>
-                                            <td>{{ project.end_year }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
                         </div>
-
-                        <br>
-
                     {% endif %}
+                </div>
 
-                    {% if related_publications %}
-
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                {{ related_publications|length }} related publication{{ related_publications|pluralize }}
-                            </div>
-
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <th>Title</th>
-                                    <th>Year</th>
-                                </thead>
-
-                                <tbody>
-                                    {% for publication in related_publications %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'publication_info' publication.slug %}">
-                                                    <i class="fa fa-chevron-right"></i> {{ publication.title }}
-                                                </a>
-                                            </td>
-
-                                            <td>{{ publication.year }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                    {% endif %}
-
-                </div> <!-- end tab-pane #related_tab -->
-
-                {% endblock %}
+                <div id="tag-cloud-container" class="col-md-6">
+                    <div id="publication-tag-cloud" style="width: 100px; height: 50px;"></div>
                 </div>
             </div>
 
-        </div>
+            <blockquote>
+                <p>
+                    Abstract
+                </p>
 
+                <footer>
+                    {% if publication.abstract %}
+                        {{ publication.abstract }}
+                    {% else %}
+                        No abstract available.
+                    {% endif %}
+                </footer>
+            </blockquote>
+
+        {% endblock %}
     </div>
 
 {% endblock %}
@@ -268,6 +160,47 @@
     <script>
         $('#publications-nav').addClass('active');
     </script>
+
+    <script>
+        $('#publication_overview').removeClass('active');
+        $('#publication_ext_info').removeClass('active');
+        $('#publication_related_pubs').removeClass('active');
+        $('#publication_related_projects').removeClass('active');
+    </script>
+
+    <script>
+        $('#publication-tag-cloud').width($('#tag-cloud-container').width() + 'px');
+        var custom_height = $('#publication-tag-cloud').width() * 0.5;
+
+        if (custom_height > 125) {
+            custom_height = 125;
+        }
+
+        $('#tag-cloud-container').height(custom_height + 'px');
+        $('#publication-tag-cloud').height(custom_height + 'px');
+    </script>
+
+    <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
+
+    <script>
+        var word_array = [
+            {% for tag in tag_list %}
+                {text: "{{ tag }}", weight: "{% randInt 2 8 %}", link:"{% url 'view_publication_tag' tag.slug %}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            $("#publication-tag-cloud").jQCloud(word_array);
+        });
+    </script>
+
+    {% block publication_scripts %}
+
+         <script>
+            $('#publication_overview').addClass('active');
+        </script>
+
+    {% endblock %}
 
 {% endblock %}
 

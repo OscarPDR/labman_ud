@@ -6,7 +6,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h2 id="member-count">
                 {% if is_active_members %}
                     {{ members_length }} member{{ members_length|pluralize }}
@@ -56,16 +56,6 @@
                 </ul>
             </div>
         {% endif %}
-
-        {% if is_active_members %}
-            <a class="btn btn-primary col-md-2" href="{% url 'former_members' %}">
-                <i class="fa fa-step-backward"></i>&emsp;Former members
-            </a>
-        {% else %}
-            <a class="btn btn-primary col-md-2" href="{% url 'members' %}">
-                Active members
-            </a>
-        {% endif %}
     </div>
 
     <br>
@@ -95,11 +85,6 @@
                         </a>
                         <br>
                         <span class="member-name">
-                            {% if ENABLE_RDF_PUBLISHING %}
-                                <a target="_blank" href="{{ RDF_URI }}people/{{ member.slug }}">&emsp;
-                                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="14" src="{% static 'img/rdf.png' %}"/>
-                                </a>
-                            {% endif %}
                             {% if member.title %}{{member.title}} {% endif %}{{ member.full_name }}
                         </span>
                         <br>

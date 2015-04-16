@@ -5,56 +5,67 @@
 
 {% block content %}
 
-    <div class="centered">
-        {% if clean_index %}
-            <h2>{{ persons_length }} person{{ persons|pluralize }}</h2>
-        {% elif query_string %}
-            <h2>{{ persons_length }} person{{ persons|pluralize }} found for <em>'{{ query_string }}'</em>
-            &emsp;<small><a id="clean-filters" href="{% url 'person_index' %}">Clean filters</a></small></h2>
-        {% endif %}
-    </div>
-
-    <br>
-
-    <div class="row">
+    <div id="form-section">
         <form class="form-search" action="" method="post">
             {% csrf_token %}
-            <div class="col-md-4">
-                {{ form.text }}
-            </div>
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Search people</button>
+            <div class="input-group">
+                {{ form.text }}
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
             </div>
         <form>
     </div>
 
-    {% autopaginate persons %}
+    <div class="row">
+        <div class="col-md-8">
+            {% if clean_index %}
+                <h2>{{ persons_length }} person{{ persons|pluralize }}</h2>
+            {% elif query_string %}
+                <h2>{{ persons_length }} person{{ persons|pluralize }} found for <em>'{{ query_string }}'</em>
+                &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'person_index' %}">Clean filters</a></small></h2>
+            {% endif %}
+        </div>
 
-    {% paginate %}
+        <div class="col-md-4">
+            {% autopaginate persons %}
 
-    <br>
+            {% paginate %}
+        </div>
+    </div>
 
     <div class="row">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>Full name</th>
+                    <th class="col-md-11">Full name</th>
+                    <th class="col-md-1">Active</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for person in persons %}
-                    <tr>
-                        <td>
-                            &emsp;
-                            {% if person.is_active %}
-                                <i class="fa fa-user fa-large"></i>&emsp;
-                            {% endif %}
-
+                    <tr class="vertical-alignment">
+                        <td class="col-md-11">
                             <a href="{% url 'determine_person_info' person.slug %}">
+                                &emsp;
+                                {% if person.title %}
+                                    {{ person.title }}
+                                {% endif %}
                                 {{ person.full_name }}
                             </a>
+                        </td>
+
+                        <td class="col-md-1 centered">
+                            {% if person.is_active %}
+                                <a href="{% url 'members' %}">
+                                    <i class="fa fa-check-circle-o"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -68,11 +79,16 @@
 
 {% block scripts %}
 
+    <script>
+        $('.pagination').addClass('pagination-sm');
+    </script>
+
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');
+            $('#id_text').attr('placeholder', '{{ query_string }}');
         </script>
     {% endif %}
 

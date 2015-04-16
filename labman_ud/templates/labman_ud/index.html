@@ -18,29 +18,36 @@
 
         <div class="col-md-4">
             <h2>
-                &emsp;<i class="fa fa-newspaper-o fa-grey"></i>
+                &emsp;
+                <i class="fa fa-newspaper-o fa-grey"></i>
+                &nbsp;
                 Latest news
-                <a class="pull-right" href="{% url 'news_index' %}"><small>All news</small></a>
             </h2>
 
-            <div class="soften-limited"></div>
+            <div class="soften"></div>
 
             {% for news in latest_news %}
                 <div class="well latest-news">
-                    <strong>
-                        <i class="fa fa-chevron-right fa-grey"></i>&emsp;{{ news.title|safe }}
-                    </strong>
+                    <a href="{% url 'view_news' news.slug %}">
+                        {{ news.title|safe }}
+                    </a>
+
+                    <br>
 
                     <p>
                         {{ news.created|date:"l, d F Y" }}
                     </p>
-
-                    <a class="btn btn-primary" href="{% url 'view_news' news.slug %}">
-                        Read more
-                    </a>
                 </div>
 
             {% endfor %}
+
+            <div class="centered">
+                <a class="btn btn-default" href="{% url 'news_index' %}">
+                    <i class="fa fa-list-alt"></i>
+                    &nbsp;
+                    View all news
+                </a>
+            </div>
         </div>
     </div>
 

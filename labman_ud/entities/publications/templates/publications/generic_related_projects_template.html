@@ -1,0 +1,38 @@
+{% load sanitize_types %}
+
+<div class="row">
+    <table class="table table-striped table-bordered table-hover table-responsive" data-toggle="table" data-search="true" data-pagination="true">
+        <thead>
+            <tr>
+                <th class="col-md-8">Title</th>
+                <th class="col-md-2" data-field="year" data-sortable="true">Period</th>
+                <th class="col-md-2" data-field="type" data-sortable="true">Type</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for project in related_projects %}
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
+                            <a href="{% url 'project_info' project.slug %}">
+                                {{ project.full_name }}
+                            </a>
+                        </td>
+
+                        <td class="col-md-2">
+                            {{ project.start_year }} - {{ project.end_year }}
+                            <a href="{% url 'view_project_status' project.status|slugify %}">
+                                <i title="{{ project.status }}" class="fa fa-circle status-{{ project.status|slugify }}"></i>
+                            </a>
+                        </td>
+
+                        <td class="col-md-2">
+                            <a href="{% url 'view_project_type' project.project_type|slugify %}">
+                                {{ project.project_type }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>

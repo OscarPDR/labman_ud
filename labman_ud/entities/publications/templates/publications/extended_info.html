@@ -1,0 +1,53 @@
+{% extends "publications/info.html" %}
+
+
+
+{% block publication_content %}
+
+    {% with rankings|length as num_rankings %}
+        {% if num_rankings > 0 %}
+            <div class="row">
+                <div class="col-md-3">
+                    {% include 'publications/templates/rankings.html' %}
+                </div>
+
+                <div class="col-md-9">
+        {% endif%}
+
+            {% if publication.child_type == 'ConferencePaper' %}
+                {% include 'publications/templates/conference_paper.html' %}
+            {% endif %}
+
+            {% if publication.child_type == 'JournalArticle' %}
+                {% include 'publications/templates/journal_article.html' %}
+            {% endif %}
+
+            {% if publication.child_type == 'BookSection' %}
+                {% include 'publications/templates/book_section.html' %}
+            {% endif %}
+
+            {% if publication.child_type == 'Book' %}
+                {% include 'publications/templates/book.html' %}
+            {% endif %}
+
+            {% if publication.child_type == 'MagazineArticle' %}
+                {% include 'publications/templates/magazine_article.html' %}
+            {% endif %}
+
+        {% if num_rankings > 0 %}
+                </div>
+            </div>
+        {% endif%}
+    {% endwith %}
+
+    {% include 'publications/templates/citation.html' %}
+
+{% endblock %}
+
+
+
+{% block publication_scripts %}
+     <script>
+        $('#publication_ext_info').addClass('active');
+    </script>
+{% endblock %}

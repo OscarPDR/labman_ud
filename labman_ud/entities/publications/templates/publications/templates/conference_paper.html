@@ -1,86 +1,62 @@
-<div class="panel panel-default">
+
+<div class="panel panel-info">
     <div class="panel-heading">
-        <strong>Proceedings:</strong>&emsp;{{ parent_publication.title }}
+        <h3 class="panel-title">
+            <strong>Parent proceedings:</strong>&emsp;{{ parent_publication.title }}
+        </h3>
     </div>
 
     <div class="panel-body">
-        <div class="row">
+        <dl id="pub-child-type-infobox" class="dl-horizontal">
             {% if publication.presented_at and publication.presented_at.short_name != parent_publication.title %}
-                <div class="col-md-12">
-                    <h5>Presented at:</h5>
+                <dt>Presented at</dt>
 
-                    <p>
-                        {{ publication.presented_at.short_name }} ({{ publication.presented_at.year }})
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ publication.presented_at.short_name }} ({{ publication.presented_at.year }})
+                </dd>
             {% endif %}
 
             {% if parent_publication.isbn %}
-                <div class="col-md-4">
-                    <h5>ISBN:</h5>
+                <dt>ISBN</dt>
 
-                    <p>
-                        {{ parent_publication.isbn }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.isbn }}
+                </dd>
             {% endif %}
 
             {% if parent_publication.year %}
-                <div class="col-md-4">
-                    <h5>Year:</h5>
+                <dt>Year</dt>
 
-                    <p>
-                        {{ parent_publication.year }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.year }}
+                </dd>
             {% endif %}
 
             {% if parent_publication.volume %}
-                <div class="col-md-4">
-                    <h5>Volume:</h5>
+                <dt>Volume</dt>
 
-                    <p>
-                        {{ parent_publication.volume }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ parent_publication.volume }}
+                </dd>
             {% endif %}
 
             {% if publication.pages %}
-                <div class="col-md-4">
-                    <h5>Pages:</h5>
+                <dt>Pages</dt>
 
-                    <p>
-                        {{ publication.pages }}
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    {{ publication.pages }}
+                </dd>
             {% endif %}
 
             {% if publication.doi %}
-                <div class="col-md-4">
-                    <h5>DOI:</h5>
+                <dt>DOI</dt>
 
-                    <p>
-                        <a target="_blank" href="http://dx.doi.org/{{ publication.doi }}">
-                            {{ publication.doi }}
-                        </a>
-                    </p>
-
-                    <br>
-                </div>
+                <dd>
+                    <a target="_blank" href="http://dx.doi.org/{{ publication.doi }}">
+                        {{ publication.doi }}
+                    </a>
+                </dd>
             {% endif %}
-
-        </div>
+        </dl>
     </div>
 </div>
-
-{% include 'publications/templates/citation.html' %}

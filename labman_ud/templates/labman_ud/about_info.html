@@ -1,0 +1,64 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <div id="about-section">
+        <h2>
+            {% if collaborations %}
+                Collaborations
+            {% else %}
+                {{ about_section.title }}
+            {% endif %}
+        </h2>
+
+        <div class="soften"></div>
+
+        <div class="row">
+            {% if collaborations %}
+
+                <div class="col-md-4 col-md-offset-1">
+                    <div class="thumbnail">
+                        <a class="collaborations-item" href="{% url 'organization_index' %}">
+                            <img src="{% static 'img/handshake.png' %}" />
+
+                            <p class="caption">
+                                Full list of <strong>organizations</strong> we have collaborated with.
+                            </p>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-md-offset-2">
+                    <div class="thumbnail">
+                        <a class="collaborations-item" href="{% url 'person_index' %}">
+                            <img src="{% static 'img/meeting.png' %}" />
+
+                            <p class="caption">
+                                Full list of <strong>people</strong> we have worked or published with.
+                            </p>
+                        </a>
+                    </div>
+                </div>
+
+            {% else %}
+
+                {{ about_section.content|safe }}
+
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#about-nav').addClass('active');
+    </script>
+
+{% endblock %}

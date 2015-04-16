@@ -1,67 +1,25 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags staticfiles %}
-{% load sanitize_types %}
+{% load pagination_tags sanitize_types staticfiles %}
 
 
 
 {% block content %}
 
-    <br>
-
-    <div class="row">
+    <div id="form-section">
         <form class="form-search" action="" method="post">
             {% csrf_token %}
-            <div class="col-md-4">
-                {{ form.text }}
-            </div>
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Search publications</button>
+            <div class="input-group">
+                {{ form.text }}
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
             </div>
         <form>
-
-        <div class="col-md-2">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Publication types <span class="caret"></span>
-                </button>
-
-                <ul class="dropdown-menu" role="menu">
-                    {% for type, number in pubtype_info.items %}
-                        <li style="text-align: left;">
-                            <a href="{% url 'view_publication_type' type %}">
-                                {{ number }} {{ type|sanitize|lower }}{{ number|pluralize }}
-                            </a>
-                        </li>
-                    {% endfor %}
-
-                    {% if theses %}
-                        <li class="divider"></li>
-
-                        <li>
-                            <a href="{% url 'phd_dissertations_index' %}">
-                                {{ theses|length }} PhD dissertation{{ theses|pluralize}}
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-md-2">
-            <a href="{% url 'publication_tag_cloud' %}" class="btn btn-info">
-                <i class="fa fa-cloud fa-large"></i>&emsp;Tag cloud
-            </a>
-        </div>
-
-        <div class="col-md-2">
-            <a href="{% url 'publication_feed' %}" class="btn btn-info">
-                <i class="fa fa-rss"></i>&emsp;Subscribe
-            </a>
-        </div>
     </div>
-
-    <br>
 
     <div class="row">
         <div class="col-md-8">
@@ -78,7 +36,7 @@
                 {% elif query_string %}
                     <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
                 {% endif %}
-                &emsp;<small><a id="clean-filters" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
+                &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
 
             {% endif %}
         </div>
@@ -90,43 +48,30 @@
         </div>
     </div>
 
-    <br>
-
     <div class="row">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover table-responsive">
             <thead>
                 <tr>
-                    <th class="col-md-7">Title</th>
+                    <th class="col-md-8">Title</th>
                     <th class="col-md-1">Year</th>
                     <th class="col-md-2">Type</th>
-                    <th class="col-md-1">BibTeX</th>
-                    <th class="col-md-1 text-center"><i class="fa fa-download"></i></th>
+                    <th class="col-md-1 text-center">
+                        <i class="fa fa-file-pdf-o"></i>
+                    </th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for publication in publications %}
-                    <tr>
-                        <td class="col-md-7">
-                            {% if ENABLE_RDF_PUBLISHING %}
-                                <a target="_blank" href="{{ RDF_URI }}publications/{{ publication.slug }}">
-                                    <img class="rdf-icon" alt="RDF description" title="RDF description" width="16" src="{% static 'img/rdf.png' %}"/>
-                                </a>
-                            {% endif %}
-
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
                             <a href="{% url 'publication_info' publication.slug %}">
                                 {{ publication.title }}
                             </a>
 
                             <br>
 
-                            &emsp;<small>
-                                {% for author in publication.publicationauthor_set.all|dictsort:'position' %}
-                                    {{ author.author.full_name }}{% if not forloop.last %},{% endif %}
-                                {% endfor %}
-                            </small>
-
-
+                            {% include 'publications/publication_authors.html' %}
                         </td>
 
                         <td class="col-md-1 centered">
@@ -140,38 +85,10 @@
                         </td>
 
                         <td class="col-md-1 centered">
-                            {% if publication.bibtex %}
-                                <a data-toggle="modal" href="#myModal_{{ forloop.counter }}">
-                                    <i class="fa fa-paperclip fa-2x"></i>
-                                </a>
-
-                                <div class="modal fade" id="myModal_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title"><img src="{% static 'img/bibtex.png' %}" width="150" /></h4>
-                                        </div>
-
-                                        <div class="modal-body">
-                                        <pre style="text-align: left;">
-{{ publication.bibtex }}
-                                        </pre>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal-dialog -->
-                                </div><!-- /.modal -->
-                            {% endif %}
-                        </td>
-
-                        <td class="col-md-1 centered">
                             {% if publication.pdf %}
-                                <a target="_blank" href="{{ MEDIA_URL }}{{ publication.pdf }}">
-                                    <i class="fa fa-file-text fa-2x"></i>
+                                <a target="_blank" class="btn btn-default btn-xs" href="{{ MEDIA_URL }}{{ publication.pdf }}">
+                                    <i class="fa fa-download"></i>
+                                    &nbsp;&asymp; {{ publication.pdf.size|filesizeformat }}
                                 </a>
                             {% endif %}
                         </td>
@@ -195,11 +112,16 @@
         $('#publications-nav').addClass('active');
     </script>
 
+    <script>
+        $('.pagination').addClass('pagination-sm');
+    </script>
+
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
 
         <script>
             $('tbody').highlight('{{ query_string }}');
+            $('#id_text').attr('placeholder', '{{ query_string }}');
         </script>
     {% endif %}
 

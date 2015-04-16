@@ -98,12 +98,6 @@ def save_book_section_as_rdf(book_section):
     graph.add((resource_uri, RDF.type, SWRC.InBook))
     graph.add((resource_uri, RDFS.label, Literal(book_section.title)))
 
-    # Indexed by ISI is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.isi, Literal(book_section.isi)))
-
-    # Indexed by DBLP is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.dblp, Literal(book_section.dblp)))
-
     # Pages is optional
     if book_section.pages:
         graph.add((resource_uri, BIBO.pages, Literal(book_section.pages)))
@@ -117,10 +111,6 @@ def save_book_section_as_rdf(book_section):
 
     # Presented at is optional
     # TODO: reference to event page
-
-    # Core is optional
-    if book_section.core:
-        graph.add((resource_uri, SWRCFE.core, Literal(book_section.core)))
 
     insert_by_post(graph)
 
@@ -202,12 +192,6 @@ def save_conference_paper_as_rdf(conference_paper):
     graph.add((resource_uri, RDF.type, SWRC.InProceedings))
     graph.add((resource_uri, RDFS.label, Literal(conference_paper.title)))
 
-    # Indexed by ISI is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.isi, Literal(conference_paper.isi)))
-
-    # Indexed by DBLP is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.dblp, Literal(conference_paper.dblp)))
-
     # Pages is optional
     if conference_paper.pages:
         graph.add((resource_uri, BIBO.pages, Literal(conference_paper.pages)))
@@ -221,10 +205,6 @@ def save_conference_paper_as_rdf(conference_paper):
 
     # Presented at is optional
     # TODO: reference to event page
-
-    # Core is optional
-    if conference_paper.core:
-        graph.add((resource_uri, SWRCFE.core, Literal(conference_paper.core)))
 
     insert_by_post(graph)
 
@@ -289,12 +269,6 @@ def save_journal_article_as_rdf(journal_article):
     # Define type and label of resource
     graph.add((resource_uri, RDF.type, SWRC.Article))
     graph.add((resource_uri, RDFS.label, Literal(journal_article.title)))
-
-    # Indexed by ISI is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.isi, Literal(journal_article.isi)))
-
-    # Indexed by DBLP is always present (defaults to False)
-    graph.add((resource_uri, SWRCFE.dblp, Literal(journal_article.dblp)))
 
     # Pages is optional
     if journal_article.pages:

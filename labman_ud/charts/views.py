@@ -13,13 +13,12 @@ from django.template.defaultfilters import slugify
 from charts.utils import nx_graph
 from networkx.readwrite import json_graph
 
-from entities.funding_programs.models import FundingProgram
-from entities.organizations.models import Organization, Unit
-from entities.persons.models import Person, Job
-from entities.projects.models import Project, FundingAmount, Funding, AssignedPerson
-from entities.publications.models import Publication, PublicationAuthor, PublicationTag
-from entities.utils.models import GeographicalScope, Role
-
+from entities.funding_programs.models import *
+from entities.organizations.models import *
+from entities.persons.models import *
+from entities.projects.models import *
+from entities.publications.models import *
+from entities.utils.models import *
 from entities.projects.utils import *
 
 from labman_setup.models import *
@@ -27,19 +26,20 @@ from labman_setup.models import *
 import json
 import networkx as nx
 import numpy as np
+from collections import OrderedDict, Counter
 
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
 PUBLICATION_TYPES = {
-    'BookSection' : 'Book section', 
+    'BookSection' : 'Book section',
     'Book' : 'Book',
-    'ConferencePaper' : 'Conference paper', 
+    'ConferencePaper' : 'Conference paper',
     'Proceedings' : 'Proceedings',
-    'JournalArticle' : 'Journal article', 
-    'JCR' : 'JCR indexed journal article', 
+    'JournalArticle' : 'Journal article',
+    'JCR' : 'JCR indexed journal article',
     'Journal' : 'Journal',
-    'MagazineArticle' : 'Magazine article', 
+    'MagazineArticle' : 'Magazine article',
     'Magazine' : 'Magazine',
     'Thesis' : 'PhD dissertation'
 }
@@ -291,7 +291,7 @@ def publications_number_of_publications(request):
         if pub_type == 'JournalArticle':
             if publication.journalarticle.parent_journal.impact_factor:
                 pub_type = 'JCR'
-                
+
         pub_year = publication.year
         if pub_year in range(min_year, max_year + 1):
             publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
@@ -577,35 +577,6 @@ def publications_by_author(request, author_slug):
     }
 
     return render(request, "charts/publications/number_of_publications_by_author.html", return_dict)
-
-
-####################################################################################################
-###     tags_by_author
-####################################################################################################
-
-def tags_by_author(request, author_slug):
-    tag_dict = {}
-
-    author = get_object_or_404(Person, slug=author_slug)
-
-    publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-    tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
-
-    for tag in tags:
-        t = tag.tag.name
-        if t in tag_dict.keys():
-            tag_dict[t] = tag_dict[t] + 1
-        else:
-            tag_dict[t] = 1
-
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'%s - Tag cloud' % author.full_name,
-        'author': author,
-        'tag_dict': tag_dict,
-    }
-
-    return render(request, 'charts/publications/tags_by_author.html', return_dict)
 
 
 ####################################################################################################
@@ -1145,3 +1116,48 @@ def related_persons(request, person_slug, top):
     }
 
     return render(request, "charts/people/related_persons.html", return_dict)
+
+
+###     topic_cloud(entity_slug, person_slug)
+####################################################################################################
+
+def topic_cloud(request, entity_slug, person_slug=None):
+
+    tags = None
+    items = None
+    person = None
+
+    if entity_slug == 'publications':
+        if person_slug:
+            person = Person.objects.get(slug=person_slug)
+            publication_ids = person.publications.all().values_list('id', flat=True)
+            tags = PublicationTag.objects.filter(publication_id__in=publication_ids)
+
+        else:
+            tags = PublicationTag.objects.all()
+
+    elif entity_slug == 'projects':
+        if person_slug:
+            person = Person.objects.get(slug=person_slug)
+            project_ids = person.projects.all().values_list('id', flat=True)
+            tags = ProjectTag.objects.filter(project_id__in=project_ids)
+
+        else:
+            tags = ProjectTag.objects.all()
+
+    if tags:
+        tag_list = tags.values_list('tag__name', flat=True)
+        counter = Counter(tag_list)
+        ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
+
+        items = ord_dict.items()
+        items = items[len(items)-100:]
+
+    return_dict = {
+        'tag_dict': dict(items),
+        'entity_slug': entity_slug,
+        'person': person,
+        'entity_slug': entity_slug,
+    }
+
+    return render(request, "charts/topics/cloud.html", return_dict)

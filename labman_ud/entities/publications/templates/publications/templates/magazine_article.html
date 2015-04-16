@@ -1,40 +1,36 @@
 
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
-        <strong>Published in:</strong>&emsp;{{ parent_publication.title }}
+        <h3 class="panel-title">
+            <strong>Parent magazine:</strong>&emsp;{{ parent_publication.title }}
+        </h3>
     </div>
 
     <div class="panel-body">
-        <div class="row">
-            {% if parent_publication.issue %}
-                <div class="col-md-4">
-                    <h5>Issue:</h5>
+        <dl id="pub-child-type-infobox" class="dl-horizontal">
+            {% if parent_publication.year %}
+                <dt>Year</dt>
 
-                    <p>
-                        {{ parent_publication.issue }}
-                    </p>
-                </div>
+                <dd>
+                    {{ parent_publication.year }}
+                </dd>
+            {% endif %}
+
+            {% if parent_publication.issue %}
+                <dt>Issue</dt>
+
+                <dd>
+                    {{ parent_publication.issue }}
+                </dd>
             {% endif %}
 
             {% if publication.pages %}
-                <div class="col-md-4">
-                    <h5>Pages:</h5>
+                <dt>Pages</dt>
 
-                    <p>
-                        {{ publication.pages }}
-                    </p>
-                </div>
+                <dd>
+                    {{ publication.pages }}
+                </dd>
             {% endif %}
-
-            {% if publication.year %}
-                <div class="col-md-4">
-                    <h5>Year:</h5>
-
-                    <p>
-                        {{ publication.year }}
-                    </p>
-                </div>
-            {% endif %}
-        </div>
+        </dl>
     </div>
 </div>

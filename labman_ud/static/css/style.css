@@ -11,37 +11,121 @@ html, body {
     height: 100%;
 }
 
+body {
+    padding-top: 65px;
+}
+
 h5, h6 {
     font-weight: bold;
 }
 
-.navbar .nav {
-    display: table;
+#form-section {
+    margin: 0 1em;
 }
 
-.navbar .nav li {
-    display: table-cell;
-    width: 1%;
-    float: none;
+.publication-authors {
+    display: inline-block;
 }
 
-.navbar .nav li a {
+.publication-authors p span {
+    margin: 0 0.75em;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    color: #777;
+}
+
+.publication-authors p span i {
+    margin-right: 0.25em;
+}
+
+.publication-authors p {
+    font-size: 0.75em;
     margin: 0;
 }
 
-.nav-justified {
-    margin-bottom: 2.5em;
+#author-list {
+    display: block;
+    color: #777;
+    font-weight: bold;
+    padding-bottom: 1em;
 }
 
-.nav-justified > li > a {
-    margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+#author-list i {
+    margin-left: 1em;
+}
+
+.project-code {
+    margin-left: 1.5em;
+    font-weight: bold;
+    font-size: 0.75em;
+    color: #777;
+}
+
+.rss-link {
+    text-align: center;
+    margin-bottom: 9px;
+}
+
+.rss-link a {
+    background-color: #f60;
+    display: inline;
+    padding: 0.2em 0.6em 0.3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #FFF;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25em;
+}
+
+.status-not-started {
+    color: #999;
+    margin-left: 0.75em;
+}
+
+.status-ongoing {
+    color: #5cb85c;
+    margin-left: 0.75em;
+}
+
+.status-finished {
+    color: #f22;
+    margin-left: 0.75em;
+}
+
+#brand-logo {
+    position: absolute;
+    top: 1px;
+    left: 10px;
+    visibility: hidden;
+}
+
+#brand-text {
+    font-weight: bold;
+}
+
+.breadcrumb > li.active > a {
     color: #999;
 }
 
-.nav-justified li a:hover {
-    background-image: -webkit-linear-gradient(top, #d8d8d8 0%, #d8d8d8 100%);
+.login-box {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.navbar-nav > li > a > i {
+    margin-right: 0.5em;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    background-color: #eee;
+}
+
+.navbar-default .navbar-nav > .active > a {
+    background-color: #ddd;
 }
 
 #principal-h1 {
@@ -95,37 +179,77 @@ h4 {
     list-style-type: none;
 }
 
-#document_download {
+#document-download {
     margin: 0.5em;
-}
-
-#document_download > img {
-    margin-bottom: 1em;
+    max-width: 75px;
 }
 
 #publication-type {
     float: right
 }
 
-#document-download-button {
-    margin-top: 0.7em;
-    margin-bottom: 0.5em;
-}
-
 #publication-abstract {
     text-align: justify;
 }
 
-.project-tag {
-    display: block;
-    margin: 0.25em 0;
+#project-tag-cloud, #publication-tag-cloud {
+    border: 1px solid #ccc;
+    border-radius: 0.75em;
 }
 
 #project-type {
     float: right
 }
 
-.vertical-alignment > td {
+#entity-title {
+    padding-bottom: 1.5em;
+    margin-left: 1.5em;
+}
+
+.entity-info-nav {
+    text-align: center;
+    padding: 0.75em 0;
+}
+
+.entity-info-nav > a {
+    margin: 0.5em;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.entity-info-nav > a:hover {
+    background-color: #ebebeb;
+    border-color: #adadad;
+}
+
+.entity-info-nav > a.active {
+    color: #fff;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}
+
+.entity-info-nav > a > span {
+    margin-left: 0.75em;
+}
+
+.entity-info-content {
+    margin: 0 0.5em;
+}
+
+.entity-metadata {
+    padding-bottom: 1em;
+}
+
+.entity-metadata i {
+    margin-right: 1em;
+}
+
+table > tbody > tr.vertical-alignment > td {
     vertical-align: middle;
 }
 
@@ -137,10 +261,11 @@ h4 {
     height: 500px;
 }
 
-#funding_program_full_name {
-    padding-top: 0em;
-    padding-left: 7.5em;
-    font-weight: normal;
+i.fa.fa-external-link {
+    font-size: 0.6em;
+    position: relative;
+    bottom: 0.6em;
+
 }
 
 .organization-logo {
@@ -156,6 +281,8 @@ h4 {
 #main-container {
     display: block;
     min-height: 500px;
+    padding: 0.5em;
+    background-color: white;
 }
 
 .container {
@@ -212,14 +339,12 @@ ul.nav.nav-tabs {
     margin-left: 2em;
 }
 
-#about-tab-content > .tab-pane {
-    border: 1px solid #999;
-    border-radius: 0.5em;
-    padding: 1.5em;
+#about-tabs {
+    margin: 1em;
 }
 
-#about-tab-content > .tab-pane > p {
-    text-align: justify;
+#about-section {
+    margin: 1.5em;
 }
 
 .publication-template {
@@ -240,14 +365,23 @@ ul.nav.nav-tabs {
     text-align: justify;
 }
 
+.overview-header {
+    padding-bottom: 1.5em;
+}
+
+#project-description {
+    padding: 0 15px;
+    margin: 1em;
+    border-left: 5px solid #eee;
+    text-align: justify;
+}
+
 #project-header {
     display: block;
 }
 
-.project-logo {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 1.5em;
+#project-logo {
+    max-height: 125px;
 }
 
 .project-logo > .img-responsive {
@@ -361,6 +495,8 @@ ul.nav.nav-tabs {
     margin-left: 3px;
     margin-top: -3px;
     margin-right: 5px;
+    width: 16px;
+    height: 16px;
 }
 
 .semantic-searcher-results li a {
@@ -392,6 +528,7 @@ footer {
     width: 100%;
     min-height: 2.5em;
     margin: 0 auto;
+    background-color: white;
 }
 
 footer > a {
@@ -578,7 +715,8 @@ footer h4 {
 
 .soften {
     height: 5px;
-    margin: 3em 0 1.5em 0;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
     background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
     background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
     background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
@@ -586,28 +724,19 @@ footer h4 {
     border: 0;
 }
 
-.soften-limited {
-    height: 5px;
-    margin: 1em 0;
-    background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .2), transparent);
-    border: 0;
+.well.latest-news {
+    padding: 1em 0.75em 0.5em;
 }
 
 .latest-news {
     margin: 1.5em;
 }
 
-.latest-news > .soften {
-    margin-top: 1.5em;
-}
-
 .latest-news > p {
     font-size: 0.8em;
     text-align: right;
     margin-top: 1.5em;
+    margin-bottom: 0;
 }
 
 .medals-layout img {
@@ -662,9 +791,11 @@ footer h4 {
     margin: 0.5em;
 }
 
-.highlight {
+.highlight, .publication-authors p span.highlight {
     background-color: yellow;
     font-weight: bold;
+    border: none;
+    margin: 0;
 }
 
 .dl-horizontal > .day-number {
@@ -773,9 +904,19 @@ blockquote footer {
     color: #2a6496;
 }
 
+#pub-child-type-infobox > dd {
+    padding-bottom: 0.75em;
+    padding-left: 0.5em;
+}
+
+#rankings {
+    padding-bottom: 1em;
+}
+
 .ranking-icon {
     max-width: 50%;
     max-height: 100px;
+    margin-bottom: 0.5em;
 }
 
 .ranking-name {

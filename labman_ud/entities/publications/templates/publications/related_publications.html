@@ -1,8 +1,44 @@
-{% extends "publications/info.html" %}
-{% load staticfiles %}
+{% extends 'publications/info.html' %}
+{% load staticfiles sanitize_types %}
 
 
 
-{% block publication_contents %}
-    {% include "publications/tpl_related_publications.html" %}
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
+
+{% endblock %}
+
+
+
+{% block publication_content %}
+
+    {% include 'publications/generic_related_publications_template.html' %}
+
+{% endblock %}
+
+
+
+{% block publication_scripts %}
+
+    <script>
+        $('#publication_related_pubs').addClass('active');
+    </script>
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+
+        $('ul.pagination').addClass('pagination-sm');
+    </script>
+
 {% endblock %}

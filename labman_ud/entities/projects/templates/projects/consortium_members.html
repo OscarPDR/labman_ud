@@ -5,36 +5,32 @@
 
 {% block project_content %}
 
-    <div class="tab-pane active" id="project-consortium-members">
+    <h5>Project leader:</h5>
+    <ul>
+        <li>
+            <a href="{% url 'organization_info' project.project_leader.slug %}">
+                {{ project.project_leader.full_name }}
+            </a>
+        </li>
+    </ul>
 
-        <h5>Project leader:</h5>
+    <br>
+
+    {% if consortium_members %}
+        <h5>Consortium members:</h5>
         <ul>
-            <li>
-                <a href="{% url 'organization_info' project.project_leader.slug %}">
-                    {{ project.project_leader.full_name }}
-                </a>
-            </li>
+            {% for consortium_member in consortium_members %}
+                <li>
+                    <a href="{% url 'organization_info' consortium_member.organization.slug %}">
+                        {{ consortium_member.organization.full_name }}
+                        {% if consortium_member.organization.short_name and consortium_member.organization.short_name != consortium_member.organization.full_name %}
+                            ({{consortium_member.organization.short_name }})
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
         </ul>
-
-        <br>
-
-        {% if consortium_members %}
-            <h5>Consortium members:</h5>
-            <ul>
-                {% for consortium_member in consortium_members %}
-                    <li>
-                        <a href="{% url 'organization_info' consortium_member.organization.slug %}">
-                            {{ consortium_member.organization.full_name }}
-                            {% if consortium_member.organization.short_name and consortium_member.organization.short_name != consortium_member.organization.full_name %}
-                                ({{consortium_member.organization.short_name }})
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-    </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -43,8 +39,7 @@
 {% block project_scripts %}
 
     <script>
-        $('.project_info').removeClass('active');
-        $('.project_consortium_members').addClass('active');
+        $('#project_consortium').addClass('active');
     </script>
 
 {% endblock %}

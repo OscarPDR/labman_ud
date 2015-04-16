@@ -17,16 +17,13 @@ from collections import OrderedDict, Counter
 from .forms import PersonSearchForm
 from .models import Person, Job, AccountProfile
 
-from entities.news.models import PersonRelatedToNews
+from entities.news.models import News, PersonRelatedToNews
 from entities.organizations.models import Organization, Unit
-from entities.projects.models import Project, AssignedPerson
+from entities.projects.models import AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
 from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
 
-from charts.views import PUBLICATION_TYPES
-
-# Create your views here.
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
@@ -524,15 +521,13 @@ def member_publication_bibtex_download(request, person_slug):
 
 def member_news(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
-    person_news = PersonRelatedToNews.objects.filter(person=member).select_related('news').order_by('-news__created')
-    news = OrderedDict()
+    person_news_ids = PersonRelatedToNews.objects.filter(person=member).values_list('id', flat=True)
 
-    for news_person in person_news:
-        news_piece = news_person.news
-        year_month = u'%s %s' % (news_piece.created.strftime('%B'), news_piece.created.year)
-        if not year_month in news:
-            news[year_month] = []
-        news[year_month].append(news_piece)
+    if person_news_ids != []:
+        news = News.objects.filter(id__in=person_news_ids).order_by('-created')
+
+    else:
+        news = None
 
     # dictionary to be returned in render(request, )
     return_dict = {
@@ -590,6 +585,8 @@ def __get_award_info(award_slug):
     publication_relations = PublicationRelatedToAward.objects.filter(award=award).select_related('publication')
     publications = [publication_relation.publication for publication_relation in publication_relations]
 
+    print publications
+
     # dictionary to be returned in render(request, )
     return_dict = {
         'award': award,
@@ -601,58 +598,30 @@ def __get_award_info(award_slug):
     return return_dict, award
 
 
-###########################################################################
-# View: member_awards
-###########################################################################
+###     award_info(award_slug)
+####################################################################################################
 
 def award_info(request, award_slug):
     return_dict, award = __get_award_info(award_slug)
+
     return_dict.update({
         'web_title': u'Awards - %s' % award.full_name,
-        'current_link': 'info',
     })
 
     return render(request, 'awards/info.html', return_dict)
 
 
-###########################################################################
-# View: award_related_publications
-###########################################################################
-
-def award_related_publications(request, award_slug):
-    return_dict, award = __get_award_info(award_slug)
-    return_dict.update({
-        'web_title': u'Awards - %s - Related publications' % award.full_name,
-        'current_link': 'related_publications',
-    })
-
-    return render(request, 'awards/related_publications.html', return_dict)
-
-
-###########################################################################
-# View: award_related_projects
-###########################################################################
-
-def award_related_projects(request, award_slug):
-    return_dict, award = __get_award_info(award_slug)
-    return_dict.update({
-        'web_title': u'Awards - %s - Related projects' % award.full_name,
-        'current_link': 'related_projects',
-    })
-
-    return render(request, 'awards/related_projects.html', return_dict)
-
-
-###########################################################################
-# View: award_index
-###########################################################################
+###     award_index()
+####################################################################################################
 
 def award_index(request):
     awards = Award.objects.all().order_by('-date')
+
     return_dict = {
         'web_title': u'Awards',
         'awards': awards,
     }
+
     return render(request, 'awards/index.html', return_dict)
 
 
@@ -811,35 +780,13 @@ def person_info(request, person_slug):
 
     person = get_object_or_404(Person, slug=person_slug)
 
-    projects = {}
-
-    roles = Role.objects.all()
-
-    for role in roles:
-        projects[role.name] = []
-        project_ids = AssignedPerson.objects.filter(person_id=person.id, role=role.id).values('project_id')
-        project_objects = Project.objects.filter(id__in=project_ids).order_by('slug')
-
-        for project in project_objects:
-            projects[role.name].append(project)
-
     publication_ids = PublicationAuthor.objects.filter(author=person.id).values('publication_id')
-    _publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
-
-    publications = {}
-
-    for publication_type in PUBLICATION_TYPES:
-        publications[publication_type] = []
-
-    for publication in _publications:
-        pub_type = publication.child_type
-        publications[pub_type].append(publication)
+    publications = Publication.objects.filter(id__in=publication_ids).order_by('-year')
 
     # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': person.full_name,
         'person': person,
-        'projects': projects,
         'publications': publications,
     }
 
