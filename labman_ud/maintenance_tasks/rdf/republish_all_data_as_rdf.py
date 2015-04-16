@@ -18,47 +18,20 @@ from entities.utils.models import *
 ###########################################################################
 
 def republish_all_data_as_rdf():
+
     print '#' * 80
     print 'Re-publishing all the information as Linked Open Data...'
     print '#' * 80
+    print
 
-    print '\tCleaning SPARQL graph...'
+    print 'Cleaning SPARQL graph...'
     empty_graph()
-    print '\t\Graph is now empty'
+    print 'Graph is now empty'
 
-    print
-    print 'Starting process... this may take a while'
-    print
-
-    print '\tRe-publishing organizations module'
-    for organization in Organization.objects.all():
-        try:
-            organization.save()
-
-        except:
-            print 'Error while publishing: %s' % organization.full_name
-    print '\t\tModule re-published'
-    print
-
-    print '\tRe-publishing persons module'
-    for person in Person.objects.all():
-        try:
-            person.save()
-
-        except:
-            print 'Error while publishing: %s' % person.full_name
-    print '\t\tModule re-published'
-    print
-
-    print '\tRe-publishing events module'
-    for event in Event.objects.all():
-        try:
-            event.save()
-
-        except:
-            print 'Error while publishing: %s' % event.full_name
-    print '\t\tModule re-published'
-    print
+    _publish_module('Organization', Organization.objects.all())
+    _publish_module('Person', Person.objects.all())
+    _publish_module('Event', Event.objects.all())
+    _publish_module('Project', Project.objects.all())
 
     print '\tRe-publishing publications module'
     for publication in Publication.objects.all():
@@ -101,12 +74,38 @@ def republish_all_data_as_rdf():
     print '\t\Module re-published'
     print
 
-    print '\tRe-publishing events module'
-    for project in Project.objects.all():
+
+###     _publish_module(module_name, module_item_set)
+####################################################################################################
+
+def _publish_module(module_name, module_item_set):
+
+    failed_items = []
+
+    print "Re-publishing '%s' module" % module_name
+
+    for item in module_item_set:
         try:
-            project.save()
+            item.save()
 
         except:
-            print 'Error while publishing: %s' % project.full_name
-    print '\t\tModule re-published'
+            failed_items.append(item)
+            print '\tError while publishing: (%d) %s' % (item.id, item)
+
+    print 'First loop finished'
+    print
+
+    if len(failed_items) > 0:
+        for item in failed_items:
+            print u'\tTrying to re-publish: (%d) %s' % (item.id, item)
+
+            try:
+                print '\t\tSuccess'
+                item.save()
+
+            except:
+                print '\t\tFailed again'
+
+    print
+    print '-' * 50
     print
