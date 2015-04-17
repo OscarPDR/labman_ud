@@ -34,7 +34,9 @@
                         {% endif %}
                         <br>
                         <span class="member-position">
-                            {{ person.full_name }}
+                            <a href="{% url 'determine_person_info' person.slug %}">
+                                {{ person.full_name }}
+                            </a>
                         </span>
                     </div>
                 {% endfor %}
