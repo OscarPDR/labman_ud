@@ -521,7 +521,7 @@ def member_publication_bibtex_download(request, person_slug):
 
 def member_news(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
-    person_news_ids = PersonRelatedToNews.objects.filter(person=member).values_list('id', flat=True)
+    person_news_ids = PersonRelatedToNews.objects.filter(person=member).values_list('news_id', flat=True)
 
     if person_news_ids != []:
         news = News.objects.filter(id__in=person_news_ids).order_by('-created')
