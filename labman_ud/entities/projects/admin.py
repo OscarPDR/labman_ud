@@ -75,6 +75,8 @@ class FundingInline(admin.TabularInline):
         FundingAmountInline,
     ]
 
+    exclude = ['slug']
+
 
 ###########################################################################
 # Class: ConsortiumMemberInline
@@ -92,6 +94,7 @@ class ConsortiumMemberInline(admin.TabularInline):
 class AssignedPersonInline(admin.TabularInline):
     model = AssignedPerson
     extra = 1
+    exclude = ['description']
 
 
 ###########################################################################
