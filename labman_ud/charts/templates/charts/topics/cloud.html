@@ -70,7 +70,7 @@
                 {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_publication_tag' key|slugify %}"},
                 {% else %}
                 {text: "{{ key }}", weight: "{{ value }}", link:"{% url 'view_project_tag' key|slugify %}"},
-                {% endif %}}
+                {% endif %}
             {% endfor %}
         ];
 
