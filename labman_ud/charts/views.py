@@ -44,6 +44,13 @@ PUBLICATION_TYPES = {
     'Thesis' : 'PhD dissertation'
 }
 
+PUBLICATION_COLORS = {
+    'BookSection' : '#ffaaaa',
+    'ConferencePaper' : '#ffecaa',
+    'JournalArticle' : '#88cc88',
+    'MagazineArticle' : '#827fb2',
+}
+
 
 ####################################################################################################
 ###     chart_index
@@ -577,6 +584,132 @@ def publications_by_author(request, author_slug):
     }
 
     return render(request, "charts/publications/number_of_publications_by_author.html", return_dict)
+
+
+####################################################################################################
+###     publication_places_by_author(author_slug, child_type=None)
+####################################################################################################
+
+def publication_places_by_author(request, author_slug, child_type=None):
+
+    author = get_object_or_404(Person, slug=author_slug)
+
+    place_set = set()
+
+    pub_types = set()
+
+    for publication in PublicationAuthor.objects.filter(author=author):
+        pub_types.add(str(publication.publication.child_type))
+
+    pub_types = sorted(list(pub_types))
+
+    colors = []
+
+    max_value = 0
+
+    full_list = []
+
+    ###     child_type
+    ###########################################################################
+    if child_type:
+        min_year = PublicationAuthor.objects.filter(author=author).aggregate(Min('publication__year'))
+        min_year = min_year.get('publication__year__min')
+        max_year = date.today().year
+
+        colors = None
+
+        publications = PublicationAuthor.objects.filter(author=author, publication__child_type=child_type)
+
+        for publication in publications:
+            place_set.add(publication.position)
+
+        place_list = sorted(list(place_set))
+        place_list = [str(place) + _author_place_suffix(place) for place in place_list]
+
+        full_list.append(['year'] + place_list + ['Total'])
+
+        list_length = len(place_list)
+
+        for year in range(min_year, max_year + 1):
+            inner_list = [0] * (len(place_list) + 2)
+            inner_list[0] = str(year)
+
+            for filtered_publication in publications.filter(publication__year=year):
+                place_str = str(filtered_publication.position) + _author_place_suffix(filtered_publication.position)
+                index = place_list.index(place_str) + 1
+                inner_list[index] += 1
+                inner_list[-1] += 1
+
+            if inner_list[-1] > max_value:
+                max_value = inner_list[-1]
+
+            full_list.append(inner_list)
+
+    else:
+        publications = PublicationAuthor.objects.filter(author=author)
+
+        for publication in publications:
+            place_set.add(publication.position)
+
+        place_list = sorted(list(place_set))
+
+        for pub_type in pub_types:
+            if pub_type in PUBLICATION_COLORS:
+                colors.append(PUBLICATION_COLORS[pub_type])
+
+        full_list.append(['place'] + pub_types + ['Total'])
+
+        list_length = len(pub_types)
+
+        for place in place_list:
+            inner_list = [0] * (len(pub_types) + 2)
+            inner_list[0] = str(place) + _author_place_suffix(place)
+
+            for filtered_publication in publications.filter(position=place):
+                index = pub_types.index(filtered_publication.publication.child_type) + 1
+                inner_list[index] += 1
+                inner_list[-1] += 1
+
+            if inner_list[-1] > max_value:
+                max_value = inner_list[-1]
+
+            full_list.append(inner_list)
+
+    ###     end child_type
+    ###########################################################################
+
+    ROUND_TO = 5 if (max_value > 5) else 3
+    max_value = (max_value + ROUND_TO) / ROUND_TO * ROUND_TO
+
+    return_dict = {
+        'author': author,
+        'child_type': child_type,
+        'colors': colors,
+        'len': list_length,
+        'max_value': max_value,
+        'pub_types': pub_types,
+        'publication_places': full_list,
+    }
+
+    return render(request, "charts/publications/number_of_publications_by_place.html", return_dict)
+
+
+def _author_place_suffix(place):
+
+    suffixes = {
+        1: 'st',
+        2: 'nd',
+        3: 'rd',
+        21: 'st',
+        22: 'nd',
+        23: 'rd',
+    }
+
+    if place in suffixes.keys():
+        return suffixes[place]
+
+    else:
+        return 'th'
 
 
 ####################################################################################################

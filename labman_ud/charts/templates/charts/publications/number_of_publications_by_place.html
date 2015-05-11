@@ -1,0 +1,103 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles sanitize_types %}
+
+
+
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/nv.d3.min.css' %}"/>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        <li><a href="{% url 'members' %}">Members</a></li>
+
+        <li><a href="{% url 'member_info' author.slug %}">{{ author.full_name }}</a></li>
+
+        <li class="active">
+            Number of publications by author place
+            {% if child_type %}
+                &emsp;( {{ child_type|sanitize }})
+            {% endif %}
+        </li>
+    </ul>
+
+    <br>
+
+    <div class="centered">
+        <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-default">
+                <a href="{% url 'publication_places_by_author' author.slug %}">
+                    All
+                </a>
+            </button>
+
+            {% for pub_type in pub_types %}
+                <button type="button" class="btn btn-default">
+                    <a href="{% url 'publication_places_by_author_and_type' author.slug pub_type %}">
+                        {{ pub_type|sanitize }}
+                    </a>
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="number_of_publications_by_place_container" class="centered">
+        <div id="number_of_publications_by_place" style="width: 100px; height: 50px;"></div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script>
+        $('#number_of_publications_by_place').width($('#number_of_publications_by_place_container').width() + 'px');
+        var custom_height = $('#number_of_publications_by_place').width() * 0.5;
+
+        $('#number_of_publications_by_place_container').height(custom_height + 'px');
+        $('#number_of_publications_by_place').height(custom_height + 'px');
+    </script>
+
+    <script src="{% static 'js/google-charts.js' %}"></script>
+
+    <script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawVisualization);
+
+        function drawVisualization() {
+            var data = google.visualization.arrayToDataTable({{ publication_places|safe }});
+
+            var vTitle = "Number of publications";
+            var hTitle = "Author place";
+
+            {% if child_type %}
+                vTitle += " ( {{ child_type|sanitize }})";
+                hTitle += " (by year)";
+            {% endif %}
+
+            var options = {
+                vAxis: {title: vTitle, viewWindow: {max: {{ max_value}} }},
+                hAxis: {title: hTitle},
+                {% if colors %}
+                    colors: {{ colors|safe }},
+                {% endif %}
+                seriesType: "bars",
+                series: { {{ len }}: {type: "line", color: 'black'}}
+            };
+
+            var chart = new google.visualization.ComboChart(document.getElementById('number_of_publications_by_place'));
+            chart.draw(data, options);
+        }
+</script>
+
+    <script>
+        $('#members-nav').addClass('active');
+    </script>
+
+{% endblock %}

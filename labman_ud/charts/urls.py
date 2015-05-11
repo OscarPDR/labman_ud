@@ -21,6 +21,8 @@ urlpatterns = [
     # /publications
     url(r'^publications/egonetwork/(?P<author_slug>\S+)$', 'charts.views.publications_egonetwork', name='publications_egonetwork'),
     url(r'^publications/total_number/(?P<author_slug>\S+)$', 'charts.views.publications_by_author', name='publications_by_author'),
+    url(r'^publications/by_place/(?P<author_slug>\S+)/(?P<child_type>\S+)$', 'charts.views.publication_places_by_author', name='publication_places_by_author_and_type'),
+    url(r'^publications/by_place/(?P<author_slug>\S+)$', 'charts.views.publication_places_by_author', name='publication_places_by_author'),
 
     url(r'^publications/total_number/$', 'charts.views.publications_number_of_publications', name='publications_number_of_publications'),
 

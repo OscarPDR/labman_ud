@@ -44,6 +44,17 @@
                         <br>
 
                         <dt>
+                            <a href="{% url 'publication_places_by_author' member.slug %}">
+                                Author place
+                            </a>
+                        </dt>
+                        <dd>
+                            Distribution of publications by author place, classified by publication type authored by {{ member.full_name }}.
+                        </dd>
+
+                        <br>
+
+                        <dt>
                             <a href="{% url 'topics_by_person' 'publications' member.slug %}">
                                 Tag cloud
                             </a>
