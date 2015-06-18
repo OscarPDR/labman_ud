@@ -42,11 +42,7 @@
         <a id="project_people" href="{% url 'project_assigned_persons' project.slug %}">
             <i class="fa fa-group"></i>
             <span class="hidden-xs hidden-sm">
-                {% if is_internal %}
-                    Developers
-                {% else %}
-                    Employees
-                {% endif %}
+                Participants
             </span>
         </a>
 
