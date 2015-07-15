@@ -1037,7 +1037,7 @@ def gender_distribution(request, organization_slug=None):
         jobs = Job.objects.all()
 
     for job in jobs:
-        if job.start_date and job.end_date:
+        if job.start_date:
             start_year = job.start_date.year
 
             if start_year >= min_year:
@@ -1109,16 +1109,17 @@ def position_distribution(request, organization_slug=None):
             position_distribution_sets[year][position_slug] = set()
 
     for job in jobs:
-        start_year = job.start_date.year
+        if job.start_year:
+            start_year = job.start_date.year
 
-        if start_year >= min_year:
-            end_year = job.end_date.year if job.end_date else actual_year
+            if start_year >= min_year:
+                end_year = job.end_date.year if job.end_date else actual_year
 
-            position_slug = slugify(job.position)
+                position_slug = slugify(job.position)
 
-            if position_slug != '':
-                for year in range(start_year, end_year + 1):
-                    position_distribution_sets[year][position_slug].add(job.person.full_name)
+                if position_slug != '':
+                    for year in range(start_year, end_year + 1):
+                        position_distribution_sets[year][position_slug].add(job.person.full_name)
 
     max_persons = 0
 
