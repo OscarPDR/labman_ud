@@ -1109,7 +1109,7 @@ def position_distribution(request, organization_slug=None):
             position_distribution_sets[year][position_slug] = set()
 
     for job in jobs:
-        if job.start_year:
+        if job.start_date:
             start_year = job.start_date.year
 
             if start_year >= min_year:
