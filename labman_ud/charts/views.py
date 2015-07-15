@@ -1037,15 +1037,16 @@ def gender_distribution(request, organization_slug=None):
         jobs = Job.objects.all()
 
     for job in jobs:
-        start_year = job.start_date.year
+        if job.start_date and job.end_date:
+            start_year = job.start_date.year
 
-        if start_year >= min_year:
-            end_year = job.end_date.year if job.end_date else actual_year
+            if start_year >= min_year:
+                end_year = job.end_date.year if job.end_date else actual_year
 
-            gender = job.person.gender.lower() if job.person.gender else 'male'
+                gender = job.person.gender.lower() if job.person.gender else 'male'
 
-            for year in range(start_year, end_year + 1):
-                gender_distribution_sets[year][gender].add(job.person.full_name)
+                for year in range(start_year, end_year + 1):
+                    gender_distribution_sets[year][gender].add(job.person.full_name)
 
     max_persons = 0
 
