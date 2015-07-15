@@ -1259,7 +1259,7 @@ def related_persons(request, person_slug, top):
 def topic_cloud(request, entity_slug, person_slug=None):
 
     tags = None
-    items = None
+    items = []
     person = None
 
     if entity_slug == 'publications':
