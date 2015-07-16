@@ -615,6 +615,7 @@ def award_info(request, award_slug):
 ####################################################################################################
 
 def award_index(request):
+
     awards = Award.objects.all().order_by('-date')
 
     return_dict = {

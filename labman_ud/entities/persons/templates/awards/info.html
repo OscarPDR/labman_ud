@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load staticfiles sanitize_types %}
+{% load staticfiles sanitize_types awardee_names %}
 
 
 
@@ -50,6 +50,9 @@
                     {{ award.event.full_name }}
                     <br>
                 {% endif %}
+
+                <strong>Awardees:</strong>&nbsp;
+                {% awardee_names award %}
             </footer>
         </blockquote>
 

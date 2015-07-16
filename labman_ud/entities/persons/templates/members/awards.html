@@ -1,5 +1,5 @@
 {% extends "members/info.html" %}
-{% load staticfiles %}
+{% load staticfiles awardee_names %}
 
 
 
@@ -15,7 +15,12 @@
                     <dl class="dl-horizontal">
                         {% for item in value %}
                             <dt class="day-number">{{ item.date|date:"d" }}</dt>
-                            <dd class="news-title"><a href="{% url 'award_info' item.slug %}">{{ item.full_name }}</a></dd>
+                            <dd class="news-title">
+                                <a href="{% url 'award_info' item.slug %}">{{ item.full_name }}</a>
+                                <small>
+                                    {% awardee_names item %}
+                                </small>
+                            </dd>
                         {% endfor %}
                     </dl>
                 </blockquote>
