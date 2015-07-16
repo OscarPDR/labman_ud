@@ -1,5 +1,6 @@
 
 from django.contrib.auth import logout
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 
@@ -36,15 +37,21 @@ def logout_view(request):
 ####################################################################################################
 
 def about_info(request, about_page_slug):
+
+    about_section = None
+    collaborations = False
+
     if about_page_slug == u'collaborations':
-        about_section = None
         title = u'Collaborations'
         collaborations = True
 
     else:
-        about_section = AboutSection.objects.get(slug=about_page_slug)
-        title = about_section.title
-        collaborations = False
+        try:
+            about_section = AboutSection.objects.get(slug=about_page_slug)
+            title = about_section.title
+
+        except ObjectDoesNotExist:
+            title = u'404'
 
     return_dict = {
         'about_section': about_section,
