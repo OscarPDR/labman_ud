@@ -62,6 +62,11 @@
                                                     &emsp;&emsp;
                                                     <strong>
                                                         {{ publication.parent_title }}
+
+                                                        {% if publication.impact_factor %}
+                                                            &nbsp;
+                                                            (IF: {{ publication.impact_factor|floatformat:3 }})
+                                                        {% endif %}
                                                     </strong>
                                                 </small>
                                             </td>

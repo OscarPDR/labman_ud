@@ -423,6 +423,9 @@ def member_publications(request, person_slug, publication_type_slug=None):
         author_list = [ pubauthor.author.full_name for pubauthor in sorted_publication_authors ]
         authors = ', '.join(author_list)
 
+        parent_title = None
+        impact_factor = None
+
         if publication_item.child_type == 'ConferencePaper':
             conference_paper = publication_item.conferencepaper
             parent_title = conference_paper.parent_proceedings.title if conference_paper.parent_proceedings else ''
@@ -434,13 +437,11 @@ def member_publications(request, person_slug, publication_type_slug=None):
         elif publication_item.child_type == 'JournalArticle':
             journal_article = publication_item.journalarticle
             parent_title = journal_article.parent_journal.title if journal_article.parent_journal else ''
+            impact_factor = journal_article.parent_journal.impact_factor
 
         elif publication_item.child_type == 'MagazineArticle':
             magazine_article = publication_item.magazinearticle
             parent_title = magazine_article.parent_magazine.title if magazine_article.parent_magazine else ''
-
-        else:
-            parent_title = ''
 
         publication_dict = {
             'title': title,
@@ -450,6 +451,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
             'pdf': pdf,
             'authors': authors,
             'parent_title': parent_title,
+            'impact_factor': impact_factor,
         }
 
         if publication_item.child_type == 'JournalArticle':
