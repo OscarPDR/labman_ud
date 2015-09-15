@@ -51,14 +51,14 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         publication_ids = PublicationTag.objects.filter(tag=tag).values('publication_id')
-        publications = Publication.objects.filter(id__in=publication_ids).select_related('authors__author').prefetch_related('authors')
+        publications = Publication.objects.filter(id__in=publication_ids).prefetch_related('authors')
 
     if publication_type:
         publications = Publication.objects.filter(child_type=publication_type)
 
     if not tag_slug and not publication_type:
         clean_index = True
-        publications = Publication.objects.all().select_related('authors__author').prefetch_related('authors')
+        publications = Publication.objects.all().prefetch_related('authors')
 
     publications = publications.order_by('-year', '-title').exclude(authors=None)
 
@@ -146,17 +146,17 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
             if FILTERS['tag:']:
                 for tag in FILTERS['tag:']:
-                    tag_ids = PublicationTag.objects.filter(tag__name__icontains=tag).select_related('tag').values('tag__id')
+                    tag_ids = PublicationTag.objects.filter(tag__name__icontains=tag).values('tag__id')
                     sql_query = sql_query.filter(tags__id__in=tag_ids)
 
             if FILTERS['author:']:
                 for author in FILTERS['author:']:
-                    author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=author).select_related('author').values('author__id')
+                    author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=author).values('author__id')
                     sql_query = sql_query.filter(authors__id__in=author_ids)
         else:
             sql_query = Publication.objects.exclude(authors=None).all()
 
-        sql_query = sql_query.select_related('authors__author', 'tags__tag').prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
+        sql_query = sql_query.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
         publication_strings = [(publication, publication.display_all_fields().lower()) for publication in sql_query]
 
         publications = []
