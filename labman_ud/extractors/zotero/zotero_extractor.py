@@ -1,6 +1,4 @@
-import time
-import pickle
-import socket
+# -*- coding: utf-8 -*-
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,12 +9,11 @@ from entities.events.models import Event
 from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
+from entities.publications.models import QUARTILE_CHOICES, Ranking, PublicationRank
 from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
 from labman_setup.models import ZoteroConfiguration
 from labman_ud.util import nslugify
-
-from entities.publications.models import QUARTILE_CHOICES, Ranking, PublicationRank
 
 from datetime import datetime
 from dateutil import parser
@@ -24,14 +21,17 @@ from pyzotero import zotero
 from pyzotero.zotero_errors import HTTPError
 
 import os
+import pickle
 import pprint
 import re
-
+import socket
+import time
 
 pp = pprint.PrettyPrinter(indent=4)
 
 JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
-ACCEPTED_ATTACHMENT_FORMATS = ('.pdf','.doc','.docx')
+ACCEPTED_ATTACHMENT_FORMATS = ('.pdf', '.doc', '.docx')
+
 
 ####################################################################################################
 # def: get_zotero_variables()
@@ -51,15 +51,15 @@ def get_zotero_variables():
         print "ZoteroConfiguration object not configured in admin panel"
 
         return '', '', ''
-        
+
 
 ####################################################################################################
 # def: get_zotero_connection()
-####################################################################################################        
+####################################################################################################
 def get_zotero_connection():
     api_key, library_id, library_type = get_zotero_variables()
-    zot = zotero.Zotero(library_id = library_id, library_type=library_type, api_key=api_key)
-    
+    zot = zotero.Zotero(library_id=library_id, library_type=library_type, api_key=api_key)
+
     return zot
 
 
@@ -70,14 +70,9 @@ def get_zotero_connection():
 def get_last_zotero_version():
     zot = get_zotero_connection()
 
-    NEW_ZOTERO = False
-    if NEW_ZOTERO:
-        latest_version_number = zot.last_modified_version()
-    else:
-        items = zot.items(limit=1)
-        latest_version_number = int(zot.request.headers.get('last-modified-version', 0))
+    latest_version_number = zot.request.headers.get('last-modified-version', 0)
 
-    return latest_version_number
+    return int(latest_version_number)
 
 
 ####################################################################################################
@@ -87,13 +82,14 @@ def get_last_zotero_version():
 def get_last_synchronized_zotero_version():
     try:
         last_version = ZoteroExtractorLog.objects.all().aggregate(Max('version'))['version__max']
+
         if last_version is None:
             last_version = 0
 
     except:
         last_version = 0
 
-    return last_version
+    return int(last_version)
 
 
 ####################################################################################################
@@ -101,6 +97,8 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
+
+    from_version = int(from_version)
     last_zotero_version = get_last_zotero_version()
 
     if from_version == last_zotero_version:
@@ -118,29 +116,32 @@ def extract_publications_from_zotero(from_version):
         print 'Last version in Zotero is %d' % (last_zotero_version)
 
         zot = get_zotero_connection()
-        
+
         total_items = []
-        
+
         #
-        # 
+        #
         #           W A R N I N G            W A R N I N G        W A R N I N G
-        # 
+        #
         # USE_CACHE is used for caching the results. It's useful for debugging, but should NEVER be true in production
-        # 
+        #
         USE_CACHE = False
         CACHE_FILE = 'cache.pickle'
+
         if USE_CACHE and os.path.exists(CACHE_FILE):
             print "LOADING FROM CACHE!!!"
             items = pickle.load(open(CACHE_FILE))
+
         else:
             start = 0
             limit = 100
-            items = zot.items(since=from_version, limit = limit, start = start)
+            items = zot.items(since=from_version, limit=limit, start=start)
             total_items.extend(items)
+
             while len(items) > 0:
                 start += limit
                 print "%s results found. Trying with ?start=%s" % (len(items), start)
-                items = zot.items(since=from_version, limit = limit, start = start)
+                items = zot.items(since=from_version, limit=limit, start=start)
                 if items:
                     print "Last paper added: %s" % (items[-1]['data']['dateAdded'])
                 total_items.extend(items)
@@ -148,14 +149,14 @@ def extract_publications_from_zotero(from_version):
             items = total_items
 
             # Used for USE_CACHE. WARNING
-            pickle.dump(items, open(CACHE_FILE,'w'))
+            pickle.dump(items, open(CACHE_FILE, 'w'))
 
         print
         print '*' * 50
         print '%d new items (includes attachments as items)' % len(items)
         print '*' * 50
         print
-        
+
         items_ordered = {}
         attachments = []
         for item in items:
@@ -167,23 +168,27 @@ def extract_publications_from_zotero(from_version):
             else:
                 item_id = item['key']
                 items_ordered[item_id] = item
-        
+
         attachment_number = 0
 
         for a in attachments:
             if 'parentItem' in a['data']:
                 attachment_number += 1
                 parent_id = a['data']['parentItem']
-                if items_ordered.has_key(parent_id):
+
+                if parent_id in items_ordered.keys():
                     items_ordered[parent_id]['attachment'] = a
-                else: 
+
+                else:
                     #only the attachment has been modified
                     parent_publication = zot.item(parent_id)
-                    for publication in Publication.objects.filter(zotero_key = parent_publication['key']).all():
+                    publications = Publication.objects.filter(zotero_key=parent_publication['key'])
+
+                    for publication in publications:
                         _save_attachment(a['key'], publication.slug, a['data']['filename'])
             else:
                 print a['data'].get('title', 'The user did not even added a title'), "did not have a parentItem"
-        
+
         number_of_items = len(items_ordered)
         print
         print '*' * 50
@@ -191,11 +196,10 @@ def extract_publications_from_zotero(from_version):
         print '*' * 50
         print
 
-        
         for pos, i_id in enumerate(items_ordered):
             item = items_ordered[i_id]
             publication_type = item['data']['itemType']
-            print '\t[%s/%s][%s][%s] > %s' % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title','No title').encode('utf-8'))
+            print '\t[%s/%s][%s][%s] > %s' % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title', 'No title').encode('utf-8'))
             generate_publication(item)
 
 
@@ -214,21 +218,23 @@ def clean_database():
 
     ZoteroExtractorLog.objects.all().delete()
 
+
 ####################################################################################################
 # def: generate_publication_from_zotero()
 ####################################################################################################
 
 def generate_publication(item):
-    publication_type = item['data']['itemType']
 
-    existing_publications = Publication.objects.filter(zotero_key = item['key']).all()
+    publication_type = item['data']['itemType']
+    existing_publications = Publication.objects.filter(zotero_key=item['key']).all()
+
     for existing_publication in existing_publications:
         # There should 0 or 1 publication for that zotero key but just in case we run a "for"
-        PublicationAuthor.objects.filter(publication = existing_publication).all().delete()
-        PublicationEditor.objects.filter(publication = existing_publication).all().delete()
-        PublicationTag.objects.filter(publication = existing_publication).all().delete()
-        PublicationRank.objects.filter(publication = existing_publication).all().delete()
-        RelatedPublication.objects.filter(publication = existing_publication).all().delete()
+        PublicationAuthor.objects.filter(publication=existing_publication).all().delete()
+        PublicationEditor.objects.filter(publication=existing_publication).all().delete()
+        PublicationTag.objects.filter(publication=existing_publication).all().delete()
+        PublicationRank.objects.filter(publication=existing_publication).all().delete()
+        RelatedPublication.objects.filter(publication=existing_publication).all().delete()
         existing_publication.delete()
 
     if publication_type == 'conferencePaper':
@@ -242,7 +248,8 @@ def generate_publication(item):
     elif publication_type == 'magazineArticle':
         parse_magazine_article(item)
     elif publication_type == 'attachment':
-        pass # this should not happen
+        # this should not happen
+        pass
     elif publication_type == 'thesis':
         parse_thesis(item)
     else:
@@ -253,13 +260,14 @@ def generate_publication(item):
         print
         pp.pprint(item)
         print
-        
+
 ###############################################################################
 ###############################################################################
 # Item parsing
 ###############################################################################
 ###############################################################################
-        
+
+
 ####################################################################################################
 # def: parse_journal_article()
 ####################################################################################################
@@ -288,13 +296,13 @@ def parse_journal_article(item):
     _save_publication_authors(_extract_authors(item), journal_article)
 
     _extract_tags(item, journal_article)
-    
-    if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], journal_article.slug, item['attachment']['data']['filename'])
 
-    _save_zotero_extractor_log(item, journal_article)     
-    
-    
+    if 'attachment' in item:
+        save_attachment(item['attachment']['key'], journal_article.slug, item['attachment']['data']['filename'])
+
+    _save_zotero_extractor_log(item, journal_article)
+
+
 ####################################################################################################
 # def: parse_journal()
 ####################################################################################################
@@ -303,7 +311,7 @@ def parse_journal(item):
     journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item['data']['date']).year, item['data'].get('volume'), item['data'].get('issue'))
     try:
         journal = Journal.objects.get(slug=journal_slug)
-        
+
     except ObjectDoesNotExist:
         journal = Journal()
 
@@ -322,14 +330,15 @@ def parse_journal(item):
     journal.save()
 
     return journal
-    
+
+
 ####################################################################################################
 # def: parse_conference_paper()
 ####################################################################################################
 
 def parse_conference_paper(item):
     conference_paper = ConferencePaper()
-    
+
     conference_paper.zotero_key = item['key']
 
     conference_paper.title = item['data']['title']
@@ -352,7 +361,7 @@ def parse_conference_paper(item):
     _save_publication_authors(_extract_authors(item), conference_paper)
 
     _extract_tags(item, conference_paper)
-    
+
     if 'attachment' in item:
         _save_attachment(item['attachment']['key'], conference_paper.slug, item['attachment']['data']['filename'])
 
@@ -397,13 +406,14 @@ def parse_proceedings(item):
     proceedings.save()
 
     return proceedings
-    
+
+
 ####################################################################################################
 # def: parse_conference()
 ####################################################################################################
 
 def parse_conference(item, proceedings):
-    if item['data'].has_key('conferenceName') and item['data']['conferenceName'] != '':
+    if 'conferenceName' in item['data'] and item['data']['conferenceName'] != '':
         try:
             event = Event.objects.get(
                 slug=nslugify(item['data']['conferenceName'], _parse_date(item['data']['date']).year),
@@ -416,7 +426,7 @@ def parse_conference(item, proceedings):
 
         event.full_name = item['data']['conferenceName']
 
-        if  item['data'].has_key('place') and item['data']['place'] != '':
+        if 'place' in item['data'] and item['data']['place'] != '':
             places_list = item['data']['place'].split(', ')
 
             if len(places_list) == 2:
@@ -479,7 +489,8 @@ def parse_conference(item, proceedings):
 
     else:
         return None
-        
+
+
 ####################################################################################################
 # def: parse_book_section()
 ####################################################################################################
@@ -508,9 +519,9 @@ def parse_book_section(item):
     _save_publication_authors(_extract_authors(item), book_section)
 
     _extract_tags(item, book_section)
-    
-    if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], book_section.slug, item['attachment']['data']['filename'])
+
+    if 'attachment' in item:
+        save_attachment(item['attachment']['key'], book_section.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book_section)
 
@@ -545,7 +556,8 @@ def parse_book(item):
     _save_publication_editors(_extract_editors(item), book)
 
     return book
-    
+
+
 ####################################################################################################
 # def: parse_authored_book()
 ####################################################################################################
@@ -581,12 +593,13 @@ def parse_authored_book(item):
     _save_publication_authors(_extract_authors(item), book)
 
     _extract_tags(item, book)
-    
-    if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], book.slug, item['attachment']['data']['filename'])
+
+    if 'attachment' in item:
+        save_attachment(item['attachment']['key'], book.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book)
-    
+
+
 ####################################################################################################
 # def: parse_magazine_article()
 ####################################################################################################
@@ -615,9 +628,9 @@ def parse_magazine_article(item):
     _save_publication_authors(_extract_authors(item), magazine_article)
 
     _extract_tags(item, magazine_article)
-    
-    if item.has_key('attachment'):         
-         _save_attachment(item['attachment']['key'], magazine_article.slug, item['attachment']['data']['filename'])
+
+    if 'attachment' in item:
+        _save_attachment(item['attachment']['key'], magazine_article.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, magazine_article)
 
@@ -650,9 +663,6 @@ def parse_magazine(item):
     return magazine
 
 
-
-
-
 ####################################################################################################
 # def: parse_thesis()
 ####################################################################################################
@@ -675,7 +685,8 @@ def parse_thesis(item):
 # Common methods
 ###############################################################################
 ###############################################################################
-        
+
+
 ####################################################################################################
 # def: _extract_short_title()
 ####################################################################################################
@@ -687,8 +698,9 @@ def _extract_short_title(item):
         index = item['data']['title'].find(':')
 
         if index != -1:
-            return item['data']['title'][:index]        
-        
+            return item['data']['title'][:index]
+
+
 ####################################################################################################
 # def: _assign_if_exists()
 ####################################################################################################
@@ -696,7 +708,8 @@ def _extract_short_title(item):
 def _assign_if_exists(item, key):
     if item['data'].get(key):
         return item['data'][key]
-            
+
+
 ####################################################################################################
 # def: _extract_doi()
 ####################################################################################################
@@ -704,23 +717,25 @@ def _assign_if_exists(item, key):
 def _extract_doi(item):
     DOI_ORG_BASE_URL = 'http://dx.doi.org/'
 
-    if item['data'].has_key('DOI'):
+    if 'DOI' in item['data']:
         if item['data']['DOI'] != '':
             return item['data']['DOI']
 
-    elif item['data'].has_key('url'):
+    elif 'url' in item['data']:
         if item['data']['url'] != '' and DOI_ORG_BASE_URL in item['data']['url']:
             base_url_end_index = len(DOI_ORG_BASE_URL)
             underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
 
             return item['data']['url'][base_url_end_index:underscore_index]
-        
+
+
 ####################################################################################################
 # def: _parse_date()
 ####################################################################################################
 
-def _parse_date(date_string): 
-    return parser.parse(date_string, fuzzy=True, default=datetime.now())   
+def _parse_date(date_string):
+    return parser.parse(date_string, fuzzy=True, default=datetime.now())
+
 
 ####################################################################################################
 # def: _extract_bibtex()
@@ -743,7 +758,8 @@ def _extract_bibtex(item_key):
             break
 
     return item
-    
+
+
 ####################################################################################################
 # def: _extract_authors()
 ####################################################################################################
@@ -751,7 +767,7 @@ def _extract_bibtex(item_key):
 def _extract_authors(item):
     authors = []
 
-    if  item['data'].has_key('creators') and len(item['data']['creators']) > 0:
+    if 'creators' in item['data'] and len(item['data']['creators']) > 0:
         for creator_item in item['data']['creators']:
             creator_type = creator_item['creatorType']
 
@@ -789,7 +805,8 @@ def _extract_authors(item):
                 authors.append(author)
 
     return authors
-    
+
+
 ####################################################################################################
 # def: _save_publication_authors()
 ####################################################################################################
@@ -797,7 +814,7 @@ def _extract_authors(item):
 def _save_publication_authors(authors, publication):
     order = 1
 
-    PublicationAuthor.objects.filter(publication = publication).all().delete()
+    PublicationAuthor.objects.filter(publication=publication).all().delete()
 
     for author in authors:
         publication_author = PublicationAuthor(
@@ -808,8 +825,9 @@ def _save_publication_authors(authors, publication):
 
         publication_author.save()
 
-        order += 1               
-        
+        order += 1
+
+
 ####################################################################################################
 # def: _extract_tags()
 ####################################################################################################
@@ -817,11 +835,11 @@ def _save_publication_authors(authors, publication):
 def _extract_tags(item, publication):
 
     # Clean ranking and projects so as to ensure that it's correctly synchronized
-    PublicationRank.objects.filter(publication = publication).all().delete()
-    RelatedPublication.objects.filter(publication = publication).all().delete()
-    PublicationTag.objects.filter(publication = publication).all().delete()
+    PublicationRank.objects.filter(publication=publication).all().delete()
+    RelatedPublication.objects.filter(publication=publication).all().delete()
+    PublicationTag.objects.filter(publication=publication).all().delete()
 
-    if item['data'].has_key('tags') and len(item['data']['tags']) > 0:
+    if 'tags' in item['data'] and len(item['data']['tags']) > 0:
         for tag_item in item['data']['tags']:
             tag_name = tag_item['tag'].encode('utf-8')
 
@@ -844,8 +862,9 @@ def _extract_tags(item, publication):
                     publication=publication,
                 )
 
-                publication_tag.save()        
-        
+                publication_tag.save()
+
+
 ####################################################################################################
 # def: _save_zotero_extractor_log()
 ####################################################################################################
@@ -858,8 +877,8 @@ def _save_zotero_extractor_log(item, publication):
     )
 
     zotero_extractor_log.save()
-        
-        
+
+
 ####################################################################################################
 # def: _save_attachment()
 ####################################################################################################
@@ -892,8 +911,9 @@ def _save_attachment(attachment_id, publication_slug, filename):
         pdffile.write(item)
 
     publication.pdf = path
-    publication.save() 
-    
+    publication.save()
+
+
 ####################################################################################################
 # def: _extract_editors()
 ####################################################################################################
@@ -901,7 +921,7 @@ def _save_attachment(attachment_id, publication_slug, filename):
 def _extract_editors(item):
     editors = []
 
-    if item['data'].has_key('creators') and len(item['data']['creators']) > 0:
+    if 'creators' in item['data'] and len(item['data']['creators']) > 0:
         for creator_item in item['data']['creators']:
             creator_type = creator_item['creatorType']
 
@@ -939,7 +959,8 @@ def _extract_editors(item):
                 editors.append(editor)
 
     return editors
-    
+
+
 ####################################################################################################
 # def: _save_publication_editors()
 ####################################################################################################
@@ -954,7 +975,8 @@ def _save_publication_editors(editors, publication):
         )
 
         publication_editor.save()
-        
+
+
 ####################################################################################################
 # def: _determine_if_tag_is_special()
 ####################################################################################################
@@ -970,7 +992,7 @@ def _determine_if_tag_is_special(tag, publication):
 
     if tag_slug in ranking_slugs:
         ranking = Ranking.objects.get(slug=tag_slug)
-        publication_ranking = PublicationRank(ranking = ranking, publication = publication)
+        publication_ranking = PublicationRank(ranking=ranking, publication=publication)
         publication_ranking.save()
 
     elif (tag_slug in ['q1', 'q-1']) and (publication.child_type == 'JournalArticle'):
@@ -1012,5 +1034,3 @@ def _determine_if_tag_is_special(tag, publication):
         special = False
 
     return special
-
-        
