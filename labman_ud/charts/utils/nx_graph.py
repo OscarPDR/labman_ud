@@ -65,7 +65,7 @@ def analyze(G):
 
     partitions = community.best_partition(G)
 
-    for key in partitions.keys():
+    for key in partitions:
         G.node[key]['modularity'] = partitions[key]
 
     return G
