@@ -14,6 +14,9 @@ class FeedWrapper(object):
         return response
 
 
+###     unique_slugify(instance, name_field, slug_field, failure)
+####################################################################################################
+
 def unique_slugify(instance, name_field="name", slug_field="slug", failure=True):
     # If it has already been created, return
     if getattr(instance, 'id'):
@@ -42,23 +45,29 @@ def unique_slugify(instance, name_field="name", slug_field="slug", failure=True)
         raise Exception("Error generating unique slug for %s" % instance)
 
 
+###     nslugify(*values)
+####################################################################################################
+
 def nslugify(*values):
     slugified_values = [slugify(unicode(value if value is not None else '').encode('utf8')) for value in values]
     return '-'.join(slugified_values)
 
 
+###     get_last_model_update_log_entry(app_label, model_name_list)
+####################################################################################################
+
 def get_last_model_update_log_entry(app_label, model_name_list=None):
 
     if model_name_list:
         model_ids = ContentType.objects.filter(
-                app_label=app_label,
-                model__in=[x.lower() for x in model_name_list],
-            ).values_list('id', flat=True)
+            app_label=app_label,
+            model__in=[x.lower() for x in model_name_list],
+        ).values_list('id', flat=True)
 
     else:
         model_ids = ContentType.objects.filter(
-                app_label=app_label,
-            ).values_list('id', flat=True)
+            app_label=app_label,
+        ).values_list('id', flat=True)
 
     logentries = LogEntry.objects.filter(content_type_id__in=model_ids).order_by('-action_time')
 
@@ -67,3 +76,15 @@ def get_last_model_update_log_entry(app_label, model_name_list=None):
 
     else:
         return None
+
+
+###     get_or_default(model, default, *args, **kwargs)
+####################################################################################################
+
+def get_or_default(model, default=None, *args, **kwargs):
+
+    try:
+        return model.objects.get(*args, **kwargs)
+
+    except model.DoesNotExist:
+        return default
