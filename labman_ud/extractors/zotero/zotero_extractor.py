@@ -1,60 +1,54 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.template.defaultfilters import slugify
 
 from entities.events.models import Event
+from entities.news.models import News, PublicationRelatedToNews
 from entities.persons.models import Person, Nickname
 from entities.projects.models import Project, RelatedPublication
 from entities.publications.models import *
-from entities.publications.models import QUARTILE_CHOICES, Ranking, PublicationRank
 from entities.utils.models import Tag, City, Country
 from extractors.zotero.models import ZoteroExtractorLog
 from labman_setup.models import ZoteroConfiguration
-from labman_ud.util import nslugify
+from labman_ud.util import nslugify, get_or_default
 
 from datetime import datetime
 from dateutil import parser
 from pyzotero import zotero
 from pyzotero.zotero_errors import HTTPError
 
+import logging
 import os
-import pickle
-import pprint
 import re
 import socket
 import time
 
-pp = pprint.PrettyPrinter(indent=4)
+
+logger = logging.getLogger(__name__)
 
 JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
 ACCEPTED_ATTACHMENT_FORMATS = ('.pdf', '.doc', '.docx')
 
 
-####################################################################################################
-# def: get_zotero_variables()
+###     get_zotero_variables()
 ####################################################################################################
 
 def get_zotero_variables():
-    try:
-        zotero_config = ZoteroConfiguration.objects.get()
 
-        api_key = zotero_config.api_key
-        library_id = zotero_config.library_id
-        library_type = zotero_config.library_type
+    zot = get_or_default(ZoteroConfiguration)
 
-        return api_key, library_id, library_type
+    if zot:
+        return zot.api_key, zot.library_id, zot.library_type
 
-    except ObjectDoesNotExist:
-        print "ZoteroConfiguration object not configured in admin panel"
+    else:
+        logger.warn(u"ZoteroConfiguration() object not configured in admin panel")
 
         return '', '', ''
 
 
-####################################################################################################
-# def: get_zotero_connection()
+###     get_zotero_connection()
 ####################################################################################################
 def get_zotero_connection():
     api_key, library_id, library_type = get_zotero_variables()
@@ -63,20 +57,16 @@ def get_zotero_connection():
     return zot
 
 
-####################################################################################################
-# def: get_last_zotero_version()
+###     get_last_zotero_version()
 ####################################################################################################
 
 def get_last_zotero_version():
     zot = get_zotero_connection()
 
-    latest_version_number = zot.request.headers.get('last-modified-version', 0)
-
-    return int(latest_version_number)
+    return int(zot.last_modified_version())
 
 
-####################################################################################################
-# def: get_last_synchronized_zotero_version()
+###     get_last_synchronized_zotero_version()
 ####################################################################################################
 
 def get_last_synchronized_zotero_version():
@@ -92,8 +82,7 @@ def get_last_synchronized_zotero_version():
     return int(last_version)
 
 
-####################################################################################################
-# def: get_item_keys_since_last_synchronized_version()
+###     extract_publications_from_zotero(from_version)
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
@@ -102,69 +91,85 @@ def extract_publications_from_zotero(from_version):
     last_zotero_version = get_last_zotero_version()
 
     if from_version == last_zotero_version:
-        print 'Labman is updated to the last version in Zotero (%d)' % (last_zotero_version)
+        logger.info(u"Labman is updated to the last version in Zotero (%d)" % last_zotero_version)
 
         return []
 
     else:
         if from_version > last_zotero_version:
+
             # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
             from_version = last_zotero_version - 1
-            print 'Error solved'
+            logger.warn(u"Asked 'from_version' was greater than 'last_zotero_version'. Strange...")
 
-        print 'Getting items since version %d' % (from_version)
-        print 'Last version in Zotero is %d' % (last_zotero_version)
+        # In case of a reset, save relationships between publications and news
+        publications_related_to_news = []
+
+        if from_version == 0:
+            logger.info(u"A publication DB reset is ordered")
+
+            for item_to_be_saved in PublicationRelatedToNews.objects.all():
+                publications_related_to_news.append((
+                    item_to_be_saved.news.title,
+                    item_to_be_saved.publication.title
+                ))
+
+            Publication.objects.all().delete()
+            # Just in case any legacy ZoteroExtractorLog() instances are left behind
+            ZoteroExtractorLog.objects.all().delete()
+
+        # Retrieve publications since required zotero version
+        logger.info(u"Getting items since version %d" % from_version)
+        logger.info(u"Last version in Zotero is %d" % last_zotero_version)
 
         zot = get_zotero_connection()
 
         total_items = []
+        start = 0
+        limit = 100
 
-        #
-        #
-        #           W A R N I N G            W A R N I N G        W A R N I N G
-        #
-        # USE_CACHE is used for caching the results. It's useful for debugging, but should NEVER be true in production
-        #
-        USE_CACHE = False
-        CACHE_FILE = 'cache.pickle'
+        items = zot.items(since=from_version, limit=limit, start=start)
+        total_items.extend(items)
 
-        if USE_CACHE and os.path.exists(CACHE_FILE):
-            print "LOADING FROM CACHE!!!"
-            items = pickle.load(open(CACHE_FILE))
+        while len(items) > 0:
+            start += limit
 
-        else:
-            start = 0
-            limit = 100
+            logger.debug(u"%s results found. Trying with ?start=%s" % (len(items), start))
+
             items = zot.items(since=from_version, limit=limit, start=start)
+
+            if items:
+                logger.debug(u"Last paper added: %s" % (items[-1]['data']['dateAdded']))
+
             total_items.extend(items)
 
-            while len(items) > 0:
-                start += limit
-                print "%s results found. Trying with ?start=%s" % (len(items), start)
-                items = zot.items(since=from_version, limit=limit, start=start)
-                if items:
-                    print "Last paper added: %s" % (items[-1]['data']['dateAdded'])
-                total_items.extend(items)
+        items = total_items
 
-            items = total_items
-
-            # Used for USE_CACHE. WARNING
-            pickle.dump(items, open(CACHE_FILE, 'w'))
-
-        print
-        print '*' * 50
-        print '%d new items (includes attachments as items)' % len(items)
-        print '*' * 50
-        print
+        logger.info(u"")
+        logger.info(u"%d new items (includes attachments as items)" % len(items))
 
         items_ordered = {}
         attachments = []
+
+        # Versioning control
+        highest_detected_version = 0
+        highest_parsed_version = 0
+
         for item in items:
+            if item['version'] > highest_detected_version:
+                highest_detected_version = item['version']
+
             if item['data']['itemType'] == 'attachment':
-                if item['data']['filename'].lower().endswith(ACCEPTED_ATTACHMENT_FORMATS):
-                    attachments.append(item)
+                if 'filename' in item['data']:
+                    if item['data']['filename'].lower().endswith(ACCEPTED_ATTACHMENT_FORMATS):
+                        attachments.append(item)
+
+                    else:
+                        logger.warn(u"\tInvalid attachment >> %s" % item['data']['filename'])
+
                 else:
-                    print "Invalid attachment. File %s not ending with %s." % (item['data']['filename'], ACCEPTED_ATTACHMENT_FORMATS)
+                    logger.warn(u"Could not identify attachment's filename")
+
             else:
                 item_id = item['key']
                 items_ordered[item_id] = item
@@ -180,52 +185,68 @@ def extract_publications_from_zotero(from_version):
                     items_ordered[parent_id]['attachment'] = a
 
                 else:
-                    #only the attachment has been modified
+                    # Only the attachment has been modified
                     parent_publication = zot.item(parent_id)
                     publications = Publication.objects.filter(zotero_key=parent_publication['key'])
 
                     for publication in publications:
                         _save_attachment(a['key'], publication.slug, a['data']['filename'])
             else:
-                print a['data'].get('title', 'The user did not even added a title'), "did not have a parentItem"
+                logger.warn(u"%s" % a['data'].get('title', 'The user did not even added a title'))
 
         number_of_items = len(items_ordered)
-        print
-        print '*' * 50
-        print '%d items (%s attachments)' % (number_of_items, attachment_number)
-        print '*' * 50
-        print
+
+        logger.info(u"")
+        logger.info(u"%d items to be parsed (%d attachments)" % (number_of_items, attachment_number))
 
         for pos, i_id in enumerate(items_ordered):
             item = items_ordered[i_id]
             publication_type = item['data']['itemType']
-            print '\t[%s/%s][%s][%s] > %s' % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title', 'No title').encode('utf-8'))
+
+            logger.info(u"\t[%s/%s][%s][%s] > %s" % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title', 'No title').encode('utf-8')))
+
             generate_publication(item)
 
+            if item['version'] > highest_parsed_version:
+                highest_parsed_version = item['version']
 
-####################################################################################################
-# def: clean_database()
-####################################################################################################
+        if highest_parsed_version == highest_detected_version:
+            logger.info(u"Latest parsed item was a valid one")
 
-def clean_database():
-    Publication.objects.all().delete()
+        else:
+            logger.info(u"Latest parsed item was not a valid one, versioning must be fixed")
 
-    RelatedPublication.objects.all().delete()
-    PublicationRank.objects.all().delete()
-    PublicationAuthor.objects.all().delete()
-    PublicationEditor.objects.all().delete()
-    PublicationTag.objects.all().delete()
+            ZoteroExtractorLog.objects.create(
+                item_key=u'VERSION_FIX',
+                version=highest_detected_version,
+            )
 
-    ZoteroExtractorLog.objects.all().delete()
+        # In case of a reset, reset saved relationships between publications and news
+        if len(publications_related_to_news) > 0:
+            logger.info(u"")
+            logger.info(u"Restoring removed PublicationRelatedToNews() instances")
+
+        for index, saved_link in enumerate(publications_related_to_news):
+            news = get_or_default(News, title=saved_link[0])
+            publication = get_or_default(Publication, title=saved_link[1])
+
+            if news and publication:
+                PublicationRelatedToNews.objects.create(
+                    publication=publication,
+                    news=news,
+                )
+
+                logger.info(u"[%d/%d] Link created" % (index + 1, len(publications_related_to_news)))
+
+            else:
+                logger.info(u"[%d/%d] Link NOT created: %s" % (index + 1, len(publications_related_to_news), str(saved_link)))
 
 
-####################################################################################################
-# def: generate_publication_from_zotero()
+###     generate_publication(item)
 ####################################################################################################
 
 def generate_publication(item):
 
-    publication_type = item['data']['itemType']
     existing_publications = Publication.objects.filter(zotero_key=item['key']).all()
 
     for existing_publication in existing_publications:
@@ -237,29 +258,34 @@ def generate_publication(item):
         RelatedPublication.objects.filter(publication=existing_publication).all().delete()
         existing_publication.delete()
 
+    publication_type = item['data']['itemType']
+
     if publication_type == 'conferencePaper':
         parse_conference_paper(item)
+
     elif publication_type == 'bookSection':
         parse_book_section(item)
+
     elif publication_type == 'book':
         parse_authored_book(item)
+
     elif publication_type == 'journalArticle':
         parse_journal_article(item)
+
     elif publication_type == 'magazineArticle':
         parse_magazine_article(item)
+
     elif publication_type == 'attachment':
         # this should not happen
+        logger.warn(u"Publication type is ATTACHMENT")
         pass
+
     elif publication_type == 'thesis':
         parse_thesis(item)
+
     else:
-        print
-        print '*' * 50
-        print 'NOT PARSED:\t\tPublication type: %s' % publication_type
-        print '*' * 50
-        print
-        pp.pprint(item)
-        print
+        logger.warn(u"NOT parsed: %s" % publication_type)
+
 
 ###############################################################################
 ###############################################################################
@@ -268,8 +294,7 @@ def generate_publication(item):
 ###############################################################################
 
 
-####################################################################################################
-# def: parse_journal_article()
+###     parse_journal_article(item)
 ####################################################################################################
 
 def parse_journal_article(item):
@@ -286,7 +311,7 @@ def parse_journal_article(item):
 
     journal_article.parent_journal = parse_journal(item)
 
-    journal_article.published = _parse_date(item['data']['date'])
+    journal_article.published = _parse_date(item)
     journal_article.year = journal_article.published.year
 
     journal_article.bibtex = _extract_bibtex(item['key'])
@@ -298,22 +323,18 @@ def parse_journal_article(item):
     _extract_tags(item, journal_article)
 
     if 'attachment' in item:
-        save_attachment(item['attachment']['key'], journal_article.slug, item['attachment']['data']['filename'])
+        _save_attachment(item['attachment']['key'], journal_article.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, journal_article)
 
 
-####################################################################################################
-# def: parse_journal()
+###     parse_journal(item)
 ####################################################################################################
 
 def parse_journal(item):
-    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item['data']['date']).year, item['data'].get('volume'), item['data'].get('issue'))
-    try:
-        journal = Journal.objects.get(slug=journal_slug)
+    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue'))
 
-    except ObjectDoesNotExist:
-        journal = Journal()
+    journal = get_or_default(Journal, Journal(), slug=journal_slug)
 
     journal.title = item['data']['publicationTitle']
 
@@ -324,7 +345,7 @@ def parse_journal(item):
     journal.journal_abbreviation = _assign_if_exists(item, 'journalAbbrevation')
     journal.issue = _assign_if_exists(item, 'issue')
 
-    journal.published = _parse_date(item['data']['date'])
+    journal.published = _parse_date(item)
     journal.year = journal.published.year
 
     journal.save()
@@ -332,8 +353,7 @@ def parse_journal(item):
     return journal
 
 
-####################################################################################################
-# def: parse_conference_paper()
+###     parse_conference_paper(item)
 ####################################################################################################
 
 def parse_conference_paper(item):
@@ -351,7 +371,7 @@ def parse_conference_paper(item):
     conference_paper.parent_proceedings = parse_proceedings(item)
     conference_paper.presented_at = parse_conference(item, conference_paper.parent_proceedings)
 
-    conference_paper.published = _parse_date(item['data']['date'])
+    conference_paper.published = _parse_date(item)
     conference_paper.year = conference_paper.published.year
 
     conference_paper.bibtex = _extract_bibtex(item['key'])
@@ -368,8 +388,7 @@ def parse_conference_paper(item):
     _save_zotero_extractor_log(item, conference_paper)
 
 
-####################################################################################################
-# def: parse_proceedings()
+###     parse_proceedings(item)
 ####################################################################################################
 
 def parse_proceedings(item):
@@ -383,14 +402,12 @@ def parse_proceedings(item):
         else:
             proceedings_title = 'Proceedings for article: %s' % item['data']['title']
 
-    try:
-        proceedings = Proceedings.objects.get(
-            slug=nslugify(proceedings_title, _parse_date(item['data']['date']).year, item['data'].get('volume')),
-            year=_parse_date(item['data']['date']).year
-        )
-
-    except ObjectDoesNotExist:
-        proceedings = Proceedings()
+    proceedings = get_or_default(
+        Proceedings,
+        Proceedings(),
+        slug=nslugify(proceedings_title, _parse_date(item).year, item['data'].get('volume')),
+        year=_parse_date(item).year,
+    )
 
     proceedings.title = proceedings_title
 
@@ -400,7 +417,7 @@ def parse_proceedings(item):
     proceedings.publisher = _assign_if_exists(item, 'publisher')
     proceedings.place = _assign_if_exists(item, 'place')
 
-    proceedings.published = _parse_date(item['data']['date'])
+    proceedings.published = _parse_date(item)
     proceedings.year = proceedings.published.year
 
     proceedings.save()
@@ -408,19 +425,16 @@ def parse_proceedings(item):
     return proceedings
 
 
-####################################################################################################
-# def: parse_conference()
+###     parse_conference(item, proceedings)
 ####################################################################################################
 
 def parse_conference(item, proceedings):
     if 'conferenceName' in item['data'] and item['data']['conferenceName'] != '':
-        try:
-            event = Event.objects.get(
-                slug=nslugify(item['data']['conferenceName'], _parse_date(item['data']['date']).year),
-            )
-
-        except ObjectDoesNotExist:
-            event = Event()
+        event = get_or_default(
+            Event,
+            Event(),
+            slug=nslugify(item['data']['conferenceName'], _parse_date(item).year),
+        )
 
         event.event_type = 'Academic event'
 
@@ -436,49 +450,42 @@ def parse_conference(item, proceedings):
                 event_location = ''
 
                 if city_name and city_name != '':
-                    try:
-                        city = City.objects.get(slug=slugify(city_name))
-
-                    except ObjectDoesNotExist:
-                        city = City(
-                            full_name=city_name,
-                        )
-
-                        city.save()
-
-                    event_location = city_name
+                    city, created = City.objects.get_or_create(
+                        slug=slugify(city_name),
+                        defaults={
+                            'full_name': city_name,
+                        },
+                    )
 
                 else:
                     city = None
 
-                if country_name and country_name != '':
-                    try:
-                        country = Country.objects.get(slug=slugify(country_name))
+                if country_name and country_name != '' and city:
+                    country, created = Country.objects.get_or_create(
+                        slug=slugify(country_name),
+                        defaults={
+                            'full_name': country_name,
+                        },
+                    )
 
-                    except ObjectDoesNotExist:
-                        country = Country(
-                            full_name=country_name,
-                        )
-
-                        country.save()
-
-                    city.country = country
-                    city.save()
-
-                    if city_name and city_name != '':
-                        event_location = '%s (%s)' % (event_location, country_name)
-                    else:
-                        event_location = '(%s)' % country_name
+                    if city:
+                        city.country = country
+                        city.save()
 
                 else:
                     country = None
+
+                try:
+                    event_location = '%s (%s)' % (city_name, country_name)
+                except:
+                    event_location = ''
 
                 event.host_city = city
                 event.host_country = country
 
                 event.location = event_location
 
-        event.start_date = _parse_date(item['data']['date'])
+        event.start_date = _parse_date(item)
         event.year = event.start_date.year
 
         event.proceedings = proceedings
@@ -491,8 +498,7 @@ def parse_conference(item, proceedings):
         return None
 
 
-####################################################################################################
-# def: parse_book_section()
+###     parse_book_section(item)
 ####################################################################################################
 
 def parse_book_section(item):
@@ -509,7 +515,7 @@ def parse_book_section(item):
 
     book_section.parent_book = parse_book(item)
 
-    book_section.published = _parse_date(item['data']['date'])
+    book_section.published = _parse_date(item)
     book_section.year = book_section.published.year
 
     book_section.bibtex = _extract_bibtex(item['key'])
@@ -521,24 +527,22 @@ def parse_book_section(item):
     _extract_tags(item, book_section)
 
     if 'attachment' in item:
-        save_attachment(item['attachment']['key'], book_section.slug, item['attachment']['data']['filename'])
+        _save_attachment(item['attachment']['key'], book_section.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book_section)
 
 
-####################################################################################################
-# def: parse_book()
+###     parse_book(item)
 ####################################################################################################
 
 def parse_book(item):
-    try:
-        book = Book.objects.get(
-            slug=nslugify(item['data']['bookTitle'], _parse_date(item['data']['date']).year, item['data'].get('volume'), item['data'].get('series')),
-            year=_parse_date(item['data']['date']).year
-        )
 
-    except ObjectDoesNotExist:
-        book = Book()
+    book = get_or_default(
+        Book,
+        Book(),
+        slug=nslugify(item['data']['bookTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('series')),
+        year=_parse_date(item).year,
+    )
 
     book.title = item['data']['bookTitle']
 
@@ -548,7 +552,7 @@ def parse_book(item):
     book.publisher = _assign_if_exists(item, 'publisher')
     book.place = _assign_if_exists(item, 'place')
 
-    book.published = _parse_date(item['data']['date'])
+    book.published = _parse_date(item)
     book.year = book.published.year
 
     book.save()
@@ -558,8 +562,7 @@ def parse_book(item):
     return book
 
 
-####################################################################################################
-# def: parse_authored_book()
+###     parse_authored_book(item)
 ####################################################################################################
 
 def parse_authored_book(item):
@@ -583,7 +586,7 @@ def parse_authored_book(item):
     book.publisher = _assign_if_exists(item, 'publisher')
     book.place = _assign_if_exists(item, 'place')
 
-    book.published = _parse_date(item['data']['date'])
+    book.published = _parse_date(item)
     book.year = book.published.year
 
     book.bibtex = _extract_bibtex(item['key'])
@@ -595,13 +598,12 @@ def parse_authored_book(item):
     _extract_tags(item, book)
 
     if 'attachment' in item:
-        save_attachment(item['attachment']['key'], book.slug, item['attachment']['data']['filename'])
+        _save_attachment(item['attachment']['key'], book.slug, item['attachment']['data']['filename'])
 
     _save_zotero_extractor_log(item, book)
 
 
-####################################################################################################
-# def: parse_magazine_article()
+###     parse_magazine_article(item)
 ####################################################################################################
 
 def parse_magazine_article(item):
@@ -618,7 +620,7 @@ def parse_magazine_article(item):
 
     magazine_article.parent_magazine = parse_magazine(item)
 
-    magazine_article.published = _parse_date(item['data']['date'])
+    magazine_article.published = _parse_date(item)
     magazine_article.year = magazine_article.published.year
 
     magazine_article.bibtex = _extract_bibtex(item['key'])
@@ -635,19 +637,17 @@ def parse_magazine_article(item):
     _save_zotero_extractor_log(item, magazine_article)
 
 
-####################################################################################################
-# def: parse_magazine()
+###     parse_magazine(item)
 ####################################################################################################
 
 def parse_magazine(item):
-    try:
-        magazine = Magazine.objects.get(
-            slug=nslugify(item['data']['publicationTitle'], _parse_date(item['data']['date']).year, item['data'].get('volume'), item['data'].get('issue')),
-            year=_parse_date(item['data']['date']).year
-        )
 
-    except ObjectDoesNotExist:
-        magazine = Magazine()
+    magazine = get_or_default(
+        Magazine,
+        Magazine(),
+        slug=nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue')),
+        year=_parse_date(item).year,
+    )
 
     magazine.title = item['data']['publicationTitle']
 
@@ -655,7 +655,7 @@ def parse_magazine(item):
     magazine.volume = _assign_if_exists(item, 'volume')
     magazine.issue = _assign_if_exists(item, 'issue')
 
-    magazine.published = _parse_date(item['data']['date'])
+    magazine.published = _parse_date(item)
     magazine.year = magazine.published.year
 
     magazine.save()
@@ -663,22 +663,21 @@ def parse_magazine(item):
     return magazine
 
 
-####################################################################################################
-# def: parse_thesis()
+###     parse_thesis(item)
 ####################################################################################################
 
 def parse_thesis(item):
     author = _extract_authors(item)[0]
 
-    try:
-        Thesis.objects.get(slug=slugify(item['data']['title']))
+    thesis = get_or_default(
+        Thesis,
+        slug=slugify(item['data']['title']),
+    )
 
-    except ObjectDoesNotExist:
-        print
-        print '*' * 75
-        print '%s should register his/her thesis using labman\'s admin page' % author
-        print '*' * 75
-        print
+    if not thesis:
+        logger.warn(u"")
+        logger.warn(u"%s should register his/her thesis using labman's admin page" % author)
+
 
 ###############################################################################
 ###############################################################################
@@ -687,8 +686,7 @@ def parse_thesis(item):
 ###############################################################################
 
 
-####################################################################################################
-# def: _extract_short_title()
+###     _extract_short_title(item)
 ####################################################################################################
 
 def _extract_short_title(item):
@@ -701,8 +699,7 @@ def _extract_short_title(item):
             return item['data']['title'][:index]
 
 
-####################################################################################################
-# def: _assign_if_exists()
+###     _assign_if_exists(item, key)
 ####################################################################################################
 
 def _assign_if_exists(item, key):
@@ -710,8 +707,7 @@ def _assign_if_exists(item, key):
         return item['data'][key]
 
 
-####################################################################################################
-# def: _extract_doi()
+###     _extract_doi(item)
 ####################################################################################################
 
 def _extract_doi(item):
@@ -729,16 +725,37 @@ def _extract_doi(item):
             return item['data']['url'][base_url_end_index:underscore_index]
 
 
-####################################################################################################
-# def: _parse_date()
+###     _parse_date(item)
 ####################################################################################################
 
-def _parse_date(date_string):
-    return parser.parse(date_string, fuzzy=True, default=datetime.now())
+def _parse_date(item):
+
+    try:
+        date_string = item['data']['date']
+        parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
+
+    except ValueError:
+        try:
+            date_chunks = date_string.split()
+            parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+
+        except:
+            try:
+                alternate_date_string = item['meta']['parsedDate']
+                parsed_date = parser.parse(alternate_date_string, fuzzy=True, default=datetime.today())
+
+            except ValueError:
+                try:
+                    date_chunks = alternate_date_string.split()
+                    parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+
+                except:
+                    parsed_date = datetime.today()
+
+    return parsed_date
 
 
-####################################################################################################
-# def: _extract_bibtex()
+###     _extract_bibtex(item_key)
 ####################################################################################################
 
 def _extract_bibtex(item_key):
@@ -747,10 +764,12 @@ def _extract_bibtex(item_key):
     counter = 4
     while counter >= 0:
         counter -= 1
+
         try:
             item = zot.item(item_key, format='bibtex')
+
         except (HTTPError, socket.error) as e:
-            print "Error %s. Retrying in 5 seconds" % e
+            logger.debug(u"Error %s. Retrying in 5 seconds" % e)
             time.sleep(5)
             if counter == 0:
                 raise
@@ -760,8 +779,7 @@ def _extract_bibtex(item_key):
     return item
 
 
-####################################################################################################
-# def: _extract_authors()
+###     _extract_authors(item)
 ####################################################################################################
 
 def _extract_authors(item):
@@ -783,32 +801,33 @@ def _extract_authors(item):
 
                 author_slug = slugify('%s %s' % (author_first_name, author_first_surname))
 
-                try:
-                    # Check if author is in DB (comparing by slug)
-                    author = Person.objects.get(slug=author_slug)
+                author = get_or_default(
+                    Person,
+                    slug=author_slug,
+                )
 
-                except ObjectDoesNotExist:
-                    # If it isn't
-                    # Check if author name correspond with any of the posible nicknames of the authors in DB
-                    nicks = Nickname.objects.filter(slug=author_slug).all()
-                    if nicks:
-                        author = nicks[0].person
-                    else:
-                        # If there is no reference to that person in the DB, create a new one
-                        author = Person(
-                            first_name=author_first_name,
-                            first_surname=author_first_surname
+                if not author:
+                    try:
+                        nick = Nickname.objects.filter(slug=author_slug).first()
+
+                    except:
+                        nick = None
+
+                    if nick:
+                        author, created = Person.objects.get_or_create(
+                            id=nick.person.id,
+                            defaults={
+                                'first_name': author_first_name,
+                                'first_surname': author_first_surname,
+                            },
                         )
-
-                        author.save()
 
                 authors.append(author)
 
     return authors
 
 
-####################################################################################################
-# def: _save_publication_authors()
+###     _save_publication_authors(authors, publication)
 ####################################################################################################
 
 def _save_publication_authors(authors, publication):
@@ -828,8 +847,7 @@ def _save_publication_authors(authors, publication):
         order += 1
 
 
-####################################################################################################
-# def: _extract_tags()
+###     _extract_tags(item, publication)
 ####################################################################################################
 
 def _extract_tags(item, publication):
@@ -847,15 +865,12 @@ def _extract_tags(item, publication):
                 pass
 
             else:
-                try:
-                    tag = Tag.objects.get(slug=slugify(tag_name))
-
-                except ObjectDoesNotExist:
-                    tag = Tag(
-                        name=tag_name,
-                    )
-
-                    tag.save()
+                tag, created = Tag.objects.get_or_create(
+                    slug=slugify(tag_name),
+                    defaults={
+                        'name': tag_name,
+                    },
+                )
 
                 publication_tag = PublicationTag(
                     tag=tag,
@@ -865,8 +880,7 @@ def _extract_tags(item, publication):
                 publication_tag.save()
 
 
-####################################################################################################
-# def: _save_zotero_extractor_log()
+###     _save_zotero_extractor_log(item, publication)
 ####################################################################################################
 
 def _save_zotero_extractor_log(item, publication):
@@ -879,19 +893,21 @@ def _save_zotero_extractor_log(item, publication):
     zotero_extractor_log.save()
 
 
-####################################################################################################
-# def: _save_attachment()
+###     _save_attachment(attachment_id, publication_slug, filename)
 ####################################################################################################
 
 def _save_attachment(attachment_id, publication_slug, filename):
     zot = get_zotero_connection()
     counter = 4
+
     while counter >= 0:
         counter -= 1
+
         try:
             item = zot.file(attachment_id)
+
         except (HTTPError, socket.error) as e:
-            print "Error %s. Retrying in 5 seconds" % e
+            logger.debug(u"Error %s. Retrying in 5 seconds" % e)
             time.sleep(5)
             if counter == 0:
                 raise
@@ -914,8 +930,7 @@ def _save_attachment(attachment_id, publication_slug, filename):
     publication.save()
 
 
-####################################################################################################
-# def: _extract_editors()
+###     _extract_editors(item)
 ####################################################################################################
 
 def _extract_editors(item):
@@ -937,32 +952,32 @@ def _extract_editors(item):
 
                 editor_slug = slugify('%s %s' % (editor_first_name, editor_first_surname))
 
-                try:
-                    # Check if editor is in DB (comparing by slug)
-                    editor = Person.objects.get(slug=editor_slug)
+                editor = get_or_default(
+                    Person,
+                    slug=editor_slug,
+                )
 
-                except ObjectDoesNotExist:
-                    # If it isn't
-                    try:
-                        # Check if editor name correspond with any of the posible nicknames of the authors in DB
-                        nick = Nickname.objects.get(slug=editor_slug)
-                        editor = nick.person
-                    except ObjectDoesNotExist:
-                        # If there is no reference to that person in the DB, create a new one
-                        editor = Person(
-                            first_name=editor_first_name,
-                            first_surname=editor_first_surname
+                if not editor:
+                    nick = get_or_default(
+                        Nickname,
+                        slug=editor_slug,
+                    )
+
+                    if nick:
+                        editor, created = Person.objects.get_or_create(
+                            id=nick.person.id,
+                            defaults={
+                                'first_name': editor_first_name,
+                                'first_surname': editor_first_surname,
+                            },
                         )
-
-                        editor.save()
 
                 editors.append(editor)
 
     return editors
 
 
-####################################################################################################
-# def: _save_publication_editors()
+###     _save_publication_editors(editors, publication)
 ####################################################################################################
 
 def _save_publication_editors(editors, publication):
@@ -977,8 +992,7 @@ def _save_publication_editors(editors, publication):
         publication_editor.save()
 
 
-####################################################################################################
-# def: _determine_if_tag_is_special()
+###     _determine_if_tag_is_special(tag, publication)
 ####################################################################################################
 
 def _determine_if_tag_is_special(tag, publication):
