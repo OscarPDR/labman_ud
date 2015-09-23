@@ -1,15 +1,13 @@
 # -*- encoding: utf-8 -*-
 
-
 from rdflib import Literal
 
 from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
 
-###########################################################################
-# Model: FundingProgram
-###########################################################################
+###		FundingProgram
+####################################################################################################
 
 # def save_funding_program_as_rdf(funding_program):
 #     graph = create_namespaced_graph()
