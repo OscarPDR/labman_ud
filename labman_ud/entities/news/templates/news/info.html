@@ -5,51 +5,35 @@
 
 {% block content %}
 
-    <h2>{{ news.title|safe }}</h2>
+    <h2>{{ news_piece.title|safe }}</h2>
 
-    <h6>Published on {{ news.created|date:"l, d F Y - H:i" }}</h6>
+    <h6>Published on {{ news_piece.created|date:"l, d F Y - H:i" }}</h6>
 
     <br>
     <br>
-
-    <!-- <a href="" onclick="window.open(
-            'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
-            'facebook-share-dialog',
-            'width=626,height=436'
-        ); return false;">
-        Share on Facebook
-    </a> -->
 
     <div class="row">
-        <div id="news-body" {% if related %}class="col-md-8"{% endif %}>
-            {{ news.content|safe }}
+        <div id="news-body" {% if has_related %}class="col-md-8"{% endif %}>
+            {{ news_piece.content|safe }}
         </div>
 
-        {% if related %}
-            <div class="col-md-3 well pull-right">
-                <h5>Related:</h5>
-
-                {% if related_persons %}
-                    {% for person in related_persons %}
-                        <i class="fa fa-user fa-large"></i>&emsp;
-                        {% if person.is_active %}
-                            <a href="{% url 'member_info' person.slug %}">
-                                {{ person.full_name }}
-                            </a>
-                        {% else %}
-                            <a href="{% url 'person_info' person.slug %}">
-                                {{ person.full_name }}
-                            </a>
-                        {% endif %}
+        {% if has_related %}
+            <div class="col-md-3 well pull-right news-related">
+                {% if news_piece.persons.all %}
+                    {% for person in news_piece.persons.all %}
+                        <a href="{% url 'determine_person_info' person.slug %}">
+                            <i class="fa fa-user fa-large"></i>
+                            {{ person.full_name }}
+                        </a>
                         <br>
                     {% endfor %}
                     <br>
                 {% endif %}
 
-                {% if related_projects %}
-                    {% for project in related_projects %}
-                        <i class="fa fa-gears fa-large"></i>&emsp;
+                {% if news_piece.projects.all %}
+                    {% for project in news_piece.projects.all %}
                         <a href="{% url 'project_info' project.slug %}">
+                            <i class="fa fa-gears fa-large"></i>
                             {{ project.short_name }}
                         </a>
                         <br>
@@ -57,10 +41,10 @@
                     <br>
                 {% endif %}
 
-                {% if related_publications %}
-                    {% for publication in related_publications %}
-                        <i class="fa fa-file-text-o fa-large"></i>&emsp;
+                {% if news_piece.publications.all %}
+                    {% for publication in news_piece.publications.all %}
                         <a href="{% url 'publication_info' publication.slug %}">
+                            <i class="fa fa-file-text-o fa-large"></i>
                             {{ publication.title }}
                         </a>
                         <br>
@@ -70,12 +54,6 @@
             </div>
         {% endif %}
     </div>
-
-    <ul>
-        {% for tag in tags %}
-            <li>{{ tag.name }}</li>
-        {% endfor %}
-    </ul>
 
 {% endblock %}
 

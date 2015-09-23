@@ -1,123 +1,130 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
+
 from .models import *
 
 
-###########################################################################
-# Class: NewsTagInline
-###########################################################################
+###		NewsTagInline
+####################################################################################################
 
 class NewsTagInline(admin.TabularInline):
     model = NewsTag
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: EventRelatedToNewsInline
-###########################################################################
+###		EventRelatedToNewsInline
+####################################################################################################
 
 class EventRelatedToNewsInline(admin.TabularInline):
     model = EventRelatedToNews
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: ProjectRelatedToNewsInline
-###########################################################################
+###		ProjectRelatedToNewsInline
+####################################################################################################
 
 class ProjectRelatedToNewsInline(admin.TabularInline):
     model = ProjectRelatedToNews
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: PersonRelatedToNewsInline
-###########################################################################
+###		PersonRelatedToNewsInline
+####################################################################################################
 
 class PersonRelatedToNewsInline(admin.TabularInline):
     model = PersonRelatedToNews
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: PublicationRelatedToNewsInline
-###########################################################################
+###		PublicationRelatedToNewsInline
+####################################################################################################
 
 class PublicationRelatedToNewsInline(admin.TabularInline):
     model = PublicationRelatedToNews
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: NewAdmin
-###########################################################################
+###		NewAdmin
+####################################################################################################
 
 class NewsAdmin(admin.ModelAdmin):
     model = News
+
     search_fields = ['title', 'content']
+
     list_display = ['title', 'created']
+
     exclude = [
         'slug',
     ]
+
     inlines = [
         NewsTagInline,
-        EventRelatedToNewsInline,
-        ProjectRelatedToNewsInline,
         PersonRelatedToNewsInline,
+        ProjectRelatedToNewsInline,
         PublicationRelatedToNewsInline,
+        EventRelatedToNewsInline,
     ]
 
 
-###########################################################################
-# Class: NewsTagAdmin
-###########################################################################
+###		NewsTagAdmin
+####################################################################################################
 
 class NewsTagAdmin(admin.ModelAdmin):
     model = NewsTag
 
+    search_fields = ['news__title', 'tag__name']
 
-###########################################################################
-# Class: EventRelatedToNewsAdmin
-###########################################################################
+    list_display = ['news', 'tag']
+
+
+###		EventRelatedToNewsAdmin
+####################################################################################################
 
 class EventRelatedToNewsAdmin(admin.ModelAdmin):
     model = EventRelatedToNews
 
     search_fields = ['event__full_name', 'news__title']
+
     list_display = ['event', 'news']
 
 
-###########################################################################
-# Class: ProjectRelatedToNewsAdmin
-###########################################################################
+###		ProjectRelatedToNewsAdmin
+####################################################################################################
 
 class ProjectRelatedToNewsAdmin(admin.ModelAdmin):
     model = ProjectRelatedToNews
 
     search_fields = ['project__full_name', 'news__title']
+
     list_display = ['project', 'news']
 
 
-###########################################################################
-# Class: PersonRelatedToNewsAdmin
-###########################################################################
+###		PersonRelatedToNewsAdmin
+####################################################################################################
 
 class PersonRelatedToNewsAdmin(admin.ModelAdmin):
     model = PersonRelatedToNews
 
     search_fields = ['person__full_name', 'news__title']
+
     list_display = ['person', 'news']
 
 
-###########################################################################
-# Class: PublicationRelatedToNewsAdmin
-###########################################################################
+###		PublicationRelatedToNewsAdmin
+####################################################################################################
 
 class PublicationRelatedToNewsAdmin(admin.ModelAdmin):
     model = PublicationRelatedToNews
 
     search_fields = ['publication__title', 'news__title']
+
     list_display = ['publication', 'news']
 
 
@@ -127,10 +134,10 @@ class PublicationRelatedToNewsAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
-admin.site.register(News, NewsAdmin)
-admin.site.register(NewsTag, NewsTagAdmin)
 
 admin.site.register(EventRelatedToNews, EventRelatedToNewsAdmin)
-admin.site.register(ProjectRelatedToNews, ProjectRelatedToNewsAdmin)
+admin.site.register(News, NewsAdmin)
+admin.site.register(NewsTag, NewsTagAdmin)
 admin.site.register(PersonRelatedToNews, PersonRelatedToNewsAdmin)
+admin.site.register(ProjectRelatedToNews, ProjectRelatedToNewsAdmin)
 admin.site.register(PublicationRelatedToNews, PublicationRelatedToNewsAdmin)
