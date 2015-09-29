@@ -3,6 +3,13 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             <strong>Parent journal:</strong>&emsp;{{ parent_publication.title }}
+
+            {% if parent_publication.quartile %}
+                <span class="pull-right label label-quartile label-{{ parent_publication.quartile|slugify }}">
+
+                    {{ parent_publication.quartile }}
+                </span>
+            {% endif %}
         </h3>
     </div>
 
