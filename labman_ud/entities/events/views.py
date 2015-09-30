@@ -10,10 +10,8 @@ from .models import Event
 
 PAGINATION_NUMBER = settings.EVENTS_PAGINATION
 
-
-###########################################################################
-# View: event_index
-###########################################################################
+###		event_index
+####################################################################################################
 
 def event_index(request):
     events = Event.objects.all()

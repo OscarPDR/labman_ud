@@ -4,37 +4,29 @@ from django.contrib import admin
 
 from .models import *
 
-
-###########################################################################
-# Class: PublicationRankInline
-###########################################################################
+###		PublicationRankInline
+####################################################################################################
 
 class PublicationRankInline(admin.TabularInline):
     model = PublicationRank
     extra = 1
 
-
-###########################################################################
-# Class: VivaPanelInline
-###########################################################################
+###		VivaPanelInline
+####################################################################################################
 
 class VivaPanelInline(admin.TabularInline):
     model = VivaPanel
     extra = 1
 
-
-###########################################################################
-# Class: PublicationSeeAlsoInline
-###########################################################################
+###		PublicationSeeAlsoInline
+####################################################################################################
 
 class PublicationSeeAlsoInline(admin.TabularInline):
     model = PublicationSeeAlso
     extra = 1
 
-
-###########################################################################
-# Class: PublicationSeeAlsoAdmin
-###########################################################################
+###		PublicationSeeAlsoAdmin
+####################################################################################################
 
 class PublicationSeeAlsoAdmin(admin.ModelAdmin):
     model = PublicationSeeAlso
@@ -42,19 +34,15 @@ class PublicationSeeAlsoAdmin(admin.ModelAdmin):
     list_display = ['publication', 'see_also']
     search_fields = ['publication__title']
 
-
-###########################################################################
-# Class: ThesisSeeAlsoInline
-###########################################################################
+###		ThesisSeeAlsoInline
+####################################################################################################
 
 class ThesisSeeAlsoInline(admin.TabularInline):
     model = ThesisSeeAlso
     extra = 1
 
-
-###########################################################################
-# Class: ThesisSeeAlsoAdmin
-###########################################################################
+###		ThesisSeeAlsoAdmin
+####################################################################################################
 
 class ThesisSeeAlsoAdmin(admin.ModelAdmin):
     model = ThesisSeeAlso
@@ -62,55 +50,43 @@ class ThesisSeeAlsoAdmin(admin.ModelAdmin):
     list_display = ['thesis', 'see_also']
     search_fields = ['thesis__title']
 
-
-###########################################################################
-# Class: PublicationTagAdmin
-###########################################################################
+###		PublicationTagAdmin
+####################################################################################################
 
 class PublicationTagInline(admin.TabularInline):
     model = PublicationTag
     extra = 1
 
-
-###########################################################################
-# Class: PublicationAuthorInline
-###########################################################################
+###		PublicationAuthorInline
+####################################################################################################
 
 class PublicationAuthorInline(admin.TabularInline):
     model = PublicationAuthor
     extra = 1
 
-
-###########################################################################
-# Class: PublicationEditorInline
-###########################################################################
+###		PublicationEditorInline
+####################################################################################################
 
 class PublicationEditorInline(admin.TabularInline):
     model = PublicationEditor
     extra = 1
 
-
-###########################################################################
-# Class: ThesisAbstractInline
-###########################################################################
+###		ThesisAbstractInline
+####################################################################################################
 
 class ThesisAbstractInline(admin.TabularInline):
     model = ThesisAbstract
     extra = 1
 
-
-###########################################################################
-# Class: CoAdvisorInline
-###########################################################################
+###		CoAdvisorInline
+####################################################################################################
 
 class CoAdvisorInline(admin.TabularInline):
     model = CoAdvisor
     extra = 1
 
-
-###########################################################################
-# Class: PublicationAdmin
-###########################################################################
+###		PublicationAdmin
+####################################################################################################
 
 class PublicationAdmin(admin.ModelAdmin):
     model = Publication
@@ -127,10 +103,8 @@ class PublicationAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: ThesisAdmin
-###########################################################################
+###		ThesisAdmin
+####################################################################################################
 
 class ThesisAdmin(admin.ModelAdmin):
     model = Thesis
@@ -146,10 +120,8 @@ class ThesisAdmin(admin.ModelAdmin):
         ThesisAbstractInline,
     ]
 
-
-###########################################################################
-# Class: VivaPanelAdmin
-###########################################################################
+###		VivaPanelAdmin
+####################################################################################################
 
 class VivaPanelAdmin(admin.ModelAdmin):
     model = VivaPanel
@@ -158,10 +130,8 @@ class VivaPanelAdmin(admin.ModelAdmin):
     list_display = ['thesis', 'person', 'role']
     list_filter = ['thesis', 'role']
 
-
-###########################################################################
-# Class: PublicationAuthorAdmin
-###########################################################################
+###		PublicationAuthorAdmin
+####################################################################################################
 
 class PublicationAuthorAdmin(admin.ModelAdmin):
     model = PublicationAuthor
@@ -170,10 +140,8 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
     list_display = ['publication', 'author']
     list_filter = ['author__full_name']
 
-
-###########################################################################
-# Class: PublicationEditorAdmin
-###########################################################################
+###		PublicationEditorAdmin
+####################################################################################################
 
 class PublicationEditorAdmin(admin.ModelAdmin):
     model = PublicationEditor
@@ -182,10 +150,8 @@ class PublicationEditorAdmin(admin.ModelAdmin):
     list_display = ['publication', 'editor']
     list_filter = ['editor__full_name']
 
-
-###########################################################################
-# Class: PublicationTagAdmin
-###########################################################################
+###		PublicationTagAdmin
+####################################################################################################
 
 class PublicationTagAdmin(admin.ModelAdmin):
     model = PublicationTag
@@ -194,10 +160,8 @@ class PublicationTagAdmin(admin.ModelAdmin):
     list_display = ['publication', 'tag']
     list_filter = ['tag__name']
 
-
-###########################################################################
-# Class: BookAdmin
-###########################################################################
+###		BookAdmin
+####################################################################################################
 
 class BookAdmin(admin.ModelAdmin):
     model = Book
@@ -214,10 +178,8 @@ class BookAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: BookSectionAdmin
-###########################################################################
+###		BookSectionAdmin
+####################################################################################################
 
 class BookSectionAdmin(admin.ModelAdmin):
     model = BookSection
@@ -234,10 +196,8 @@ class BookSectionAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: ProceedingsAdmin
-###########################################################################
+###		ProceedingsAdmin
+####################################################################################################
 
 class ProceedingsAdmin(admin.ModelAdmin):
     model = Proceedings
@@ -254,10 +214,8 @@ class ProceedingsAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: ConferencePaperAdmin
-###########################################################################
+###		ConferencePaperAdmin
+####################################################################################################
 
 class ConferencePaperAdmin(admin.ModelAdmin):
     model = ConferencePaper
@@ -273,16 +231,14 @@ class ConferencePaperAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: JournalAdmin
-###########################################################################
+###		JournalAdmin
+####################################################################################################
 
 class JournalAdmin(admin.ModelAdmin):
     model = Journal
 
     search_fields = ['title', 'slug']
-    list_display = ['title', 'year']
+    list_display = ['title', 'year', 'slug']
     list_filter = ['year']
     exclude = ['slug']
     inlines = [
@@ -292,10 +248,8 @@ class JournalAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: JournalArticleAdmin
-###########################################################################
+###		JournalArticleAdmin
+####################################################################################################
 
 class JournalArticleAdmin(admin.ModelAdmin):
     model = JournalArticle
@@ -311,10 +265,8 @@ class JournalArticleAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: MagazineAdmin
-###########################################################################
+###		MagazineAdmin
+####################################################################################################
 
 class MagazineAdmin(admin.ModelAdmin):
     model = Magazine
@@ -330,10 +282,8 @@ class MagazineAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: MagazineArticleAdmin
-###########################################################################
+###		MagazineArticleAdmin
+####################################################################################################
 
 class MagazineArticleAdmin(admin.ModelAdmin):
     model = MagazineArticle
@@ -349,26 +299,20 @@ class MagazineArticleAdmin(admin.ModelAdmin):
         PublicationTagInline,
     ]
 
-
-###########################################################################
-# Class: ThesisAbstractAdmin
-###########################################################################
+###		ThesisAbstractAdmin
+####################################################################################################
 
 class ThesisAbstractAdmin(admin.ModelAdmin):
     model = ThesisAbstract
 
-
-###########################################################################
-# Class: CoAdvisorAdmin
-###########################################################################
+###		CoAdvisorAdmin
+####################################################################################################
 
 class CoAdvisorAdmin(admin.ModelAdmin):
     model = CoAdvisor
 
-
-###########################################################################
-# Class: PublicationRankAdmin
-###########################################################################
+###		PublicationRankAdmin
+####################################################################################################
 
 class PublicationRankAdmin(admin.ModelAdmin):
     model = PublicationRank
@@ -377,10 +321,8 @@ class PublicationRankAdmin(admin.ModelAdmin):
     list_display = ['publication', '_child_type', 'ranking']
     list_filter = ['ranking']
 
-
-###########################################################################
-# Class: RankingAdmin
-###########################################################################
+###		RankingAdmin
+####################################################################################################
 
 class RankingAdmin(admin.ModelAdmin):
     model = Ranking

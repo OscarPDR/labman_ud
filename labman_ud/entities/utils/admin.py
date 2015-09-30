@@ -235,6 +235,9 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ['full_name']
     exclude = ['slug']
 
+    verbose_name = u'City'
+    verbose_name_plural = u'Cities'
+
 
 ####################################################################################################
 ###     CountryAdmin

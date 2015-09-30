@@ -7,70 +7,51 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.syndication.views import Feed
 
-from .models import News, PersonRelatedToNews, ProjectRelatedToNews, PublicationRelatedToNews
+from .models import News
 
-from entities.persons.models import Person
-from entities.projects.models import Project
-from entities.publications.models import Publication
-
-from labman_setup.models import *
+from labman_setup.models import LabmanDeployGeneralSettings
 
 
-###########################################################################
-# View: news_index
-###########################################################################
+###     news_index()
+####################################################################################################
 
 def news_index(request):
+
     news = News.objects.all().order_by('-created', 'title')
 
     # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': 'News',
         'news': news,
+        'web_title': 'News',
     }
 
     return render(request, 'news/index.html', return_dict)
 
 
-###########################################################################
-# View: view_news
-###########################################################################
+###     view_news(news_slug)
+####################################################################################################
 
 def view_news(request, news_slug):
-    news = get_object_or_404(News, slug=news_slug)
-    # tags = news.tags.all()
 
-    related_persons_ids = PersonRelatedToNews.objects.filter(news=news.id).values('person_id')
-    related_persons = Person.objects.filter(id__in=related_persons_ids).order_by('slug')
+    news_pieces = News.objects.prefetch_related('projects', 'publications', 'persons')
+    news_piece = get_object_or_404(news_pieces, slug=news_slug)
 
-    related_projects_ids = ProjectRelatedToNews.objects.filter(news=news.id).values('project_id')
-    related_projects = Project.objects.filter(id__in=related_projects_ids).order_by('slug')
-
-    related_publications_ids = PublicationRelatedToNews.objects.filter(news=news.id).values('publication_id')
-    related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('slug')
-
-    if not related_persons and not related_projects and not related_publications:
-        related = False
-    else:
-        related = True
+    num_rel_projects = len(news_piece.projects.related_val)
+    num_rel_publications = len(news_piece.publications.related_val)
+    num_rel_persons = len(news_piece.persons.related_val)
 
     # dictionary to be returned in render(request, )
     return_dict = {
-        # 'tags': tags,
-        'web_title': news.title,
-        'news': news,
-        'related': related,
-        'related_persons': related_persons,
-        'related_projects': related_projects,
-        'related_publications': related_publications,
+        'has_related': bool(num_rel_projects or num_rel_publications or num_rel_persons),
+        'news_piece': news_piece,
+        'web_title': news_piece.title,
     }
 
     return render(request, 'news/info.html', return_dict)
 
 
-###########################################################################
-# Feed: news feeds
-###########################################################################
+###     LatestNewsFeed(Feed)
+####################################################################################################
 
 class LatestNewsFeed(Feed):
     def __init__(self, *args, **kwargs):

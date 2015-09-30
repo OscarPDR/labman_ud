@@ -8,14 +8,9 @@ from django.conf import settings
 from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
-# print graph.serialize(format='turtle')
-# print graph.serialize(format='n3')
-# print graph.serialize(format='xml')
 
-
-###########################################################################
-# Model: Person
-###########################################################################
+###		Person
+####################################################################################################
 
 def save_person_as_rdf(person):
     graph = create_namespaced_graph()
@@ -105,9 +100,8 @@ def delete_person_rdf(person):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: PersonSeeAlso
-###########################################################################
+###		PersonSeeAlso
+####################################################################################################
 
 def save_person_see_also_as_rdf(person_see_also):
     graph = create_namespaced_graph()
@@ -125,9 +119,8 @@ def delete_person_see_also_rdf(person_see_also):
     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
 
 
-###########################################################################
-# Model: AccountProfile
-###########################################################################
+###		AccountProfile
+####################################################################################################
 
 
 def save_account_profile_as_rdf(account_profile):
@@ -155,9 +148,8 @@ def delete_account_profile_rdf(account_profile):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Nickname
-###########################################################################
+###		Nickname
+####################################################################################################
 
 def save_nickname_as_rdf(nickname):
     graph = create_namespaced_graph()
@@ -175,9 +167,8 @@ def delete_nickname_rdf(nickname):
     delete_resources_with_predicate(resource_uri, FOAF.nick)
 
 
-###########################################################################
-# Model: Job
-###########################################################################
+###		Job
+####################################################################################################
 
 
 def save_job_as_rdf(job):

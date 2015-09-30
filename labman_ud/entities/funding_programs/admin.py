@@ -1,48 +1,43 @@
 # -*- encoding: utf-8 -*-
 
 from django.contrib import admin
+
 from .models import *
 
 
-###########################################################################
-# Class: FundingProgramSeeAlsoInline
-###########################################################################
+###     FundingProgramSeeAlsoInline
+####################################################################################################
 
 class FundingProgramSeeAlsoInline(admin.TabularInline):
     model = FundingProgramSeeAlso
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: FundingProgramSeeAlsoAdmin
-###########################################################################
+###     FundingProgramLogoInline
+####################################################################################################
 
-class FundingProgramSeeAlsoAdmin(admin.ModelAdmin):
-    model = FundingProgramSeeAlso
-
-    list_display = ['funding_program', 'see_also']
-    search_fields = ['funding_program__full_name']
-
-
-###########################################################################
-# Class: FundingProgramLogoInline
-###########################################################################
-
-class FundingProgramLogoInline(admin.StackedInline):
+class FundingProgramLogoInline(admin.TabularInline):
     model = FundingProgramLogo
-    extra = 1
+
+    extra = 0
     exclude = ['slug']
 
 
-###########################################################################
-# Class: FundingProgramAdmin
-###########################################################################
+###     FundingProgramAdmin
+####################################################################################################
 
 class FundingProgramAdmin(admin.ModelAdmin):
+    model = FundingProgram
+
     search_fields = ['full_name', 'short_name']
+
     list_display = ['short_name', 'full_name', 'geographical_scope']
+
     list_filter = ['geographical_scope']
+
     exclude = ['slug']
+
     inlines = [
         FundingProgramSeeAlsoInline,
         FundingProgramLogoInline,
@@ -55,5 +50,4 @@ class FundingProgramAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
-admin.site.register(FundingProgramSeeAlso, FundingProgramSeeAlsoAdmin)
 admin.site.register(FundingProgram, FundingProgramAdmin)

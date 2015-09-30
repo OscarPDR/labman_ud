@@ -5,47 +5,36 @@ from django.contrib import admin
 from .models import *
 
 
-###########################################################################
-# Class: OrganizationSeeAlsoInline
-###########################################################################
+###     OrganizationSeeAlsoInline
+####################################################################################################
 
 class OrganizationSeeAlsoInline(admin.TabularInline):
     model = OrganizationSeeAlso
-    extra = 1
+
+    extra = 0
 
 
-###########################################################################
-# Class: OrganizationSeeAlsoAdmin
-###########################################################################
-
-class OrganizationSeeAlsoAdmin(admin.ModelAdmin):
-    model = OrganizationSeeAlso
-
-    list_display = ['organization', 'see_also']
-    search_fields = ['organization__full_name']
-
-
-###########################################################################
-# Class: OrganizationAdmin
-###########################################################################
+###     OrganizationAdmin
+####################################################################################################
 
 class OrganizationAdmin(admin.ModelAdmin):
     model = Organization
 
     search_fields = ['full_name', 'short_name']
-    list_display = ['full_name', 'short_name', 'organization_type']
+
+    list_display = ['full_name', 'organization_type']
+
     list_filter = ['country__full_name', 'organization_type']
-    exclude = [
-        'slug',
-    ]
+
+    exclude = ['slug']
+
     inlines = [
         OrganizationSeeAlsoInline,
     ]
 
 
-###########################################################################
-# Class: UnitAdmin
-###########################################################################
+###     UnitAdmin
+####################################################################################################
 
 class UnitAdmin(admin.ModelAdmin):
     model = Unit
@@ -53,12 +42,11 @@ class UnitAdmin(admin.ModelAdmin):
     list_display = ['organization', 'head', 'order']
 
 
-###########################################################################
-###########################################################################
-# Register classes
-###########################################################################
-###########################################################################
+####################################################################################################
+####################################################################################################
+###     Register classes
+####################################################################################################
+####################################################################################################
 
-admin.site.register(OrganizationSeeAlso, OrganizationSeeAlsoAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Unit, UnitAdmin)

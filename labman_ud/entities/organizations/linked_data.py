@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-
 from rdflib import Literal
 
 from django.conf import settings
@@ -9,9 +8,8 @@ from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
 
-###########################################################################
-# Model: Organization
-###########################################################################
+###		Organization
+####################################################################################################
 
 def save_organization_as_rdf(organization):
     graph = create_namespaced_graph()
@@ -83,9 +81,8 @@ def delete_organization_rdf(organization):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: OrganizationSeeAlso
-###########################################################################
+###		OrganizationSeeAlso
+####################################################################################################
 
 def save_organization_see_also_as_rdf(organization_see_also):
     graph = create_namespaced_graph()
@@ -103,9 +100,8 @@ def delete_organization_see_also_rdf(organization_see_also):
     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
 
 
-###########################################################################
-# Model: Unit
-###########################################################################
+###		Unit
+####################################################################################################
 
 def save_unit_as_rdf(unit):
     graph = create_namespaced_graph()

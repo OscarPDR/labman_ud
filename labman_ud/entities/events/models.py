@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 
-import os
-
 from django.db import models
 from labman_ud.util import nslugify
 
 from .linked_data import *
+
+import os
+
 
 EVENT_TYPES = (
     ('Academic event', 'Academic event'),
@@ -15,18 +16,15 @@ EVENT_TYPES = (
 )
 
 
-# Create your models here.
-
-
 def event_logo_path(self, filename):
     return '%s/%s%s' % ('events', self.slug, os.path.splitext(filename)[-1])
 
 
-###########################################################################
-# Model: Event
-###########################################################################
+###		Event
+####################################################################################################
 
 class Event(models.Model):
+
     event_type = models.CharField(
         max_length=75,
         choices=EVENT_TYPES,
@@ -101,7 +99,12 @@ class Event(models.Model):
         null=True,
     )
 
-    proceedings = models.ForeignKey('publications.Proceedings', blank=True, null=True, related_name='conference')
+    proceedings = models.ForeignKey(
+        'publications.Proceedings',
+        blank=True,
+        null=True,
+        related_name='conference',
+    )
 
     class Meta:
         ordering = ['slug']
@@ -137,15 +140,20 @@ class Event(models.Model):
         super(Event, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: EventSeeAlso
-###########################################################################
+###		EventSeeAlso
+####################################################################################################
 
 class EventSeeAlso(models.Model):
+
     event = models.ForeignKey('Event')
+
     see_also = models.URLField(
         max_length=512,
     )
+
+    class Meta:
+        verbose_name = u'Event (see also)'
+        verbose_name_plural = u'Events (see also)'
 
     def __unicode__(self):
         return u'%s related resource: %s' % (self.event.full_name, self.see_also)
@@ -169,17 +177,18 @@ class EventSeeAlso(models.Model):
         super(EventSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: PersonRelatedToEvent
-###########################################################################
+###		PersonRelatedToEvent
+####################################################################################################
 
 class PersonRelatedToEvent(models.Model):
+
     person = models.ForeignKey('persons.Person')
+
     event = models.ForeignKey('Event')
 
     class Meta:
-        verbose_name = u'Person related to event'
-        verbose_name_plural = u'People related to events'
+        verbose_name = u'Person related to Event'
+        verbose_name_plural = u'People related to Events'
 
     def __unicode__(self):
         return u'%s attended %s' % (self.person.full_name, self.event.full_name)

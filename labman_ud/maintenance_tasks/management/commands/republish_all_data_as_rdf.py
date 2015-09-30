@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 
 from maintenance_tasks.rdf.republish_all_data_as_rdf import republish_all_data_as_rdf
 
 
-class Command(NoArgsCommand):
-    can_import_settings = True
+class Command(BaseCommand):
 
-    help = 'Empties previously existing SPARQL graphs (if any) and re-publishes everything as RDF'
+    help = u"Empties previously existing SPARQL graphs (if any) and re-publishes everything as RDF"
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         republish_all_data_as_rdf()

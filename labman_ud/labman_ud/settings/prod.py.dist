@@ -3,32 +3,118 @@ from .base import *
 
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 ADMINS = (
-    ('', ''),
+    # ('name', 'mail@address.com'),
 )
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.',
         'NAME': '',
-        # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-    }
+    },
 }
 
-USE_X_FORWARDED_HOST = True
-FORCE_SCRIPT_NAME = '/labman'
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            PROJECT_DIR.child('templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.template.context_processors.media',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
 
-STATIC_URL = '/labman/static/'
+                'labman_ud.context_processors.global_vars',
+            ],
+        },
+    },
+]
 
-MEDIA_URL = '/labman/media/'
+USE_X_FORWARDED_HOST = False
+
 MEDIA_ROOT = ''
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+# Email settings
+EMAIL_HOST = ''
+EMAIL_PORT = 25
+
+# RDF settings
+
+ENABLE_RDF_PUBLISHING = False
+
+SPARQL_ENDPOINT_AUTH = False
+
+SPARQL_ENDPOINT_URL = ''
+GRAPH_BASE_URL = ''
+
+SPARQL_ENDPOINT_REALM = ''
+SPARQL_ENDPOINT_USER = ''
+SPARQL_ENDPOINT_PASSWORD = ''
+
+# Logging settings
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': """
+[%(asctime)s] %(levelname)s
+[%(name)s:%(lineno)s]
+    %(message)s
+            """,
+            'datefmt': '%Y/%m/%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'compact': {
+            'format': '[%(asctime)s] [%(levelname)s]\t%(message)s',
+            'datefmt': '%Y/%m/%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'compact',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '~/labman.log',
+            'maxBytes': 1024 * 1024,    # 1 MB
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'maintenance_tasks': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'extractors.zotero': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

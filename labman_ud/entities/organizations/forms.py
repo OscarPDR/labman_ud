@@ -1,25 +1,10 @@
 # -*- encoding: utf-8 -*-
 
 from django import forms
-from django.forms import widgets
-
-from .models import Organization
 
 
-# Create your forms here.
-
-
-###########################################################################
-# Widget: URLInput
-###########################################################################
-
-class URLInput(widgets.Input):
-    input_type = 'url'
-
-
-###########################################################################
-# Class: FundingProgramSearchForm
-###########################################################################
+###		OrganizationSearchForm
+####################################################################################################
 
 class OrganizationSearchForm(forms.Form):
     text = forms.CharField(
@@ -30,16 +15,3 @@ class OrganizationSearchForm(forms.Form):
             'placeholder': 'Organization name',
         })
     )
-
-
-###########################################################################
-# Form: OrganizationForm
-###########################################################################
-
-class OrganizationForm(forms.ModelForm):
-    class Meta:
-        model = Organization
-        widgets = {
-            'homepage': URLInput(attrs={'placeholder': 'http://'}),
-        }
-        exclude = ('slug',)

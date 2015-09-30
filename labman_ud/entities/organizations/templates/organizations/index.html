@@ -24,12 +24,12 @@
     <div class="row">
         <div class="col-md-8">
             {% if clean_index %}
-                <h2>{{ organizations_length }} organization{{ organizations|pluralize }}</h2>
+                <h2>{{ organizations|length }} organization{{ organizations|pluralize }}</h2>
             {% else %}
                 {% if organization_type %}
-                    <h2>{{ organizations_length }} {{ organization_type|lower }}{{ organizations|pluralize }}</em>
+                    <h2>{{ organizations|length }} {{ organization_type|lower }}{{ organizations|pluralize }}</em>
                 {% elif query_string %}
-                    <h2>{{ organizations_length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
+                    <h2>{{ organizations|length }} organization{{ organizations|pluralize }} found for <em>'{{ query_string }}'</em>
                 {% endif %}
                 &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'organization_index' %}">Clean filters</a></small></h2>
             {% endif %}

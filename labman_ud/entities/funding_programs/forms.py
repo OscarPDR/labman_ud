@@ -4,20 +4,16 @@ from django import forms
 
 from .models import FundingProgram
 
-# Create the form class.
 
-
-###########################################################################
-# Class: FundingProgramSearchForm
-###########################################################################
+###		FundingProgramSearchForm
+####################################################################################################
 
 class FundingProgramSearchForm(forms.Form):
     text = forms.CharField(max_length=50)
 
 
-###########################################################################
-# Form: FundingProgramForm
-###########################################################################
+###		FundingProgramForm
+####################################################################################################
 
 class FundingProgramForm(forms.ModelForm):
     class Meta:

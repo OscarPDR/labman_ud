@@ -7,67 +7,42 @@ from .linked_data import *
 from .models import *
 
 
-###########################################################################
-# Class: PersonSeeAlsoInline
-###########################################################################
+###		PersonSeeAlsoInline
+####################################################################################################
 
 class PersonSeeAlsoInline(admin.TabularInline):
     model = PersonSeeAlso
-    extra = 1
+    extra = 0
 
 
-###########################################################################
-# Class: PersonSeeAlsoAdmin
-###########################################################################
-
-class PersonSeeAlsoAdmin(admin.ModelAdmin):
-    model = PersonSeeAlso
-
-    def delete_model(modeladmin, request, queryset):
-        for obj in queryset:
-            if getattr(settings, 'ENABLE_RDF_PUBLISHING', False):
-                delete_person_see_also_rdf(obj)
-            obj.delete()
-
-    list_display = ['person', 'see_also']
-    search_fields = ['person__full_name']
-    actions = [
-        delete_model,
-    ]
-
-
-###########################################################################
-# Class: AccountProfileInline
-###########################################################################
+###		AccountProfileInline
+####################################################################################################
 
 class AccountProfileInline(admin.TabularInline):
     model = AccountProfile
     extra = 1
 
 
-###########################################################################
-# Class: NicknameInline
-###########################################################################
+###		NicknameInline
+####################################################################################################
 
 class NicknameInline(admin.TabularInline):
     model = Nickname
-    extra = 1
+    extra = 0
 
     exclude = ['slug']
 
 
-###########################################################################
-# Class: JobInline
-###########################################################################
+###		JobInline
+####################################################################################################
 
 class JobInline(admin.StackedInline):
     model = Job
     extra = 1
 
 
-###########################################################################
-# Class: PersonAdmin
-###########################################################################
+###		PersonAdmin
+####################################################################################################
 
 class PersonAdmin(admin.ModelAdmin):
     model = Person
@@ -97,9 +72,8 @@ class PersonAdmin(admin.ModelAdmin):
     ]
 
 
-###########################################################################
-# Class: AccountProfileAdmin
-###########################################################################
+###		AccountProfileAdmin
+####################################################################################################
 
 class AccountProfileAdmin(admin.ModelAdmin):
     model = AccountProfile
@@ -115,9 +89,8 @@ class AccountProfileAdmin(admin.ModelAdmin):
     ]
 
 
-###########################################################################
-# Class: NicknameAdmin
-###########################################################################
+###		NicknameAdmin
+####################################################################################################
 
 class NicknameAdmin(admin.ModelAdmin):
     model = Nickname
@@ -142,7 +115,6 @@ class NicknameAdmin(admin.ModelAdmin):
 ####################################################################################################
 ####################################################################################################
 
-admin.site.register(PersonSeeAlso, PersonSeeAlsoAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(AccountProfile, AccountProfileAdmin)
 admin.site.register(Nickname, NicknameAdmin)
