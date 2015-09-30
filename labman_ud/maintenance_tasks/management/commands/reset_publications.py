@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 
 from maintenance_tasks.publications.reset_publications import reset_publications
 
 
-class Command(NoArgsCommand):
-    can_import_settings = True
+class Command(BaseCommand):
 
-    help = 'Removes every publication in labman and restarts it with data from Zotero.'
+    help = u"Removes every publication in labman and resets it with data from Zotero"
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         reset_publications()

@@ -1,22 +1,22 @@
 # -*- encoding: utf-8 -*-
 
-import os
-
 from django.db import models
 from django.template.defaultfilters import slugify
 
 from .linked_data import *
+
+import os
 
 
 def funding_program_logo_path(self, filename):
     return "%s/%s_%s%s" % ("funding_programs", self.funding_program.slug, self.slug, os.path.splitext(filename)[-1])
 
 
-###########################################################################
-# Model: FundingProgram
-###########################################################################
+###		FundingProgram
+####################################################################################################
 
 class FundingProgram(models.Model):
+
     organization = models.ForeignKey('organizations.Organization')
 
     full_name = models.CharField(
@@ -44,9 +44,8 @@ class FundingProgram(models.Model):
 
     class Meta:
         ordering = ['slug']
-
-    def __unicode__(self):
-        return u'%s, %s' % (self.full_name, self.organization.full_name)
+        verbose_name = u'Funding program'
+        verbose_name_plural = u'Funding programs'
 
     def save(self, *args, **kwargs):
         if not self.short_name:
@@ -57,25 +56,23 @@ class FundingProgram(models.Model):
         super(FundingProgram, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: FundingProgramSeeAlso
-###########################################################################
+###		FundingProgramSeeAlso
+####################################################################################################
 
 class FundingProgramSeeAlso(models.Model):
+
     funding_program = models.ForeignKey('FundingProgram')
+
     see_also = models.URLField(
         max_length=512,
     )
 
-    def __unicode__(self):
-        return u'%s related resource: %s' % (self.funding_program.full_name, self.see_also)
 
-
-###########################################################################
-# Model: FundingProgramLogo
-###########################################################################
+###		FundingProgramLogo
+####################################################################################################
 
 class FundingProgramLogo(models.Model):
+
     funding_program = models.ForeignKey('FundingProgram')
 
     name = models.CharField(
@@ -95,9 +92,6 @@ class FundingProgramLogo(models.Model):
         blank=True,
         null=True,
     )
-
-    def __unicode__(self):
-        return u'Logo for funding program: %s' % (self.funding_program.short_name)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

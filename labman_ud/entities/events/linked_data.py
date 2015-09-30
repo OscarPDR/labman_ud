@@ -9,9 +9,8 @@ from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
 
-###########################################################################
-# Model: Event
-###########################################################################
+###		Event
+####################################################################################################
 
 def save_event_as_rdf(event):
     graph = create_namespaced_graph()
@@ -94,9 +93,8 @@ def delete_event_rdf(event):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: EventSeeAlso
-###########################################################################
+###		EventSeeAlso
+####################################################################################################
 
 def save_event_see_also_as_rdf(event_see_also):
     graph = create_namespaced_graph()
@@ -114,9 +112,8 @@ def delete_event_see_also_rdf(event_see_also):
     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
 
 
-###########################################################################
-# Model: PersonRelatedToEvent
-###########################################################################
+###		PersonRelatedToEvent
+####################################################################################################
 
 def save_person_related_to_event_as_rdf(person_related_to_event):
     graph = create_namespaced_graph()

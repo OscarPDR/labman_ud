@@ -17,9 +17,8 @@ def file_path(self, filename):
     return "%s/%s%s" % ("files", self.slug, os.path.splitext(filename)[-1])
 
 
-###########################################################################
-# Model: City
-###########################################################################
+###		City
+####################################################################################################
 
 class City(models.Model):
     full_name = models.CharField(
@@ -54,6 +53,8 @@ class City(models.Model):
 
     class Meta:
         ordering = ['slug']
+        verbose_name = u'City'
+        verbose_name_plural = u'Cities'
 
     def __unicode__(self):
         city_name = self.full_name
@@ -72,9 +73,8 @@ class City(models.Model):
         super(City, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: CitySeeAlso
-###########################################################################
+###		CitySeeAlso
+####################################################################################################
 
 class CitySeeAlso(models.Model):
     city = models.ForeignKey('City')
@@ -86,9 +86,8 @@ class CitySeeAlso(models.Model):
         return u'%s related resource: %s' % (self.city.full_name, self.see_also)
 
 
-###########################################################################
-# Model: Country
-###########################################################################
+###		Country
+####################################################################################################
 
 class Country(models.Model):
     full_name = models.CharField(
@@ -128,9 +127,8 @@ class Country(models.Model):
             save_country_as_rdf(self)
 
 
-###########################################################################
-# Model: CountrySeeAlso
-###########################################################################
+###		CountrySeeAlso
+####################################################################################################
 
 class CountrySeeAlso(models.Model):
     country = models.ForeignKey('Country')
@@ -142,9 +140,8 @@ class CountrySeeAlso(models.Model):
         return u'%s related resource: %s' % (self.country.full_name, self.see_also)
 
 
-###########################################################################
-# Model: GeographicalScope
-###########################################################################
+###		GeographicalScope
+####################################################################################################
 
 class GeographicalScope(models.Model):
     name = models.CharField(
@@ -181,9 +178,8 @@ class GeographicalScope(models.Model):
             save_geographical_scope_as_rdf(self)
 
 
-###########################################################################
-# Model: GeographicalScopeSeeAlso
-###########################################################################
+###		GeographicalScopeSeeAlso
+####################################################################################################
 
 class GeographicalScopeSeeAlso(models.Model):
     geographical_scope = models.ForeignKey('GeographicalScope')
@@ -195,9 +191,8 @@ class GeographicalScopeSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.geographical_scope.name, self.see_also)
 
 
-###########################################################################
-# Model: Role
-###########################################################################
+###		Role
+####################################################################################################
 
 class Role(models.Model):
     name = models.CharField(
@@ -241,9 +236,8 @@ class Role(models.Model):
         super(Role, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: Tag
-###########################################################################
+###		Tag
+####################################################################################################
 
 class Tag(models.Model):
     name = models.CharField(
@@ -285,9 +279,8 @@ class Tag(models.Model):
             save_tag_as_rdf(self)
 
 
-###########################################################################
-# Model: TagSeeAlso
-###########################################################################
+###		TagSeeAlso
+####################################################################################################
 
 class TagSeeAlso(models.Model):
     tag = models.ForeignKey('Tag')
@@ -299,9 +292,8 @@ class TagSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.tag.name, self.see_also)
 
 
-###########################################################################
-# Model: Language
-###########################################################################
+###		Language
+####################################################################################################
 
 class Language(models.Model):
     name = models.CharField(
@@ -330,9 +322,8 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: LanguageSeeAlso
-###########################################################################
+###		LanguageSeeAlso
+####################################################################################################
 
 class LanguageSeeAlso(models.Model):
     language = models.ForeignKey('Language')
@@ -344,9 +335,8 @@ class LanguageSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.language.name, self.see_also)
 
 
-###########################################################################
-# Model: Network
-###########################################################################
+###		Network
+####################################################################################################
 
 class Network(models.Model):
     name = models.CharField(
@@ -381,9 +371,8 @@ class Network(models.Model):
         super(Network, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: NetworkSeeAlso
-###########################################################################
+###		NetworkSeeAlso
+####################################################################################################
 
 class NetworkSeeAlso(models.Model):
     network = models.ForeignKey('Network')
@@ -395,9 +384,8 @@ class NetworkSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.network.name, self.see_also)
 
 
-###########################################################################
-# Model: PhDProgram
-###########################################################################
+###		PhDProgram
+####################################################################################################
 
 class PhDProgram(models.Model):
     name = models.CharField(
@@ -437,9 +425,8 @@ class PhDProgram(models.Model):
         return u'%s' % (self.name)
 
 
-###########################################################################
-# Model: PhDProgramSeeAlso
-###########################################################################
+###		PhDProgramSeeAlso
+####################################################################################################
 
 class PhDProgramSeeAlso(models.Model):
     phd_program = models.ForeignKey('PhDProgram')
@@ -451,9 +438,8 @@ class PhDProgramSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.phd_program.name, self.see_also)
 
 
-###########################################################################
-# Model: ContributionType
-###########################################################################
+###		ContributionType
+####################################################################################################
 
 class ContributionType(models.Model):
     name = models.CharField(
@@ -482,9 +468,8 @@ class ContributionType(models.Model):
         super(ContributionType, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: Contribution
-###########################################################################
+###		Contribution
+####################################################################################################
 
 class Contribution(models.Model):
     title = models.CharField(
@@ -518,9 +503,8 @@ class Contribution(models.Model):
         super(Contribution, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: ContributionSeeAlso
-###########################################################################
+###		ContributionSeeAlso
+####################################################################################################
 
 class ContributionSeeAlso(models.Model):
     contribution = models.ForeignKey('Contribution')
@@ -532,9 +516,8 @@ class ContributionSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.contribution.title, self.see_also)
 
 
-###########################################################################
-# Model: PersonRelatedToContribution
-###########################################################################
+###		PersonRelatedToContribution
+####################################################################################################
 
 class PersonRelatedToContribution(models.Model):
     person = models.ForeignKey('persons.Person')
@@ -544,9 +527,8 @@ class PersonRelatedToContribution(models.Model):
         return u'%s related contribution:%s' % (self.person.full_name, self.contribution.title)
 
 
-###########################################################################
-# Model: ProjectRelatedToContribution
-###########################################################################
+###		ProjectRelatedToContribution
+####################################################################################################
 
 class ProjectRelatedToContribution(models.Model):
     project = models.ForeignKey('projects.Project')
@@ -556,9 +538,8 @@ class ProjectRelatedToContribution(models.Model):
         return u'%s related contribution:%s' % (self.project.full_name, self.contribution.title)
 
 
-###########################################################################
-# Model: PublicationRelatedToContribution
-###########################################################################
+###		PublicationRelatedToContribution
+####################################################################################################
 
 class PublicationRelatedToContribution(models.Model):
     publication = models.ForeignKey('publications.Publication')
@@ -568,9 +549,8 @@ class PublicationRelatedToContribution(models.Model):
         return u'%s related contribution:%s' % (self.publication.title, self.contribution.title)
 
 
-###########################################################################
-# Model: TagRelatedToContribution
-###########################################################################
+###		TagRelatedToContribution
+####################################################################################################
 
 class TagRelatedToContribution(models.Model):
     tag = models.ForeignKey('Tag')
@@ -580,9 +560,8 @@ class TagRelatedToContribution(models.Model):
         return u'%s related contribution:%s' % (self.tag.name, self.contribution.title)
 
 
-###########################################################################
-# Model: FileItemRelatedToContribution
-###########################################################################
+###		FileItemRelatedToContribution
+####################################################################################################
 
 class FileItemRelatedToContribution(models.Model):
     file_item = models.ForeignKey('FileItem')
@@ -592,9 +571,8 @@ class FileItemRelatedToContribution(models.Model):
         return u'%s related contribution:%s' % (self.file_item.name, self.contribution.title)
 
 
-###########################################################################
-# Model: FileItem
-###########################################################################
+###		FileItem
+####################################################################################################
 
 class FileItem(models.Model):
     name = models.CharField(
@@ -627,9 +605,8 @@ class FileItem(models.Model):
         super(FileItem, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: License
-###########################################################################
+###		License
+####################################################################################################
 
 class License(models.Model):
     full_name = models.CharField(
@@ -662,9 +639,8 @@ class License(models.Model):
         super(License, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: LicenseSeeAlso
-###########################################################################
+###		LicenseSeeAlso
+####################################################################################################
 
 class LicenseSeeAlso(models.Model):
     license = models.ForeignKey('License')
@@ -676,9 +652,8 @@ class LicenseSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.license.full_name, self.see_also)
 
 
-###########################################################################
-# Model: TalkOrCourse
-###########################################################################
+###		TalkOrCourse
+####################################################################################################
 
 class TalkOrCourse(models.Model):
     title = models.CharField(
@@ -718,9 +693,8 @@ class TalkOrCourse(models.Model):
         super(TalkOrCourse, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: TalkOrCourseSeeAlso
-###########################################################################
+###		TalkOrCourseSeeAlso
+####################################################################################################
 
 class TalkOrCourseSeeAlso(models.Model):
     talk_or_course = models.ForeignKey('TalkOrCourse')
@@ -732,9 +706,8 @@ class TalkOrCourseSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.talk_or_course.title, self.see_also)
 
 
-###########################################################################
-# Model: PersonRelatedToTalkOrCourse
-###########################################################################
+###		PersonRelatedToTalkOrCourse
+####################################################################################################
 
 class PersonRelatedToTalkOrCourse(models.Model):
     person = models.ForeignKey('persons.Person')
@@ -744,9 +717,8 @@ class PersonRelatedToTalkOrCourse(models.Model):
         return u'%s related talk or course:%s' % (self.person.full_name, self.talk_or_course.title)
 
 
-###########################################################################
-# Model: ProjectRelatedToTalkOrCourse
-###########################################################################
+###		ProjectRelatedToTalkOrCourse
+####################################################################################################
 
 class ProjectRelatedToTalkOrCourse(models.Model):
     project = models.ForeignKey('projects.Project')
@@ -756,9 +728,8 @@ class ProjectRelatedToTalkOrCourse(models.Model):
         return u'%s related talk or course:%s' % (self.project.full_name, self.talk_or_course.title)
 
 
-###########################################################################
-# Model: TagRelatedToTalkOrCourse
-###########################################################################
+###		TagRelatedToTalkOrCourse
+####################################################################################################
 
 class TagRelatedToTalkOrCourse(models.Model):
     tag = models.ForeignKey('Tag')
@@ -768,9 +739,8 @@ class TagRelatedToTalkOrCourse(models.Model):
         return u'%s related talk or course:%s' % (self.tag.name, self.talk_or_course.title)
 
 
-###########################################################################
-# Model: FileItemRelatedToTalkOrCourse
-###########################################################################
+###		FileItemRelatedToTalkOrCourse
+####################################################################################################
 
 class FileItemRelatedToTalkOrCourse(models.Model):
     file_item = models.ForeignKey('FileItem')
@@ -780,9 +750,8 @@ class FileItemRelatedToTalkOrCourse(models.Model):
         return u'%s related talk or course:%s' % (self.file_item.name, self.talk_or_course.title)
 
 
-###########################################################################
-# Model: Award
-###########################################################################
+###		Award
+####################################################################################################
 
 class Award(models.Model):
     full_name = models.CharField(
@@ -832,9 +801,8 @@ class Award(models.Model):
         super(Award, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: AwardSeeAlso
-###########################################################################
+###		AwardSeeAlso
+####################################################################################################
 
 class AwardSeeAlso(models.Model):
     award = models.ForeignKey('Award')
@@ -846,9 +814,8 @@ class AwardSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.award.full_name, self.see_also)
 
 
-###########################################################################
-# Model: PersonRelatedToAward
-###########################################################################
+###		PersonRelatedToAward
+####################################################################################################
 
 class PersonRelatedToAward(models.Model):
     person = models.ForeignKey('persons.Person')
@@ -858,9 +825,8 @@ class PersonRelatedToAward(models.Model):
         return u'%s related talk or course:%s' % (self.person.full_name, self.award.full_name)
 
 
-###########################################################################
-# Model: ProjectRelatedToAward
-###########################################################################
+###		ProjectRelatedToAward
+####################################################################################################
 
 class ProjectRelatedToAward(models.Model):
     project = models.ForeignKey('projects.Project')
@@ -870,9 +836,8 @@ class ProjectRelatedToAward(models.Model):
         return u'%s related talk or course:%s' % (self.project.full_name, self.award.full_name)
 
 
-###########################################################################
-# Model: PublicationRelatedToAward
-###########################################################################
+###		PublicationRelatedToAward
+####################################################################################################
 
 class PublicationRelatedToAward(models.Model):
     publication = models.ForeignKey('publications.Publication')

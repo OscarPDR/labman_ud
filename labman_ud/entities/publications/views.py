@@ -21,10 +21,8 @@ from labman_ud.util import *
 
 from collections import OrderedDict, Counter
 
-
-###########################################################################
-# View: publication_index
-###########################################################################
+###		publication_index
+####################################################################################################
 
 def _validate_term(token, name, numeric=False):
     if not token.startswith(name):
@@ -211,10 +209,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     return render(request, 'publications/index.html', return_dict)
 
-
-###########################################################################
-# View: publication_info
-###########################################################################
+###		publication_info
+####################################################################################################
 
 def publication_info(request, publication_slug):
     publication = get_object_or_404(Publication, slug=publication_slug)
@@ -299,6 +295,9 @@ def __build_publication_return_dict(publication):
 
     rankings = set()
 
+    print publication.id
+    print parent_publication.id
+
     try:
         for publication_rank in PublicationRank.objects.filter(publication=publication):
             rankings.add(publication_rank.ranking)
@@ -327,10 +326,8 @@ def __build_publication_return_dict(publication):
         'tag_list': tag_list,
     }
 
-
-###########################################################################
-# View: publication_tag_cloud
-###########################################################################
+###		publication_tag_cloud
+####################################################################################################
 
 def publication_tag_cloud(request):
     tags = PublicationTag.objects.all().values_list('tag__name', flat=True)
@@ -352,9 +349,9 @@ def publication_tag_cloud(request):
     return render(request, 'publications/tag_cloud.html', return_dict)
 
 
-###########################################################################
+####################################################################################################
 # Feed: publications feeds
-###########################################################################
+####################################################################################################
 
 class LatestPublicationsFeed(Feed):
     def __init__(self, *args, **kwargs):
@@ -392,10 +389,8 @@ class LatestPublicationsFeed(Feed):
         url = reverse('publication_info', args=[item.slug or 'no-slug-found'])
         return self.__request.request.build_absolute_uri(url)
 
-
-###########################################################################
-# View: phd_dissertations_index
-###########################################################################
+###		phd_dissertations_index
+####################################################################################################
 
 def phd_dissertations_index(request):
 

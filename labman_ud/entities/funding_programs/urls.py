@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-urlpatterns = patterns('',
-    url(r'^$', 'entities.funding_programs.views.funding_program_index', name = 'funding_program_index'),
-    url(r'^info/(\S+)$', 'entities.funding_programs.views.funding_program_info', name = 'funding_program_info'),
-)
+from django.conf.urls import url
 
-urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns = [
+    url(r'^$', 'entities.funding_programs.views.funding_program_index', name='funding_program_index'),
+    url(r'^info/(?P<funding_program_slug>\S+)/$', 'entities.funding_programs.views.funding_program_info', name='funding_program_info'),
+]

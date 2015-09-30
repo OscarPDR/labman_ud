@@ -51,9 +51,8 @@ PROJECT_TYPES = (
 )
 
 
-###########################################################################
-# Model: Project
-###########################################################################
+###		Project
+####################################################################################################
 
 class Project(models.Model):
     project_leader = models.ForeignKey('organizations.Organization')
@@ -169,9 +168,8 @@ class Project(models.Model):
         super(Project, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: ProjectSeeAlso
-###########################################################################
+###		ProjectSeeAlso
+####################################################################################################
 
 class ProjectSeeAlso(models.Model):
     project = models.ForeignKey('Project')
@@ -201,9 +199,8 @@ class ProjectSeeAlso(models.Model):
         super(ProjectSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: Funding
-###########################################################################
+###		Funding
+####################################################################################################
 
 class Funding(models.Model):
     project = models.ForeignKey('Project')
@@ -255,9 +252,8 @@ class Funding(models.Model):
         super(Funding, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: FundingSeeAlso
-###########################################################################
+###		FundingSeeAlso
+####################################################################################################
 
 class FundingSeeAlso(models.Model):
     funding = models.ForeignKey('Funding')
@@ -288,9 +284,8 @@ class FundingSeeAlso(models.Model):
         super(FundingSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: FundingAmount
-###########################################################################
+###		FundingAmount
+####################################################################################################
 
 class FundingAmount(models.Model):
     funding = models.ForeignKey('Funding')
@@ -326,9 +321,8 @@ class FundingAmount(models.Model):
         super(FundingAmount, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: AssignedPerson
-###########################################################################
+###		AssignedPerson
+####################################################################################################
 
 class AssignedPerson(models.Model):
     project = models.ForeignKey('Project')
@@ -376,9 +370,8 @@ class AssignedPerson(models.Model):
         super(AssignedPerson, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: AssignedPersonTag
-###########################################################################
+###		AssignedPersonTag
+####################################################################################################
 
 class AssignedPersonTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -388,9 +381,8 @@ class AssignedPersonTag(models.Model):
         return u'%s tagged as: %s' % (self.assigned_person.person, self.tag.name)
 
 
-###########################################################################
-# Model: ConsortiumMember
-###########################################################################
+###		ConsortiumMember
+####################################################################################################
 
 class ConsortiumMember(models.Model):
     project = models.ForeignKey('Project')
@@ -401,9 +393,8 @@ class ConsortiumMember(models.Model):
         return u'%s is taking part in %s' % (self.organization.short_name, self.project.short_name)
 
 
-###########################################################################
-# Model: ProjectTag
-###########################################################################
+###		ProjectTag
+####################################################################################################
 
 class ProjectTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -413,9 +404,8 @@ class ProjectTag(models.Model):
         return u'%s tagged as: %s' % (self.project.full_name, self.tag.name)
 
 
-###########################################################################
-# Model: RelatedPublication
-###########################################################################
+###		RelatedPublication
+####################################################################################################
 
 class RelatedPublication(models.Model):
     project = models.ForeignKey('Project')

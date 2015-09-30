@@ -9,22 +9,23 @@ from entities.persons.models import *
 from entities.projects.models import *
 from entities.publications.models import *
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 ###     republish_all_data_as_rdf()
 #####################################################################################################
 
 def republish_all_data_as_rdf():
 
-    print
-    print '#' * 80
-    print 'Re-publishing all the information as Linked Open Data...'
-    print '#' * 80
-    print
+    logger.info(u'')
+    logger.info(u'Request to re-publish all data as Linked Open Data')
 
-    print 'Cleaning SPARQL graph...'
+    logger.info(u'\tCleaning SPARQL graph')
     empty_graph()
-    print 'Graph is now empty'
-    print
+    logger.info(u'\tGraph empty')
+
+    logger.info(u'')
 
     _publish_module('Event', Event.objects.all())
     _publish_module('Organization', Organization.objects.all())
@@ -48,7 +49,7 @@ def _publish_module(module_name, module_item_set):
 
     failed_items = []
 
-    print "Re-publishing '%s' module" % module_name
+    logger.info(u'Re-publishing all data in <%s> module' % module_name)
 
     for item in module_item_set:
         try:
@@ -56,23 +57,21 @@ def _publish_module(module_name, module_item_set):
 
         except:
             failed_items.append(item)
-            print '\tError while publishing item with ID (%d): %s' % (item.id, item)
+            logger.warn(u'\tError while publishing item with ID (%d): %s' % (item.id, item))
 
-    print 'First loop finished'
+    logger.debug(u'First publishing loop finished')
 
     if len(failed_items) > 0:
         print
 
         for item in failed_items:
-            print u'\tTrying to re-publish item with ID (%d): %s' % (item.id, item)
+            logger.info(u'\tTrying to re-publish item with ID (%d): %s' % (item.id, item))
 
             try:
-                print '\t\tSuccess'
+                logger.debug(u'\t\tSuccess')
                 item.save()
 
             except:
-                print '\t\tFailed again'
+                logger.warn(u'\t\tFailed again')
 
-    print
-    print '-' * 50
-    print
+    logger.info(u'<%s> module re-published' % module_name)

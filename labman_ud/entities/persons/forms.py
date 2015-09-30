@@ -2,12 +2,9 @@
 
 from django import forms
 
-# Create the form class.
 
-
-###########################################################################
-# Class: PersonSearchForm
-###########################################################################
+###		PersonSearchForm()
+####################################################################################################
 
 class PersonSearchForm(forms.Form):
     text = forms.CharField(

@@ -3,19 +3,15 @@
 from django.contrib import admin
 from .models import *
 
-
-###########################################################################
-# Class: EventSeeAlsoInline
-###########################################################################
+###		EventSeeAlsoInline
+####################################################################################################
 
 class EventSeeAlsoInline(admin.TabularInline):
     model = EventSeeAlso
     extra = 1
 
-
-###########################################################################
-# Class: EventSeeAlsoAdmin
-###########################################################################
+###		EventSeeAlsoAdmin
+####################################################################################################
 
 class EventSeeAlsoAdmin(admin.ModelAdmin):
     model = EventSeeAlso
@@ -23,19 +19,15 @@ class EventSeeAlsoAdmin(admin.ModelAdmin):
     list_display = ['event', 'see_also']
     search_fields = ['event__full_name']
 
-
-###########################################################################
-# Class: PersonRelatedToEventInline
-###########################################################################
+###		PersonRelatedToEventInline
+####################################################################################################
 
 class PersonRelatedToEventInline(admin.TabularInline):
     model = PersonRelatedToEvent
     extra = 1
 
-
-###########################################################################
-# Class: EventAdmin
-###########################################################################
+###		EventAdmin
+####################################################################################################
 
 class EventAdmin(admin.ModelAdmin):
     model = Event
@@ -50,10 +42,8 @@ class EventAdmin(admin.ModelAdmin):
         PersonRelatedToEventInline,
     ]
 
-
-###########################################################################
-# Class: PersonRelatedToEventAdmin
-###########################################################################
+###		PersonRelatedToEventAdmin
+####################################################################################################
 
 class PersonRelatedToEventAdmin(admin.ModelAdmin):
     model = PersonRelatedToEvent

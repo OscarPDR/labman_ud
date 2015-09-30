@@ -12,9 +12,6 @@ from .linked_data import *
 from redactor.fields import RedactorField
 
 
-# Create your models here.
-
-
 def person_profile_picture_path(self, filename):
     return "%s/%s%s" % ("persons", self.slug, os.path.splitext(filename)[-1])
 
@@ -28,15 +25,13 @@ GENDERS = (
     ('Female', 'Female'),
 )
 
-
 TITLES = (
     ('Dr.', 'Dr.'),
 )
 
 
-###########################################################################
-###     Person
-###########################################################################
+###     Person()
+####################################################################################################
 
 class Person(models.Model):
     first_name = models.CharField(
@@ -204,9 +199,8 @@ class Person(models.Model):
         super(Person, self).delete(*args, **kwargs)
 
 
-###########################################################################
-###     PersonSeeAlso
-###########################################################################
+###     PersonSeeAlso()
+####################################################################################################
 
 class PersonSeeAlso(models.Model):
     person = models.ForeignKey('Person', related_name='see_also_links')
@@ -237,9 +231,8 @@ class PersonSeeAlso(models.Model):
         super(PersonSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-###     AccountProfile
-###########################################################################
+###     AccountProfile()
+####################################################################################################
 
 class AccountProfile(models.Model):
     person = models.ForeignKey('Person')
@@ -250,8 +243,8 @@ class AccountProfile(models.Model):
         max_length=150,
     )
 
-    def __unicode__(self):
-        return u'%s\'s %s account profile: %s' % (self.person.full_name, self.network.name, self.profile_id)
+    # def __unicode__(self):
+    #     return u'%s\'s %s account profile: %s' % (self.person.full_name, self.network.name, self.profile_id)
 
     def save(self, *args, **kwargs):
         # Publish RDF data
@@ -272,9 +265,8 @@ class AccountProfile(models.Model):
         super(AccountProfile, self).delete(*args, **kwargs)
 
 
-###########################################################################
-###     Nickname
-###########################################################################
+###     Nickname()
+####################################################################################################
 
 class Nickname(models.Model):
     person = models.ForeignKey('Person', related_name='nicknames')
@@ -315,9 +307,8 @@ class Nickname(models.Model):
         super(Nickname, self).delete(*args, **kwargs)
 
 
-###########################################################################
-###     Job
-###########################################################################
+###     Job()
+####################################################################################################
 
 class Job(models.Model):
     person = models.ForeignKey('Person')
@@ -365,18 +356,16 @@ class Job(models.Model):
         super(Job, self).delete(*args, **kwargs)
 
 
-###########################################################################
-###     PhDProgramFollowedByPerson
-###########################################################################
+###     PhDProgramFollowedByPerson()
+####################################################################################################
 
 class PhDProgramFollowedByPerson(models.Model):
     person = models.ForeignKey('Person')
     phd_program = models.ForeignKey('utils.PhDProgram')
 
 
-###########################################################################
-###     ThesisRegisteredByPerson
-###########################################################################
+###     ThesisRegisteredByPerson()
+####################################################################################################
 
 class ThesisRegisteredByPerson(models.Model):
     person = models.ForeignKey('Person')

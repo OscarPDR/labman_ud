@@ -5,10 +5,8 @@ from django import forms
 
 # Create your forms here.
 
-
-###########################################################################
-# Class: PublicationSearchForm
-###########################################################################
+###		PublicationSearchForm
+####################################################################################################
 
 class PublicationSearchForm(forms.Form):
     text = forms.CharField(

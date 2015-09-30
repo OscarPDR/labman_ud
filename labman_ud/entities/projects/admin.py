@@ -4,19 +4,15 @@ from django.contrib import admin
 
 from .models import *
 
-
-###########################################################################
-# Class: ProjectSeeAlsoInline
-###########################################################################
+###		ProjectSeeAlsoInline
+####################################################################################################
 
 class ProjectSeeAlsoInline(admin.TabularInline):
     model = ProjectSeeAlso
     extra = 1
 
-
-###########################################################################
-# Class: ProjectSeeAlsoAdmin
-###########################################################################
+###		ProjectSeeAlsoAdmin
+####################################################################################################
 
 class ProjectSeeAlsoAdmin(admin.ModelAdmin):
     model = ProjectSeeAlso
@@ -24,19 +20,15 @@ class ProjectSeeAlsoAdmin(admin.ModelAdmin):
     list_display = ['project', 'see_also']
     search_fields = ['project__full_name']
 
-
-###########################################################################
-# Class: FundingSeeAlsoInline
-###########################################################################
+###		FundingSeeAlsoInline
+####################################################################################################
 
 class FundingSeeAlsoInline(admin.TabularInline):
     model = FundingSeeAlso
     extra = 1
 
-
-###########################################################################
-# Class: FundingSeeAlsoAdmin
-###########################################################################
+###		FundingSeeAlsoAdmin
+####################################################################################################
 
 class FundingSeeAlsoAdmin(admin.ModelAdmin):
     model = FundingSeeAlso
@@ -44,28 +36,22 @@ class FundingSeeAlsoAdmin(admin.ModelAdmin):
     list_display = ['funding', 'see_also']
     search_fields = ['funding__slug']
 
-
-###########################################################################
-# Class: FundingAmountInline
-###########################################################################
+###		FundingAmountInline
+####################################################################################################
 
 class FundingAmountInline(admin.TabularInline):
     model = FundingAmount
     extra = 1
 
-
-###########################################################################
-# Class: ProjectTagInline
-###########################################################################
+###		ProjectTagInline
+####################################################################################################
 
 class ProjectTagInline(admin.TabularInline):
     model = ProjectTag
     extra = 1
 
-
-###########################################################################
-# Class: FundingInline
-###########################################################################
+###		FundingInline
+####################################################################################################
 
 class FundingInline(admin.TabularInline):
     model = Funding
@@ -77,38 +63,30 @@ class FundingInline(admin.TabularInline):
 
     exclude = ['slug']
 
-
-###########################################################################
-# Class: ConsortiumMemberInline
-###########################################################################
+###		ConsortiumMemberInline
+####################################################################################################
 
 class ConsortiumMemberInline(admin.TabularInline):
     model = ConsortiumMember
     extra = 1
 
-
-###########################################################################
-# Class: AssignedPersonInline
-###########################################################################
+###		AssignedPersonInline
+####################################################################################################
 
 class AssignedPersonInline(admin.TabularInline):
     model = AssignedPerson
     extra = 1
     exclude = ['description']
 
-
-###########################################################################
-# Class: RelatedPublicationInline
-###########################################################################
+###		RelatedPublicationInline
+####################################################################################################
 
 class RelatedPublicationInline(admin.TabularInline):
     model = RelatedPublication
     extra = 1
 
-
-###########################################################################
-# Class: ProjectAdmin
-###########################################################################
+###		ProjectAdmin
+####################################################################################################
 
 class ProjectAdmin(admin.ModelAdmin):
     model = Project
@@ -128,10 +106,8 @@ class ProjectAdmin(admin.ModelAdmin):
         ProjectTagInline,
     ]
 
-
-###########################################################################
-# Class: FundingAdmin
-###########################################################################
+###		FundingAdmin
+####################################################################################################
 
 class FundingAdmin(admin.ModelAdmin):
     model = Funding
@@ -142,10 +118,8 @@ class FundingAdmin(admin.ModelAdmin):
         FundingAmountInline,
     ]
 
-
-###########################################################################
-# Class: FundingAmountAdmin
-###########################################################################
+###		FundingAmountAdmin
+####################################################################################################
 
 class FundingAmountAdmin(admin.ModelAdmin):
     model = FundingAmount
@@ -154,10 +128,8 @@ class FundingAmountAdmin(admin.ModelAdmin):
     list_display = ['funding', 'own_amount', 'year']
     list_filter = ['year']
 
-
-###########################################################################
-# Class: ProjectTagAdmin
-###########################################################################
+###		ProjectTagAdmin
+####################################################################################################
 
 class ProjectTagAdmin(admin.ModelAdmin):
     model = ProjectTag
@@ -166,10 +138,8 @@ class ProjectTagAdmin(admin.ModelAdmin):
     list_display = ['project', 'tag']
     list_filter = ['tag__name']
 
-
-###########################################################################
-# Class: AssignedPersonAdmin
-###########################################################################
+###		AssignedPersonAdmin
+####################################################################################################
 
 class AssignedPersonAdmin(admin.ModelAdmin):
     model = AssignedPerson
@@ -178,10 +148,8 @@ class AssignedPersonAdmin(admin.ModelAdmin):
     list_display = ['person', 'project', 'role']
     list_filter = ['role']
 
-
-###########################################################################
-# Class: ConsortiumMemberAdmin
-###########################################################################
+###		ConsortiumMemberAdmin
+####################################################################################################
 
 class ConsortiumMemberAdmin(admin.ModelAdmin):
     model = ConsortiumMember
@@ -189,10 +157,8 @@ class ConsortiumMemberAdmin(admin.ModelAdmin):
     search_fields = ['project__short_name', 'organization__short_name', 'organization__full_name']
     list_display = ['project', 'organization']
 
-
-###########################################################################
-# Class: RelatedPublicationAdmin
-###########################################################################
+###		RelatedPublicationAdmin
+####################################################################################################
 
 class RelatedPublicationAdmin(admin.ModelAdmin):
     model = RelatedPublication
@@ -201,10 +167,10 @@ class RelatedPublicationAdmin(admin.ModelAdmin):
     list_display = ['project', 'publication']
 
 
-###########################################################################
+####################################################################################################
 ###########################################################################
 # Register classes
-###########################################################################
+####################################################################################################
 ###########################################################################
 
 admin.site.register(ProjectSeeAlso, ProjectSeeAlsoAdmin)

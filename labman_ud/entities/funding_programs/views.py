@@ -12,7 +12,7 @@ from entities.projects.models import *
 
 
 ###     funding_program_index()
-###########################################################################
+####################################################################################################
 
 def funding_program_index(request):
     funding_programs = FundingProgram.objects.all().order_by('short_name')
@@ -35,19 +35,19 @@ def funding_program_index(request):
         form = FundingProgramSearchForm()
 
     return_dict = {
+        'form': form,
         'funding_programs': funding_programs,
         'funding_programs_length': len(funding_programs),
-        'form': form,
     }
 
     return render(request, "funding_programs/index.html", return_dict)
 
 
-###     funding_program_info(slug)
-###########################################################################
+###     funding_program_info(funding_program_slug)
+####################################################################################################
 
-def funding_program_info(request, slug):
-    funding_program = get_object_or_404(FundingProgram, slug=slug)
+def funding_program_info(request, funding_program_slug):
+    funding_program = get_object_or_404(FundingProgram, slug=funding_program_slug)
 
     fundings = Funding.objects.filter(funding_program_id=funding_program.id)
 

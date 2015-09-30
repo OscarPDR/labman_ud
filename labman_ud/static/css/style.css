@@ -1,4 +1,4 @@
-
+.inline-group td.original p { display:none; }
 * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -944,4 +944,29 @@ blockquote footer {
 .blockquote-role {
     font-size: 85%;
     color: #777;
+}
+
+.news-related i {
+    margin: 0 0.5em;
+}
+
+.label-quartile {
+    font-size: 1.25em;
+    margin-top: -6px;
+}
+
+.label-q1 {
+    background-color: #3369e8;
+}
+
+.label-q2 {
+    background-color: #d50f25;
+}
+
+.label-q3 {
+    background-color: #eeb211;
+}
+
+.label-q4 {
+    background-color: #009925;
 }
