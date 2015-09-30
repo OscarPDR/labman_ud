@@ -1,20 +1,38 @@
 
-from .base import *
+from base import *
 
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+ADMINS = (
+    # ('name', 'mail@address.com'),
+)
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.sqlite3',
-        # The following settings are not used with sqlite3:
+        'ENGINE': 'django.db.backends.',
+        'NAME': '',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-    }
+    },
 }
 
-STATIC_URL = '/static/'
+# Email settings
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media'
+EMAIL_HOST = ''
+EMAIL_PORT = 25
+
+# RDF settings
+
+ENABLE_RDF_PUBLISHING = False
+
+SPARQL_ENDPOINT_AUTH = False
+
+SPARQL_ENDPOINT_URL = ''
+GRAPH_BASE_URL = ''
+
+SPARQL_ENDPOINT_REALM = ''
+SPARQL_ENDPOINT_USER = ''
+SPARQL_ENDPOINT_PASSWORD = ''

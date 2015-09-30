@@ -3,32 +3,43 @@ from .base import *
 
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 ADMINS = (
-    ('', ''),
+    # ('name', 'mail@address.com'),
 )
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.',
         'NAME': '',
-        # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-    }
+    },
 }
 
-USE_X_FORWARDED_HOST = True
-FORCE_SCRIPT_NAME = '/labman'
+USE_X_FORWARDED_HOST = False
 
-STATIC_URL = '/labman/static/'
-
-MEDIA_URL = '/labman/media/'
 MEDIA_ROOT = ''
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+# Email settings
+EMAIL_HOST = ''
+EMAIL_PORT = 25
+
+# RDF settings
+
+ENABLE_RDF_PUBLISHING = False
+
+SPARQL_ENDPOINT_AUTH = False
+
+SPARQL_ENDPOINT_URL = ''
+GRAPH_BASE_URL = ''
+
+SPARQL_ENDPOINT_REALM = ''
+SPARQL_ENDPOINT_USER = ''
+SPARQL_ENDPOINT_PASSWORD = ''
