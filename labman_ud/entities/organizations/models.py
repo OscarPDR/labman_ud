@@ -18,18 +18,16 @@ ORGANIZATION_TYPES = (
     ('University', 'University'),
 )
 
-# Create your models here.
-
 
 def organization_logo_path(self, filename):
     return '%s/%s%s' % ('organizations', self.slug, os.path.splitext(filename)[-1])
 
 
-###########################################################################
-# Model: Organization
-###########################################################################
+###		Organization()
+####################################################################################################
 
 class Organization(models.Model):
+
     organization_type = models.CharField(
         max_length=75,
         choices=ORGANIZATION_TYPES,
@@ -74,6 +72,12 @@ class Organization(models.Model):
         null=True,
     )
 
+    consortium_member_in = models.ManyToManyField(
+        'projects.Project',
+        through='projects.ConsortiumMember',
+        related_name='organizations',
+    )
+
     class Meta:
         ordering = ['slug']
 
@@ -110,11 +114,11 @@ class Organization(models.Model):
         super(Organization, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: OrganizationSeeAlso
-###########################################################################
+###		OrganizationSeeAlso()
+####################################################################################################
 
 class OrganizationSeeAlso(models.Model):
+
     organization = models.ForeignKey('Organization', related_name='see_also_links')
 
     see_also = models.URLField(
@@ -143,11 +147,11 @@ class OrganizationSeeAlso(models.Model):
         super(OrganizationSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: Unit
-###########################################################################
+###		Unit()
+####################################################################################################
 
 class Unit(models.Model):
+
     organization = models.ForeignKey('Organization', related_name='unit')
 
     head = models.ForeignKey('persons.Person', null=True, blank=True)
