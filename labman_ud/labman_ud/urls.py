@@ -1,13 +1,11 @@
 
 from django.conf import settings
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.sites.models import Site
 
 from .forms import LoginForm
 
-admin.site.site_header = u'labman'
-admin.site.unregister(Site)
 
 urlpatterns = [
     url(r'^$', 'labman_ud.views.home', name='home'),
@@ -35,9 +33,6 @@ urlpatterns = [
 
     # Third-party app urls
     url(r'^redactor/', include('redactor.urls')),
-
-    # Just for development purposes, serve in another way in production
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'labman_ud.views.view404'
