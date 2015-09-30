@@ -46,6 +46,8 @@ USE_X_FORWARDED_HOST = False
 
 MEDIA_ROOT = ''
 
+STATIC_ROOT = PROJECT_DIR.child('collected_static')
+
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # Email settings
