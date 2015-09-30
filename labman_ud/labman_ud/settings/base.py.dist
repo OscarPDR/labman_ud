@@ -81,7 +81,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             PROJECT_DIR.child('templates'),
-            '/home/oscar/.virtualenvs/labman/lib/python2.7/site-packages/django',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
