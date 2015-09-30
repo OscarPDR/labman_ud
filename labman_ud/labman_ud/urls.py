@@ -32,7 +32,6 @@ urlpatterns = [
     # Custom app urls
     url(r'^charts/', include('charts.urls')),
     url(r'^management/', include('management.urls')),
-    url(r'^populate_database/', 'labman_setup.views.populate_database', name='populate_database'),
 
     # Third-party app urls
     url(r'^redactor/', include('redactor.urls')),
