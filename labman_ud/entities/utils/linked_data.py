@@ -11,9 +11,8 @@ from generators.rdf.resource_uris import *
 # print graph.serialize(format='xml')
 
 
-###########################################################################
-# Model: Country
-###########################################################################
+###		Country
+####################################################################################################
 
 def save_country_as_rdf(country):
     graph = create_namespaced_graph()
@@ -39,9 +38,8 @@ def delete_country_rdf(country):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: GeographicalScope
-###########################################################################
+###		GeographicalScope
+####################################################################################################
 
 def save_geographical_scope_as_rdf(geographical_scope):
     graph = create_namespaced_graph()
@@ -68,9 +66,8 @@ def delete_geographical_scope_rdf(geographical_scope):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Tag
-###########################################################################
+###		Tag
+####################################################################################################
 
 def save_tag_as_rdf(tag):
     graph = create_namespaced_graph()
@@ -97,9 +94,8 @@ def delete_tag_rdf(tag):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Network
-###########################################################################
+###		Network
+####################################################################################################
 
 def save_network_as_rdf(network):
     graph = create_namespaced_graph()

@@ -27,14 +27,12 @@ from entities.utils.models import Role, Network, PersonRelatedToAward, Award, Pr
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
 
-# Status
 MEMBER = 'member'
 FORMER_MEMBER = 'former_member'
 
 
-###########################################################################
-# View: __get_person_data
-###########################################################################
+###		__get_person_data(person)
+####################################################################################################
 
 def __get_person_data(person):
     try:
@@ -53,9 +51,8 @@ def __get_person_data(person):
     }
 
 
-###########################################################################
-# View: __get_head_data
-###########################################################################
+###		__get_head_data(head)
+####################################################################################################
 
 def __get_head_data(head):
     data = __get_person_data(head)
@@ -74,9 +71,8 @@ def __get_head_data(head):
     }
 
 
-###########################################################################
-# View: person_index
-###########################################################################
+###		person_index(query_string)
+####################################################################################################
 
 def person_index(request, query_string=None):
     clean_index = True
@@ -116,9 +112,8 @@ def person_index(request, query_string=None):
     return render(request, "persons/index.html", return_dict)
 
 
-###########################################################################
-# View: determine_person_info
-###########################################################################
+###		determine_person_info(person_slug)
+####################################################################################################
 
 def determine_person_info(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -131,9 +126,8 @@ def determine_person_info(request, person_slug):
         return HttpResponseRedirect(reverse('person_info', kwargs={'person_slug': person_slug}))
 
 
-###########################################################################
-# View: members
-###########################################################################
+###		members(organization_slug)
+####################################################################################################
 
 def members(request, organization_slug=None):
     konami_positions = []
@@ -182,7 +176,6 @@ def members(request, organization_slug=None):
             konami_positions.append(member.konami_code_position)
             konami_profile_pictures.append(member.profile_konami_code_picture)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Members',
         'heads_of_unit': heads_of_unit,
@@ -198,17 +191,15 @@ def members(request, organization_slug=None):
     return render(request, "members/index.html", return_dict)
 
 
-###########################################################################
-# View: members_redirect
-###########################################################################
+###		members_redirect()
+####################################################################################################
 
 def members_redirect(request):
     return HttpResponseRedirect(reverse('members'))
 
 
-###########################################################################
-# View: former_members
-###########################################################################
+###		former_members(organization_slug)
+####################################################################################################
 
 def former_members(request, organization_slug=None):
     konami_positions = []
@@ -270,7 +261,6 @@ def former_members(request, organization_slug=None):
             konami_positions.append(former_member.konami_code_position)
             konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': 'Former members',
         'konami_positions': konami_positions,
@@ -285,9 +275,8 @@ def former_members(request, organization_slug=None):
     return render(request, "members/index.html", return_dict)
 
 
-###########################################################################
-# View: member_info
-###########################################################################
+###		member_info(person_slug)
+####################################################################################################
 
 def member_info(request, person_slug):
     units = Unit.objects.all()
@@ -302,7 +291,6 @@ def member_info(request, person_slug):
 
     member = get_object_or_404(Person, slug=person_slug)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': member.full_name,
         'member': member,
@@ -315,9 +303,8 @@ def member_info(request, person_slug):
     return render(request, "members/info.html", return_dict)
 
 
-###########################################################################
-# View: member_projects
-###########################################################################
+###		member_projects(person_slug, role_slug)
+####################################################################################################
 
 def member_projects(request, person_slug, role_slug=None):
     person_status = __determine_person_status(person_slug)
@@ -358,7 +345,6 @@ def member_projects(request, person_slug, role_slug=None):
     else:
         has_projects = False
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'has_projects': has_projects,
         'member': member,
@@ -373,9 +359,8 @@ def member_projects(request, person_slug, role_slug=None):
     return render(request, "members/projects.html", return_dict)
 
 
-###########################################################################
-# View: member_publications
-###########################################################################
+###		member_publications(person_slug, publication_type_slug)
+####################################################################################################
 
 def member_publications(request, person_slug, publication_type_slug=None):
     person_status = __determine_person_status(person_slug)
@@ -407,7 +392,16 @@ def member_publications(request, person_slug, publication_type_slug=None):
     else:
         publication_ids = member.publications.all().values_list('id', flat=True)
 
-    publication_items = Publication.objects.select_related('conferencepaper','conferencepaper__parent_proceedings','booksection','booksection__parent_book','journalarticle','journalarticle__parent_journal','magazinearticle','magazinearticle__parent_magazine').prefetch_related('publicationauthor_set__author').filter(id__in=publication_ids).order_by('-published', 'title')
+    publication_items = Publication.objects.select_related(
+        'conferencepaper',
+        'conferencepaper__parent_proceedings',
+        'booksection',
+        'booksection__parent_book',
+        'journalarticle',
+        'journalarticle__parent_journal',
+        'magazinearticle',
+        'magazinearticle__parent_magazine',
+    ).prefetch_related('publicationauthor_set__author').filter(id__in=publication_ids).order_by('-published', 'title')
 
     has_publications = True if publication_ids else False
 
@@ -419,8 +413,8 @@ def member_publications(request, person_slug, publication_type_slug=None):
         pdf = publication_item.pdf if publication_item.pdf else None
 
         publication_authors = publication_item.publicationauthor_set.all()
-        sorted_publication_authors = sorted(publication_authors, lambda x, y : cmp(x.position, y.position))
-        author_list = [ pubauthor.author.full_name for pubauthor in sorted_publication_authors ]
+        sorted_publication_authors = sorted(publication_authors, lambda x, y: cmp(x.position, y.position))
+        author_list = [pubauthor.author.full_name for pubauthor in sorted_publication_authors]
         authors = ', '.join(author_list)
 
         parent_title = None
@@ -469,14 +463,13 @@ def member_publications(request, person_slug, publication_type_slug=None):
 
     all_thesis = Thesis.objects.filter(author_id=member.id).all()
 
-    # dictionary to be returned in render(request, )
     return_dict = {
-        'web_title': u'%s - Publications' % member.full_name,
+        'has_publications': has_publications,
+        'inside_category': publication_type_slug is not None,
         'member': member,
         'publications': publications,
-        'has_publications': has_publications,
-        'thesis' : all_thesis,
-        'inside_category' : publication_type_slug is not None,
+        'thesis': all_thesis,
+        'web_title': u'%s - Publications' % member.full_name,
     }
 
     data_dict = __get_job_data(member)
@@ -485,9 +478,8 @@ def member_publications(request, person_slug, publication_type_slug=None):
     return render(request, "members/publications.html", return_dict)
 
 
-###########################################################################
-# View: member_publication_bibtex
-###########################################################################
+###		member_publication_bibtex(person_slug)
+####################################################################################################
 
 def member_publication_bibtex(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
@@ -505,9 +497,8 @@ def member_publication_bibtex(request, person_slug):
     return render(request, "members/bibtex.html", return_dict)
 
 
-###########################################################################
-# View: member_publication_bibtex_download
-###########################################################################
+###		member_publication_bibtex_download(person_slug)
+####################################################################################################
 
 def member_publication_bibtex_download(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
@@ -517,9 +508,8 @@ def member_publication_bibtex_download(request, person_slug):
     return response
 
 
-###########################################################################
-# View: member_news
-###########################################################################
+###		member_news(person_slug)
+####################################################################################################
 
 def member_news(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
@@ -531,7 +521,6 @@ def member_news(request, person_slug):
     else:
         news = None
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - News' % member.full_name,
         'member': member,
@@ -543,9 +532,8 @@ def member_news(request, person_slug):
     return render(request, 'members/news.html', return_dict)
 
 
-###########################################################################
-# View: member_awards
-###########################################################################
+###		member_awards(person_slug)
+####################################################################################################
 
 def member_awards(request, person_slug):
     member = get_object_or_404(Person, slug=person_slug)
@@ -559,7 +547,6 @@ def member_awards(request, person_slug):
             awards[year_month] = []
         awards[year_month].append(award)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'%s - Awards' % member.full_name,
         'member': member,
@@ -571,9 +558,8 @@ def member_awards(request, person_slug):
     return render(request, 'members/awards.html', return_dict)
 
 
-###########################################################################
-# View: __get_award_info
-###########################################################################
+###		__get_award_info(award_slug)
+####################################################################################################
 
 def __get_award_info(award_slug):
     award = get_object_or_404(Award, slug=award_slug)
@@ -589,7 +575,6 @@ def __get_award_info(award_slug):
 
     print publications
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'award': award,
         'recipients': recipients,
@@ -628,9 +613,8 @@ def award_index(request):
     return render(request, 'awards/index.html', return_dict)
 
 
-###########################################################################
-# Feed: member news feeds
-###########################################################################
+###     member news feeds(Feed)
+####################################################################################################
 
 class LatestUserNewsFeed(Feed):
     def __init__(self, *args, **kwargs):
@@ -665,9 +649,8 @@ class LatestUserNewsFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
 
-###########################################################################
-# Feed: member publications feed
-###########################################################################
+###     member publications feed(Feed)
+####################################################################################################
 
 class LatestUserPublicationFeed(Feed):
     def __init__(self, *args, **kwargs):
@@ -702,9 +685,8 @@ class LatestUserPublicationFeed(Feed):
         return self.__request.request.build_absolute_uri(url)
 
 
-###########################################################################
-# View: member_profiles
-###########################################################################
+###		member_profiles(person_slug)
+####################################################################################################
 
 def member_profiles(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -730,7 +712,6 @@ def member_profiles(request, person_slug):
         }
         accounts.append(account_item)
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'member': member,
         'accounts': accounts,
@@ -742,9 +723,8 @@ def member_profiles(request, person_slug):
     return render(request, "members/profiles.html", return_dict)
 
 
-###########################################################################
-# View: member_graphs
-###########################################################################
+###		member_graphs(person_slug)
+####################################################################################################
 
 def member_graphs(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -768,9 +748,8 @@ def member_graphs(request, person_slug):
     return render(request, "members/graphs.html", return_dict)
 
 
-###########################################################################
-# View: person_info
-###########################################################################
+###		person_info(person_slug)
+####################################################################################################
 
 def person_info(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -796,8 +775,7 @@ def person_info(request, person_slug):
     return render(request, "persons/info.html", return_dict)
 
 
-####################################################################################################
-# __determine_person_status
+###     __determine_person_status(person_slug)
 ####################################################################################################
 
 def __determine_person_status(person_slug):
@@ -805,6 +783,7 @@ def __determine_person_status(person_slug):
 
     if person.is_active:
         return MEMBER
+
     else:
         organizations = Organization.objects.filter(id__in=UNIT_ORGANIZATION_IDS)
         all_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
@@ -816,19 +795,18 @@ def __determine_person_status(person_slug):
             return None
 
 
-####################################################################################################
-# __get_global_bibtex
+###     __get_global_bibtex(member)
 ####################################################################################################
 
 def __get_global_bibtex(member):
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values('publication_id')
     publications_bibtex = Publication.objects.filter(id__in=publication_ids).values_list('bibtex', flat=True).order_by('-year')
     global_bibtex = '\n\n'.join(publications_bibtex)
+
     return global_bibtex
 
 
-####################################################################################################
-# __group_by_key
+###     __group_by_key(stmt, key)
 ####################################################################################################
 
 def __group_by_key(stmt, key='id'):
@@ -851,8 +829,7 @@ def __group_by_key(stmt, key='id'):
     return results_by_key
 
 
-####################################################################################################
-# __get_job_data
+###     __get_job_data(member)
 ####################################################################################################
 
 def __get_job_data(member):
@@ -875,13 +852,8 @@ def __get_job_data(member):
     except:
         pass
 
-    project_ids = AssignedPerson.objects.filter(
-            person_id=member.id
-        ).order_by(
-            'role__relevance_order'
-        ).values(
-            'project_id'
-        )
+    project_ids = AssignedPerson.objects.filter(person_id=member.id)
+    project_ids = project_ids.order_by('role__relevance_order').values('project_id')
 
     publication_ids = PublicationAuthor.objects.filter(author=member.id).values_list('publication_id', flat=True)
 
@@ -908,14 +880,8 @@ def __get_job_data(member):
 
     items = ord_dict.items()
 
-    assigned_persons = AssignedPerson.objects.filter(
-            person=member
-        ).order_by(
-            'role__relevance_order',
-        ).values_list(
-            'role__name',
-            flat=True
-        )
+    assigned_persons = AssignedPerson.objects.filter(person=member)
+    assigned_persons = assigned_persons.order_by('role__relevance_order',).values_list('role__name', flat=True)
 
     role_items = OrderedDict()
 
@@ -983,9 +949,8 @@ def __get_job_data(member):
     }
 
 
-###########################################################################
-# View: member_phd_dissertation
-###########################################################################
+###		member_phd_dissertation(person_slug)
+####################################################################################################
 
 def member_phd_dissertation(request, person_slug):
     person_status = __determine_person_status(person_slug)
@@ -1019,7 +984,6 @@ def member_phd_dissertation(request, person_slug):
 
     has_coadvisors = True if len(thesis.co_advisors.all()) > 0 else False
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'abstracts': abstracts,
         'has_coadvisors': has_coadvisors,
@@ -1034,9 +998,9 @@ def member_phd_dissertation(request, person_slug):
 
     return render(request, "members/phd_dissertation.html", return_dict)
 
-###########################################################################
-# View: member_spanish_cvn
-###########################################################################
+
+###		member_spanish_cvn(person_slug)
+####################################################################################################
 
 def member_spanish_cvn(request, person_slug):
 

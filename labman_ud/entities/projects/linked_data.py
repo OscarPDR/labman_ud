@@ -9,9 +9,8 @@ from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
 
-###########################################################################
-# Model: Project
-###########################################################################
+###		Project
+####################################################################################################
 
 def save_project_as_rdf(project):
     graph = create_namespaced_graph()
@@ -113,9 +112,8 @@ def delete_project_rdf(project):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: ProjectSeeAlso
-###########################################################################
+###		ProjectSeeAlso
+####################################################################################################
 
 def save_project_see_also_as_rdf(project_see_also):
     graph = create_namespaced_graph()
@@ -133,9 +131,8 @@ def delete_project_see_also_rdf(project_see_also):
     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
 
 
-###########################################################################
-# Model: Funding
-###########################################################################
+###		Funding
+####################################################################################################
 
 def save_funding_as_rdf(funding):
     graph = create_namespaced_graph()
@@ -181,9 +178,8 @@ def delete_funding_rdf(funding):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: FundingSeeAlso
-###########################################################################
+###		FundingSeeAlso
+####################################################################################################
 
 def save_funding_see_also_as_rdf(funding_see_also):
     graph = create_namespaced_graph()
@@ -201,9 +197,8 @@ def delete_funding_see_also_rdf(funding_see_also):
     delete_resources_with_predicate(resource_uri, RDFS.seeAlso)
 
 
-###########################################################################
-# Model: FundingAmount
-###########################################################################
+###		FundingAmount
+####################################################################################################
 
 def save_funding_amount_as_rdf(funding_amount):
     graph = create_namespaced_graph()
@@ -234,9 +229,8 @@ def delete_funding_amount_rdf(funding_amount):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: AssignedPerson
-###########################################################################
+###		AssignedPerson
+####################################################################################################
 
 def save_assigned_person_as_rdf(assigned_person):
     graph = create_namespaced_graph()

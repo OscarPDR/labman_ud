@@ -4,10 +4,8 @@ from django import forms
 
 # Create the form class.
 
-
-###########################################################################
-# Class: ProjectSearchForm
-###########################################################################
+###		ProjectSearchForm
+####################################################################################################
 
 class ProjectSearchForm(forms.Form):
     text = forms.CharField(

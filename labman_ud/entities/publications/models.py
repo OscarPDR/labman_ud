@@ -63,9 +63,8 @@ def ranking_icon_picture_path(self, filename):
     return "%s/%s%s" % ("rankings", self.slug, os.path.splitext(filename)[-1])
 
 
-###########################################################################
-# Model: Publication
-###########################################################################
+###		Publication
+####################################################################################################
 
 class Publication(models.Model):
     title = models.CharField(
@@ -184,9 +183,8 @@ class Publication(models.Model):
             update_publication_object_triples(old_slug, self.slug)
 
 
-###########################################################################
-# Model: PublicationSeeAlso
-###########################################################################
+###		PublicationSeeAlso
+####################################################################################################
 
 class PublicationSeeAlso(models.Model):
     publication = models.ForeignKey('Publication')
@@ -217,9 +215,8 @@ class PublicationSeeAlso(models.Model):
         super(PublicationSeeAlso, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: CollectionPublication
-###########################################################################
+###		CollectionPublication
+####################################################################################################
 
 class CollectionPublication(Publication):
     publisher = models.CharField(
@@ -247,9 +244,8 @@ class CollectionPublication(Publication):
         abstract = True
 
 
-###########################################################################
-# Model: PartOfCollectionPublication
-###########################################################################
+###		PartOfCollectionPublication
+####################################################################################################
 
 class PartOfCollectionPublication(Publication):
     pages = models.CharField(
@@ -268,9 +264,8 @@ class PartOfCollectionPublication(Publication):
         abstract = True
 
 
-###########################################################################
-# Model: Book
-###########################################################################
+###		Book
+####################################################################################################
 
 class Book(CollectionPublication):
     isbn = models.CharField(
@@ -333,9 +328,8 @@ class Book(CollectionPublication):
         super(Book, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: BookSection
-###########################################################################
+###		BookSection
+####################################################################################################
 
 class BookSection(PartOfCollectionPublication):
     parent_book = models.ForeignKey('Book')
@@ -365,9 +359,8 @@ class BookSection(PartOfCollectionPublication):
         super(BookSection, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: Proceedings
-###########################################################################
+###		Proceedings
+####################################################################################################
 
 class Proceedings(CollectionPublication):
     isbn = models.CharField(
@@ -406,9 +399,8 @@ class Proceedings(CollectionPublication):
         super(Proceedings, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: ConferencePaper
-###########################################################################
+###		ConferencePaper
+####################################################################################################
 
 class ConferencePaper(PartOfCollectionPublication):
     parent_proceedings = models.ForeignKey('Proceedings')
@@ -442,9 +434,8 @@ class ConferencePaper(PartOfCollectionPublication):
         super(ConferencePaper, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: Journal
-###########################################################################
+###		Journal
+####################################################################################################
 
 class Journal(CollectionPublication):
     issn = models.CharField(
@@ -507,9 +498,8 @@ class Journal(CollectionPublication):
         super(Journal, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: JournalArticle
-###########################################################################
+###		JournalArticle
+####################################################################################################
 
 class JournalArticle(PartOfCollectionPublication):
     parent_journal = models.ForeignKey('Journal')
@@ -542,9 +532,8 @@ class JournalArticle(PartOfCollectionPublication):
         super(JournalArticle, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: Magazine
-###########################################################################
+###		Magazine
+####################################################################################################
 
 class Magazine(CollectionPublication):
     issn = models.CharField(
@@ -586,9 +575,8 @@ class Magazine(CollectionPublication):
         super(Magazine, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: MagazineArticle
-###########################################################################
+###		MagazineArticle
+####################################################################################################
 
 class MagazineArticle(PartOfCollectionPublication):
     parent_magazine = models.ForeignKey('Magazine')
@@ -616,9 +604,8 @@ class MagazineArticle(PartOfCollectionPublication):
         super(MagazineArticle, self).delete(*args, **kwargs)
 
 
-###########################################################################
-# Model: PublicationTag
-###########################################################################
+###		PublicationTag
+####################################################################################################
 
 class PublicationTag(models.Model):
     tag = models.ForeignKey('utils.Tag')
@@ -635,9 +622,8 @@ class PublicationTag(models.Model):
         return u'%s tagged as: %s' % (self.publication.title, self.tag.name)
 
 
-###########################################################################
-# Model: PublicationAuthor
-###########################################################################
+###		PublicationAuthor
+####################################################################################################
 
 class PublicationAuthor(models.Model):
     author = models.ForeignKey('persons.Person')
@@ -657,9 +643,8 @@ class PublicationAuthor(models.Model):
         return u'%s has written: %s as author #%d' % (self.author.full_name, self.publication.title, self.position)
 
 
-###########################################################################
-# Model: PublicationEditor
-###########################################################################
+###		PublicationEditor
+####################################################################################################
 
 class PublicationEditor(models.Model):
     editor = models.ForeignKey('persons.Person')
@@ -674,9 +659,8 @@ class PublicationEditor(models.Model):
         return u'%s has edited: %s' % (self.editor.full_name, self.publication.title)
 
 
-###########################################################################
-# Model: Thesis
-###########################################################################
+###		Thesis
+####################################################################################################
 
 class Thesis(models.Model):
     title = models.CharField(
@@ -766,9 +750,8 @@ class Thesis(models.Model):
         super(Thesis, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: ThesisSeeAlso
-###########################################################################
+###		ThesisSeeAlso
+####################################################################################################
 
 class ThesisSeeAlso(models.Model):
     thesis = models.ForeignKey('Thesis')
@@ -781,9 +764,8 @@ class ThesisSeeAlso(models.Model):
         return u'%s related resource: %s' % (self.thesis.title, self.see_also)
 
 
-###########################################################################
-# Model: ThesisAbstract
-###########################################################################
+###		ThesisAbstract
+####################################################################################################
 
 class ThesisAbstract(models.Model):
     thesis = models.ForeignKey('Thesis')
@@ -802,9 +784,8 @@ class ThesisAbstract(models.Model):
         return u'Abstract in %s for: %s' % (self.language.name, self.thesis.title)
 
 
-###########################################################################
-# Model: CoAdvisor
-###########################################################################
+###		CoAdvisor
+####################################################################################################
 
 class CoAdvisor(models.Model):
     thesis = models.ForeignKey('Thesis')
@@ -818,9 +799,8 @@ class CoAdvisor(models.Model):
         return u'%s has co-advised the thesis: %s' % (self.co_advisor.full_name, self.thesis.title)
 
 
-###########################################################################
-# Model: VivaPanel
-###########################################################################
+###		VivaPanel
+####################################################################################################
 
 class VivaPanel(models.Model):
     thesis = models.ForeignKey('Thesis')
@@ -837,9 +817,8 @@ class VivaPanel(models.Model):
         verbose_name_plural = u'VIVA panels'
 
 
-###########################################################################
-# Model: Ranking
-###########################################################################
+###		Ranking
+####################################################################################################
 
 class Ranking(models.Model):
     name = models.CharField(
@@ -871,9 +850,8 @@ class Ranking(models.Model):
         super(Ranking, self).save(*args, **kwargs)
 
 
-###########################################################################
-# Model: PublicationRank
-###########################################################################
+###		PublicationRank
+####################################################################################################
 
 class PublicationRank(models.Model):
     publication = models.ForeignKey('Publication')

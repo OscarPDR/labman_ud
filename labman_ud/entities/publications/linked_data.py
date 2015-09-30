@@ -15,9 +15,8 @@ from entities.utils.models import Language
 # print graph.serialize(format='xml')
 
 
-###########################################################################
-# Model: Publication
-###########################################################################
+###		Publication
+####################################################################################################
 
 def save_publication_as_rdf(publication):
     graph = create_namespaced_graph()
@@ -85,9 +84,8 @@ def update_publication_object_triples(old_slug, new_slug):
     update_resource_uri(old_resource_uri, new_resource_uri)
 
 
-###########################################################################
-# Model: BookSection
-###########################################################################
+###		BookSection
+####################################################################################################
 
 def save_book_section_as_rdf(book_section):
     graph = create_namespaced_graph()
@@ -121,9 +119,8 @@ def delete_book_section_rdf(book_section):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Book
-###########################################################################
+###		Book
+####################################################################################################
 
 def save_book_as_rdf(book):
     graph = create_namespaced_graph()
@@ -179,9 +176,8 @@ def delete_book_rdf(book):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: ConferencePaper
-###########################################################################
+###		ConferencePaper
+####################################################################################################
 
 def save_conference_paper_as_rdf(conference_paper):
     graph = create_namespaced_graph()
@@ -215,9 +211,8 @@ def delete_conference_paper_rdf(conference_paper):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Proceedings
-###########################################################################
+###		Proceedings
+####################################################################################################
 
 def save_proceedings_as_rdf(proceedings):
     graph = create_namespaced_graph()
@@ -257,9 +252,8 @@ def delete_proceedings_rdf(proceedings):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: JournalArticle
-###########################################################################
+###		JournalArticle
+####################################################################################################
 
 def save_journal_article_as_rdf(journal_article):
     graph = create_namespaced_graph()
@@ -293,9 +287,8 @@ def delete_journal_article_rdf(journal_article):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Journal
-###########################################################################
+###		Journal
+####################################################################################################
 
 def save_journal_as_rdf(journal):
     graph = create_namespaced_graph()
@@ -347,9 +340,8 @@ def delete_journal_rdf(journal):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: MagazineArticle
-###########################################################################
+###		MagazineArticle
+####################################################################################################
 
 def save_magazine_article_as_rdf(magazine_article):
     graph = create_namespaced_graph()
@@ -383,9 +375,8 @@ def delete_magazine_article_rdf(magazine_article):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: Magazine
-###########################################################################
+###		Magazine
+####################################################################################################
 
 def save_magazine_as_rdf(magazine):
     graph = create_namespaced_graph()
@@ -425,9 +416,8 @@ def delete_magazine_rdf(magazine):
     delete_resource(resource_uri)
 
 
-###########################################################################
-# Model: PublicationSeeAlso
-###########################################################################
+###		PublicationSeeAlso
+####################################################################################################
 
 def save_publication_see_also_as_rdf(publication_see_also):
     graph = create_namespaced_graph()
