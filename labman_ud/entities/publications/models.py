@@ -683,7 +683,6 @@ class Thesis(models.Model):
     co_advisors = models.ManyToManyField(
         'persons.Person',
         blank=True,
-        null=True,
         through='CoAdvisor',
         related_name='coadvised_thesis',
     )
