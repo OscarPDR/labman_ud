@@ -2,8 +2,12 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.sites.models import Site
 
 from .forms import LoginForm
+
+admin.site.site_header = u'labman'
+admin.site.unregister(Site)
 
 urlpatterns = [
     url(r'^$', 'labman_ud.views.home', name='home'),
