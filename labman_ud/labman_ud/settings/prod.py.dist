@@ -64,3 +64,57 @@ GRAPH_BASE_URL = ''
 SPARQL_ENDPOINT_REALM = ''
 SPARQL_ENDPOINT_USER = ''
 SPARQL_ENDPOINT_PASSWORD = ''
+
+# Logging settings
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': """
+[%(asctime)s] %(levelname)s
+[%(name)s:%(lineno)s]
+    %(message)s
+            """,
+            'datefmt': '%Y/%m/%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'compact': {
+            'format': '[%(asctime)s] [%(levelname)s]\t%(message)s',
+            'datefmt': '%Y/%m/%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'compact',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '~/labman.log',
+            'maxBytes': 1024 * 1024,    # 1 MB
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'maintenance_tasks': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'extractors.zotero': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
