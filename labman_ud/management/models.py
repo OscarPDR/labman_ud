@@ -2,12 +2,8 @@
 from django.db import models
 
 
-# Create your models here.
-
-
-###########################################################################
-# Model: IgnoredSimilarNames
-###########################################################################
+###		IgnoredSimilarNames
+####################################################################################################
 
 class IgnoredSimilarNames(models.Model):
     test_person = models.ForeignKey('persons.Person', related_name='test_person')
