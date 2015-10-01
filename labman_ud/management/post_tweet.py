@@ -23,8 +23,6 @@ def post_tweet(news_instance):
             access_token_secret=tweetpony_config.access_token_secret,
         )
 
-        print news_url
-
         if (tweetpony_config.karmacracy_username and tweetpony_config.karmacracy_api_key):
             tweet_url = _get_short_url(news_url, tweetpony_config)
 

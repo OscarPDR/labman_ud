@@ -24,6 +24,7 @@ from labman_ud.util import *
 
 from collections import OrderedDict, Counter
 
+
 ###		project_index
 ####################################################################################################
 
@@ -108,6 +109,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     return render(request, "projects/index.html", return_dict)
 
+
 ###		project_info
 ####################################################################################################
 
@@ -119,6 +121,7 @@ def project_info(request, project_slug):
     return_dict['web_title'] = project.full_name
 
     return render(request, "projects/info.html", return_dict)
+
 
 ###		project_funding_details
 ####################################################################################################
@@ -161,6 +164,7 @@ def project_funding_details(request, project_slug):
     })
 
     return render(request, "projects/funding_details.html", return_dict)
+
 
 ###		project_assigned_persons
 ####################################################################################################
@@ -224,6 +228,7 @@ def project_assigned_persons(request, project_slug):
 
     return render(request, "projects/assigned_persons.html", return_dict)
 
+
 ###		project_consortium_members
 ####################################################################################################
 
@@ -241,6 +246,7 @@ def project_consortium_members(request, project_slug):
 
     return render(request, "projects/consortium_members.html", return_dict)
 
+
 ###		project_related_publications
 ####################################################################################################
 
@@ -250,8 +256,6 @@ def project_related_publications(request, project_slug):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
-    print related_publications
-
     # dictionary to be returned in render(request, )
     return_dict = __build_project_information(project)
     return_dict.update({
@@ -260,6 +264,7 @@ def project_related_publications(request, project_slug):
     })
 
     return render(request, "projects/related_publications.html", return_dict)
+
 
 ###		project_tag_cloud
 ####################################################################################################

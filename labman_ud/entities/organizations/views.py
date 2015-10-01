@@ -77,9 +77,6 @@ def organization_info(request, slug):
     consortium_ids = ConsortiumMember.objects.filter(organization_id=organization.id).values('project_id')
     projects = Project.objects.filter(id__in=consortium_ids).order_by('-start_year', '-end_year', 'full_name')
 
-    print len(projects)
-    print len(organization.consortium_member_in.related_val)
-
     return_dict = {
         'logo': logo,
         'organization': organization,

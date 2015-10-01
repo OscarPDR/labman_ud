@@ -6,10 +6,6 @@ from rdflib import Literal
 from generators.rdf.rdf_management import *
 from generators.rdf.resource_uris import *
 
-# print graph.serialize(format='turtle')
-# print graph.serialize(format='n3')
-# print graph.serialize(format='xml')
-
 
 ###		Country
 ####################################################################################################

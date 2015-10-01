@@ -62,8 +62,6 @@ def _publish_module(module_name, module_item_set):
     logger.debug(u'First publishing loop finished')
 
     if len(failed_items) > 0:
-        print
-
         for item in failed_items:
             logger.info(u'\tTrying to re-publish item with ID (%d): %s' % (item.id, item))
 

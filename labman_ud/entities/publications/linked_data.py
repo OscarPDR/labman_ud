@@ -10,10 +10,6 @@ from generators.rdf.resource_uris import *
 
 from entities.utils.models import Language
 
-# print graph.serialize(format='turtle')
-# print graph.serialize(format='n3')
-# print graph.serialize(format='xml')
-
 
 ###		Publication
 ####################################################################################################

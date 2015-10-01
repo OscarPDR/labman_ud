@@ -295,9 +295,6 @@ def __build_publication_return_dict(publication):
 
     rankings = set()
 
-    print publication.id
-    print parent_publication.id
-
     try:
         for publication_rank in PublicationRank.objects.filter(publication=publication):
             rankings.add(publication_rank.ranking)

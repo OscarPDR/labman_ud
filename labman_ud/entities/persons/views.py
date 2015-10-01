@@ -573,8 +573,6 @@ def __get_award_info(award_slug):
     publication_relations = PublicationRelatedToAward.objects.filter(award=award).select_related('publication')
     publications = [publication_relation.publication for publication_relation in publication_relations]
 
-    print publications
-
     return_dict = {
         'award': award,
         'recipients': recipients,
