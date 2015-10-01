@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load static sanitize_types rdf_link rand_int %}
+{% load staticfiles sanitize_types rdf_link rand_int %}
 
 
 
@@ -88,7 +88,7 @@
                 <div class="col-md-3">
                     {% if pdf %}
                         <div class="centered">
-                            <img id="document-download" src="{{ STATIC_URL }}img/document_download.png"/>
+                            <img id="document-download" src="{% static 'img/document_download.png' %}"/>
                             <br>
                             <a target="_blank" class="btn btn-default btn-xs" href="{{ MEDIA_URL }}{{ pdf }}">
                                 <i class="fa fa-download"></i>
@@ -100,7 +100,8 @@
                     {% if publication.bibtex %}
                         <div class="centered">
                             <a data-toggle="modal" href="#bibtex-modal" class="btn btn-default bibtex-button">
-                                <img src="{{ STATIC_URL }}img/bibtex.png" width="50" />
+                                <img src="{% static 'img/bibtex.png' %}" width="50" />
+
                             </a>
 
                             <div class="modal fade" id="bibtex-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -108,7 +109,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title"><img src="{{ STATIC_URL }}img/bibtex.png" width="150" /></h4>
+                                            <h4 class="modal-title"><img src="{% static 'img/bibtex.png' %}" width="150" /></h4>
                                         </div>
 
                                         <div class="modal-body">

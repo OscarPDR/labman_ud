@@ -19,7 +19,7 @@
                 <div class="col-md-2">
                     {% if phd_dissertation.thesis.pdf %}
                         <a target="_blank" href="{{ MEDIA_URL }}{{ phd_dissertation.thesis.pdf }}">
-                            <img class="img-responsive" src="{{ STATIC_URL }}img/document_download.png"/>
+                            <img class="img-responsive" src="{% static 'img/document_download.png' %}"/>
                         </a>
                         <br>
                     {% endif %}
