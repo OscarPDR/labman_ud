@@ -16,7 +16,7 @@ class ProjectSearchForm(forms.Form):
             'class': 'form-control',
             'type': 'text',
             'placeholder': 'Project title or researcher name',
-        })
+        }), required=False
     )
 
     start_date = forms.CharField(

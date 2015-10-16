@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
+from django.db.models import Q, Sum
 
 from .forms import ProjectSearchForm
 from .models import *
@@ -71,6 +72,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     if request.method == 'POST':
         form_member_field_count = request.POST.get('member_field_count')
         form = ProjectSearchForm(request.POST, extra=form_member_field_count)
+
         if form.is_valid():
             query_string = form.cleaned_data['text']
             start_date = form.cleaned_data['start_date']
@@ -84,7 +86,63 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             form_funds_range = form.cleaned_data['funds_range']
             form_tags = form.cleaned_data['tags']
 
-            return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
+            for my_tuple in form.fields.items():
+                if my_tuple[0].startswith('participant_name_'):
+                    form_names = form.cleaned_data[my_tuple[0]]
+                    if form_names:
+                        form_participants_name[my_tuple[0][-1:]] = form_names
+                elif my_tuple[0].startswith('participant_role_'):
+                    form_roles = form.cleaned_data[my_tuple[0]]
+                    if form_roles:
+                        form_participants_role[my_tuple[0][-1:]] = list(form_roles.values())
+
+            # tratamiento con los filter, y devolver "projects" filtrado
+            # return a 'index' con los projectos filtrados
+
+            if start_date:
+                month_year = start_date.split('/')
+                if start_range == '<=':
+                    projects = projects.filter(Q(start_year__lt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__lte=month_year[0])))
+                elif start_range == '<':
+                    projects = projects.filter(Q(start_year__lt=month_year[1]) |
+                        (Q(start_year=month_year[1]) & Q(start_month__lt=month_year[0])))
+                elif start_range == '>=':
+                    projects = projects.filter(Q(start_year__gt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__gte=month_year[0])))
+                elif start_range == '>':
+                    projects = projects.filter(Q(start_year__gt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__gt=month_year[0])))
+                elif start_range == '==':
+                    projects = projects.filter(Q(start_year=month_year[1]) & Q(start_month=month_year[0]))
+
+            if end_date:
+                month_year = end_date.split('/')
+                if end_range == '<=':
+                    projects = projects.filter(Q(end_year__lt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__lte=month_year[0])))
+                elif end_range == '<':
+                    projects = projects.filter(Q(end_year__lt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__lt=month_year[0])))
+                elif end_range == '>=':
+                    projects = projects.filter(Q(end_year__gt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__gte=month_year[0])))
+                elif end_range == '>':
+                    projects = projects.filter(Q(end_year__gt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__gt=month_year[0])))
+                elif end_range == '==':
+                    projects = projects.filter(Q(end_year=month_year[1]) & Q(end_month=month_year[0]))
+
+            if form_project_types:
+                projects = projects.filter(project_type__in=form_project_types)
+
+            if form_project_status:
+                projects = projects.filter(status__in=form_project_status)
+
+            if form_tags:
+                projects = projects.filter(projecttag__tag__in=form_tags)
+
+            #return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
     else:
         form = ProjectSearchForm()
