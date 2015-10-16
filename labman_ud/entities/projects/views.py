@@ -55,7 +55,8 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     projects = projects.order_by('-start_year', '-end_year', 'full_name')
 
     if request.method == 'POST':
-        form = ProjectSearchForm(request.POST)
+        form_member_field_count = request.POST.get('member_field_count')
+        form = ProjectSearchForm(request.POST, extra=form_member_field_count)
         if form.is_valid():
             query_string = form.cleaned_data['text']
 
