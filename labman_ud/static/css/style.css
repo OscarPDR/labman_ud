@@ -1,3 +1,9 @@
+@-moz-document url-prefix() { 
+    .btn-group {
+        position: fixed;
+    }
+}
+
 .inline-group td.original p { display:none; }
 * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -21,6 +27,12 @@ h5, h6 {
 
 #form-section {
     margin: 0 1em;
+}
+
+#search-text {
+    float: left;
+    margin-right: 1em;
+    width: calc(100% - 3.6em);
 }
 
 .publication-authors {
