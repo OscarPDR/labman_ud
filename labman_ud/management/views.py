@@ -10,7 +10,7 @@ from entities.persons.models import Person, Nickname
 from .models import IgnoredSimilarNames
 from .forms import *
 
-from maintenance_tasks.people.check_author_redundancy_through_nicks import *
+from maintenance_tasks.people.check_people_redundancy import *
 from extractors.zotero.zotero_extractor import *
 
 import difflib
@@ -98,7 +98,7 @@ def assign_alias(request, person_id, alias_id, threshold_ratio):
 
     nickname.save()
 
-    check_author_redundancy_through_nicks(valid_person)
+    check_people_redundancy(valid_person)
 
     if threshold_ratio == DEFAULT_THRESHOLD_RATIO:
         return HttpResponseRedirect(reverse('check_names_similarity_default'))
