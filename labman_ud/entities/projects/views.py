@@ -31,9 +31,23 @@ from collections import OrderedDict, Counter
 def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None, query_string=None):
     tag = None
     status = None
+    start_date = None
+    start_range = None
+    end_date = None
+    end_range = None
     project_type = None
-
+    form_project_types = None
+    form_project_status = None
+    form_tags = None
+    form_funds_range = None
+    form_from_total_funds = None
+    form_to_total_funds = None
+    form_participants_name = {}
+    form_participants_role = {}
     clean_index = False
+
+    request.session['max_year'] = MAX_YEAR_LIMIT
+    request.session['min_year'] = MIN_YEAR_LIMIT
 
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -59,6 +73,16 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         form = ProjectSearchForm(request.POST, extra=form_member_field_count)
         if form.is_valid():
             query_string = form.cleaned_data['text']
+            start_date = form.cleaned_data['start_date']
+            start_range = form.cleaned_data['start_range']
+            end_date = form.cleaned_data['end_date']
+            end_range = form.cleaned_data['end_range']
+            form_project_types = form.cleaned_data['project_types']
+            form_project_status = form.cleaned_data['status']
+            form_from_total_funds = form.cleaned_data['from_total_funds']
+            form_to_total_funds = form.cleaned_data['to_total_funds']
+            form_funds_range = form.cleaned_data['funds_range']
+            form_tags = form.cleaned_data['tags']
 
             return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
@@ -93,6 +117,15 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     items = ord_dict.items()
 
+    status_info = Project.objects.all().values_list('status', flat=True)
+    status_items = OrderedDict(sorted(Counter(status_info).items(), key=lambda t: t[1])).items()
+
+    tags_id_info = Project.objects.all().values_list('tags', flat=True)
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+
+    roles_id = AssignedPerson.objects.all().distinct().values_list('role', flat=True)
+    roles = Role.objects.filter(id__in=roles_id).order_by('name')
+
     # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
@@ -100,11 +133,26 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'last_entry': last_entry,
         'project_type': project_type,
         'project_type_info': dict(items),
+        'project_status_info' : dict(status_items),
+        'project_tags_info' : tags_info,
         'projects': projects,
         'projects_length': projects_length,
         'query_string': query_string,
         'status': status,
         'tag': tag,
+        'roles' : roles,
+        'form_start_date' : start_date,
+        'form_start_range' : start_range,
+        'form_end_date' : end_date,
+        'form_end_range' : end_range,
+        'form_project_types' : form_project_types,
+        'form_project_status' : form_project_status,
+        'form_tags' : form_tags,
+        'form_funds_range' : form_funds_range,
+        'form_from_total_funds' : form_from_total_funds,
+        'form_to_total_funds' : form_to_total_funds,
+        'form_participants_name' : form_participants_name,
+        'form_participants_role' : form_participants_role,
         'web_title': u'Projects',
     }
 
