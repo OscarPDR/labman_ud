@@ -142,6 +142,35 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             if form_tags:
                 projects = projects.filter(projecttag__tag__in=form_tags)
 
+            if form_from_total_funds:
+                if form_funds_range == '==':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '<':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__lt=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '<=':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__lte=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '>':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gt=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '>=':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gte=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '-':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gte=form_from_total_funds)
+                    if form_to_total_funds:
+                        filtered_funding_ids = filtered_funding_ids.filter(own_amount__sum__lte=form_to_total_funds)
+                    filtered_funding_ids = filtered_funding_ids.values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+
             #return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
     else:
