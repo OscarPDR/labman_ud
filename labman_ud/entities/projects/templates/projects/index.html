@@ -134,7 +134,7 @@
                                     <span class="input-group-addon">€</span>
                                 </div>
                             </div>
-                            <div id="between_section">
+                            <div id="between_section" class="container">
                                 <div class="col-xs-2 col-sm-1" id="between_panel">
                                     <span class="fa fa-minus" id="between_label"></span>
                                 </div>
@@ -274,6 +274,47 @@
     </script>
 
     <script src="{% static 'js/extend-form.js' %}"></script>
+
+    <script>
+        $('#total_funds_select').change(function(e) {
+            value = $('#total_funds_select').val();
+            if (value == '-') {
+                $('#between_section').show();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-5 col-sm-3');
+            } else {
+                $('#between_section').hide();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-12 col-sm-3');
+            }
+        });
+    </script>
+
+     <script>
+        member_hidden_count = $("[name=member_field_count]");
+
+        $('#add-member').click(function() {
+            member_count = parseInt(member_hidden_count.val()) + 1;
+            member_hidden_count.val(member_count);
+
+            member_panel = $('#member-list').children('div:first-child').clone();
+            member_label = member_panel.find('label');
+            member_input = member_panel.find('input');
+            member_select = member_panel.find('select');
+            
+            member_panel.find('div.btn-group').remove();
+            member_select.attr('name', 'participant_role_' + member_count);
+            member_select.children().each(function() {
+                $(this).removeAttr('selected');
+            });
+            member_select.selectpicker();
+            member_label.text('Member ' + member_count + ':');
+            member_input.val('');
+            member_input.attr('name', 'participant_name_' + member_count);
+
+            $('#member-list').append(member_panel);
+        });
+    </script>
 
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>

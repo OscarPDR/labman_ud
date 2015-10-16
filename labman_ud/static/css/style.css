@@ -55,6 +55,10 @@ h5, h6 {
     color: #777;
 }
 
+#between_panel {
+    text-align: center;
+}
+
 .publication-authors p span i {
     margin-right: 0.25em;
 }
