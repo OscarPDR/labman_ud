@@ -35,6 +35,15 @@ h5, h6 {
     width: calc(100% - 3.6em);
 }
 
+#extended-form {
+    padding-top: 1em;
+    display: none;
+}
+
+#extended-form-title {
+    display: none;
+}
+
 .publication-authors {
     display: inline-block;
 }
@@ -332,6 +341,12 @@ i.fa.fa-external-link {
 
 ul.nav.nav-tabs {
     min-height: 500px;
+}
+
+#extended-form-tabs {
+    min-height: 0;
+    margin-top: 1.5em;
+    display: none;
 }
 
 #member-tabs {

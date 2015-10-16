@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags staticfiles %}
+{% load pagination_tags staticfiles get_range %}
 
 
 
@@ -23,6 +23,166 @@
                 <button id="expand-form-btn" type="button" class="btn btn-default">
                     <i class="fa fa-plus"></i>
                 </button>
+            </div>
+
+            <h2 id="extended-form-title">Advanced Search</h2>
+
+            <ul class="nav nav-tabs" id="extended-form-tabs">
+                <li><a id="all-tab">All <i class="fa"></i></a></li>
+                <li class="active"><a data-target="#basic-info-tab" data-toggle="tab">Basic Information <i class="fa"></i></a></li>
+                <li><a data-target="#funding-info-tab" data-toggle="tab">Funding <i class="fa"></i></a></li>
+                <li><a data-target="#participants-tab" data-toggle="tab">Participants <i class="fa"></i></a></li>
+            </ul>
+
+            <div id="extended-form" class="form-horizontal">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic-info-tab">
+                        <div class="form-group">
+                            <label for="start_date" class="control-label col-xs-12 col-sm-2 col-lg-2">Start Date:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select id="id_start_range" name="start_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="start_date">
+                                    <input id="id_start_date" name="start_date" type="text" class="form-control" placeholder="MM/YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">End Date:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select id="id_end_range" name="end_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="end_date">
+                                    <input id="id_end_date" name="end_date" type="text" class="form-control" placeholder="MM/YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if project_type_info %}
+                            <div class="form-group">
+                                <label for="project_types" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Project types:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_project_types" name="project_types" class="selectpicker" multiple data-width="100%">
+                                        {% for project_type in project_type_info %}
+                                            <option>{{ project_type }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if project_status_info %}
+                            <div class="form-group">
+                                <label for="project_types" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Project statuses:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_project_status" name="status" class="selectpicker" multiple data-width="100%">
+                                        {% for project_status in project_status_info %}
+                                            <option>{{ project_status }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if project_tags_info %}
+                            <div id="id_tags_panel" class="form-group">
+                                <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_tags" name="tags" class="selectpicker" multiple data-width="100%">
+                                        {% for project_tag in project_tags_info %}
+                                                <option value="{{ project_tag.id }}">{{ project_tag.name }}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane" id="funding-info-tab">
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Total funds:</label>
+                            <div class="col-xs-12 col-sm-3" id="total_funds_select_panel">
+                                <select name="funds_range" class="selectpicker" data-width="100%" id="total_funds_select">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                    <option value="-">Between</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-12 col-sm-3" id="from_total_funds_panel">
+                                <div class="input-group">
+                                    <input id="id_from_total_funds" name="from_total_funds" type="number" step="0.01" max="99999999.99" class="form-control">
+                                    <span class="input-group-addon">€</span>
+                                </div>
+                            </div>
+                            <div id="between_section">
+                                <div class="col-xs-2 col-sm-1" id="between_panel">
+                                    <span class="fa fa-minus" id="between_label"></span>
+                                </div>
+                                <div class="col-xs-5 col-sm-3">
+                                    <div class="input-group">
+                                        <input id="id_to_total_funds" name="to_total_funds" type="number" step="0.01" max="99999999.99" class="form-control">
+                                        <span class="input-group-addon">€</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="participants-tab">
+                        {% if form.member_field_count.value %}
+                            <div id="member-list">
+                                {% for index in form.member_field_count.value|get_range %}
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Member {{index}}:</label>
+                                        {% if roles %}
+                                            <div class="col-xs-6 col-sm-3">
+                                                <select name="participant_role_{{ index }}" class="selectpicker" multiple data-width="100%">
+                                                    {% for role in roles %}
+                                                        <option value="{{ role.id }}">{{ role.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-xs-6 col-sm-3">
+                                            <input name="participant_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {{ form.member_field_count }}
+                        <div class="form-group">
+                            <div class="centered col-xs-12 col-sm-8">
+                                <button id="add-member" type="button" class="btn btn-default">Add a Member</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="centered col-xs-12 col-sm-8">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                    </div>
+                </div>
             </div>
         <form>
     </div>
@@ -106,6 +266,14 @@
     <script>
         $('.pagination').addClass('pagination-sm');
     </script>
+
+    <script>
+        $(function() {
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+
+    <script src="{% static 'js/extend-form.js' %}"></script>
 
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
