@@ -124,6 +124,44 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             if form_tags:
                 publications = publications.filter(publicationtag__tag__in=form_tags)
 
+            found = True
+
+            if form_authors_name:
+                group_publication = []
+                for name in form_authors_name:
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_publications_set = set()
+                        for _id in person_id:
+                            person_publications = PublicationAuthor.objects.all().filter(author_id=_id).values_list('publication_id', flat=True)
+                            if person_publications:
+                                person_publications_set.update(person_publications)
+                        group_publication.append(person_publications_set)
+                    else:
+                        found = False
+                if group_publication and found:
+                    publications = publications.filter(id__in=list(set.intersection(*group_publication)))
+
+            if form_editors_name:
+                group_publication = []
+                for name in form_editors_name:
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_publications_set = set()
+                        for _id in person_id:
+                            print PublicationEditor.objects.all().values_list('editor__full_name', flat=True)
+                            person_publications = PublicationEditor.objects.all().filter(editor_id=_id).values_list('publication_id', flat=True)
+                            if person_publications:
+                                person_publications_set.update(person_publications)
+                        group_publication.append(person_publications_set)
+                    else:
+                        found = False
+                if group_publication and found:
+                    publications = publications.filter(id__in=list(set.intersection(*group_publication)))
+
+            if not found:
+                publications = []
+
             #return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
 
     else:

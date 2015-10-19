@@ -248,6 +248,44 @@
         $('.pagination').addClass('pagination-sm');
     </script>
 
+    <script>
+        author_hidden_count = $("[name=author_field_count]");
+
+        $('#add-author').click(function() {
+            author_count = parseInt(author_hidden_count.val()) + 1;
+            author_hidden_count.val(author_count);
+
+            author_panel = $('#member-list').children('div:first-child').clone();
+            author_label = author_panel.find('label');
+            author_input = author_panel.find('input');
+            
+            author_label.text('Author ' + author_count + ':');
+            author_input.val('');
+            author_input.attr('name', 'author_name_' + author_count);
+
+            $('#member-list').append(author_panel);
+        });
+    </script>
+
+    <script>
+        editor_hidden_count = $("[name=editor_field_count]");
+
+        $('#add-editor').click(function() {
+            editor_count = parseInt(editor_hidden_count.val()) + 1;
+            editor_hidden_count.val(editor_count);
+
+            editor_panel = $('#editor-list').children('div:first-child').clone();
+            editor_label = editor_panel.find('label');
+            editor_input = editor_panel.find('input');
+            
+            editor_label.text('Editor ' + editor_count + ':');
+            editor_input.val('');
+            editor_input.attr('name', 'editor_name_' + editor_count);
+
+            $('#editor-list').append(editor_panel);
+        });
+    </script>
+
     <script src="{% static 'js/extend-form.js' %}"></script>
 
     {% if query_string %}
