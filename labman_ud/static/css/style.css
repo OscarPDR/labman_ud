@@ -59,6 +59,10 @@ h5, h6 {
     text-align: center;
 }
 
+#between_section {
+    display: none;
+}
+
 .publication-authors p span i {
     margin-right: 0.25em;
 }
