@@ -2,8 +2,10 @@
 
 import threading
 import weakref
+import re
 
 # from django.template.defaultfilters import slugify
+from django.core import serializers
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -162,10 +164,46 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             if not found:
                 publications = []
 
+            session_filter_dict = {
+                'publications': serializers.serialize('json', publications),
+                'form_from_year' : form_from_year,
+                'form_from_range' : form_from_range,
+                'form_to_year' : form_to_year,
+                'form_to_range' : form_to_range,
+                'form_publication_types' : form_publication_types,
+                'form_tags' : serializers.serialize('json', form_tags),
+                'form_author_field_count' : form_author_field_count,
+                'form_editor_field_count' : form_editor_field_count,
+            }
+
+            request.session['filtered'] = session_filter_dict
+
             return HttpResponseRedirect(reverse('filtered_publication_query'))
 
     else:
-        form = PublicationSearchForm()
+        if 'filtered' in request.session.keys():
+            p = re.compile(ur'publications\/filtered(\/\?page=[1-9]+)?')
+
+            if  re.search(p, request.path) == None:
+                del request.session['filtered']
+                form = PublicationSearchForm(extra_author=1, extra_editor=1)
+            else:
+                form = PublicationSearchForm(extra_author=request.session['filtered']['form_author_field_count'],
+                    extra_editor=request.session['filtered']['form_editor_field_count'])
+                publications = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['publications']):
+                    publications.append(deserialized_object.object)
+                form_from_year = request.session['filtered']['form_from_year']
+                form_from_range = request.session['filtered']['form_from_range']
+                form_to_year = request.session['filtered']['form_to_year']
+                form_to_range = request.session['filtered']['form_to_range']
+                form_publication_types = []
+                for utf8type in request.session['filtered']['form_publication_types']:
+                    form_publication_types.append(utf8type.encode('utf8'))
+                form_tags = request.session['filtered']['form_tags']
+                clean_index = False
+        else:        
+            form = PublicationSearchForm(extra_author=1, extra_editor=1)
 
     if query_string:
         # Given a query_string such as: author:"Oscar Pena" my "title word"; split in ['author:"Oscar Peña"','my','"title word"']

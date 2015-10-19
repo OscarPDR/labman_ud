@@ -167,6 +167,8 @@
                     <h2>{{ publications_length }} {{ publication_type|sanitize|lower }}{{ publications|pluralize }}</em>
                 {% elif query_string %}
                     <h2>{{ publications_length }} publication{{ publications|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% else %}
+                    <h2>{{ publications_length }} publication{{ publications|pluralize }} found
                 {% endif %}
                 &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
 
