@@ -44,7 +44,17 @@ def _validate_term(token, name, numeric=False):
 def publication_index(request, tag_slug=None, publication_type=None, query_string=None):
     tag = None
 
+    form_from_year = None
+    form_from_range = None 
+    form_to_year = None 
+    form_to_range = None 
+    form_publication_types = None 
+    form_tags = None 
+
     clean_index = False
+
+    request.session['max_publication_year'] = MAX_YEAR_LIMIT
+    request.session['min_publication_year'] = MIN_YEAR_LIMIT
 
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -198,6 +208,12 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         clean_index = False
 
+    publications_ids = PublicationAuthor.objects.values_list('publication', flat=True)
+    publication_types_info = Publication.objects.filter(id__in=publications_ids).order_by().values('child_type').distinct()
+
+    tags_id_info = Publication.objects.all().values_list('tags', flat=True)
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+
     publication_model_list = [
         'Book',
         'BookSection',
@@ -225,11 +241,19 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'form': form,
         'last_entry': last_entry,
         'publication_type': publication_type,
+        'publication_types_info' : publication_types_info,
         'publications': publications,
         'publications_length': len(publications),
         'query_string': query_string,
         'tag': tag,
+        'publication_tags_info' : tags_info,
         'theses': theses,
+        'form_from_year' : form_from_year,
+        'form_from_range' : form_from_range,
+        'form_to_year' : form_to_year,
+        'form_to_range' : form_to_range,
+        'form_publication_types' : form_publication_types,
+        'form_tags' : form_tags,
         'web_title': u'Publications',
     }
 
