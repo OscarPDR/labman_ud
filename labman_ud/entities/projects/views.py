@@ -2,8 +2,11 @@
 
 import threading
 import weakref
+import json
+import re
 from inflection import titleize
 
+from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -214,10 +217,57 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             if not found:
                 projects = []
 
+            session_filter_dict = {
+                'form_start_date' : start_date,
+                'form_start_range' : start_range,
+                'form_end_date' : end_date,
+                'form_end_range' : end_range,
+                'form_project_types': form_project_types,
+                'form_project_status' : form_project_status,
+                'form_tags' : serializers.serialize('json', form_tags),
+                'projects' : serializers.serialize('json', projects),
+                'form_funds_range' : form_funds_range,
+                'form_from_total_funds' : str(form_from_total_funds),
+                'form_to_total_funds' : str(form_to_total_funds),
+                'form_participants_name' : form_participants_name,
+                'form_participants_role' : json.dumps(form_participants_role),
+                'form_member_field_count' : form_member_field_count,
+            }
+
+            request.session['filtered'] = session_filter_dict
+
             return HttpResponseRedirect(reverse('filtered_project_query'))
 
     else:
-        form = ProjectSearchForm()
+        if 'filtered' in request.session.keys():
+            p = re.compile(ur'projects\/filtered(\/\?page=[1-9]+)?')
+
+            if  re.search(p, request.path) == None:
+                del request.session['filtered']
+                form = ProjectSearchForm(extra=1)
+            else:
+                form = ProjectSearchForm(extra=request.session['filtered']['form_member_field_count']) 
+                start_date = request.session['filtered']['form_start_date']
+                start_range = request.session['filtered']['form_start_range']
+                end_date = request.session['filtered']['form_end_date']
+                end_range = request.session['filtered']['form_end_range']
+                form_project_types = request.session['filtered']['form_project_types']
+                form_project_status = request.session['filtered']['form_project_status']
+                form_tags = request.session['filtered']['form_tags']
+                form_tags = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['form_tags']):
+                    form_tags.append(deserialized_object.object)
+                projects = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['projects']):
+                    projects.append(deserialized_object.object)
+                form_funds_range = request.session['filtered']['form_funds_range']
+                form_from_total_funds = request.session['filtered']['form_from_total_funds']
+                form_to_total_funds = request.session['filtered']['form_to_total_funds']
+                form_participants_name = request.session['filtered']['form_participants_name']
+                form_participants_role = json.loads(request.session['filtered']['form_participants_role'])
+                clean_index = False
+        else:
+            form = ProjectSearchForm(extra=1)
 
     if query_string:
         query = slugify(query_string)
