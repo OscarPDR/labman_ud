@@ -214,7 +214,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
             if not found:
                 projects = []
 
-            #return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
+            return HttpResponseRedirect(reverse('filtered_project_query'))
 
     else:
         form = ProjectSearchForm()
