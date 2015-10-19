@@ -171,6 +171,49 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                     filtered_funding_ids = filtered_funding_ids.values_list('funding_id', flat=True)
                     projects = projects.filter(funding__id__in=filtered_funding_ids)
 
+            found = True
+
+            if form_participants_name:
+                group_projects = []
+                for key, name in form_participants_name.iteritems():
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_projects_set = set()
+                        for _id in person_id:
+                            participant_roles_ids = []
+                            if key in form_participants_role:
+                                for role in form_participants_role[key]:
+                                    participant_roles_ids.append(role['id'])
+                            if participant_roles_ids:
+                                person_projects = AssignedPerson.objects.all().filter(Q(person_id=_id) & Q(role__in=participant_roles_ids)).values_list('project_id', flat=True)
+                                if person_projects:
+                                    person_projects_set.update(person_projects)
+                            else:
+                                person_projects = AssignedPerson.objects.all().filter(person_id=_id).values_list('project_id', flat=True)
+                                if person_projects:
+                                    person_projects_set.update(person_projects)   
+                        group_projects.append(person_projects_set)
+                    else:
+                        found = False
+                if group_projects and found:
+                    projects = projects.filter(id__in=list(set.intersection(*group_projects)))
+
+            query = slugify(query_string)
+            projs = []
+
+            person_ids = Person.objects.filter(slug__contains=query).values('id')
+            project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
+            project_ids = set([x['project_id'] for x in project_ids])
+
+            for project in projects:
+                if (query in slugify(project.full_name)) or (project.id in project_ids):
+                    projs.append(project)
+
+            projects = projs
+
+            if not found:
+                projects = []
+
             #return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
 
     else:
