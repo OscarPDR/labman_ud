@@ -61,10 +61,36 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     publications = publications.order_by('-year', '-title').exclude(authors=None)
 
     if request.method == 'POST':
-        form = PublicationSearchForm(request.POST)
+        form_author_field_count = request.POST.get('author_field_count')
+        form_editor_field_count = request.POST.get('editor_field_count')
+
+        form = PublicationSearchForm(request.POST, extra_author=form_author_field_count,
+            extra_editor=form_editor_field_count)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
+
+            query_string = form.cleaned_data['text']
+            form_from_year = form.cleaned_data['from_year']
+            form_from_range = form.cleaned_data['from_range']
+            form_to_year = form.cleaned_data['to_year']
+            form_to_range = form.cleaned_data['to_range']
+            form_publication_types = form.cleaned_data['publication_types']
+            form_tags = form.cleaned_data['tags']
+            form_authors_name = []
+            form_editors_name = []
+
+
+            for my_tuple in form.fields.items():
+                if my_tuple[0].startswith('editor_name_'):
+                    form_editor_name = form.cleaned_data[my_tuple[0]]
+                    if form_editor_name:
+                        form_editors_name.append(form_editor_name)
+                elif my_tuple[0].startswith('author_name_'):
+                    form_author_name = form.cleaned_data[my_tuple[0]]
+                    if form_author_name:
+                        form_authors_name.append(form_author_name)
+
+            #return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
 
     else:
         form = PublicationSearchForm()
