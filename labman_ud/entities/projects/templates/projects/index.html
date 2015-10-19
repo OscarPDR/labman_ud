@@ -200,6 +200,8 @@
                     <h2>{{ projects_length }} project{{ projects|pluralize }} with status <em>'{{ status }}'</em>
                 {% elif query_string %}
                     <h2>{{ projects_length }} project{{ projects|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% else %}
+                    <h2>{{ projects_length }} project{{ projects|pluralize }} found
                 {% endif %}
                 &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'project_index' %}">Clean filters</a></small></h2>
             {% endif %}
@@ -269,6 +271,31 @@
 
     <script>
         $(function() {
+            $('.date').datetimepicker({
+                viewMode: 'years',
+                format: 'MM/YYYY',
+                minDate: new Date('{{ request.session.min_year }}-01-01'),
+                maxDate: new Date('{{ request.session.max_year }}-12-31')
+            });
+
+            $('#start_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#end_date').data("DateTimePicker").minDate(e.date);
+                } else
+                    $('#end_date').data("DateTimePicker").minDate(new Date('{{ request.session.min_year }}-01-01'));
+            });
+            
+            $('#end_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#start_date').data("DateTimePicker").maxDate(e.date);
+                } else
+                    $('#start_date').data("DateTimePicker").maxDate(new Date('{{ request.session.max_year }}-12-31'));
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
             $('.selectpicker').selectpicker();
         });
     </script>
@@ -315,6 +342,81 @@
             $('#member-list').append(member_panel);
         });
     </script>
+
+    <script>
+        //Loads start date range list of the actual filtered search.
+        {% if form_start_range %}
+            $('#id_start_range').find('[value="{{ form_start_range|safe }}"]').attr('selected', 'true');
+            $('#id_start_range').selectpicker('refresh');
+        {% endif %}
+
+        //Loads start date list of the actual filtered search.
+        {% if form_start_date %}
+            $('#id_start_date').val("{{form_start_date}}");
+        {% endif %}
+
+        //Loads end date range list of the actual filtered search.
+        {% if form_end_range %}
+            $('#id_end_range').find('[value="{{ form_end_range|safe }}"]').attr('selected', 'true');
+            $('#id_end_range').selectpicker('refresh');
+        {% endif %}
+
+        //Loads end date list of the actual filtered search.
+        {% if form_end_date %}
+            $('#id_end_date').val("{{form_end_date}}");
+        {% endif %}
+
+        //Loads type list of the actual filtered search.
+        {% for types in form_project_types %}
+            $('#id_project_types').find('option:contains("{{ types }}")').attr('selected', 'true');
+            $('#id_project_types').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads status list of the actual filtered search.
+        {% for status in form_project_status %}
+            $('#id_project_status').find('option:contains("{{ status }}")').attr('selected', 'true');
+            $('#id_project_status').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads tag list of the actual filtered search.
+        {% for tag in form_tags %}
+            $('#id_tags').find('option:contains("{{ tag }}")').attr('selected', 'true');
+            $('#id_tags').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads funds select of the actual filtered search.
+        {% if form_funds_range %}
+            $('#total_funds_select').find('[value="{{ form_funds_range|safe }}"]').attr('selected', 'true');
+            $('#total_funds_select').selectpicker('refresh');
+            value = $('#total_funds_select').val();
+            if (value == '-') {
+                $('#between_section').show();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-5 col-sm-3');
+            }
+        {% endif %}
+
+        {% if form_from_total_funds %}
+            $('#id_from_total_funds').val("{{ form_from_total_funds }}");
+        {% endif %}
+
+        {% if form_to_total_funds %}
+            $('#id_to_total_funds').val("{{ form_to_total_funds }}");
+        {% endif %}
+
+        //Loads members' of the actual filtered search.
+        {% for key, name in form_participants_name.items %}
+            $('input[name=participant_name_{{ key }}]').val("{{ name }}");
+        {% endfor %}
+
+        {% for key, role in form_participants_role.items %}
+            {% for rol in role %}
+                $('select[name=participant_role_{{ key }}]').find('[value="{{ rol.id }}"]').attr('selected', 'true');
+                $('select[name=participant_role_{{ key }}]').selectpicker('refresh');
+            {% endfor %}
+        {% endfor %}
+    </script>
+
 
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
