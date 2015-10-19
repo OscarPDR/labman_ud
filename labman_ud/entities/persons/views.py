@@ -219,47 +219,38 @@ def former_members(request, organization_slug=None):
 
     organizations = Organization.objects.filter(id__in=organization_ids)
 
-    former_member_ids = Job.objects.filter(organization__in=organizations).values('person_id')
+    former_member_ids = Job.objects.filter(
+        organization__in=organizations,
+        person__is_active=False,
+    ).order_by(
+        '-end_date',
+        'person__full_name',
+    ).values_list('person_id', flat=True)
 
-    former_member_list = Person.objects.filter(id__in=former_member_ids, is_active=False)
-    former_member_list = former_member_list.order_by('first_surname', 'second_surname', 'first_name')
+    stacked_person_ids = []
 
-    former = {}
-    ordered_dict = OrderedDict()
+    for _id in former_member_ids:
+        if _id not in stacked_person_ids:
 
-    for former_member in former_member_list:
-        job = Job.objects.filter(person_id=former_member.id).order_by('-end_date')[0]
+            former_member = Person.objects.get(pk=_id)
+            former_member_data = __get_person_data(former_member)
 
-        if not job.end_date in former.keys():
-            former[job.end_date] = []
+            if not organization_slug or (organization_slug == former_member_data['organization'].slug):
+                stacked_person_ids.append(_id)
 
-        former[job.end_date].append(former_member)
+                former_members.append({
+                    'organization': former_member_data['organization'].short_name,
+                    'organization_slug': former_member_data['organization'].slug,
+                    'full_name': former_member.full_name,
+                    'gender': former_member.gender,
+                    'position': former_member_data['position'],
+                    'profile_picture_url': former_member.profile_picture,
+                    'slug': former_member.slug,
+                    'title': former_member.title,
+                })
 
-    ordered_dict = OrderedDict(sorted(former.items(), key=lambda t: t[0], reverse=True))
-
-    former_member_list = []
-
-    for value in ordered_dict.values():
-        for item in value:
-            former_member_list.append(item)
-
-    for former_member in former_member_list:
-        former_member_data = __get_person_data(former_member)
-
-        if not organization_slug or (organization_slug == former_member_data['organization'].slug):
-            former_members.append({
-                'organization': former_member_data['organization'].short_name,
-                'organization_slug': former_member_data['organization'].slug,
-                'full_name': former_member.full_name,
-                'gender': former_member.gender,
-                'position': former_member_data['position'],
-                'profile_picture_url': former_member.profile_picture,
-                'slug': former_member.slug,
-                'title': former_member.title,
-            })
-
-            konami_positions.append(former_member.konami_code_position)
-            konami_profile_pictures.append(former_member.profile_konami_code_picture)
+                konami_positions.append(former_member.konami_code_position)
+                konami_profile_pictures.append(former_member.profile_konami_code_picture)
 
     return_dict = {
         'web_title': 'Former members',
