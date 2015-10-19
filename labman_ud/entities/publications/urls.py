@@ -8,6 +8,7 @@ from entities.publications.views import LatestPublicationsFeed
 
 urlpatterns = patterns('',
     url(r'^$', 'entities.publications.views.publication_index', name='publication_index'),
+    url(r'^filtered/$', 'entities.publications.views.publication_index', name='filtered_publication_query'),
 
     url(r'^info/(?P<publication_slug>\S+)/related_projects/$', 'entities.publications.views.publication_related_projects', name='publication_related_projects'),
     url(r'^info/(?P<publication_slug>\S+)/related_publications/$', 'entities.publications.views.publication_related_publications', name='publication_related_publications'),

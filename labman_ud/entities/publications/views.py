@@ -162,7 +162,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             if not found:
                 publications = []
 
-            #return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
+            return HttpResponseRedirect(reverse('filtered_publication_query'))
 
     else:
         form = PublicationSearchForm()
