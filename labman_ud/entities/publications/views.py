@@ -100,6 +100,30 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     if form_author_name:
                         form_authors_name.append(form_author_name)
 
+            if form_from_year:
+                if form_from_range == '<':
+                    publications = publications.filter(year__lt=form_from_year)
+                elif form_from_range == '<=':
+                    publications = publications.filter(year__lte=form_from_year)
+                elif form_from_range == '>':
+                    publications = publications.filter(year__gt=form_from_year)
+                elif form_from_range == '>=':
+                    publications = publications.filter(year__gte=form_from_year)
+                elif form_from_range == '==':
+                    publications = publications.filter(year=form_from_year)
+
+            if form_to_year:
+                if form_to_range == '<':
+                    publications = publications.filter(year__lt=form_to_year)
+                elif form_to_range == '<=':
+                    publications = publications.filter(year__lte=form_to_year)
+
+            if form_publication_types:
+                publications = publications.filter(child_type__in=form_publication_types)
+
+            if form_tags:
+                publications = publications.filter(publicationtag__tag__in=form_tags)
+
             #return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
 
     else:
