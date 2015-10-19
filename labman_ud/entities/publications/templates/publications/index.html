@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags sanitize_types staticfiles %}
+{% load pagination_tags sanitize_types staticfiles get_range%}
 
 
 
@@ -23,6 +23,132 @@
                 <button id="expand-form-btn" type="button" class="btn btn-default">
                     <i class="fa fa-plus"></i>
                 </button>
+            </div>
+
+            <h2 id="extended-form-title">Advanced Search</h2>
+
+            <ul class="nav nav-tabs" id="extended-form-tabs">
+                <li><a id="all-tab">All <i class="fa"></i></a></li>
+                <li class="active"><a data-target="#basic-info-tab" data-toggle="tab">Basic Information <i class="fa"></i></a></li>
+                <li><a data-target="#authors-tab" data-toggle="tab">Authors <i class="fa"></i></a></li>
+                 <li><a data-target="#editors-tab" data-toggle="tab">Editors <i class="fa"></i></a></li>
+            </ul>
+
+            <div id="extended-form" class="form-horizontal">
+                
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic-info-tab">
+                        <div class="form-group">
+                            <label for="start_date" id="id_from_year_label" class="control-label col-xs-12 col-sm-2 col-lg-2">Year:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select id="id_from_range" name="from_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="start_date">
+                                    <input name="from_year" type="text" class="form-control" placeholder="YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="publication_to_year">
+                            <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">To year:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select name="to_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="end_date">
+                                    <input name="to_year" type="text" class="form-control" placeholder="YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {%if publication_types_info %}
+                        <div class="form-group">
+                            <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">Publication types:</label>
+                            <div class="col-xs-12 col-sm-6">
+                                <select name="publication_types" class="selectpicker" multiple data-width="100%">
+                                    {% for publication in publication_types_info %}
+                                    <option value="{{ publication.child_type }}">{{ publication.child_type|sanitize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if publication_tags_info %}
+                            <div class="form-group">
+                                <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select name="tags" class="selectpicker" multiple data-width="100%">
+                                        {% for publication_tag in publication_tags_info %}
+                                                <option value="{{ publication_tag.id }}">{{ publication_tag.name }}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane" id="authors-tab">
+                        {% if form.author_field_count.value %}
+                            <div id="member-list">
+                                {% for index in form.author_field_count.value|get_range %}
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Author {{index}}:</label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input name="author_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {{ form.author_field_count }}
+                        <div class="form-group">
+                            <div class="centered col-xs-12 col-sm-8">
+                                <button id="add-author" type="button" class="btn btn-default">Add an Author</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="editors-tab">
+                        {% if form.editor_field_count.value %}
+                            <div id="editor-list">
+                                {% for index in form.editor_field_count.value|get_range %}
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Editor {{index}}:</label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input name="editor_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {{ form.editor_field_count }}
+                        <div class="form-group">
+                            <div class="centered col-xs-12 col-sm-8">
+                                <button id="add-editor" type="button" class="btn btn-default">Add an Editor</button>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="form-group">
+                    <div class="centered col-xs-12 col-sm-8">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                    </div>
+                </div>
+
             </div>
         <form>
     </div>
@@ -121,6 +247,8 @@
     <script>
         $('.pagination').addClass('pagination-sm');
     </script>
+
+    <script src="{% static 'js/extend-form.js' %}"></script>
 
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
