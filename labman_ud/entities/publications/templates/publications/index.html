@@ -364,6 +364,20 @@
                 $('select[name=tags]').selectpicker('refresh');
             }
         {% endif %}
+
+        {% if form_authors_name %}
+            var authors = {{form_authors_name|safe}};
+            for(var i = 0; i < authors.length; i++) {
+                $('input[name=author_name_' + (i+1)).val(authors[i]);
+            }
+        {% endif %}
+
+        {% if form_editors_name %}
+            var editors = {{form_editors_name|safe}};
+            for(var i = 0; i < editors.length; i++) {
+                $('input[name=editor_name_' + (i+1)).val(editors[i]);
+            }
+        {% endif %}
     </script>
 
     <script src="{% static 'js/extend-form.js' %}"></script>

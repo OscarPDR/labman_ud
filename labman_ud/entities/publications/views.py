@@ -51,7 +51,9 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     form_to_year = None 
     form_to_range = None 
     form_publication_types = None 
-    form_tags = None 
+    form_tags = None
+    form_authors_name = []
+    form_editors_name = []
 
     clean_index = False
 
@@ -88,9 +90,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             form_to_range = form.cleaned_data['to_range']
             form_publication_types = form.cleaned_data['publication_types']
             form_tags = form.cleaned_data['tags']
-            form_authors_name = []
-            form_editors_name = []
-
 
             for my_tuple in form.fields.items():
                 if my_tuple[0].startswith('editor_name_'):
@@ -172,6 +171,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 'form_to_range' : form_to_range,
                 'form_publication_types' : form_publication_types,
                 'form_tags' : serializers.serialize('json', form_tags),
+                'form_authors_name' : form_authors_name,
+                'form_editors_name' : form_editors_name,
                 'form_author_field_count' : form_author_field_count,
                 'form_editor_field_count' : form_editor_field_count,
             }
@@ -201,6 +202,12 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 for utf8type in request.session['filtered']['form_publication_types']:
                     form_publication_types.append(utf8type.encode('utf8'))
                 form_tags = request.session['filtered']['form_tags']
+                form_authors_name = []
+                for utf8type in request.session['filtered']['form_authors_name']:
+                    form_authors_name.append(utf8type.encode('utf8'))
+                form_editor_name = []
+                for utf8type in request.session['filtered']['form_editors_name']:
+                    form_editors_name.append(utf8type.encode('utf8'))
                 clean_index = False
         else:        
             form = PublicationSearchForm(extra_author=1, extra_editor=1)
@@ -354,6 +361,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'form_to_range' : form_to_range,
         'form_publication_types' : form_publication_types,
         'form_tags' : form_tags,
+        'form_authors_name' : form_authors_name,
+        'form_editors_name' : form_editors_name,
         'web_title': u'Publications',
     }
 
