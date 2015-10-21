@@ -251,6 +251,44 @@
     </script>
 
     <script>
+        $('#id_from_range').change(function(e) {
+            value = $('#id_from_range').val();
+            if (value == '>=' || value == '>') {
+                $('#publication_to_year').show();
+                $('#id_from_year_label').text('From year:');
+            } else {
+                $('#publication_to_year').hide();
+                $('#id_from_year_label').text('Year:');
+            }
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('.date').datetimepicker({
+                viewMode: 'years',
+                format: 'YYYY',
+                minDate: new Date('{{ request.session.min_publication_year }}-01-01'),
+                maxDate: new Date('{{ request.session.max_publication_year }}-12-31')
+            });
+
+            $('#start_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#end_date').data("DateTimePicker").minDate(e.date);
+                } else
+                    $('#end_date').data("DateTimePicker").minDate(new Date('{{ request.session.min_publication_year }}-01-01'));
+            });
+            
+            $('#end_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#start_date').data("DateTimePicker").maxDate(e.date);
+                } else
+                    $('#start_date').data("DateTimePicker").maxDate(new Date('{{ request.session.max_publication_year }}-12-31'));
+            });
+        });
+    </script>
+
+    <script>
         author_hidden_count = $("[name=author_field_count]");
 
         $('#add-author').click(function() {
@@ -286,6 +324,46 @@
 
             $('#editor-list').append(editor_panel);
         });
+    </script>
+
+    <script>          
+        {% if form_from_range %}
+            $('#id_from_range').find('[value="{{ form_from_range|safe }}"]').attr('selected', 'true');
+            $('#id_from_range').selectpicker('refresh');
+            if("{{ form_from_range|safe }}" == '>' || "{{ form_from_range|safe }}" == '>=') {
+                $('#publication_to_year').show();
+                $('#id_from_year_label').text('From year:');
+            }
+        {% endif %}
+
+        {% if form_from_year %}
+            $('input[name=from_year]').val("{{form_from_year}}");
+        {% endif %}
+
+        {% if form_to_year %}
+            $('input[name=to_year]').val("{{form_to_year}}");
+        {% endif %}
+            
+        {% if form_to_range %}
+            $('select[name=to_range]').find('[value="{{ form_to_range|safe }}"]').attr('selected', 'true');
+            $('select[name=to_range]').selectpicker('refresh');
+        {% endif %}
+            
+        {% if form_publication_types %}
+            var type = {{form_publication_types|safe}};
+            for(var i = 0; i < type.length; i++) {
+                $('select[name=publication_types]').find('[value=' + type[i] + ']').attr('selected', 'true');
+                $('select[name=publication_types]').selectpicker('refresh');
+            }
+        {% endif %}
+
+        {% if form_tags %}
+            var tags = {{form_tags|safe}};
+            for(var i = 0; i < tags.length; i++) {
+                $('select[name=tags]').find('[value=' + tags[i].pk + ']').attr('selected', 'true');
+                $('select[name=tags]').selectpicker('refresh');
+            }
+        {% endif %}
     </script>
 
     <script src="{% static 'js/extend-form.js' %}"></script>
