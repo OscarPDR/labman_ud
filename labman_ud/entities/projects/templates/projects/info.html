@@ -39,12 +39,14 @@
             </a>
         {% endif %}
 
+        {% if not project.private_participant_details %}
         <a id="project_people" href="{% url 'project_assigned_persons' project.slug %}">
             <i class="fa fa-group"></i>
             <span class="hidden-xs hidden-sm">
                 Participants
             </span>
         </a>
+        {% endif %}
 
         {% if not is_internal %}
             <a id="project_consortium" href="{% url 'project_consortium_members' project.slug %}">

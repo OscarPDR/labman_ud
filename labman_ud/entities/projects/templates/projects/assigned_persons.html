@@ -5,56 +5,58 @@
 
 {% block project_content %}
 
-    {% for role_name, people_list in people_by_role.items %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-circle fa-circle-{{ role_name|slugify }}"></i>
-                &emsp;
-                <strong>{{ role_name }}{{ people_list|pluralize }}</strong>
+    {% if not project.private_participant_details %}
+        {% for role_name, people_list in people_by_role.items %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-circle fa-circle-{{ role_name|slugify }}"></i>
+                    &emsp;
+                    <strong>{{ role_name }}{{ people_list|pluralize }}</strong>
 
-                <a href="#panel-{{ role_name|slugify }}" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-{{ role_name|slugify }}">
-                    <span class="badge">
-                        Toggle collapse
-                    </span>
-                </a>
-            </div>
-
-            <div id="panel-{{ role_name|slugify }}" class="pannel-collapse collapse in panel-body row">
-
-                {% for person in people_list %}
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 employee-item">
-                        {% if person.profile_picture_url %}
-                            <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{{ MEDIA_URL }}{{ person.profile_picture_url }}"/>
-                        {% else %}
-                            {% if person.gender == 'Female' %}
-                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/female.png' %}"/>
-                            {% else %}
-                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/male.png' %}"/>
-                            {% endif %}
-                        {% endif %}
-                        <br>
-                        <span class="member-position">
-                            <a href="{% url 'determine_person_info' person.slug %}">
-                                {{ person.full_name }}
-                            </a>
+                    <a href="#panel-{{ role_name|slugify }}" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-{{ role_name|slugify }}">
+                        <span class="badge">
+                            Toggle collapse
                         </span>
-                    </div>
-                {% endfor %}
+                    </a>
+                </div>
+
+                <div id="panel-{{ role_name|slugify }}" class="pannel-collapse collapse in panel-body row">
+
+                    {% for person in people_list %}
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 employee-item">
+                            {% if person.profile_picture_url %}
+                                <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{{ MEDIA_URL }}{{ person.profile_picture_url }}"/>
+                            {% else %}
+                                {% if person.gender == 'Female' %}
+                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/female.png' %}"/>
+                                {% else %}
+                                    <img class="circular circular-mini circular-{{ role_name|slugify }}" src="{% static 'img/male.png' %}"/>
+                                {% endif %}
+                            {% endif %}
+                            <br>
+                            <span class="member-position">
+                                <a href="{% url 'determine_person_info' person.slug %}">
+                                    {{ person.full_name }}
+                                </a>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
+
+            <br>
+        {% endfor %}
+
+        <div class="hidden-xs hidden-sm">
+            <br>
+
+            <blockquote class="blockquote-reverse">
+                <p>Participant timeline</p>
+            </blockquote>
+
+            <div id="chart_div" style="height: {{ chart_height }}px;"></div>
         </div>
-
-        <br>
-    {% endfor %}
-
-    <div class="hidden-xs hidden-sm">
-        <br>
-
-        <blockquote class="blockquote-reverse">
-            <p>Participant timeline</p>
-        </blockquote>
-
-        <div id="chart_div" style="height: {{ chart_height }}px;"></div>
-    </div>
+    {% endif %}
 
 {% endblock %}
 

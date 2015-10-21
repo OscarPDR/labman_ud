@@ -129,6 +129,8 @@ class Project(models.Model):
 
     private_funding_details = models.BooleanField(default=False)
 
+    private_participant_details = models.BooleanField(default=False)
+
     assigned_people = models.ManyToManyField('persons.Person', through='AssignedPerson', related_name='assigned_projects')
     consortium_members = models.ManyToManyField('organizations.Organization', through='ConsortiumMember', related_name='consortium_member_of')
     related_publications = models.ManyToManyField('publications.Publication', through='RelatedPublication', related_name='related_projects')
