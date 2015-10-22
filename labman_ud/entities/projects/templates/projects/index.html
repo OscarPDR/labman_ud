@@ -19,7 +19,7 @@
                 </span>
             </div>
 
-            <div class="btn-group" role="group">
+            <div class="btn-group" id="expand-form-panel" role="group">
                 <button id="expand-form-btn" type="button" class="btn btn-default">
                     <i class="fa fa-plus"></i>
                 </button>
@@ -166,6 +166,11 @@
                                         <div class="col-xs-6 col-sm-3">
                                             <input name="participant_name_{{index}}" type="text" placeholder="Name" class="form-control">
                                         </div>
+                                        {% if index > 1 %}
+                                            <div class="col-xs-1">
+                                                <span class="glyphicon glyphicon-remove"></span>            
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                             </div>
@@ -317,12 +322,33 @@
         });
     </script>
 
+    <script>
+        function myFunction() {
+            console.log("it works");
+        }
+    </script>
+
      <script>
         member_hidden_count = $("[name=member_field_count]");
 
         $('#add-member').click(function() {
             member_count = parseInt(member_hidden_count.val()) + 1;
             member_hidden_count.val(member_count);
+
+
+
+            if(!$('#member-list').children('div:first-child').find('.glyphicon-remove').length){
+                $('#member-list').children('div:first-child').find('.col-xs-6').each(function() {
+                    $(this).removeClass("col-xs-6").addClass("col-xs-5");
+                    if($(this).find('select').length) {
+                        $(this).find('select').selectpicker('refresh');
+                    }
+                });
+                $('#member-list').children('div:first-child')
+                    .append('<div class="col-xs-1">' +
+                                '<span class="glyphicon glyphicon-remove" onclick="myFunction()"></span>' +         
+                            '</div>');
+            }
 
             member_panel = $('#member-list').children('div:first-child').clone();
             member_label = member_panel.find('label');

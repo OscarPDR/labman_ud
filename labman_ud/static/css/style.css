@@ -1,5 +1,11 @@
+@media(max-width:767px){
+    #total_funds_select_panel {
+        padding-bottom: 15px;
+    }
+}
+
 @-moz-document url-prefix() { 
-    .btn-group {
+    #expand-form-panel {
         position: fixed;
     }
 }
@@ -61,6 +67,11 @@ h5, h6 {
 
 #between_section {
     display: none;
+}
+
+.glyphicon-remove {
+    vertical-align: bottom;
+    font-size: 18px;
 }
 
 .publication-authors p span i {
