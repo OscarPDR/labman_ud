@@ -6,7 +6,7 @@
 
 @-moz-document url-prefix() { 
     #expand-form-panel {
-        position: fixed;
+        position: absolute;
     }
 }
 
