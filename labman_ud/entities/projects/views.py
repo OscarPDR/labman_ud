@@ -231,7 +231,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 'form_to_total_funds' : str(form_to_total_funds),
                 'form_participants_name' : form_participants_name,
                 'form_participants_role' : json.dumps(form_participants_role),
-                'form_member_field_count' : form_member_field_count,
+                'form_member_field_count' : len(form_participants_name),
             }
 
             request.session['filtered'] = session_filter_dict

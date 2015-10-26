@@ -173,8 +173,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 'form_tags' : serializers.serialize('json', form_tags),
                 'form_authors_name' : form_authors_name,
                 'form_editors_name' : form_editors_name,
-                'form_author_field_count' : form_author_field_count,
-                'form_editor_field_count' : form_editor_field_count,
+                'form_author_field_count' : len(form_authors_name),
+                'form_editor_field_count' : len(form_editors_name),
             }
 
             request.session['filtered'] = session_filter_dict
