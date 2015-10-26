@@ -50,6 +50,10 @@ h5, h6 {
     display: none;
 }
 
+#publication_to_year {
+    display: none;
+}
+
 .publication-authors {
     display: inline-block;
 }
