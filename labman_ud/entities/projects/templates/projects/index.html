@@ -323,21 +323,28 @@
     </script>
 
     <script>
-        function myFunction() {
-            console.log("it works");
-        }
+        /*function myFunction(index) {
+            member_count--;
+            $('#member-list').find('input[name=participant_name_' + index + ']').parent('div').parent('div').remove();
+            var memberListLength = $('#member-list').children('div').length;
+            if(memberListLength >= index) {
+                for(var i = index; i <= memberListLength; i++) {
+
+                }
+            }
+            if(member_count == 1) {
+                $('.glyphicon-remove').parent('div').remove();
+            }
+        }*/
     </script>
 
      <script>
         member_hidden_count = $("[name=member_field_count]");
+        member_count = parseInt(member_hidden_count.val());
 
         $('#add-member').click(function() {
-            member_count = parseInt(member_hidden_count.val()) + 1;
-            member_hidden_count.val(member_count);
 
-
-
-            if(!$('#member-list').children('div:first-child').find('.glyphicon-remove').length){
+            /*if(!$('#member-list').children('div:first-child').find('.glyphicon-remove').length){
                 $('#member-list').children('div:first-child').find('.col-xs-6').each(function() {
                     $(this).removeClass("col-xs-6").addClass("col-xs-5");
                     if($(this).find('select').length) {
@@ -346,14 +353,18 @@
                 });
                 $('#member-list').children('div:first-child')
                     .append('<div class="col-xs-1">' +
-                                '<span class="glyphicon glyphicon-remove" onclick="myFunction()"></span>' +         
+                                '<span class="glyphicon glyphicon-remove" onclick="myFunction(' + member_count + ')"></span>' +         
                             '</div>');
-            }
+            }*/
+
+            member_count++;
+            member_hidden_count.val(member_count);
 
             member_panel = $('#member-list').children('div:first-child').clone();
             member_label = member_panel.find('label');
             member_input = member_panel.find('input');
             member_select = member_panel.find('select');
+            member_span = member_panel.find('div:last-child').find('span');
             
             member_panel.find('div.btn-group').remove();
             member_select.attr('name', 'participant_role_' + member_count);
@@ -364,6 +375,9 @@
             member_label.text('Member ' + member_count + ':');
             member_input.val('');
             member_input.attr('name', 'participant_name_' + member_count);
+
+            member_span.removeAttr("onclick");
+            member_span.attr('onclick', 'myFunction(' + member_count + ')');
 
             $('#member-list').append(member_panel);
         });
