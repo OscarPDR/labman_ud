@@ -1,3 +1,15 @@
+@media(max-width:767px){
+    #total_funds_select_panel {
+        padding-bottom: 15px;
+    }
+}
+
+@-moz-document url-prefix() { 
+    #expand-form-panel {
+        position: absolute;
+    }
+}
+
 .inline-group td.original p { display:none; }
 * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -23,6 +35,25 @@ h5, h6 {
     margin: 0 1em;
 }
 
+#search-text {
+    float: left;
+    margin-right: 1em;
+    width: calc(100% - 3.6em);
+}
+
+#extended-form {
+    padding-top: 1em;
+    display: none;
+}
+
+#extended-form-title {
+    display: none;
+}
+
+#publication_to_year {
+    display: none;
+}
+
 .publication-authors {
     display: inline-block;
 }
@@ -32,6 +63,19 @@ h5, h6 {
     border: 1px solid #ccc;
     background-color: #eee;
     color: #777;
+}
+
+#between_panel {
+    text-align: center;
+}
+
+#between_section {
+    display: none;
+}
+
+.glyphicon-remove {
+    vertical-align: bottom;
+    font-size: 18px;
 }
 
 .publication-authors p span i {
@@ -320,6 +364,12 @@ i.fa.fa-external-link {
 
 ul.nav.nav-tabs {
     min-height: 500px;
+}
+
+#extended-form-tabs {
+    min-height: 0;
+    margin-top: 1.5em;
+    display: none;
 }
 
 #member-tabs {

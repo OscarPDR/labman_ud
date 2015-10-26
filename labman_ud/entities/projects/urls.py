@@ -8,6 +8,7 @@ from entities.projects.views import LatestProjectsFeed
 
 urlpatterns = patterns('',
     url(r'^$', 'entities.projects.views.project_index', name='project_index'),
+    url(r'^filtered/$', 'entities.projects.views.project_index', name='filtered_project_query'),
 
     url(r'^feed/$', FeedWrapper(LatestProjectsFeed()), name='project_feed'),
 

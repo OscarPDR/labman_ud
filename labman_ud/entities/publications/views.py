@@ -2,8 +2,10 @@
 
 import threading
 import weakref
+import re
 
 # from django.template.defaultfilters import slugify
+from django.core import serializers
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -44,7 +46,19 @@ def _validate_term(token, name, numeric=False):
 def publication_index(request, tag_slug=None, publication_type=None, query_string=None):
     tag = None
 
+    form_from_year = None
+    form_from_range = None 
+    form_to_year = None 
+    form_to_range = None 
+    form_publication_types = None 
+    form_tags = None
+    form_authors_name = []
+    form_editors_name = []
+
     clean_index = False
+
+    request.session['max_publication_year'] = MAX_YEAR_LIMIT
+    request.session['min_publication_year'] = MIN_YEAR_LIMIT
 
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -61,13 +75,142 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     publications = publications.order_by('-year', '-title').exclude(authors=None)
 
     if request.method == 'POST':
-        form = PublicationSearchForm(request.POST)
+        form_author_field_count = request.POST.get('author_field_count')
+        form_editor_field_count = request.POST.get('editor_field_count')
+
+        form = PublicationSearchForm(request.POST, extra_author=form_author_field_count,
+            extra_editor=form_editor_field_count)
         if form.is_valid():
             query_string = form.cleaned_data['text']
-            return HttpResponseRedirect(reverse('view_publication_query', kwargs={'query_string': query_string}))
+
+            query_string = form.cleaned_data['text']
+            form_from_year = form.cleaned_data['from_year']
+            form_from_range = form.cleaned_data['from_range']
+            form_to_year = form.cleaned_data['to_year']
+            form_to_range = form.cleaned_data['to_range']
+            form_publication_types = form.cleaned_data['publication_types']
+            form_tags = form.cleaned_data['tags']
+
+            for my_tuple in form.fields.items():
+                if my_tuple[0].startswith('editor_name_'):
+                    form_editor_name = form.cleaned_data[my_tuple[0]]
+                    if form_editor_name:
+                        form_editors_name.append(form_editor_name)
+                elif my_tuple[0].startswith('author_name_'):
+                    form_author_name = form.cleaned_data[my_tuple[0]]
+                    if form_author_name:
+                        form_authors_name.append(form_author_name)
+
+            if form_from_year:
+                if form_from_range == '<':
+                    publications = publications.filter(year__lt=form_from_year)
+                elif form_from_range == '<=':
+                    publications = publications.filter(year__lte=form_from_year)
+                elif form_from_range == '>':
+                    publications = publications.filter(year__gt=form_from_year)
+                elif form_from_range == '>=':
+                    publications = publications.filter(year__gte=form_from_year)
+                elif form_from_range == '==':
+                    publications = publications.filter(year=form_from_year)
+
+            if form_to_year:
+                if form_to_range == '<':
+                    publications = publications.filter(year__lt=form_to_year)
+                elif form_to_range == '<=':
+                    publications = publications.filter(year__lte=form_to_year)
+
+            if form_publication_types:
+                publications = publications.filter(child_type__in=form_publication_types)
+
+            if form_tags:
+                publications = publications.filter(publicationtag__tag__in=form_tags)
+
+            found = True
+
+            if form_authors_name:
+                group_publication = []
+                for name in form_authors_name:
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_publications_set = set()
+                        for _id in person_id:
+                            person_publications = PublicationAuthor.objects.all().filter(author_id=_id).values_list('publication_id', flat=True)
+                            if person_publications:
+                                person_publications_set.update(person_publications)
+                        group_publication.append(person_publications_set)
+                    else:
+                        found = False
+                if group_publication and found:
+                    publications = publications.filter(id__in=list(set.intersection(*group_publication)))
+
+            if form_editors_name:
+                group_publication = []
+                for name in form_editors_name:
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_publications_set = set()
+                        for _id in person_id:
+                            print PublicationEditor.objects.all().values_list('editor__full_name', flat=True)
+                            person_publications = PublicationEditor.objects.all().filter(editor_id=_id).values_list('publication_id', flat=True)
+                            if person_publications:
+                                person_publications_set.update(person_publications)
+                        group_publication.append(person_publications_set)
+                    else:
+                        found = False
+                if group_publication and found:
+                    publications = publications.filter(id__in=list(set.intersection(*group_publication)))
+
+            if not found:
+                publications = []
+
+            session_filter_dict = {
+                'publications': serializers.serialize('json', publications),
+                'form_from_year' : form_from_year,
+                'form_from_range' : form_from_range,
+                'form_to_year' : form_to_year,
+                'form_to_range' : form_to_range,
+                'form_publication_types' : form_publication_types,
+                'form_tags' : serializers.serialize('json', form_tags),
+                'form_authors_name' : form_authors_name,
+                'form_editors_name' : form_editors_name,
+                'form_author_field_count' : len(form_authors_name),
+                'form_editor_field_count' : len(form_editors_name),
+            }
+
+            request.session['filtered'] = session_filter_dict
+
+            return HttpResponseRedirect(reverse('filtered_publication_query'))
 
     else:
-        form = PublicationSearchForm()
+        if 'filtered' in request.session.keys():
+            p = re.compile(ur'publications\/filtered(\/\?page=[1-9]+)?')
+
+            if  re.search(p, request.path) == None:
+                del request.session['filtered']
+                form = PublicationSearchForm(extra_author=1, extra_editor=1)
+            else:
+                form = PublicationSearchForm(extra_author=request.session['filtered']['form_author_field_count'],
+                    extra_editor=request.session['filtered']['form_editor_field_count'])
+                publications = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['publications']):
+                    publications.append(deserialized_object.object)
+                form_from_year = request.session['filtered']['form_from_year']
+                form_from_range = request.session['filtered']['form_from_range']
+                form_to_year = request.session['filtered']['form_to_year']
+                form_to_range = request.session['filtered']['form_to_range']
+                form_publication_types = []
+                for utf8type in request.session['filtered']['form_publication_types']:
+                    form_publication_types.append(utf8type.encode('utf8'))
+                form_tags = request.session['filtered']['form_tags']
+                form_authors_name = []
+                for utf8type in request.session['filtered']['form_authors_name']:
+                    form_authors_name.append(utf8type.encode('utf8'))
+                form_editor_name = []
+                for utf8type in request.session['filtered']['form_editors_name']:
+                    form_editors_name.append(utf8type.encode('utf8'))
+                clean_index = False
+        else:        
+            form = PublicationSearchForm(extra_author=1, extra_editor=1)
 
     if query_string:
         # Given a query_string such as: author:"Oscar Pena" my "title word"; split in ['author:"Oscar Peña"','my','"title word"']
@@ -172,6 +315,12 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         clean_index = False
 
+    publications_ids = PublicationAuthor.objects.values_list('publication', flat=True)
+    publication_types_info = Publication.objects.filter(id__in=publications_ids).order_by().values('child_type').distinct()
+
+    tags_id_info = Publication.objects.all().values_list('tags', flat=True)
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+
     publication_model_list = [
         'Book',
         'BookSection',
@@ -199,11 +348,21 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'form': form,
         'last_entry': last_entry,
         'publication_type': publication_type,
+        'publication_types_info' : publication_types_info,
         'publications': publications,
         'publications_length': len(publications),
         'query_string': query_string,
         'tag': tag,
+        'publication_tags_info' : tags_info,
         'theses': theses,
+        'form_from_year' : form_from_year,
+        'form_from_range' : form_from_range,
+        'form_to_year' : form_to_year,
+        'form_to_range' : form_to_range,
+        'form_publication_types' : form_publication_types,
+        'form_tags' : form_tags,
+        'form_authors_name' : form_authors_name,
+        'form_editors_name' : form_editors_name,
         'web_title': u'Publications',
     }
 
