@@ -2,13 +2,17 @@
 
 import threading
 import weakref
+import json
+import re
 from inflection import titleize
 
+from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.contrib.syndication.views import Feed
+from django.db.models import Q, Sum
 
 from .forms import ProjectSearchForm
 from .models import *
@@ -31,9 +35,23 @@ from collections import OrderedDict, Counter
 def project_index(request, tag_slug=None, status_slug=None, project_type_slug=None, query_string=None):
     tag = None
     status = None
+    start_date = None
+    start_range = None
+    end_date = None
+    end_range = None
     project_type = None
-
+    form_project_types = None
+    form_project_status = None
+    form_tags = None
+    form_funds_range = None
+    form_from_total_funds = None
+    form_to_total_funds = None
+    form_participants_name = {}
+    form_participants_role = {}
     clean_index = False
+
+    request.session['max_year'] = MAX_YEAR_LIMIT
+    request.session['min_year'] = MIN_YEAR_LIMIT
 
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -55,14 +73,201 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     projects = projects.order_by('-start_year', '-end_year', 'full_name')
 
     if request.method == 'POST':
-        form = ProjectSearchForm(request.POST)
+        form_member_field_count = request.POST.get('member_field_count')
+        form = ProjectSearchForm(request.POST, extra=form_member_field_count)
+
         if form.is_valid():
             query_string = form.cleaned_data['text']
+            start_date = form.cleaned_data['start_date']
+            start_range = form.cleaned_data['start_range']
+            end_date = form.cleaned_data['end_date']
+            end_range = form.cleaned_data['end_range']
+            form_project_types = form.cleaned_data['project_types']
+            form_project_status = form.cleaned_data['status']
+            form_from_total_funds = form.cleaned_data['from_total_funds']
+            form_to_total_funds = form.cleaned_data['to_total_funds']
+            form_funds_range = form.cleaned_data['funds_range']
+            form_tags = form.cleaned_data['tags']
 
-            return HttpResponseRedirect(reverse('view_project_query', kwargs={'query_string': query_string}))
+            for my_tuple in form.fields.items():
+                if my_tuple[0].startswith('participant_name_'):
+                    form_names = form.cleaned_data[my_tuple[0]]
+                    if form_names:
+                        form_participants_name[my_tuple[0][-1:]] = form_names
+                elif my_tuple[0].startswith('participant_role_'):
+                    form_roles = form.cleaned_data[my_tuple[0]]
+                    if form_roles:
+                        form_participants_role[my_tuple[0][-1:]] = list(form_roles.values())
+
+            # tratamiento con los filter, y devolver "projects" filtrado
+            # return a 'index' con los projectos filtrados
+
+            if start_date:
+                month_year = start_date.split('/')
+                if start_range == '<=':
+                    projects = projects.filter(Q(start_year__lt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__lte=month_year[0])))
+                elif start_range == '<':
+                    projects = projects.filter(Q(start_year__lt=month_year[1]) |
+                        (Q(start_year=month_year[1]) & Q(start_month__lt=month_year[0])))
+                elif start_range == '>=':
+                    projects = projects.filter(Q(start_year__gt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__gte=month_year[0])))
+                elif start_range == '>':
+                    projects = projects.filter(Q(start_year__gt=month_year[1]) |
+                     (Q(start_year=month_year[1]) & Q(start_month__gt=month_year[0])))
+                elif start_range == '==':
+                    projects = projects.filter(Q(start_year=month_year[1]) & Q(start_month=month_year[0]))
+
+            if end_date:
+                month_year = end_date.split('/')
+                if end_range == '<=':
+                    projects = projects.filter(Q(end_year__lt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__lte=month_year[0])))
+                elif end_range == '<':
+                    projects = projects.filter(Q(end_year__lt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__lt=month_year[0])))
+                elif end_range == '>=':
+                    projects = projects.filter(Q(end_year__gt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__gte=month_year[0])))
+                elif end_range == '>':
+                    projects = projects.filter(Q(end_year__gt=month_year[1]) |
+                     (Q(end_year=month_year[1]) & Q(end_month__gt=month_year[0])))
+                elif end_range == '==':
+                    projects = projects.filter(Q(end_year=month_year[1]) & Q(end_month=month_year[0]))
+
+            if form_project_types:
+                projects = projects.filter(project_type__in=form_project_types)
+
+            if form_project_status:
+                projects = projects.filter(status__in=form_project_status)
+
+            if form_tags:
+                projects = projects.filter(projecttag__tag__in=form_tags)
+
+            if form_from_total_funds:
+                if form_funds_range == '==':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '<':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__lt=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '<=':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__lte=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '>':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gt=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '>=':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gte=form_from_total_funds).values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+                elif form_funds_range == '-':
+                    funding_sum = FundingAmount.objects.all().values('funding_id').annotate(Sum('own_amount'))
+                    filtered_funding_ids = funding_sum.filter(own_amount__sum__gte=form_from_total_funds)
+                    if form_to_total_funds:
+                        filtered_funding_ids = filtered_funding_ids.filter(own_amount__sum__lte=form_to_total_funds)
+                    filtered_funding_ids = filtered_funding_ids.values_list('funding_id', flat=True)
+                    projects = projects.filter(funding__id__in=filtered_funding_ids)
+
+            found = True
+
+            if form_participants_name:
+                group_projects = []
+                for key, name in form_participants_name.iteritems():
+                    person_id = Person.objects.filter(slug__contains=slugify(name)).values_list('id', flat=True)
+                    if person_id and found:
+                        person_projects_set = set()
+                        for _id in person_id:
+                            participant_roles_ids = []
+                            if key in form_participants_role:
+                                for role in form_participants_role[key]:
+                                    participant_roles_ids.append(role['id'])
+                            if participant_roles_ids:
+                                person_projects = AssignedPerson.objects.all().filter(Q(person_id=_id) & Q(role__in=participant_roles_ids)).values_list('project_id', flat=True)
+                                if person_projects:
+                                    person_projects_set.update(person_projects)
+                            else:
+                                person_projects = AssignedPerson.objects.all().filter(person_id=_id).values_list('project_id', flat=True)
+                                if person_projects:
+                                    person_projects_set.update(person_projects)   
+                        group_projects.append(person_projects_set)
+                    else:
+                        found = False
+                if group_projects and found:
+                    projects = projects.filter(id__in=list(set.intersection(*group_projects)))
+
+            query = slugify(query_string)
+            projs = []
+
+            person_ids = Person.objects.filter(slug__contains=query).values('id')
+            project_ids = AssignedPerson.objects.filter(person_id__in=person_ids).values('project_id')
+            project_ids = set([x['project_id'] for x in project_ids])
+
+            for project in projects:
+                if (query in slugify(project.full_name)) or (project.id in project_ids):
+                    projs.append(project)
+
+            projects = projs
+
+            if not found:
+                projects = []
+
+            session_filter_dict = {
+                'form_start_date' : start_date,
+                'form_start_range' : start_range,
+                'form_end_date' : end_date,
+                'form_end_range' : end_range,
+                'form_project_types': form_project_types,
+                'form_project_status' : form_project_status,
+                'form_tags' : serializers.serialize('json', form_tags),
+                'projects' : serializers.serialize('json', projects),
+                'form_funds_range' : form_funds_range,
+                'form_from_total_funds' : str(form_from_total_funds),
+                'form_to_total_funds' : str(form_to_total_funds),
+                'form_participants_name' : form_participants_name,
+                'form_participants_role' : json.dumps(form_participants_role),
+                'form_member_field_count' : len(form_participants_name),
+            }
+
+            request.session['filtered'] = session_filter_dict
+
+            return HttpResponseRedirect(reverse('filtered_project_query'))
 
     else:
-        form = ProjectSearchForm()
+        if 'filtered' in request.session.keys():
+            p = re.compile(ur'projects\/filtered(\/\?page=[1-9]+)?')
+
+            if  re.search(p, request.path) == None:
+                del request.session['filtered']
+                form = ProjectSearchForm(extra=1)
+            else:
+                form = ProjectSearchForm(extra=request.session['filtered']['form_member_field_count']) 
+                start_date = request.session['filtered']['form_start_date']
+                start_range = request.session['filtered']['form_start_range']
+                end_date = request.session['filtered']['form_end_date']
+                end_range = request.session['filtered']['form_end_range']
+                form_project_types = request.session['filtered']['form_project_types']
+                form_project_status = request.session['filtered']['form_project_status']
+                form_tags = request.session['filtered']['form_tags']
+                form_tags = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['form_tags']):
+                    form_tags.append(deserialized_object.object)
+                projects = []
+                for deserialized_object in serializers.deserialize('json', request.session['filtered']['projects']):
+                    projects.append(deserialized_object.object)
+                form_funds_range = request.session['filtered']['form_funds_range']
+                form_from_total_funds = request.session['filtered']['form_from_total_funds']
+                form_to_total_funds = request.session['filtered']['form_to_total_funds']
+                form_participants_name = request.session['filtered']['form_participants_name']
+                form_participants_role = json.loads(request.session['filtered']['form_participants_role'])
+                clean_index = False
+        else:
+            form = ProjectSearchForm(extra=1)
 
     if query_string:
         query = slugify(query_string)
@@ -92,6 +297,15 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
 
     items = ord_dict.items()
 
+    status_info = Project.objects.all().values_list('status', flat=True)
+    status_items = OrderedDict(sorted(Counter(status_info).items(), key=lambda t: t[1])).items()
+
+    tags_id_info = Project.objects.all().values_list('tags', flat=True)
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+
+    roles_id = AssignedPerson.objects.all().distinct().values_list('role', flat=True)
+    roles = Role.objects.filter(id__in=roles_id).order_by('name')
+
     # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
@@ -99,11 +313,26 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'last_entry': last_entry,
         'project_type': project_type,
         'project_type_info': dict(items),
+        'project_status_info' : dict(status_items),
+        'project_tags_info' : tags_info,
         'projects': projects,
         'projects_length': projects_length,
         'query_string': query_string,
         'status': status,
         'tag': tag,
+        'roles' : roles,
+        'form_start_date' : start_date,
+        'form_start_range' : start_range,
+        'form_end_date' : end_date,
+        'form_end_range' : end_range,
+        'form_project_types' : form_project_types,
+        'form_project_status' : form_project_status,
+        'form_tags' : form_tags,
+        'form_funds_range' : form_funds_range,
+        'form_from_total_funds' : form_from_total_funds,
+        'form_to_total_funds' : form_to_total_funds,
+        'form_participants_name' : form_participants_name,
+        'form_participants_role' : form_participants_role,
         'web_title': u'Projects',
     }
 

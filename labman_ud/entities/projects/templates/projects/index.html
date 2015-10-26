@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags staticfiles %}
+{% load pagination_tags staticfiles get_range %}
 
 
 
@@ -9,7 +9,7 @@
         <form class="form-search" action="" method="post">
             {% csrf_token %}
 
-            <div class="input-group">
+            <div id="search-text" class="input-group">
                 {{ form.text }}
 
                 <span class="input-group-btn">
@@ -17,6 +17,177 @@
                         <i class="fa fa-search"></i>
                     </button>
                 </span>
+            </div>
+
+            <div class="btn-group" id="expand-form-panel" role="group">
+                <button id="expand-form-btn" type="button" class="btn btn-default">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+
+            <h2 id="extended-form-title">Advanced Search</h2>
+
+            <ul class="nav nav-tabs" id="extended-form-tabs">
+                <li><a id="all-tab">All <i class="fa"></i></a></li>
+                <li class="active"><a data-target="#basic-info-tab" data-toggle="tab">Basic Information <i class="fa"></i></a></li>
+                <li><a data-target="#funding-info-tab" data-toggle="tab">Funding <i class="fa"></i></a></li>
+                <li><a data-target="#participants-tab" data-toggle="tab">Participants <i class="fa"></i></a></li>
+            </ul>
+
+            <div id="extended-form" class="form-horizontal">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basic-info-tab">
+                        <div class="form-group">
+                            <label for="start_date" class="control-label col-xs-12 col-sm-2 col-lg-2">Start Date:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select id="id_start_range" name="start_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="start_date">
+                                    <input id="id_start_date" name="start_date" type="text" class="form-control" placeholder="MM/YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">End Date:</label>
+                            <div class="col-xs-6 col-sm-3">
+                                <select id="id_end_range" name="end_range" class="selectpicker" data-width="100%">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="input-group date" id="end_date">
+                                    <input id="id_end_date" name="end_date" type="text" class="form-control" placeholder="MM/YYYY"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if project_type_info %}
+                            <div class="form-group">
+                                <label for="project_types" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Project types:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_project_types" name="project_types" class="selectpicker" multiple data-width="100%">
+                                        {% for project_type in project_type_info %}
+                                            <option>{{ project_type }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if project_status_info %}
+                            <div class="form-group">
+                                <label for="project_types" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Project statuses:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_project_status" name="status" class="selectpicker" multiple data-width="100%">
+                                        {% for project_status in project_status_info %}
+                                            <option>{{ project_status }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if project_tags_info %}
+                            <div id="id_tags_panel" class="form-group">
+                                <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    <select id="id_tags" name="tags" class="selectpicker" multiple data-width="100%">
+                                        {% for project_tag in project_tags_info %}
+                                                <option value="{{ project_tag.id }}">{{ project_tag.name }}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane" id="funding-info-tab">
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Total funds:</label>
+                            <div class="col-xs-12 col-sm-3" id="total_funds_select_panel">
+                                <select name="funds_range" class="selectpicker" data-width="100%" id="total_funds_select">
+                                    <option value="<">Less than</option>
+                                    <option value="<=">Less than or equal to</option>
+                                    <option value=">">Greater than</option>
+                                    <option value=">=">Greater than or equal to</option>
+                                    <option value="==">Equal to</option>
+                                    <option value="-">Between</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-12 col-sm-3" id="from_total_funds_panel">
+                                <div class="input-group">
+                                    <input id="id_from_total_funds" name="from_total_funds" type="number" step="0.01" max="99999999.99" class="form-control">
+                                    <span class="input-group-addon">€</span>
+                                </div>
+                            </div>
+                            <div id="between_section" class="container">
+                                <div class="col-xs-2 col-sm-1" id="between_panel">
+                                    <span class="fa fa-minus" id="between_label"></span>
+                                </div>
+                                <div class="col-xs-5 col-sm-3">
+                                    <div class="input-group">
+                                        <input id="id_to_total_funds" name="to_total_funds" type="number" step="0.01" max="99999999.99" class="form-control">
+                                        <span class="input-group-addon">€</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="participants-tab">
+                        {% if form.member_field_count.value %}
+                            <div id="member-list">
+                                {% for index in form.member_field_count.value|get_range %}
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Member {{index}}:</label>
+                                        {% if roles %}
+                                            <div class="col-xs-6 col-sm-3">
+                                                <select name="participant_role_{{ index }}" class="selectpicker" multiple data-width="100%">
+                                                    {% for role in roles %}
+                                                        <option value="{{ role.id }}">{{ role.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-xs-6 col-sm-3">
+                                            <input name="participant_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                        <!--{% if index > 1 %}
+                                            <div class="col-xs-1">
+                                                <span class="glyphicon glyphicon-remove"></span>            
+                                            </div>
+                                        {% endif %}-->
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {{ form.member_field_count }}
+                        <div class="form-group">
+                            <div class="centered col-xs-12 col-sm-8">
+                                <button id="add-member" type="button" class="btn btn-default">Add a Member</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="centered col-xs-12 col-sm-8">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                    </div>
+                </div>
             </div>
         <form>
     </div>
@@ -34,6 +205,8 @@
                     <h2>{{ projects_length }} project{{ projects|pluralize }} with status <em>'{{ status }}'</em>
                 {% elif query_string %}
                     <h2>{{ projects_length }} project{{ projects|pluralize }} found for <em>'{{ query_string }}'</em>
+                {% else %}
+                    <h2>{{ projects_length }} project{{ projects|pluralize }} found
                 {% endif %}
                 &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'project_index' %}">Clean filters</a></small></h2>
             {% endif %}
@@ -100,6 +273,190 @@
     <script>
         $('.pagination').addClass('pagination-sm');
     </script>
+
+    <script>
+        $(function() {
+            $('.date').datetimepicker({
+                viewMode: 'years',
+                format: 'MM/YYYY',
+                minDate: new Date('{{ request.session.min_year }}-01-01'),
+                maxDate: new Date('{{ request.session.max_year }}-12-31')
+            });
+
+            $('#start_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#end_date').data("DateTimePicker").minDate(e.date);
+                } else
+                    $('#end_date').data("DateTimePicker").minDate(new Date('{{ request.session.min_year }}-01-01'));
+            });
+            
+            $('#end_date').on('dp.change', function (e) {
+                if(e.date) {
+                    $('#start_date').data("DateTimePicker").maxDate(e.date);
+                } else
+                    $('#start_date').data("DateTimePicker").maxDate(new Date('{{ request.session.max_year }}-12-31'));
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+
+    <script src="{% static 'js/extend-form.js' %}"></script>
+
+    <script>
+        $('#total_funds_select').change(function(e) {
+            value = $('#total_funds_select').val();
+            if (value == '-') {
+                $('#between_section').show();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-5 col-sm-3');
+            } else {
+                $('#between_section').hide();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-12 col-sm-3');
+            }
+        });
+    </script>
+
+    <script>
+        /*function myFunction(index) {
+            member_count--;
+            $('#member-list').find('input[name=participant_name_' + index + ']').parent('div').parent('div').remove();
+            var memberListLength = $('#member-list').children('div').length;
+            if(memberListLength >= index) {
+                for(var i = index; i <= memberListLength; i++) {
+
+                }
+            }
+            if(member_count == 1) {
+                $('.glyphicon-remove').parent('div').remove();
+            }
+        }*/
+    </script>
+
+     <script>
+        member_hidden_count = $("[name=member_field_count]");
+        member_count = parseInt(member_hidden_count.val());
+
+        $('#add-member').click(function() {
+
+            /*if(!$('#member-list').children('div:first-child').find('.glyphicon-remove').length){
+                $('#member-list').children('div:first-child').find('.col-xs-6').each(function() {
+                    $(this).removeClass("col-xs-6").addClass("col-xs-5");
+                    if($(this).find('select').length) {
+                        $(this).find('select').selectpicker('refresh');
+                    }
+                });
+                $('#member-list').children('div:first-child')
+                    .append('<div class="col-xs-1">' +
+                                '<span class="glyphicon glyphicon-remove" onclick="myFunction(' + member_count + ')"></span>' +         
+                            '</div>');
+            }*/
+
+            member_count++;
+            member_hidden_count.val(member_count);
+
+            member_panel = $('#member-list').children('div:first-child').clone();
+            member_label = member_panel.find('label');
+            member_input = member_panel.find('input');
+            member_select = member_panel.find('select');
+            member_span = member_panel.find('div:last-child').find('span');
+            
+            member_panel.find('div.btn-group').remove();
+            member_select.attr('name', 'participant_role_' + member_count);
+            member_select.children().each(function() {
+                $(this).removeAttr('selected');
+            });
+            member_select.selectpicker();
+            member_label.text('Member ' + member_count + ':');
+            member_input.val('');
+            member_input.attr('name', 'participant_name_' + member_count);
+
+            member_span.removeAttr("onclick");
+            member_span.attr('onclick', 'myFunction(' + member_count + ')');
+
+            $('#member-list').append(member_panel);
+        });
+    </script>
+
+    <script>
+        //Loads start date range list of the actual filtered search.
+        {% if form_start_range %}
+            $('#id_start_range').find('[value="{{ form_start_range|safe }}"]').attr('selected', 'true');
+            $('#id_start_range').selectpicker('refresh');
+        {% endif %}
+
+        //Loads start date list of the actual filtered search.
+        {% if form_start_date %}
+            $('#id_start_date').val("{{form_start_date}}");
+        {% endif %}
+
+        //Loads end date range list of the actual filtered search.
+        {% if form_end_range %}
+            $('#id_end_range').find('[value="{{ form_end_range|safe }}"]').attr('selected', 'true');
+            $('#id_end_range').selectpicker('refresh');
+        {% endif %}
+
+        //Loads end date list of the actual filtered search.
+        {% if form_end_date %}
+            $('#id_end_date').val("{{form_end_date}}");
+        {% endif %}
+
+        //Loads type list of the actual filtered search.
+        {% for types in form_project_types %}
+            $('#id_project_types').find('option:contains("{{ types }}")').attr('selected', 'true');
+            $('#id_project_types').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads status list of the actual filtered search.
+        {% for status in form_project_status %}
+            $('#id_project_status').find('option:contains("{{ status }}")').attr('selected', 'true');
+            $('#id_project_status').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads tag list of the actual filtered search.
+        {% for tag in form_tags %}
+            $('#id_tags').find('option:contains("{{ tag }}")').attr('selected', 'true');
+            $('#id_tags').selectpicker('refresh');
+        {% endfor %}
+
+        //Loads funds select of the actual filtered search.
+        {% if form_funds_range %}
+            $('#total_funds_select').find('[value="{{ form_funds_range|safe }}"]').attr('selected', 'true');
+            $('#total_funds_select').selectpicker('refresh');
+            value = $('#total_funds_select').val();
+            if (value == '-') {
+                $('#between_section').show();
+                $('#from_total_funds_panel').removeClass();
+                $('#from_total_funds_panel').addClass('col-xs-5 col-sm-3');
+            }
+        {% endif %}
+
+        {% if form_from_total_funds %}
+            $('#id_from_total_funds').val("{{ form_from_total_funds }}");
+        {% endif %}
+
+        {% if form_to_total_funds %}
+            $('#id_to_total_funds').val("{{ form_to_total_funds }}");
+        {% endif %}
+
+        //Loads members' of the actual filtered search.
+        {% for key, name in form_participants_name.items %}
+            $('input[name=participant_name_{{ key }}]').val("{{ name }}");
+        {% endfor %}
+
+        {% for key, role in form_participants_role.items %}
+            {% for rol in role %}
+                $('select[name=participant_role_{{ key }}]').find('[value="{{ rol.id }}"]').attr('selected', 'true');
+                $('select[name=participant_role_{{ key }}]').selectpicker('refresh');
+            {% endfor %}
+        {% endfor %}
+    </script>
+
 
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
