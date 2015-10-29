@@ -1,0 +1,60 @@
+{% extends "projects/info.html" %}
+{% load staticfiles sanitize_types %}
+
+
+
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-table.min.css' %}" />
+
+{% endblock %}
+
+
+
+{% block project_content %}
+
+    <table class="table table-condensed table-bordered table-striped table-responsive" data-toggle="table" data-search="true" data-pagination="true">
+        <thead>
+            <th data-field="date" data-sortable="true">Date</th>
+            <th>Title</th>
+        </thead>
+
+        <tbody>
+            {% for item in related_news %}
+                <tr>
+                    <td>{{ item.news.created|date:"d M, Y" }}</td>
+                    <td>
+                        <a href="{% url 'view_news' item.news.slug %}">
+                            {{ item.news.title }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+
+
+{% block project_scripts %}
+
+    <script>
+        $('#project_related_news').addClass('active');
+    </script>
+
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script>
+        function queryParams() {
+            return {
+                type: 'owner',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 100,
+                page: 1
+            };
+        };
+    </script>
+
+{% endblock %}

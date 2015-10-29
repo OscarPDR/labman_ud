@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^info/(?P<project_slug>\S+)/assigned_persons/$', 'entities.projects.views.project_assigned_persons', name='project_assigned_persons'),
     url(r'^info/(?P<project_slug>\S+)/consortium_members/$', 'entities.projects.views.project_consortium_members', name='project_consortium_members'),
     url(r'^info/(?P<project_slug>\S+)/related_publications/$', 'entities.projects.views.project_related_publications', name='project_related_publications'),
+    url(r'^info/(?P<project_slug>\S+)/related_news/$', 'entities.projects.views.project_related_news', name='project_related_news'),
     url(r'^info/(?P<project_slug>\S+)/$', 'entities.projects.views.project_info', name='project_info'),
 
     url(r'^tag/(?P<tag_slug>\S+)/$', 'entities.projects.views.project_index', name='view_project_tag'),

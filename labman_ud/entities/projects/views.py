@@ -22,6 +22,7 @@ from entities.funding_programs.models import FundingProgram, FundingProgramLogo
 from entities.persons.models import Person
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
+from entities.news.models import ProjectRelatedToNews
 
 from labman_setup.models import *
 from labman_ud.util import *
@@ -194,7 +195,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                             else:
                                 person_projects = AssignedPerson.objects.all().filter(person_id=_id).values_list('project_id', flat=True)
                                 if person_projects:
-                                    person_projects_set.update(person_projects)   
+                                    person_projects_set.update(person_projects)
                         group_projects.append(person_projects_set)
                     else:
                         found = False
@@ -246,7 +247,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 del request.session['filtered']
                 form = ProjectSearchForm(extra=1)
             else:
-                form = ProjectSearchForm(extra=request.session['filtered']['form_member_field_count']) 
+                form = ProjectSearchForm(extra=request.session['filtered']['form_member_field_count'])
                 start_date = request.session['filtered']['form_start_date']
                 start_range = request.session['filtered']['form_start_range']
                 end_date = request.session['filtered']['form_end_date']
@@ -476,7 +477,7 @@ def project_consortium_members(request, project_slug):
     return render(request, "projects/consortium_members.html", return_dict)
 
 
-###		project_related_publications
+###     project_related_publications
 ####################################################################################################
 
 def project_related_publications(request, project_slug):
@@ -493,6 +494,20 @@ def project_related_publications(request, project_slug):
     })
 
     return render(request, "projects/related_publications.html", return_dict)
+
+
+###     project_related_news(project_slug)
+####################################################################################################
+
+def project_related_news(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    return_dict = __build_project_information(project)
+
+    return_dict.update({
+        'web_title': u'%s - Related news' % project.full_name,
+    })
+
+    return render(request, "projects/related_news.html", return_dict)
 
 
 ###		project_tag_cloud
@@ -527,12 +542,15 @@ def __build_project_information(project):
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
 
+    related_news = ProjectRelatedToNews.objects.filter(project=project).order_by('-news__created')
+
     # dictionary to be returned in render(request, )
     return {
         'is_internal': project.project_type in ['Internal project', 'External project'],
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,
+        'related_news': related_news,
         'tags': tags,
     }
 

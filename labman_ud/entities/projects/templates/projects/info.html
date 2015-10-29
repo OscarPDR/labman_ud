@@ -65,6 +65,15 @@
                 </span>
             </a>
         {% endif %}
+
+        {% if related_news %}
+            <a id="project_related_news" href="{% url 'project_related_news' project.slug %}">
+                <i class="fa fa-newspaper-o"></i>
+                <span class="hidden-xs hidden-sm">
+                    {{ related_news|length }} news piece{{ related_news|pluralize }}
+                </span>
+            </a>
+        {% endif %}
     </div>
 
     <div class="soften"></div>
