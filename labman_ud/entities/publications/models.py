@@ -640,7 +640,7 @@ class PublicationAuthor(models.Model):
         verbose_name_plural = u'Publication authors'
 
     def __unicode__(self):
-        return u'%s has written: %s as author #%d' % (self.author.full_name, self.publication.title, self.position)
+        return u'%s has written: %s as author' % (self.author.full_name, self.publication.title)
 
 
 ###		PublicationEditor

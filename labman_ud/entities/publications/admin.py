@@ -137,7 +137,7 @@ class PublicationAuthorAdmin(admin.ModelAdmin):
     model = PublicationAuthor
 
     search_fields = ['publication__slug', 'author__slug']
-    list_display = ['publication', 'author']
+    list_display = ['publication', 'author', 'position']
     list_filter = ['author__full_name']
 
 ###		PublicationEditorAdmin
