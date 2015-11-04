@@ -247,7 +247,10 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 del request.session['filtered']
                 form = ProjectSearchForm(extra=1)
             else:
-                form = ProjectSearchForm(extra=request.session['filtered']['form_member_field_count'])
+                member_field_count = request.session['filtered']['form_member_field_count']
+                if member_field_count == 0:
+                    member_field_count = 1
+                form = ProjectSearchForm(extra=member_field_count)
                 start_date = request.session['filtered']['form_start_date']
                 start_range = request.session['filtered']['form_start_range']
                 end_date = request.session['filtered']['form_end_date']

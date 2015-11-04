@@ -189,8 +189,14 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 del request.session['filtered']
                 form = PublicationSearchForm(extra_author=1, extra_editor=1)
             else:
-                form = PublicationSearchForm(extra_author=request.session['filtered']['form_author_field_count'],
-                    extra_editor=request.session['filtered']['form_editor_field_count'])
+                author_field_count = request.session['filtered']['form_author_field_count']
+                editor_field_count = request.session['filtered']['form_editor_field_count']
+                if author_field_count == 0:
+                    author_field_count = 1
+                if editor_field_count == 0:
+                    editor_field_count = 1
+                form = PublicationSearchForm(extra_author=author_field_count,
+                    extra_editor=editor_field_count)
                 publications = []
                 for deserialized_object in serializers.deserialize('json', request.session['filtered']['publications']):
                     publications.append(deserialized_object.object)
