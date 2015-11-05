@@ -47,6 +47,9 @@ class FundingProgram(models.Model):
         verbose_name = u'Funding program'
         verbose_name_plural = u'Funding programs'
 
+    def __unicode__(self):
+        return self.full_name
+
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.full_name.encode('utf-8')
