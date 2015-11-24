@@ -203,7 +203,7 @@ def extract_publications_from_zotero(from_version):
             item = items_ordered[i_id]
             publication_type = item['data']['itemType']
 
-            logger.info(u"\t[%s/%s][%s][%s] > %s" % (pos + 1, number_of_items, time.asctime(), publication_type.encode('utf-8'), item['data'].get('title', 'No title').encode('utf-8')))
+            logger.info(u"\t[%s/%s][%s][%s] > %s" % (pos + 1, number_of_items, time.asctime(), publication_type, item['data'].get('title', 'No title')))
 
             generate_publication(item)
 
