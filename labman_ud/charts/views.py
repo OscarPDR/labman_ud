@@ -292,7 +292,6 @@ def publications_number_of_publications(request):
         default_pub_dict[pub_type] = {}
         for year in range(min_year, max_year):
             default_pub_dict[pub_type][year] = 0
-            totals_by_year[year] = 0
 
     for authored_pub in authored_publications:
         pub_type = authored_pub.child_type
@@ -340,11 +339,6 @@ def projects_number_of_projects(request):
 
     fundings = Funding.objects.all().select_related('project', 'funding_program')
     projects_data = defaultdict(lambda: defaultdict(set))
-    # {
-    #    year: {
-    #        project_id: [ scope1, scope2, scope3 ]
-    #    }
-    # }
 
     scopes = set()
 
@@ -353,26 +347,36 @@ def projects_number_of_projects(request):
             projects_data[year][funding.project_id].add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
             scopes.add(geographical_scopes_by_id[funding.funding_program.geographical_scope_id])
 
-    years = sorted(projects_data.keys())
+    years_range = sorted(projects_data.keys())
 
-    projects = {}
+    default_project_dict = {}
 
     for scope in scopes:
-        projects[scope] = {}
-        for year in years:
-            projects[scope][year] = 0
+        default_project_dict[scope] = OrderedDict()
+        for year in years_range:
+            default_project_dict[scope][year] = 0
 
-    for year in years:
+    for year in years_range:
         for project_id in projects_data.get(year, []):
             for scope in projects_data[year][project_id]:
-                projects[scope][year] += 1
+                default_project_dict[scope][year] += 1
 
-    print projects
+    project_counts = []
+
+    for scope, value_dict in default_project_dict.iteritems():
+        item_dict = {
+            'key': str(inflection.titleize(scope)),
+            'values': []
+        }
+        for year, count in value_dict.iteritems():
+            item_dict['values'].append({'x': year, 'y': count})
+
+        project_counts.append(item_dict)
 
     return_dict = {
         'web_title': u'Number of projects',
-        'projects': projects,
-        'years': years,
+        'project_counts': project_counts,
+        'years_range': years_range,
     }
 
     return render(request, "charts/projects/number_of_projects.html", return_dict)
