@@ -274,10 +274,10 @@ def publications_number_of_publications(request):
     min_year = 2000
     max_year = datetime.datetime.now().year + 1
 
-    years = []
+    years_range = []
 
     for year in range(min_year, max_year):
-        years.append(year)
+        years_range.append(year)
 
     default_pub_dict = {}
     totals_by_year = {}
@@ -322,7 +322,7 @@ def publications_number_of_publications(request):
     return_dict = {
         'web_title': u'Number of publications',
         'publication_counts': publication_counts,
-        'years': years,
+        'years_range': years_range,
     }
 
     return render(request, "charts/publications/number_of_publications.html", return_dict)
@@ -358,7 +358,7 @@ def projects_number_of_projects(request):
     projects = {}
 
     for scope in scopes:
-        projects[scope] = OrderedDict()
+        projects[scope] = {}
         for year in years:
             projects[scope][year] = 0
 
@@ -366,6 +366,8 @@ def projects_number_of_projects(request):
         for project_id in projects_data.get(year, []):
             for scope in projects_data[year][project_id]:
                 projects[scope][year] += 1
+
+    print projects
 
     return_dict = {
         'web_title': u'Number of projects',
