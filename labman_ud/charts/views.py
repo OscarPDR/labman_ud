@@ -283,6 +283,7 @@ def publications_number_of_publications(request):
     totals_by_year = {}
 
     authored_publications = Publication.objects.all().exclude(authors=None)
+    authored_publications = authored_publications.select_related('journalarticle', 'journalarticle__parent_journal')
 
     publication_types = list(set(authored_publications.values_list('child_type', flat=True)))
     publication_types.append('JCR')
@@ -327,23 +328,23 @@ def publications_number_of_publications(request):
     return render(request, "charts/publications/number_of_publications.html", return_dict)
 
 
-####################################################################################################
-###     projects_number_of_projects
+###     projects_number_of_projects()
 ####################################################################################################
 
 def projects_number_of_projects(request):
-    geographical_scopes = GeographicalScope.objects.all()
+
     geographical_scopes_by_id = {}
-    for geographical_scope in geographical_scopes:
+
+    for geographical_scope in GeographicalScope.objects.all():
         geographical_scopes_by_id[geographical_scope.id] = geographical_scope.name
 
     fundings = Funding.objects.all().select_related('project', 'funding_program')
     projects_data = defaultdict(lambda: defaultdict(set))
     # {
-    #    year : {
-    #        project_id : [ scope1, scope2, scope3 ]
+    #    year: {
+    #        project_id: [ scope1, scope2, scope3 ]
     #    }
-    #}
+    # }
 
     scopes = set()
 
@@ -366,7 +367,6 @@ def projects_number_of_projects(request):
             for scope in projects_data[year][project_id]:
                 projects[scope][year] += 1
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Number of projects',
         'projects': projects,
