@@ -38,80 +38,46 @@
     <script src="{% static 'js/nv.d3.min.js' %}"></script>
 
     <script>
-
-        var jsonObj = []
-
-        // Adapt data to NVD3.js format
-        {% for item, values in publications.items %}
-            var tempjson = {};
-            var currentValues = 0;
-            tempjson['key'] = '{{ item }}';
-            tempjson['values'] = [];
-
-            {% for year, value in values.items %}
-                tempjson['values'].push([{{ year }}, {{ value }}]);
-                currentValues = currentValues + {{ value }};
-            {% endfor %}
-            if (currentValues > 0)
-                jsonObj.push(tempjson);
-        {% endfor %}
-
-        // Total
-        var tempjson = {
-            'key' : 'Total',
-            'values' : []
-        };
-        var tempvalues = {
-            // year : value
-        };
-        $(jsonObj).each(function(pos, category_data) {
-            $(category_data.values).each(function(pos, year_data) {
-                if (tempvalues[year_data[0]] == undefined) {
-                    tempvalues[year_data[0]] = year_data[1];
-                } else {
-                    tempvalues[year_data[0]] = tempvalues[year_data[0]] + year_data[1];
-                }
-            });
-        });
-
-        var max_value = 0;
-        {% for year, _ in publications.items.0.1.items %}
-        tempjson.values.push([ {{ year }}, tempvalues[{{ year }}] ]);
-        if (max_value < tempvalues[ {{ year }} ])
-            max_value = tempvalues[ {{ year }} ];
-        {% endfor %}
-        jsonObj.push(tempjson);
-
-        console.log(jsonObj);
-
         nv.addGraph(function() {
-            // var chart = nv.models.multiBarChart();
-
             var chart = nv.models.lineChart()
-                .x(function(d) { return d[0] })
-                .y(function(d) { return d[1] })
-                .clipEdge(true);
+                .useInteractiveGuideline(true)
+                .duration(350)
+                .margin({'bottom': 85})
+                .showLegend(true)
+                .showYAxis(true)
+                .showXAxis(true)
+                .clipEdge(true)
+                .interpolate('linear')
+                .margin({'top': 500})
+                .noData('There is no data to display')
+                .color([
+                    "#000", "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78",
+                    "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd"
+                ])
+            ;
 
-            chart.xAxis.tickFormat(function(d) {
-                var date = new Date();
-                date.setYear(parseInt(d));
-                return d3.time.format("%Y")(date)
-            });
+            chart.xAxis
+                .showMaxMin(false)
+                .tickValues({{ years }})
+                .rotateLabels(-50)
+                .tickFormat(d3.format('d'));
 
-            chart.yAxis.tickFormat(d3.format(".1"));
-            // If forced, it does not auto-scale.
-            //  chart.forceY([0, max_value + 1]);
+            chart.yAxis
+                .showMaxMin(false)
+                .tickValues([0, 10, 20, 30, 40, 50, 60])
+                .tickFormat(d3.format('d'));
 
-            d3.select("#number_of_publications svg")
-                    .datum(jsonObj)
-                .transition().duration(500).call(chart);
+            chart.legend
+                .margin({'bottom': 50});
 
-            nv.utils.windowResize(chart.update);
+            d3.select('#number_of_publications svg')
+                .datum({{ publication_counts|safe }})
+                .call(chart);
+
+            nv.utils.windowResize(function() { chart.update() });
+
             return chart;
         });
-
-        function publicationsData() {
-        }
     </script>
 
     <script>

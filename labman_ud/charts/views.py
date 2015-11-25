@@ -2,7 +2,7 @@
 
 from itertools import combinations
 from collections import defaultdict, OrderedDict
-from datetime import date
+import datetime
 import operator
 
 # from django.contrib.auth.decorators import login_required
@@ -23,6 +23,7 @@ from entities.projects.utils import *
 
 from labman_setup.models import *
 
+import inflection
 import json
 import networkx as nx
 import numpy as np
@@ -73,7 +74,7 @@ def funding_total_incomes(request):
 
     incomes = []
 
-    current_year = date.today().year
+    current_year = datetime.date.today().year
 
     for year in range(min_year, max_year + 1):
         income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
@@ -220,7 +221,7 @@ def funding_total_incomes_by_scope(request):
 
     min_year = FundingAmount.objects.aggregate(Min('year')).get('year__min')
     max_year = FundingAmount.objects.aggregate(Max('year')).get('year__max')
-    current_year = date.today().year
+    current_year = datetime.date.today().year
 
     incomes = {}
 
@@ -265,49 +266,61 @@ def funding_total_incomes_by_scope(request):
     return render(request, "charts/funding/total_incomes_by_scope.html", return_dict)
 
 
-####################################################################################################
-###     publications_number_of_publications
+###     publications_number_of_publications()
 ####################################################################################################
 
 def publications_number_of_publications(request):
-    publications = {}
 
-    # min_year = Publication.objects.aggregate(Min('published'))
-    max_year = Publication.objects.aggregate(Max('published'))
-
-    # min_year = min_year.get('published__min').year
     min_year = 2000
-
-    max_year = max_year.get('published__max').year
+    max_year = datetime.datetime.now().year + 1
 
     years = []
 
-    for year in range(min_year, max_year + 1):
+    for year in range(min_year, max_year):
         years.append(year)
 
-    for publication_type in PUBLICATION_TYPES:
-        publications[publication_type] = {}
-        for year in range(min_year, max_year + 1):
-            publications[publication_type][year] = 0
+    default_pub_dict = {}
+    totals_by_year = {}
 
-    # all_publications = Publication.objects.all()
-    all_publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal').all().exclude(authors=None)
+    authored_publications = Publication.objects.all().exclude(authors=None)
 
-    for publication in all_publications:
-        pub_type = publication.child_type
-        if pub_type == 'JournalArticle':
-            if publication.journalarticle.parent_journal.impact_factor:
-                pub_type = 'JCR'
+    publication_types = list(set(authored_publications.values_list('child_type', flat=True)))
+    publication_types.append('JCR')
 
-        pub_year = publication.year
-        if pub_year in range(min_year, max_year + 1):
-            publications[pub_type][pub_year] = publications[pub_type][pub_year] + 1
+    for pub_type in publication_types:
+        default_pub_dict[pub_type] = {}
+        for year in range(min_year, max_year):
+            default_pub_dict[pub_type][year] = 0
+            totals_by_year[year] = 0
 
-    # dictionary to be returned in render(request, )
+    for authored_pub in authored_publications:
+        pub_type = authored_pub.child_type
+        if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.parent_journal.impact_factor):
+            pub_type = 'JCR'
+
+        pub_year = authored_pub.year
+        if pub_year in range(min_year, max_year):
+            default_pub_dict[pub_type][pub_year] = default_pub_dict[pub_type][pub_year] + 1
+            totals_by_year[pub_year] = totals_by_year.get(pub_year, 0) + 1
+
+    publication_counts = [{
+        'key': 'Total',
+        'values': [{'x': year, 'y': count} for year, count in totals_by_year.iteritems()]
+    }]
+
+    for pub_type, value_dict in default_pub_dict.iteritems():
+        item_dict = {
+            'key': str(inflection.titleize(pub_type)),
+            'values': []
+        }
+        for year, count in value_dict.iteritems():
+            item_dict['values'].append({'x': year, 'y': count})
+
+        publication_counts.append(item_dict)
+
     return_dict = {
         'web_title': u'Number of publications',
-        'publication_types': PUBLICATION_TYPES,
-        'publications': publications,
+        'publication_counts': publication_counts,
         'years': years,
     }
 
@@ -544,7 +557,7 @@ def publications_by_author(request, author_slug):
     min_year = _publications.aggregate(Min('year'))
     max_year = _publications.aggregate(Max('year'))
 
-    max_year = date.today().year
+    max_year = datetime.date.today().year
     min_year = min_year.get('year__min')
     # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
@@ -614,7 +627,7 @@ def publication_places_by_author(request, author_slug, child_type=None):
     if child_type:
         min_year = PublicationAuthor.objects.filter(author=author).aggregate(Min('publication__year'))
         min_year = min_year.get('publication__year__min')
-        max_year = date.today().year
+        max_year = datetime.date.today().year
 
         colors = None
 
@@ -851,7 +864,7 @@ def group_timeline(request):
                 'current': False,
             })
         else:
-            today = date.today()
+            today = datetime.date.today()
             record.update({
                 'end_year': today.year,
                 'end_month': today.month - 1,
@@ -1015,7 +1028,7 @@ def gender_distribution(request, organization_slug=None):
     gender_distribution_sets = {}
 
     min_year = 2005
-    actual_year = date.today().year
+    actual_year = datetime.date.today().year
 
     for year in range(min_year, actual_year + 1):
         gender_distribution[year] = {
@@ -1097,7 +1110,7 @@ def position_distribution(request, organization_slug=None):
         position_list.remove('')
 
     min_year = 2005
-    actual_year = date.today().year
+    actual_year = datetime.date.today().year
 
     for year in range(min_year, actual_year + 1):
         position_distribution[year] = {}
