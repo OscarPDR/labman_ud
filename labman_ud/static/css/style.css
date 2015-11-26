@@ -4,7 +4,7 @@
     }
 }
 
-@-moz-document url-prefix() { 
+@-moz-document url-prefix() {
     #expand-form-panel {
         position: absolute;
     }
@@ -1019,4 +1019,35 @@ blockquote footer {
 
 .label-q4 {
     background-color: #009925;
+}
+
+.uncertain {
+  fill: #7e7e7e;
+}
+
+.confirmed {
+    fill: #4285F4;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path {
+    display: none;
+}
+
+g.y.axis > g.tick > line {
+    stroke: #eee;
+}
+
+.year {
+    color: #f4b400;
 }

@@ -61,11 +61,11 @@ def chart_index(request):
     return render(request, 'charts/index.html', {'web_title': 'Charts'})
 
 
-####################################################################################################
-###     funding_total_incomes
+###     funding_total_incomes()
 ####################################################################################################
 
 def funding_total_incomes(request):
+
     min_year = FundingAmount.objects.aggregate(Min('year'))
     max_year = FundingAmount.objects.aggregate(Max('year'))
 
@@ -80,10 +80,9 @@ def funding_total_incomes(request):
         income = FundingAmount.objects.filter(year=year).aggregate(value=Sum('own_amount'))
         if income['value'] is None:
             income['value'] = 0
-        certainty = False if (year >= current_year) else True
-        incomes.append({'key': year, 'value': int(income['value']), 'certainty': certainty})
+        column_class = 'uncertain' if (year >= current_year) else 'confirmed'
+        incomes.append({'year': year, 'value': int(income['value']), 'column_class': column_class})
 
-    # dictionary to be returned in render(request, )
     return_dict = {
         'web_title': u'Total incomes',
         'incomes': incomes,
@@ -92,17 +91,17 @@ def funding_total_incomes(request):
     return render(request, "charts/funding/total_incomes.html", return_dict)
 
 
-####################################################################################################
-###     funding_incomes_by_year
+###     funding_incomes_by_year()
 ####################################################################################################
 
 def funding_incomes_by_year(request, year):
-    incomes = {}
+
+    incomes_dict = {}
 
     geographical_scopes = GeographicalScope.objects.all()
 
     for geographical_scope in geographical_scopes:
-        incomes[geographical_scope.name] = 0
+        incomes_dict[geographical_scope.name] = 0
 
     year_incomes = FundingAmount.objects.filter(year=year)
 
@@ -110,9 +109,16 @@ def funding_incomes_by_year(request, year):
         funding = Funding.objects.get(id=year_income.funding_id)
         funding_program = FundingProgram.objects.get(id=funding.funding_program.id)
         scope = funding_program.geographical_scope.name
-        incomes[scope] = incomes[scope] + int(year_income.own_amount)
+        incomes_dict[scope] = incomes_dict[scope] + int(year_income.own_amount)
 
-    # dictionary to be returned in render(request, )
+    incomes = []
+
+    current_year = datetime.date.today().year
+
+    for key, value in incomes_dict.iteritems():
+        column_class = 'uncertain' if (int(year) >= current_year) else 'confirmed'
+        incomes.append({'scope': str(key), 'amount': value, 'column_class': column_class})
+
     return_dict = {
         'web_title': u'Total incomes by year',
         'incomes': incomes,

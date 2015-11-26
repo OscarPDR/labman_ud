@@ -3,6 +3,14 @@
 
 
 
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/d3-tip.css' %}" />
+
+{% endblock %}
+
+
+
 {% block content %}
 
     <ul class="breadcrumb">
@@ -17,13 +25,11 @@
         <li class="active">{{ year }}</li>
     </ul>
 
-    <div id="chart-div" class="centered">
-        <h4>Project funds for {{ year }}</h4>
-
-        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div class="centered">
+        <h4>Incomes for {{ year }} by scope</h4>
+        <br>
+        <div id="chart_div"></div>
     </div>
-
-    <br>
 
 {% endblock %}
 
@@ -34,55 +40,153 @@
     <script src="https://www.google.com/jsapi"></script>
 
     <script>
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Year');
-            data.addColumn('number', 'Income');
-            data.addColumn({type: 'string', role: 'tooltip'});
-            data.addRows([
-                {% for key, value in incomes.items %}
-                    ['{{ key }}', {{ value }}, '{{ value|intcomma }} €'],
-                {% endfor %}
-            ]);
+        // google.load("visualization", "1", {packages:["corechart"]});
+        // google.setOnLoadCallback(drawChart);
+        // function drawChart() {
+        //     var data = new google.visualization.DataTable();
+        //     data.addColumn('string', 'Year');
+        //     data.addColumn('number', 'Income');
+        //     data.addColumn({type: 'string', role: 'tooltip'});
+        //     data.addRows([
+        //         {% for key, value in incomes.items %}
+        //             ['{{ key }}', {{ value }}, '{{ value|intcomma }} €'],
+        //         {% endfor %}
+        //     ]);
 
-            var options = {
-                legend: {position: 'none'},
-                hAxis: {
-                    title: 'Geographical scope',
-                    titleTextStyle: {color: 'black'},
-                    slantedTextAngle: 45,
-                    slantedText: true,
-                },
-                vAxis: {
-                    title: 'Incomes in €',
-                    titleTextStyle: {color: 'black'},
-                },
-                colors: ['#132da3'],
-            };
+        //     var options = {
+        //         legend: {position: 'none'},
+        //         hAxis: {
+        //             title: 'Geographical scope',
+        //             titleTextStyle: {color: 'black'},
+        //             slantedTextAngle: 45,
+        //             slantedText: true,
+        //         },
+        //         vAxis: {
+        //             title: 'Incomes in €',
+        //             titleTextStyle: {color: 'black'},
+        //         },
+        //         colors: ['#132da3'],
+        //     };
 
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+        //     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        //     chart.draw(data, options);
 
-            // Add selection handler.
-            google.visualization.events.addListener(chart, 'select', selectHandler);
-            console.log();
+        //     // Add selection handler.
+        //     google.visualization.events.addListener(chart, 'select', selectHandler);
+        //     console.log();
 
-            function selectHandler() {
-                var selection = chart.getSelection();
-                for (var i = 0; i < selection.length; i++) {
-                    var item = selection[i];
-                    var scope = data.getValue(item.row, item.column-1);
+        //     function selectHandler() {
+        //         var selection = chart.getSelection();
+        //         for (var i = 0; i < selection.length; i++) {
+        //             var item = selection[i];
+        //             var scope = data.getValue(item.row, item.column-1);
 
-                    var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
-                    redirect_url = redirect_url.replace("scope_to_replace", scope);
+        //             var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
+        //             redirect_url = redirect_url.replace("scope_to_replace", scope);
 
-                    window.location.replace(redirect_url);
-                }
-            }
-        }
+        //             window.location.replace(redirect_url);
+        //         }
+        //     }
+        // }
 
+    </script>
+
+    <script src="{% static 'js/d3.min.js' %}"></script>
+    <script src="{% static 'js/d3-tip.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            var dataset = {{ incomes|safe  }};
+
+            var full_width = $( "#chart_div" ).width() / 2;
+            var width = full_width;
+            var height = width * 0.4;
+
+            $("#charts_div").width(width);
+            $("#charts_div").height(height);
+
+            var margin = {top: 20, right: 25, bottom: 70, left: 75};
+
+            var x = d3.scale.ordinal().rangeRoundBands([0, width], .15);
+            var y = d3.scale.linear().range([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            var formatAbbrValue = d3.format('.2s');
+            var formatThousandsValue = d3.format(",");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .tickSize(-width)
+                .outerTickSize(0)
+                .tickFormat(function(d) {  return formatAbbrValue(d); })
+                .orient("left");
+
+            var svg = d3.select("#chart_div")
+                .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            x.domain(dataset.map(function(d) { return d.scope; }));
+            y.domain([0, d3.max(dataset, function(d) { return d.amount; })]);
+
+            var tip = d3.tip().attr('class', 'd3-tip hello').html(function(d) {
+                var htmlStr = "<div class='centered'><span class='year'>" + d.scope + "</span><br><br>" + formatThousandsValue(d.amount) + " €</div>"
+                return  htmlStr;
+            });
+            svg.call(tip)
+
+            svg.selectAll("bar")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                    .attr("class", function(d) { return d.column_class; })
+                    .attr("x", function(d) { return x(d.scope); })
+                    .attr("width", x.rangeBand())
+                    .attr("y", function(d) { return y(d.amount); })
+                    .attr("height", function(d) { return height - y(d.amount); })
+
+                    .on('mouseover', function(d) {
+                        tip.show(d);
+                        d3.select(this).transition()
+                        .duration(300)
+                        .style('opacity', 0.5);
+                    })
+
+                    .on('mouseout', function(d) {
+                        tip.hide(d);
+                        d3.select(this).transition()
+                        .duration(300)
+                        .style('opacity', 1);
+                    })
+
+                    .on('click', function(d) {
+                        var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
+                        redirect_url = redirect_url.replace("scope_to_replace", d.scope);
+
+                        window.location.replace(redirect_url);
+                    })
+            ;
+
+            svg.selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", "-.55em")
+                .attr("transform", "rotate(-90)" );
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+        });
     </script>
 
     <script>
