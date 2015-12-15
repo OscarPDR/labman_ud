@@ -1164,7 +1164,7 @@ def position_distribution(request, organization_slug=None):
     position_distribution_array.append(['Year'])
 
     for position in position_list:
-        position_distribution_array[0].append(str(position))
+        position_distribution_array[0].append(position)
 
     for year in range(min_year, actual_year + 1):
         array_row = [str(year)]
