@@ -801,9 +801,12 @@ def _extract_authors(item):
 
                 author_slug = slugify('%s %s' % (author_first_name, author_first_surname))
 
-                author = get_or_default(
-                    Person,
+                author, created = Person.objects.get_or_create(
                     slug=author_slug,
+                    defaults={
+                        'first_name': author_first_name,
+                        'first_surname': author_first_surname,
+                    },
                 )
 
                 if not author:
