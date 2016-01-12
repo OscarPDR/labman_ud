@@ -79,7 +79,7 @@ class Project(models.Model):
     )
 
     description = RedactorField(
-        max_length=3000,
+        max_length=7500,
         blank=True,
         null=True,
     )
