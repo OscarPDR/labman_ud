@@ -341,56 +341,57 @@
     </script>
 
     <script>          
+        // Loads form data from previous search.
         {% if form_from_range %}
-            $('#id_from_range').find('[value="{{ form_from_range|safe }}"]').attr('selected', 'true');
-            $('#id_from_range').selectpicker('refresh');
-            if("{{ form_from_range|safe }}" == '>' || "{{ form_from_range|safe }}" == '>=') {
-                $('#publication_to_year').show();
-                $('#id_from_year_label').text('From year:');
-            }
+        $('#id_from_range').find('[value="{{ form_from_range|safe }}"]').attr('selected', 'true');
+        $('#id_from_range').selectpicker('refresh');
+        if("{{ form_from_range|safe }}" == '>' || "{{ form_from_range|safe }}" == '>=') {
+            $('#publication_to_year').show();
+            $('#id_from_year_label').text('From year:');
+        }
         {% endif %}
 
         {% if form_from_year %}
-            $('input[name=from_year]').val("{{form_from_year}}");
+        $('input[name=from_year]').val("{{form_from_year}}");
         {% endif %}
 
         {% if form_to_year %}
-            $('input[name=to_year]').val("{{form_to_year}}");
+        $('input[name=to_year]').val("{{form_to_year}}");
         {% endif %}
             
         {% if form_to_range %}
-            $('select[name=to_range]').find('[value="{{ form_to_range|safe }}"]').attr('selected', 'true');
-            $('select[name=to_range]').selectpicker('refresh');
+        $('select[name=to_range]').find('[value="{{ form_to_range|safe }}"]').attr('selected', 'true');
+        $('select[name=to_range]').selectpicker('refresh');
         {% endif %}
             
         {% if form_publication_types %}
-            var type = {{form_publication_types|safe}};
-            for(var i = 0; i < type.length; i++) {
-                $('select[name=publication_types]').find('[value=' + type[i] + ']').attr('selected', 'true');
-                $('select[name=publication_types]').selectpicker('refresh');
-            }
+        var type = {{form_publication_types|safe}};
+        for(var i = 0; i < type.length; i++) {
+            $('select[name=publication_types]').find('[value=' + type[i] + ']').attr('selected', 'true');
+            $('select[name=publication_types]').selectpicker('refresh');
+        }
         {% endif %}
 
         {% if form_tags %}
-            var tags = {{form_tags|safe}};
-            for(var i = 0; i < tags.length; i++) {
-                $('select[name=tags]').find('[value=' + tags[i].pk + ']').attr('selected', 'true');
-                $('select[name=tags]').selectpicker('refresh');
-            }
+        var tags = {{form_tags|safe}};
+        for(var i = 0; i < tags.length; i++) {
+            $('select[name=tags]').find('[value=' + tags[i].pk + ']').attr('selected', 'true');
+            $('select[name=tags]').selectpicker('refresh');
+        }
         {% endif %}
 
         {% if form_authors_name %}
-            var authors = {{form_authors_name|safe}};
-            for(var i = 0; i < authors.length; i++) {
-                $('input[name=author_name_' + (i+1) + ']').val(authors[i]);
-            }
+        var authors = {{form_authors_name|string_list|safe}};
+        for(var i = 0; i < authors.length; i++) {
+            $('input[name=author_name_' + (i+1) + ']').val(authors[i]);
+        }
         {% endif %}
 
         {% if form_editors_name %}
-            var editors = {{form_editors_name|safe}};
-            for(var i = 0; i < editors.length; i++) {
-                $('input[name=editor_name_' + (i+1) + ']').val(editors[i]);
-            }
+        var editors = {{form_editors_name|string_list|safe}};
+        for(var i = 0; i < editors.length; i++) {
+            $('input[name=editor_name_' + (i+1) + ']').val(editors[i]);
+        }
         {% endif %}
     </script>
 
