@@ -248,10 +248,15 @@
 {% block scripts %}
     <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
     
+    <script>
+        var allAuthors = {{author_info|string_list|safe}};
+        var allEditors = {{editor_info|string_list|safe}};
+    </script>
+
     <script> 
         /* Loads information of the author and editor typeahead */
-        $('.author-typeahead').typeahead({source: {{author_info|string_list|safe}} });
-        $('.editor-typeahead').typeahead({source: {{editor_info|string_list|safe}} });
+        $('.author-typeahead').typeahead({source: allAuthors });
+        $('.editor-typeahead').typeahead({source: allEditors });
     </script>
 
     <script>
@@ -314,7 +319,7 @@
             author_label.text('Author ' + author_count + ':');
             author_input.val('');
             author_input.attr('name', 'author_name_' + author_count);
-            author_input.typeahead({source: {{author_info|string_list|safe}} });
+            author_input.typeahead({source: allAuthors });
 
             $('#member-list').append(author_panel);
         });
@@ -334,7 +339,7 @@
             editor_label.text('Editor ' + editor_count + ':');
             editor_input.val('');
             editor_input.attr('name', 'editor_name_' + editor_count);
-            editor_input.typeahead({source: {{editor_info|string_list|safe}} })
+            editor_input.typeahead({source: allEditors })
 
             $('#editor-list').append(editor_panel);
         });
@@ -397,13 +402,22 @@
 
     <script src="{% static 'js/extend-form.js' %}"></script>
 
-    {% if query_string %}
+    {% if query_string or form_authors_name %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
 
-        <script>
-            $('tbody').highlight('{{ query_string }}');
-            $('#id_text').attr('placeholder', '{{ query_string }}');
-        </script>
+        {% if query_string %}
+            <script>
+                $('tbody').highlight('{{ query_string }}');
+                $('#id_text').attr('placeholder', '{{ query_string }}');
+            </script>
+        {% endif %}
+        {% if form_authors_name %}
+            <script>
+            for(var i = 0; i < authors.length; i++) {
+                $('tbody').highlight(authors[i]);
+            }
+            </script>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
