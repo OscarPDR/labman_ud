@@ -1,10 +1,9 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags sanitize_types staticfiles get_range%}
+{% load pagination_tags sanitize_types staticfiles get_range string_list%}
 
 
 
 {% block content %}
-
     <div id="form-section">
         <form class="form-search" action="" method="post">
             {% csrf_token %}
@@ -38,6 +37,12 @@
                 
                 <div class="tab-content">
                     <div class="tab-pane active" id="basic-info-tab">
+                        <!--<div class="form-group">
+                            <label for="title" id="title_label" class="control-label col-xs-12 col-sm-2 col-lg-2">Title</label>
+                            <div class="col-xs-12 col-sm-6">
+                                <input autocomplete="off" name="title" data-provide="typeahead" type="text" placeholder="Title" class="form-control title-typeahead">
+                            </div>
+                        </div>-->
                         <div class="form-group">
                             <label for="start_date" id="id_from_year_label" class="control-label col-xs-12 col-sm-2 col-lg-2">Year:</label>
                             <div class="col-xs-6 col-sm-3">
@@ -108,7 +113,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Author {{index}}:</label>
                                         <div class="col-xs-12 col-sm-6">
-                                            <input name="author_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                            <input autocomplete="off" name="author_name_{{index}}" data-provide="typeahead" type="text" placeholder="Name" class="form-control author-typeahead">
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -129,7 +134,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Editor {{index}}:</label>
                                         <div class="col-xs-12 col-sm-6">
-                                            <input name="editor_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                            <input autocomplete="off" name="editor_name_{{index}}" data-provide="typeahead" type="text" placeholder="Name" class="form-control editor-typeahead">
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -241,6 +246,13 @@
 
 
 {% block scripts %}
+    <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
+    
+    <script> 
+        /* Loads information of the author and editor typeahead */
+        $('.author-typeahead').typeahead({source: {{author_info|string_list|safe}} });
+        $('.editor-typeahead').typeahead({source: {{editor_info|string_list|safe}} });
+    </script>
 
     <script>
         $('#publications-nav').addClass('active');
@@ -302,6 +314,7 @@
             author_label.text('Author ' + author_count + ':');
             author_input.val('');
             author_input.attr('name', 'author_name_' + author_count);
+            author_input.typeahead({source: {{author_info|string_list|safe}} });
 
             $('#member-list').append(author_panel);
         });
@@ -321,6 +334,7 @@
             editor_label.text('Editor ' + editor_count + ':');
             editor_input.val('');
             editor_input.attr('name', 'editor_name_' + editor_count);
+            editor_input.typeahead({source: {{editor_info|string_list|safe}} })
 
             $('#editor-list').append(editor_panel);
         });

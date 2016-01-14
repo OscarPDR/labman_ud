@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import threading
 import weakref
@@ -164,6 +164,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 publications = []
 
             session_filter_dict = {
+                'query_string' : query_string,
                 'publications': serializers.serialize('json', publications),
                 'form_from_year' : form_from_year,
                 'form_from_range' : form_from_range,
@@ -186,9 +187,12 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             p = re.compile(ur'publications\/filtered(\/\?page=[1-9]+)?')
 
             if  re.search(p, request.path) == None:
+                # IF requested page is not filted, deletes session filter info.
                 del request.session['filtered']
+                # Loads default report.
                 form = PublicationSearchForm(extra_author=1, extra_editor=1)
             else:
+                # IF requested page is filtered, loads info from session.
                 author_field_count = request.session['filtered']['form_author_field_count']
                 editor_field_count = request.session['filtered']['form_editor_field_count']
                 if author_field_count == 0:
@@ -197,8 +201,10 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     editor_field_count = 1
                 form = PublicationSearchForm(extra_author=author_field_count,
                     extra_editor=editor_field_count)
+                query_string = request.session['filtered']['query_string']
                 publications = []
-                for deserialized_object in serializers.deserialize('json', request.session['filtered']['publications']):
+                for deserialized_object in serializers.deserialize('json', 
+                    request.session['filtered']['publications']):
                     publications.append(deserialized_object.object)
                 form_from_year = request.session['filtered']['form_from_year']
                 form_from_range = request.session['filtered']['form_from_range']
@@ -321,11 +327,25 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         clean_index = False
 
-    publications_ids = PublicationAuthor.objects.values_list('publication', flat=True)
-    publication_types_info = Publication.objects.filter(id__in=publications_ids).order_by().values('child_type').distinct()
+    # Retrieves all the publication types.
+    publications_ids = PublicationAuthor.objects.values_list('publication',
+        flat=True)
+    publication_types_info = Publication.objects.filter(
+        id__in=publications_ids).order_by().values('child_type').distinct()
 
+    # Retrieves all the tag names.
     tags_id_info = Publication.objects.all().values_list('tags', flat=True)
     tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+
+    # Retrieves all the full names of authors.
+    author_info = PublicationAuthor.objects.all() \
+        .distinct('author__full_name').order_by() \
+        .values_list('author__full_name', flat=True)
+
+    # Retrieves all the full names of editors.
+    editor_info = PublicationEditor.objects \
+        .distinct('editor__full_name').order_by() \
+        .values_list('editor__full_name', flat=True)
 
     publication_model_list = [
         'Book',
@@ -353,6 +373,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'clean_index': clean_index,
         'form': form,
         'last_entry': last_entry,
+        'author_info': author_info,
+        'editor_info': editor_info,
         'publication_type': publication_type,
         'publication_types_info' : publication_types_info,
         'publications': publications,
