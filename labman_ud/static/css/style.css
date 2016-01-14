@@ -78,6 +78,10 @@ h5, h6 {
     font-size: 18px;
 }
 
+.typeahead.dropdown-menu {
+    min-width: calc(100% - 30px);
+}
+
 .publication-authors p span i {
     margin-right: 0.25em;
 }
