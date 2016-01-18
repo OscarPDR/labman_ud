@@ -96,11 +96,12 @@
                             <div class="form-group">
                                 <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
                                 <div class="col-xs-12 col-sm-6">
-                                    <select name="tags" class="selectpicker" multiple data-width="100%">
+                                    <!-- <select name="tags" class="selectpicker" multiple data-width="100%">
                                         {% for publication_tag in publication_tags_info %}
                                                 <option value="{{ publication_tag.id }}">{{ publication_tag.name }}</option>
                                             {% endfor %}
-                                    </select>
+                                    </select> -->
+                                    <input name="tags" data-provide="typeahead" type="text" class="form-control tag-typeahead">
                                 </div>
                             </div>
                         {% endif %}
@@ -246,11 +247,17 @@
 
 
 {% block scripts %}
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tokenfield.min.js' %}"></script>
     <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
     
     <script>
         var allAuthors = {{author_info|string_list|safe}};
         var allEditors = {{editor_info|string_list|safe}};
+        var allTags = {{publication_tags_info|string_list|safe}};
+        {% if form_tags %}
+        var tags = {{form_tags|string_list|safe}};
+        {% endif %}
     </script>
 
     <script> 
@@ -377,14 +384,6 @@
         }
         {% endif %}
 
-        {% if form_tags %}
-        var tags = {{form_tags|safe}};
-        for(var i = 0; i < tags.length; i++) {
-            $('select[name=tags]').find('[value=' + tags[i].pk + ']').attr('selected', 'true');
-            $('select[name=tags]').selectpicker('refresh');
-        }
-        {% endif %}
-
         {% if form_authors_name %}
         var authors = {{form_authors_name|string_list|safe}};
         for(var i = 0; i < authors.length; i++) {
@@ -399,8 +398,6 @@
         }
         {% endif %}
     </script>
-
-    <script src="{% static 'js/extend-form.js' %}"></script>
 
     {% if query_string or form_authors_name %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
@@ -419,5 +416,42 @@
             </script>
         {% endif %}
     {% endif %}
+
+    <script>
+        var populated = false;
+        $('#expand-form-btn').click(function() {
+            $(this).removeClass('hover');
+            var buttonIcon = $(this).children('i');
+            if(buttonIcon.hasClass('fa-plus')) {
+                buttonIcon.removeClass('fa-plus').addClass('fa-minus');
+                $('#extended-form-title, #extended-form-tabs, #extended-form').fadeIn();
+                // Loads tags after advanced search panel is visible to fix wrong width calc.
+                $('.tag-typeahead').tokenfield({
+                    autocomplete: {
+                    source: allTags,
+                    delay: 100
+                },
+                    showAutocompleteOnFocus: true
+                });
+                //Loads tags filter values after typeahead is populated.
+                {% if form_tags %}
+                if(!populated) {
+                    $('input[name=tags]').tokenfield('setTokens', tags);
+                    populated = true;
+                }
+                {% endif %}
+
+            } else {
+                buttonIcon.removeClass('fa-minus').addClass('fa-plus');
+                $('#extended-form-title, #extended-form-tabs, #extended-form').fadeOut();
+            }
+        });
+
+        $('#all-tab').click(function() {
+            $('#extended-form-tabs li.active').removeClass('active');
+            $(this).parent().addClass('active');
+            $('.tab-pane').addClass('active');
+        });
+    </script>
 
 {% endblock %}

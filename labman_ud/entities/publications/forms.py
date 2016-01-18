@@ -14,7 +14,7 @@ class CommaSeparatedStringField(forms.Field):
 
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ', ')
-        super(CommaSeparedStringField, self).__init__(*args, **kwargs)
+        super(CommaSeparatedStringField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if not value:

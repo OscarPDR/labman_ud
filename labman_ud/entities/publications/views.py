@@ -123,7 +123,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 publications = publications.filter(child_type__in=form_publication_types)
 
             if form_tags:
-                publications = publications.filter(publicationtag__tag__in=form_tags)
+                publications = publications.filter(publicationtag__tag__name__in=form_tags)
 
             found = True
 
@@ -171,7 +171,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 'form_to_year' : form_to_year,
                 'form_to_range' : form_to_range,
                 'form_publication_types' : form_publication_types,
-                'form_tags' : serializers.serialize('json', form_tags),
+                'form_tags' : form_tags,
                 'form_authors_name' : form_authors_name,
                 'form_editors_name' : form_editors_name,
                 'form_author_field_count' : len(form_authors_name),
@@ -335,7 +335,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     # Retrieves all the tag names.
     tags_id_info = Publication.objects.all().values_list('tags', flat=True)
-    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by().values_list('name', flat=True)
 
     # Retrieves all the full names of authors.
     author_info = PublicationAuthor.objects.all() \
