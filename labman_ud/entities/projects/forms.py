@@ -4,6 +4,25 @@ from django import forms
 from .models import *
 from entities.utils.models import Tag, Role
 
+class CommaSeparatedStringField(forms.Field):
+
+    def __init__(self, *args, **kwargs):
+        self.token = kwargs.pop('token', ', ')
+        super(CommaSeparatedStringField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if not value:
+            return []
+        if isinstance(value, list):
+            return value
+        return value.split(self.token)
+
+    def clean(self, value):
+        value = self.to_python(value)
+        self.validate(value)
+        self.run_validators(value)
+        return value
+
 # Create the form class.
 
 ###		ProjectSearchForm
@@ -46,8 +65,8 @@ class ProjectSearchForm(forms.Form):
     funds_range = forms.CharField(
         max_length=2, required=False)
 
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(), required=False)
+    tags = CommaSeparatedStringField(
+        required=False)
 
     member_field_count = forms.CharField(widget=forms.HiddenInput())
 

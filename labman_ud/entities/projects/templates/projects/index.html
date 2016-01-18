@@ -1,5 +1,5 @@
 {% extends "labman_ud/base.html" %}
-{% load pagination_tags staticfiles get_range %}
+{% load pagination_tags staticfiles get_range string_list %}
 
 
 
@@ -105,11 +105,7 @@
                             <div id="id_tags_panel" class="form-group">
                                 <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
                                 <div class="col-xs-12 col-sm-6">
-                                    <select id="id_tags" name="tags" class="selectpicker" multiple data-width="100%">
-                                        {% for project_tag in project_tags_info %}
-                                                <option value="{{ project_tag.id }}">{{ project_tag.name }}</option>
-                                            {% endfor %}
-                                    </select>
+                                    <input name="tags" data-provide="typeahead" type="text" class="form-control tag-typeahead">
                                 </div>
                             </div>
                         {% endif %}
@@ -265,6 +261,17 @@
 
 
 {% block scripts %}
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tokenfield.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
+
+    <script>
+        // var allMembers = {{author_info|string_list|safe}};
+        var allTags = {{project_tags_info|string_list|safe}};
+        {% if form_tags %}
+        var tags = {{form_tags|string_list|safe}};
+        {% endif %}
+    </script>
 
     <script>
         $('#projects-nav').addClass('active');
@@ -304,8 +311,6 @@
             $('.selectpicker').selectpicker();
         });
     </script>
-
-    <script src="{% static 'js/extend-form.js' %}"></script>
 
     <script>
         $('#total_funds_select').change(function(e) {
@@ -418,12 +423,6 @@
             $('#id_project_status').selectpicker('refresh');
         {% endfor %}
 
-        //Loads tag list of the actual filtered search.
-        {% for tag in form_tags %}
-            $('#id_tags').find('option:contains("{{ tag }}")').attr('selected', 'true');
-            $('#id_tags').selectpicker('refresh');
-        {% endfor %}
-
         //Loads funds select of the actual filtered search.
         {% if form_funds_range %}
             $('#total_funds_select').find('[value="{{ form_funds_range|safe }}"]').attr('selected', 'true');
@@ -457,7 +456,6 @@
         {% endfor %}
     </script>
 
-
     {% if query_string %}
         <script src="{% static 'js/jquery-highlight.js' %}"></script>
 
@@ -466,5 +464,42 @@
             $('#id_text').attr('placeholder', '{{ query_string }}');
         </script>
     {% endif %}
+
+    <script>
+        var populated = false;
+        $('#expand-form-btn').click(function() {
+            $(this).removeClass('hover');
+            var buttonIcon = $(this).children('i');
+            if(buttonIcon.hasClass('fa-plus')) {
+                buttonIcon.removeClass('fa-plus').addClass('fa-minus');
+                $('#extended-form-title, #extended-form-tabs, #extended-form').fadeIn();
+                // Loads tags after advanced search panel is visible to fix wrong width calc.
+                $('.tag-typeahead').tokenfield({
+                    autocomplete: {
+                    source: allTags,
+                    delay: 100
+                },
+                    showAutocompleteOnFocus: true
+                });
+                //Loads tags filter values after typeahead is populated.
+                {% if form_tags %}
+                if(!populated) {
+                    $('input[name=tags]').tokenfield('setTokens', tags);
+                    populated = true;
+                }
+                {% endif %}
+
+            } else {
+                buttonIcon.removeClass('fa-minus').addClass('fa-plus');
+                $('#extended-form-title, #extended-form-tabs, #extended-form').fadeOut();
+            }
+        });
+
+        $('#all-tab').click(function() {
+            $('#extended-form-tabs li.active').removeClass('active');
+            $(this).parent().addClass('active');
+            $('.tab-pane').addClass('active');
+        });
+    </script>
 
 {% endblock %}

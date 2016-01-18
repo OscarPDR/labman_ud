@@ -144,7 +144,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 projects = projects.filter(status__in=form_project_status)
 
             if form_tags:
-                projects = projects.filter(projecttag__tag__in=form_tags)
+                projects = projects.filter(projecttag__tag__name__in=form_tags)
 
             if form_from_total_funds:
                 if form_funds_range == '==':
@@ -225,7 +225,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 'form_end_range' : end_range,
                 'form_project_types': form_project_types,
                 'form_project_status' : form_project_status,
-                'form_tags' : serializers.serialize('json', form_tags),
+                'form_tags' : form_tags,
                 'projects' : serializers.serialize('json', projects),
                 'form_funds_range' : form_funds_range,
                 'form_from_total_funds' : str(form_from_total_funds),
@@ -258,9 +258,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 form_project_types = request.session['filtered']['form_project_types']
                 form_project_status = request.session['filtered']['form_project_status']
                 form_tags = request.session['filtered']['form_tags']
-                form_tags = []
-                for deserialized_object in serializers.deserialize('json', request.session['filtered']['form_tags']):
-                    form_tags.append(deserialized_object.object)
+                form_tags = request.session['filtered']['form_tags']
                 projects = []
                 for deserialized_object in serializers.deserialize('json', request.session['filtered']['projects']):
                     projects.append(deserialized_object.object)
@@ -305,7 +303,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     status_items = OrderedDict(sorted(Counter(status_info).items(), key=lambda t: t[1])).items()
 
     tags_id_info = Project.objects.all().values_list('tags', flat=True)
-    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name')
+    tags_info = Tag.objects.filter(id__in=tags_id_info).order_by('name').values_list('name', flat=True)
 
     roles_id = AssignedPerson.objects.all().distinct().values_list('role', flat=True)
     roles = Role.objects.filter(id__in=roles_id).order_by('name')
