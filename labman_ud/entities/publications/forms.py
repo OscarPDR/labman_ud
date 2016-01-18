@@ -10,6 +10,25 @@ for choice in types:
     PUBLICATION_TYPES = PUBLICATION_TYPES + ((choice, choice),)
 
 
+class CommaSeparatedStringField(forms.Field):
+
+    def __init__(self, *args, **kwargs):
+        self.token = kwargs.pop('token', ', ')
+        super(CommaSeparedStringField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if not value:
+            return []
+        if isinstance(value, list):
+            return value
+        return value.split(self.token)
+
+    def clean(self, value):
+        value = self.to_python(value)
+        self.validate(value)
+        self.run_validators(value)
+        return value
+
 # Create your forms here.
 
 ###		PublicationSearchForm
@@ -24,9 +43,6 @@ class PublicationSearchForm(forms.Form):
             'placeholder': 'Publication title or author name',
         })
     , required=False)
-
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(), required=False)
 
     from_year = forms.CharField(
         max_length=4, required=False)
@@ -43,8 +59,8 @@ class PublicationSearchForm(forms.Form):
     publication_types = forms.MultipleChoiceField(
         choices=PUBLICATION_TYPES, required=False)
 
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(), required=False)
+    tags = CommaSeparatedStringField(
+        required=False)
 
     author_field_count = forms.CharField(widget=forms.HiddenInput())
     editor_field_count = forms.CharField(widget=forms.HiddenInput())
