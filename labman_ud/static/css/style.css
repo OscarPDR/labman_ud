@@ -78,6 +78,12 @@ h5, h6 {
     font-size: 18px;
 }
 
+.ui-autocomplete {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .typeahead.dropdown-menu {
     min-width: calc(100% - 30px);
 }
