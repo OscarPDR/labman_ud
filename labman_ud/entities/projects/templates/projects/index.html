@@ -160,7 +160,7 @@
                                             </div>
                                         {% endif %}
                                         <div class="col-xs-6 col-sm-3">
-                                            <input name="participant_name_{{index}}" type="text" placeholder="Name" class="form-control">
+                                            <input autocomplete="off" name="participant_name_{{index}}" data-provide="typeahead" type="text" placeholder="Name" class="form-control member-typeahead">
                                         </div>
                                         <!--{% if index > 1 %}
                                             <div class="col-xs-1">
@@ -266,11 +266,14 @@
     <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
 
     <script>
-        // var allMembers = {{author_info|string_list|safe}};
+        var allMembers = {{participants_info|string_list|safe}};
         var allTags = {{project_tags_info|string_list|safe}};
         {% if form_tags %}
         var tags = {{form_tags|string_list|safe}};
         {% endif %}
+
+        /* Loads information of the author and editor typeahead */
+        $('.member-typeahead').typeahead({source: allMembers });
     </script>
 
     <script>
@@ -380,6 +383,7 @@
             member_label.text('Member ' + member_count + ':');
             member_input.val('');
             member_input.attr('name', 'participant_name_' + member_count);
+            member_input.typeahead({source: allMembers });
 
             member_span.removeAttr("onclick");
             member_span.attr('onclick', 'myFunction(' + member_count + ')');

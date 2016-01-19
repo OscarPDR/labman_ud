@@ -308,6 +308,11 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     roles_id = AssignedPerson.objects.all().distinct().values_list('role', flat=True)
     roles = Role.objects.filter(id__in=roles_id).order_by('name')
 
+    # Retrieves all the full names of authors.
+    participants_info =  AssignedPerson.objects.all() \
+        .distinct('person__full_name').order_by() \
+        .values_list('person__full_name', flat=True)
+
     # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
@@ -335,6 +340,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'form_to_total_funds' : form_to_total_funds,
         'form_participants_name' : form_participants_name,
         'form_participants_role' : form_participants_role,
+        'participants_info' : participants_info,
         'web_title': u'Projects',
     }
 
