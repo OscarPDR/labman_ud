@@ -62,16 +62,11 @@
             var chartTitle = 'Gender distribution';
         {% endif %}
 
-
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
+
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Female', 'Male'],
-                {% for key, value in gender_distribution.items %}
-                ['{{ key }}', {{ value.female }}, {{ value.male }}],
-                {% endfor %}
-            ]);
+            var data = google.visualization.arrayToDataTable({{ gender_distribution_list|safe }});
 
             var options = {
                 title: chartTitle,
@@ -79,10 +74,12 @@
                     title: 'Year',
                     titleTextStyle: {
                         color: '#333'
-                    }
+                    },
+                    slantedText: true,
+                    slantedTextAngle: 60,
                 },
                 vAxis: {
-                    title: 'Persons',
+                    title: 'Number of people',
                     minValue: 0,
                     maxValue: {{ max_persons }} + 1,
                     format: '#'

@@ -1030,23 +1030,17 @@ def projects_timeline(request, person_slug):
     return render(request, 'charts/people/projects_timeline.html', return_dict)
 
 
-####################################################################################################
-###     gender_distribution
+###     gender_distribution(organization_slug=None)
 ####################################################################################################
 
 def gender_distribution(request, organization_slug=None):
 
-    gender_distribution = {}
     gender_distribution_sets = {}
 
     min_year = 2005
     actual_year = datetime.date.today().year
 
     for year in range(min_year, actual_year + 1):
-        gender_distribution[year] = {
-            'female': 0,
-            'male': 0,
-        }
         gender_distribution_sets[year] = {
             'male': set(),
             'female': set(),
@@ -1073,17 +1067,23 @@ def gender_distribution(request, organization_slug=None):
                 for year in range(start_year, end_year + 1):
                     gender_distribution_sets[year][gender].add(job.person.full_name)
 
+    gender_distribution_list = []
+    gender_distribution_list.insert(0, ['Year', 'Females', 'Males'])
+
     max_persons = 0
 
     for year in range(min_year, actual_year + 1):
-        gender_distribution[year]['female'] = len(gender_distribution_sets[year]['female'])
-        gender_distribution[year]['male'] = len(gender_distribution_sets[year]['male'])
-        total_year = gender_distribution[year]['female'] + gender_distribution[year]['male']
+        females = len(gender_distribution_sets[year]['female'])
+        males = len(gender_distribution_sets[year]['male'])
+        total_year = females + males
+
+        gender_distribution_list.append([str(year), females, males])
+
         if (total_year > max_persons):
             max_persons = total_year
 
     return_dict = {
-        'gender_distribution': gender_distribution,
+        'gender_distribution_list': gender_distribution_list,
         'max_persons': max_persons,
         'units': units,
         'organization': organization,
