@@ -29,6 +29,8 @@ VIVA_OUTCOMES = (
     ('Apt', 'Apt'),
     ('Cum Laude', 'Cum Laude'),
     ('Cum Laude by unanimity', 'Cum Laude by unanimity'),
+    ('Pass with distinction', 'Pass with distinction'),
+    ('Pass with distinction by unanimity', 'Pass with distinction by unanimity'),
 )
 
 VIVA_PANEL_ROLES = (
