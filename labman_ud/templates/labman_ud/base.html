@@ -328,6 +328,20 @@
             </script>
         {% endif %}
 
+        <script src="{% static 'js/konami.js' %}"></script>
+
+        <script>
+            var success = function() {
+                $("body").append(
+                    $.getScript("https://rawgit.com/mediaupstream/LOLTranslate.js/master/bookmarklet.js")
+                );
+            };
+
+            var konami = new Konami(success);
+        </script>
+
         {% block scripts %}{% endblock %}
     </body>
 </html>
+
+
