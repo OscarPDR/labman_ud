@@ -61,7 +61,7 @@ def _update_related_fields(nickname_object):
             item.person = nickname_object.person
             item.save()
 
-        for item in AssignedPersonTag.objects.filter(assigned_person=wrong_person):
+        for item in AssignedPersonTag.objects.filter(assigned_person__person=wrong_person):
             logger.info(u'\t\tUpdating AssignedPersonTag() instances')
             item.assigned_person = nickname_object.person
             item.save()
