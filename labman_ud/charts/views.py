@@ -437,7 +437,12 @@ def publication_coauthorships(request, max_position=None, within_group=False):
             G.node[author_id1]['name'] = name1
             G.node[author_id2]['name'] = name2
 
-    G = nx_graph.analyze(G)
+    try:
+        G = nx_graph.analyze(G)
+
+    except:
+        # Avoid networkx's "power iteration failed to converge" error
+        pass
 
     data = json_graph.node_link_data(G)
 
