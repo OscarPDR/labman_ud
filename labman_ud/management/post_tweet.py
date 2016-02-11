@@ -1,5 +1,6 @@
 
 from django.conf import settings
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
 from labman_setup.models import *
@@ -13,8 +14,18 @@ def post_tweet(news_instance):
     tweetpony_config = _get_tweetpony_configuration()
     base_url = _get_base_url()
 
-    if tweetpony_config and base_url:
+    if tweetpony_config:
         news_url = '%s%s' % (base_url, reverse('view_news', kwargs={'news_slug': news_instance.slug}))
+
+        try:
+            send_mail(
+                '[labman_NEWS] %s' % news_instance.title,
+                news_url,
+                getattr(settings, 'DEFAULT_EMAIL_SENDER', ''),
+                getattr(settings, 'NEWS_UPDATES_RECEIVERS', []),
+            )
+        except:
+            pass
 
         tweetpony_api = tweetpony.API(
             consumer_key=tweetpony_config.consumer_key,
