@@ -54,7 +54,7 @@ def _get_base_url():
         return 'localhost:8000'
 
     else:
-        return getattr(settings, 'BASE_URL', '')
+        return LabmanDeployGeneralSettings.objects.get().base_url
 
 
 def _get_short_url(full_news_url, tweetpony_config):
