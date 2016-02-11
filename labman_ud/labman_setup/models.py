@@ -38,6 +38,8 @@ class LabmanDeployGeneralSettings(models.Model):
         null=True,
     )
 
+    base_url = models.URLField()
+
     background_color = models.CharField(
         max_length=25,
         blank=True,
