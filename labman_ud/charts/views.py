@@ -407,6 +407,8 @@ def publication_coauthorships(request, max_position=None, within_group=False):
     # 'publication_id': [ pub_author1, pub_author2, pub_author3 ]
     authors_per_publication = defaultdict(list)
 
+    names = set()
+
     if within_group:
         people = Person.objects.all().values("is_active", "id")
         active_by_id = {}
@@ -437,6 +439,9 @@ def publication_coauthorships(request, max_position=None, within_group=False):
             G.node[author_id1]['name'] = name1
             G.node[author_id2]['name'] = name2
 
+            names.add(name1)
+            names.add(name2)
+
     try:
         G = nx_graph.analyze(G)
 
@@ -448,6 +453,7 @@ def publication_coauthorships(request, max_position=None, within_group=False):
 
     return_dict = {
         'data': json.dumps(data),
+        'names': list(names),
         'web_title': u'Publications co-authorship',
         'within_group': within_group,
     }
