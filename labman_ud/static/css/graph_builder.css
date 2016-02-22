@@ -1,0 +1,30 @@
+
+svg {
+    border: 1px dashed #ccc;
+}
+
+text {
+    font-family: sans-serif;
+    pointer-events: none;
+}
+
+.link {
+    stroke: #999;
+    border: 1px solid black;
+    stroke-opacity: .6;
+    fill: none;
+}
+
+.graph-label {
+    text-shadow:
+        1px 0px 1px #ddd, 0px 1px 1px #eee,
+        2px 1px 1px #ddd, 1px 2px 1px #eee,
+        3px 2px 1px #ddd, 2px 3px 1px #eee;
+}
+
+.tooltip-label {
+    font: 12px sans-serif;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px lightsteelblue;
+    fill: darkblue;
+}

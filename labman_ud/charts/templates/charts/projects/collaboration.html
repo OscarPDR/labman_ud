@@ -1,5 +1,13 @@
 {% extends "labman_ud/base.html" %}
-{% load staticfiles %}
+{% load staticfiles string_list %}
+
+
+
+{% block header_css %}
+
+    <link rel="stylesheet" href="{% static 'css/graph_builder.css' %}" />
+
+{% endblock %}
 
 
 
@@ -18,9 +26,20 @@
         </li>
     </ul>
 
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="name_input" class="sr-only">Researcher name</label>
+            <input id="typea" type="text" class="form-control typeahead" id="name_input" placeholder="Researcher">
+        </div>
+
+        <button onclick="search_function()" class="btn btn-default">
+            <i class="fa fa-search"></i>
+        </button>
+    </form>
+
     <br>
 
-    <div id="co-authorship-graph"></div>
+    <section></section>
 
     <br>
 
@@ -32,123 +51,43 @@
 
     <script src="{% static 'js/d3.min.js' %}"></script>
 
+    <script src="{% static 'js/graph_builder.js' %}"></script>
+    <script src="{% static 'js/typeahead.bundle.js' %}"></script>
+    <script src="{% static 'js/substring-matcher.js' %}"></script>
+
     <script>
-        var graph = {{ data|safe }};
+        var search_strings = {{ names|string_list|safe }};
 
-        var width = 1000;
-        var height = 1000;
+        $('.typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'search_strings',
+            source: substringMatcher(search_strings)
+        });
+    </script>
 
-        var color = d3.scale.category20();
+    <script>
+        var width = $('section').width();
+        var height = width * 0.6;
 
-        var force = d3.layout.force()
-            .gravity(0.5)
-            .friction(0.5)
-            .charge(-5000)
-            .linkDistance(175)
-            .size([width, height]);
-
-        var svg = d3.select("#co-authorship-graph").append("svg")
-            .attr("width", width)
-            .attr("height", height);
-            // .attr("viewBox", "0 0 " + width + " " + height )
-            // .attr("preserveAspectRatio", "xMidYMid meet");
-
-        var drawGraph = function(graph) {
-            force
-                .nodes(graph.nodes)
-                .links(graph.links)
-                .start();
-
-            var link = svg.selectAll(".link")
-                .data(graph.links)
-                .enter()
-                .append("line")
-                .attr("class", "link")
-                .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
-                // .style("stroke-width", function(d) { return d.weight; });
-
-            var gnodes = svg.selectAll('g.gnode')
-                .data(graph.nodes)
-                .enter()
-                .append('g')
-                .classed('gnode', true);
-                // .on("mouseover", function);
-                // .on("mouseover", fade(0.1))
-                // .on("mouseout", fade(1));
-
-            function neighboring(a, b) {
-                return graph.links.some(function(l) {
-                    if (a == b)
-                        return true;
-                    else
-                        return (l.source === a && l.target === b) || (l.source === b && l.target === a);
-                });
-            };
-
-            var node = gnodes.append("circle")
-                .attr("class", "node")
-                // .attr("r", function(d) { return d.degree*2; })
-                .attr("r", function(d) { return d.eigenvector*35+5; })
-                // .attr("r", function(d) { return (1-d.closeness)*25; })
-                // .attr("r", function(d) { return d.pagerank*300; })
-                // .attr("r", 10)
-                // .style("fill", function(d) { return color(d['k-clique']); })
-                .style("fill", function(d) { return color(d['modularity']); })
-                .on("mouseover", function (d) {
-                    link.style("opacity", function(o) {
-                        return o.source === d || o.target === d ? 1 : 0.1;
-                    });
-                    node.style("opacity", function(o) {
-                        return neighboring(d, o) ? 1 : 0.1;
-                    });
-                    labels.style("opacity", function(o) {
-                        return neighboring(d, o) ? 1 : 0.1;
-                    });
-                })
-                .on("mouseout", function (d) {
-                    link.style("opacity", 1);
-                    node.style("opacity", 1);
-                    labels.style("opacity", 1);
-                })
-                .call(force.drag);
-
-            var labels = gnodes.append("text")
-                .attr("class", "graph-label")
-                .text(function(d) { return d.name; });
-
-            var projects = link.append("title")
-                .text(function(d) { return 'Collaborated on ' + d.weight + ' projects.'; });
-
-            force.on("tick", function() {
-                link
-                    .attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
-
-                gnodes.attr("transform", function(d) {
-                    return 'translate(' + [d.x, d.y] + ')';
-                });
-
-                labels.attr("transform", function(d) {
-                    return 'translate(' + [16, 3] + ')';
-                });
-
-            });
+        var options = {
+            'container': {
+                'width': width,
+                'height': height,
+            },
+            'directed': false,
+            'transition': {
+                'duration': 500,
+                'ease': 'linear',
+            }
         };
 
-        drawGraph(graph);
+        var graph = {{ data|safe }};
 
-        // Returns an event handler for fading a given chord group.
-        function fade(opacity) {
-          return function(g, i) {
-            svg.selectAll(".chord path")
-                .filter(function(d) { return d.source.index != i && d.target.index != i; })
-              .transition()
-                .style("opacity", opacity);
-          };
-        }
-
+        buildGraph(graph, options, 'section');
     </script>
 
     <script>

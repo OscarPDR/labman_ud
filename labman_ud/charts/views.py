@@ -464,6 +464,7 @@ def project_collaborations(request, exclude_leaders=False, within_group=False):
     G = nx.Graph()
 
     projects = Project.objects.all()
+    names = set()
 
     for project in projects:
         if exclude_leaders:
@@ -482,6 +483,9 @@ def project_collaborations(request, exclude_leaders=False, within_group=False):
                 for i in range(pos+1, len(person_ids)):
                     person1 = Person.objects.get(id=person_id)
                     person2 = Person.objects.get(id=person_ids[i])
+
+                    names.add(person1.full_name)
+                    names.add(person2.full_name)
 
                     add_node = True
 
@@ -505,6 +509,7 @@ def project_collaborations(request, exclude_leaders=False, within_group=False):
 
     return_dict = {
         'data': json.dumps(data),
+        'names': list(names),
         'web_title': u'Group collaborations',
         'within_group': within_group,
     }
