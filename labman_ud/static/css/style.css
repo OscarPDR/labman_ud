@@ -329,7 +329,7 @@ i.fa.fa-external-link {
 
 .funding-program-logo {
     margin: 1em 0;
-    height: 75px;
+    max-width: 75%;
 }
 
 #main-container {
