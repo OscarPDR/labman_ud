@@ -295,34 +295,46 @@ def publications_number_of_publications(request):
     publication_types.append('JCR')
 
     for pub_type in publication_types:
+        if pub_type != 'JCR':
+            pub_type = str(inflection.titleize(pub_type))
         default_pub_dict[pub_type] = {}
         for year in range(min_year, max_year):
+            year = str(year)
             default_pub_dict[pub_type][year] = 0
+            totals_by_year[year] = 0
 
     for authored_pub in authored_publications:
         pub_type = authored_pub.child_type
         if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.parent_journal.impact_factor):
             pub_type = 'JCR'
+        else:
+            pub_type = str(inflection.titleize(pub_type))
 
         pub_year = authored_pub.year
         if pub_year in range(min_year, max_year):
+            pub_year = str(pub_year)
             default_pub_dict[pub_type][pub_year] = default_pub_dict[pub_type][pub_year] + 1
             totals_by_year[pub_year] = totals_by_year.get(pub_year, 0) + 1
 
-    publication_counts = [{
-        'key': 'Total',
-        'values': [{'x': year, 'y': count} for year, count in totals_by_year.iteritems()]
-    }]
+    publication_counts = []
+    pub_types = ['Journal Article', 'JCR', 'Book Section', 'Book', 'Magazine Article', 'Conference Paper']
 
-    for pub_type, value_dict in default_pub_dict.iteritems():
-        item_dict = {
-            'key': str(inflection.titleize(pub_type)),
-            'values': []
-        }
-        for year, count in value_dict.iteritems():
-            item_dict['values'].append({'x': year, 'y': count})
+    publication_counts.append(['Year', 'Total'] + pub_types)
 
-        publication_counts.append(item_dict)
+    for year in range(min_year, max_year):
+        year = str(year)
+        count_row = [year]
+        count_row.append(totals_by_year[year])
+
+        for pub_type in pub_types:
+            if pub_type in default_pub_dict and year in default_pub_dict[pub_type]:
+                    row_item = default_pub_dict[pub_type][year]
+            else:
+                row_item = 0
+
+            count_row.append(row_item)
+
+        publication_counts.append(count_row)
 
     return_dict = {
         'web_title': u'Number of publications',
