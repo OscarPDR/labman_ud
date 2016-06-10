@@ -203,7 +203,13 @@ def extract_publications_from_zotero(from_version):
             item = items_ordered[i_id]
             publication_type = item['data']['itemType']
 
-            logger.info(u"\t[%s/%s][%s][%s] > %s" % (pos + 1, number_of_items, time.asctime(), publication_type, item['data'].get('title', 'No title')))
+            logger.info(u"  [%s/%s][%s][%s] > %s" % (
+                pos + 1,
+                number_of_items,
+                datetime.strftime(datetime.now(), "%d/%b/%Y %H:%M:%S"),
+                publication_type,
+                item['data'].get('title', 'No title')
+            ))
 
             generate_publication(item)
 
@@ -987,12 +993,16 @@ def _save_publication_editors(editors, publication):
     PublicationEditor.objects.filter(publication=publication).all().delete()
 
     for editor in editors:
-        publication_editor = PublicationEditor(
-            editor=editor,
-            publication=publication,
-        )
+        try:
+            publication_editor = PublicationEditor(
+                editor=editor,
+                publication=publication,
+            )
 
-        publication_editor.save()
+            publication_editor.save()
+
+        except:
+            logger.warn(u"The editor could not be saved. Please check.")
 
 
 ###     _determine_if_tag_is_special(tag, publication)
