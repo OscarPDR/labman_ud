@@ -26,8 +26,6 @@ urlpatterns = [
     url(r'^project_type/(?P<project_type_slug>\S+)/$', views.project_index, name='view_project_type'),
 
     url(r'^query/(?P<query_string>.+)/$', views.project_index, name='view_project_query'),
-
-    url(r'^tag_cloud/$', views.project_tag_cloud, name='project_tag_cloud'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

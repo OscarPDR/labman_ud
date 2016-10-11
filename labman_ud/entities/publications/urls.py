@@ -25,8 +25,6 @@ urlpatterns = [
     url(r'^phd_dissertations/$', views.phd_dissertations_index, name='phd_dissertations_index'),
 
     url(r'^query/(?P<query_string>.+)/$', views.publication_index, name='view_publication_query'),
-
-    url(r'^tag_cloud/$', views.publication_tag_cloud, name='publication_tag_cloud'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

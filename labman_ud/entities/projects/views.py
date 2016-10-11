@@ -517,27 +517,6 @@ def project_related_news(request, project_slug):
     return render(request, "projects/related_news.html", return_dict)
 
 
-###		project_tag_cloud
-####################################################################################################
-
-def project_tag_cloud(request):
-    tags = ProjectTag.objects.all().values_list('tag__name', flat=True)
-
-    counter = Counter(tags)
-    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
-
-    items = ord_dict.items()
-    items = items[len(items)-100:]
-
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'Projects tag cloud',
-        'tag_dict': dict(items),
-    }
-
-    return render(request, 'projects/tag_cloud.html', return_dict)
-
-
 ############################################################################
 # Function: __build_project_information
 ############################################################################

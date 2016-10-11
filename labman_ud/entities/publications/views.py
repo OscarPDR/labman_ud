@@ -47,10 +47,10 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
     tag = None
 
     form_from_year = None
-    form_from_range = None 
-    form_to_year = None 
-    form_to_range = None 
-    form_publication_types = None 
+    form_from_range = None
+    form_to_year = None
+    form_to_range = None
+    form_publication_types = None
     form_tags = None
     form_authors_name = []
     form_editors_name = []
@@ -203,7 +203,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     extra_editor=editor_field_count)
                 query_string = request.session['filtered']['query_string']
                 publications = []
-                for deserialized_object in serializers.deserialize('json', 
+                for deserialized_object in serializers.deserialize('json',
                     request.session['filtered']['publications']):
                     publications.append(deserialized_object.object)
                 form_from_year = request.session['filtered']['form_from_year']
@@ -221,7 +221,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 for utf8type in request.session['filtered']['form_editors_name']:
                     form_editors_name.append(utf8type.encode('utf8'))
                 clean_index = False
-        else:        
+        else:
             form = PublicationSearchForm(extra_author=1, extra_editor=1)
 
     if query_string:
@@ -509,28 +509,6 @@ def __build_publication_return_dict(publication):
         'related_publications': related_publications,
         'tag_list': tag_list,
     }
-
-###		publication_tag_cloud
-####################################################################################################
-
-def publication_tag_cloud(request):
-    tags = PublicationTag.objects.all().values_list('tag__name', flat=True)
-
-    counter = Counter(tags)
-    ord_dict = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
-
-    items = ord_dict.items()
-    items = items[len(items)-100:]
-
-    # dictionary to be returned in render(request, )
-    return_dict = {
-        'web_title': u'Publications tag cloud',
-        'tag_dict': dict(items),
-        'number_of_tags': len(tags),
-        'number_of_publications': Publication.objects.all().count(),
-    }
-
-    return render(request, 'publications/tag_cloud.html', return_dict)
 
 
 ####################################################################################################
