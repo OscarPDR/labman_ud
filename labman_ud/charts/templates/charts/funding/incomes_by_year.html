@@ -37,60 +37,6 @@
 
 {% block scripts %}
 
-    <script src="https://www.google.com/jsapi"></script>
-
-    <script>
-        // google.load("visualization", "1", {packages:["corechart"]});
-        // google.setOnLoadCallback(drawChart);
-        // function drawChart() {
-        //     var data = new google.visualization.DataTable();
-        //     data.addColumn('string', 'Year');
-        //     data.addColumn('number', 'Income');
-        //     data.addColumn({type: 'string', role: 'tooltip'});
-        //     data.addRows([
-        //         {% for key, value in incomes.items %}
-        //             ['{{ key }}', {{ value }}, '{{ value|intcomma }} €'],
-        //         {% endfor %}
-        //     ]);
-
-        //     var options = {
-        //         legend: {position: 'none'},
-        //         hAxis: {
-        //             title: 'Geographical scope',
-        //             titleTextStyle: {color: 'black'},
-        //             slantedTextAngle: 45,
-        //             slantedText: true,
-        //         },
-        //         vAxis: {
-        //             title: 'Incomes in €',
-        //             titleTextStyle: {color: 'black'},
-        //         },
-        //         colors: ['#132da3'],
-        //     };
-
-        //     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        //     chart.draw(data, options);
-
-        //     // Add selection handler.
-        //     google.visualization.events.addListener(chart, 'select', selectHandler);
-        //     console.log();
-
-        //     function selectHandler() {
-        //         var selection = chart.getSelection();
-        //         for (var i = 0; i < selection.length; i++) {
-        //             var item = selection[i];
-        //             var scope = data.getValue(item.row, item.column-1);
-
-        //             var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
-        //             redirect_url = redirect_url.replace("scope_to_replace", scope);
-
-        //             window.location.replace(redirect_url);
-        //         }
-        //     }
-        // }
-
-    </script>
-
     <script src="{% static 'js/d3.min.js' %}"></script>
     <script src="{% static 'js/d3-tip.js' %}"></script>
 
@@ -165,10 +111,7 @@
                     })
 
                     .on('click', function(d) {
-                        var redirect_url = "{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}";
-                        redirect_url = redirect_url.replace("scope_to_replace", d.scope);
-
-                        window.location.replace(redirect_url);
+                        window.location.replace("{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}".replace("scope_to_replace", d.scope));
                     })
             ;
 

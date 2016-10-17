@@ -83,10 +83,7 @@
                     var item = selection[i];
                     var year = data.getValue(item.row, 0);
 
-                    var redirect_url = "{% url 'funding_incomes_by_year' '0101' %}";
-                    redirect_url = redirect_url.replace("0101", year);
-
-                    window.location.replace(redirect_url);
+                    window.location.replace("{% url 'funding_incomes_by_year' '0101' %}".replace("0101", year));
                 };
             };
         };

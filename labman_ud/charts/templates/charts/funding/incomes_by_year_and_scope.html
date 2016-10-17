@@ -70,10 +70,7 @@
                     var item = selection[i];
                     var project_slug = data.getValue(item.row, 2);
 
-                    var redirect_url = "{% url 'funding_incomes_by_project' 'project_slug' %}";
-                    redirect_url = redirect_url.replace("project_slug", project_slug);
-
-                    window.location.replace(redirect_url);
+                    window.location.replace("{% url 'funding_incomes_by_project' 'project_slug' %}".replace("project_slug", project_slug));
                 }
             }
         }
