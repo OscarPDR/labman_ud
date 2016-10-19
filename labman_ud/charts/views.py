@@ -9,6 +9,9 @@ import operator
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
+
+from django_ajax.decorators import ajax
 
 from charts.utils import nx_graph
 from networkx.readwrite import json_graph
@@ -51,6 +54,28 @@ PUBLICATION_COLORS = {
     'JournalArticle' : '#88cc88',
     'MagazineArticle' : '#827fb2',
 }
+
+
+###     dynamic_url(url_name, param)
+####################################################################################################
+
+@ajax
+def dynamic_url(request):
+
+    url_name = str(request.GET['url_name'])
+
+    kwargs={}
+
+    if 'year' in request.GET:
+        kwargs['year'] = int(request.GET['year'])
+
+    if 'project_slug' in request.GET:
+        kwargs['project_slug'] = str(request.GET['project_slug'])
+
+    if 'scope' in request.GET:
+        kwargs['scope'] = str(request.GET['scope'])
+
+    return {'url': reverse(url_name, kwargs=kwargs)}
 
 
 ####################################################################################################

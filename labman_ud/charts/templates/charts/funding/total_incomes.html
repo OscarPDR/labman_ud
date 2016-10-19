@@ -107,7 +107,16 @@
                     })
 
                     .on('click', function(d) {
-                        window.location.replace("{% url 'funding_incomes_by_year' '0101' %}".replace("0101", d.year));
+                        ajaxGet(
+                            "{% url 'dynamic_url' %}",
+                            {
+                                'url_name': 'funding_incomes_by_year',
+                                'year': d.year,
+                            },
+                            function(content) {
+                                window.location.replace(content['url']);
+                            }
+                        );
                     })
             ;
 

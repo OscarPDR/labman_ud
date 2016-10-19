@@ -12,6 +12,7 @@ django-extensions==1.6.1
 django-logentry-admin==0.1.5
 django-pagination-bootstrap==1.0.7
 django-wysiwyg-redactor==0.4.9
+djangoajax==2.3.6
 docutils==0.12
 enum34==1.1.2
 feedparser==5.2.1

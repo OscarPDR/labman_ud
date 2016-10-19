@@ -111,7 +111,17 @@
                     })
 
                     .on('click', function(d) {
-                        window.location.replace("{% url 'funding_incomes_by_year_and_scope' year 'scope_to_replace' %}".replace("scope_to_replace", d.scope));
+                        ajaxGet(
+                            "{% url 'dynamic_url' %}",
+                            {
+                                'url_name': 'funding_incomes_by_year_and_scope',
+                                'year': '{{ year }}',
+                                'scope': d.scope,
+                            },
+                            function(content) {
+                                window.location.replace(content['url']);
+                            }
+                        );
                     })
             ;
 

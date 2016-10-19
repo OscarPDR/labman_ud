@@ -6,6 +6,8 @@ import charts.views as views
 urlpatterns = [
     url(r'^$', views.chart_index, name='chart_index'),
 
+    url(r'^ajax_dynamic_url/$', views.dynamic_url, name='dynamic_url'),
+
     ### topic_clouds
     ###########################################################################
 

@@ -83,7 +83,16 @@
                     var item = selection[i];
                     var year = data.getValue(item.row, 0);
 
-                    window.location.replace("{% url 'funding_incomes_by_year' '0101' %}".replace("0101", year));
+                    ajaxGet(
+                        "{% url 'dynamic_url' %}",
+                        {
+                            'url_name': 'funding_incomes_by_year',
+                            'year': year,
+                        },
+                        function(content) {
+                            window.location.replace(content['url']);
+                        }
+                    );
                 };
             };
         };
