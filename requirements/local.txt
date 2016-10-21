@@ -1,5 +1,0 @@
-
-# Include the base.txt requirements file
--r base.txt
-
-# Local development dependencies go here

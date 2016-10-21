@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-6 col-md-offset-3 well">
-            <form class="form-inline center" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+            <form class="form-inline center" role="form" method="post" action="{% url 'login_view' %}">
             {% csrf_token %}
                 <div class="form-group">
                     <label class="sr-only" for="id_username">Username</label>
@@ -20,7 +20,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" value="login">Sign in</button>
-                <input type="hidden" name="next" value="{{ next }}" />
+                <input type="hidden" name="next" value="{% url 'admin:index' %}" />
             </form>
         </div>
 

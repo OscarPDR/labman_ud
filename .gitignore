@@ -20,9 +20,3 @@ labman_ud/collected_static/
 # Test database files
 *.db
 *.sqlite3
-
-# Sublime Text project configuration
-*.sublime-project
-*.sublime-workspace
-
-celerybeat-schedule
