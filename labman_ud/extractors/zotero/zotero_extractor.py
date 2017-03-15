@@ -25,7 +25,6 @@ import re
 import socket
 import time
 
-
 logger = logging.getLogger(__name__)
 
 JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
@@ -36,7 +35,6 @@ ACCEPTED_ATTACHMENT_FORMATS = ('.pdf', '.doc', '.docx')
 ####################################################################################################
 
 def get_zotero_variables():
-
     zot = get_or_default(ZoteroConfiguration)
 
     if zot:
@@ -86,7 +84,6 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
-
     from_version = int(from_version)
     last_zotero_version = get_last_zotero_version()
 
@@ -97,7 +94,6 @@ def extract_publications_from_zotero(from_version):
 
     else:
         if from_version > last_zotero_version:
-
             # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
             from_version = last_zotero_version - 1
             logger.warn(u"Asked 'from_version' was greater than 'last_zotero_version'. Strange...")
@@ -244,14 +240,14 @@ def extract_publications_from_zotero(from_version):
                 logger.info(u"[%d/%d] Link created" % (index + 1, len(publications_related_to_news)))
 
             else:
-                logger.info(u"[%d/%d] Link NOT created: %s" % (index + 1, len(publications_related_to_news), str(saved_link)))
+                logger.info(
+                    u"[%d/%d] Link NOT created: %s" % (index + 1, len(publications_related_to_news), str(saved_link)))
 
 
 ###     generate_publication(item)
 ####################################################################################################
 
 def generate_publication(item):
-
     existing_publications = Publication.objects.filter(zotero_key=item['key']).all()
 
     for existing_publication in existing_publications:
@@ -265,31 +261,20 @@ def generate_publication(item):
 
     publication_type = item['data']['itemType']
 
-    if publication_type == 'conferencePaper':
-        parse_conference_paper(item)
+    # Declaring different publications procedures with their methods
+    parse_publication = {
+        'conferencePaper': parse_conference_paper,
+        'bookSection': parse_book_section,
+        'book': parse_authored_book,
+        'journalArticle': parse_journal_article,
+        'magazineArticle': parse_magazine_article,
+        'thesis': parse_thesis,
+        'attachment': lambda print_attachment_warm: (logger.warn(u"Publication type is ATTACHMENT"))
+    }
 
-    elif publication_type == 'bookSection':
-        parse_book_section(item)
-
-    elif publication_type == 'book':
-        parse_authored_book(item)
-
-    elif publication_type == 'journalArticle':
-        parse_journal_article(item)
-
-    elif publication_type == 'magazineArticle':
-        parse_magazine_article(item)
-
-    elif publication_type == 'attachment':
-        # this should not happen
-        logger.warn(u"Publication type is ATTACHMENT")
-        pass
-
-    elif publication_type == 'thesis':
-        parse_thesis(item)
-
-    else:
-        logger.warn(u"NOT parsed: %s" % publication_type)
+    # Calling to needed function to parse the required element
+    parse_publication.get(publication_type, lambda print_not_parsed: (logger.warn(u"NOT parsed: %s" % publication_type)
+                                                                      ))(item)
 
 
 ###############################################################################
@@ -337,7 +322,8 @@ def parse_journal_article(item):
 ####################################################################################################
 
 def parse_journal(item):
-    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue'))
+    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'),
+                            item['data'].get('issue'))
 
     journal = get_or_default(Journal, Journal(), slug=journal_slug)
 
@@ -541,11 +527,11 @@ def parse_book_section(item):
 ####################################################################################################
 
 def parse_book(item):
-
     book = get_or_default(
         Book,
         Book(),
-        slug=nslugify(item['data']['bookTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('series')),
+        slug=nslugify(item['data']['bookTitle'], _parse_date(item).year, item['data'].get('volume'),
+                      item['data'].get('series')),
         year=_parse_date(item).year,
     )
 
@@ -646,11 +632,11 @@ def parse_magazine_article(item):
 ####################################################################################################
 
 def parse_magazine(item):
-
     magazine = get_or_default(
         Magazine,
         Magazine(),
-        slug=nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue')),
+        slug=nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'),
+                      item['data'].get('issue')),
         year=_parse_date(item).year,
     )
 
@@ -725,7 +711,8 @@ def _extract_doi(item):
     elif 'url' in item['data']:
         if item['data']['url'] != '' and DOI_ORG_BASE_URL in item['data']['url']:
             base_url_end_index = len(DOI_ORG_BASE_URL)
-            underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
+            underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(
+                item['data']['url'])
 
             return item['data']['url'][base_url_end_index:underscore_index]
 
@@ -734,7 +721,6 @@ def _extract_doi(item):
 ####################################################################################################
 
 def _parse_date(item):
-
     try:
         date_string = item['data']['date']
         parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
@@ -859,7 +845,6 @@ def _save_publication_authors(authors, publication):
 ####################################################################################################
 
 def _extract_tags(item, publication):
-
     # Clean ranking and projects so as to ensure that it's correctly synchronized
     PublicationRank.objects.filter(publication=publication).all().delete()
     RelatedPublication.objects.filter(publication=publication).all().delete()
