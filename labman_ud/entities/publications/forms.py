@@ -4,14 +4,8 @@ from django import forms
 from entities.utils.models import Tag
 from entities.publications.models import Publication
 
-PUBLICATION_TYPES = (())
-types = Publication.objects.all().values_list('child_type', flat=True).order_by('child_type').distinct()
-for choice in types:
-    PUBLICATION_TYPES = PUBLICATION_TYPES + ((choice, choice),)
-
 
 class CommaSeparatedStringField(forms.Field):
-
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ', ')
         super(CommaSeparatedStringField, self).__init__(*args, **kwargs)
@@ -29,6 +23,7 @@ class CommaSeparatedStringField(forms.Field):
         self.run_validators(value)
         return value
 
+
 # Create your forms here.
 
 ###		PublicationSearchForm
@@ -42,7 +37,7 @@ class PublicationSearchForm(forms.Form):
             'type': 'text',
             'placeholder': 'Publication title or author name',
         })
-    , required=False)
+        , required=False)
 
     from_year = forms.CharField(
         max_length=4, required=False)
@@ -57,7 +52,7 @@ class PublicationSearchForm(forms.Form):
         max_length=2, required=False)
 
     publication_types = forms.MultipleChoiceField(
-        choices=PUBLICATION_TYPES, required=False)
+        choices=(()), required=False)
 
     tags = CommaSeparatedStringField(
         required=False)
@@ -66,6 +61,15 @@ class PublicationSearchForm(forms.Form):
     editor_field_count = forms.CharField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
+
+        publication_types_tuple = (())
+        types = Publication.objects.all().values_list('child_type', flat=True).order_by('child_type').distinct()
+        for choice in types:
+            publication_types_tuple = publication_types_tuple + ((choice, choice),)
+
+        self.publication_types = forms.MultipleChoiceField(
+            choices=publication_types_tuple, required=False)
+
         extra_editor_fields = kwargs.pop('extra_editor', 1)
         extra_author_fields = kwargs.pop('extra_author', 1)
 
