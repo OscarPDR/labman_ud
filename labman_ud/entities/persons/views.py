@@ -107,6 +107,7 @@ def person_index(request, query_string=None):
         'persons': persons,
         'persons_length': persons_length,
         'query_string': query_string,
+        'current_page': 'info',
     }
 
     return render(request, "persons/index.html", return_dict)
@@ -286,6 +287,7 @@ def member_info(request, person_slug):
         'web_title': member.full_name,
         'member': member,
         'units': units,
+        'current_page': 'info',
     }
 
     data_dict = __get_job_data(member)
@@ -342,6 +344,7 @@ def member_projects(request, person_slug, role_slug=None):
         'projects': projects,
         'roles': Role.objects.all(),
         'web_title': u'%s - Projects' % member.full_name,
+        'current_page': 'projects',
     }
 
     data_dict = __get_job_data(member)
@@ -461,6 +464,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         'publications': publications,
         'thesis': all_thesis,
         'web_title': u'%s - Publications' % member.full_name,
+        'current_page': 'publications',
     }
 
     data_dict = __get_job_data(member)
@@ -516,6 +520,7 @@ def member_news(request, person_slug):
         'web_title': u'%s - News' % member.full_name,
         'member': member,
         'news': news,
+        'current_page': 'news',
     }
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
@@ -542,6 +547,7 @@ def member_awards(request, person_slug):
         'web_title': u'%s - Awards' % member.full_name,
         'member': member,
         'awards': awards,
+        'current_page': 'awards',
     }
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)

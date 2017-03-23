@@ -74,14 +74,6 @@
 {% block people_scripts %}
 
     <script>
-        $('.member_biography').removeClass('btn-primary');
-        $('.member_biography').addClass('btn-default');
-
-        $('.member_projects').removeClass('btn-default');
-        $('.member_projects').addClass('btn-primary');
-    </script>
-
-    <script>
         {% for role_name, project_list in projects.items %}
             {% for role in roles %}
                 {% if role_name == role.name %}
