@@ -612,18 +612,19 @@ def publications_egonetwork(request, author_slug):
 ####################################################################################################
 
 def publications_by_author(request, author_slug):
-    publications = {}
+    # Publications dict Ordered
+    publications = OrderedDict()
 
     author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-    _publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal').filter(id__in=publication_ids)
+    _publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal')\
+        .filter(id__in=publication_ids)
 
-    min_year = _publications.aggregate(Min('year'))
-    max_year = _publications.aggregate(Max('year'))
-
+    # If is not provided a minimum year, the program will pick the last 7 years as min day
+    min_year = _publications.aggregate(Min('year')).get('year__min', False)
     max_year = datetime.date.today().year
-    min_year = min_year.get('year__min')
+
     # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
     # people who published lately
@@ -632,16 +633,14 @@ def publications_by_author(request, author_slug):
     else:
         min_year = max_year - 7
 
-    years = []
-
-    for year in range(min_year, max_year + 1):
-        years.append(year)
-
+    # Generating the range of years
+    years = range(min_year, max_year + 1)
+    # Initializing the publication dicts
     for publication_type in PUBLICATION_TYPES:
-        publications[publication_type] = {}
-        for year in range(min_year, max_year + 1):
+        publications[publication_type] = OrderedDict()
+        for year in years:
             publications[publication_type][year] = 0
-
+    # Filling with slug data
     for publication in _publications:
         pub_type = publication.child_type
         if pub_type == 'JournalArticle':
