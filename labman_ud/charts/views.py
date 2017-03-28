@@ -1198,31 +1198,34 @@ def position_distribution(request, organization_slug=None):
                     for year in range(start_year, end_year + 1):
                         position_distribution_sets[year][position_slug].add(job.person.full_name)
 
+    # Defining the total persons across the years
     max_persons = 0
+    years = range(min_year, actual_year + 1)
 
-    for year in range(min_year, actual_year + 1):
+    for year in years:
         total_year = 0
-
         for position in position_list:
             position_slug = slugify(position)
             total_year = total_year + len(position_distribution_sets[year][position_slug])
             position_distribution[year][position_slug] = len(position_distribution_sets[year][position_slug])
-
-        if (total_year > max_persons):
+        if total_year > max_persons:
             max_persons = total_year
 
-    position_distribution_array = []
-
-    position_distribution_array.append(['Year'])
-
+    # Creating the position array list
+    position_distribution_array = list()
+    # Creating the table indices list to specify the data types
+    position_distribution_array.append(list())
+    # Appending the Type of the year
+    position_distribution_array[0].append({'label': 'Year', 'type': 'string'})
+    # Filling position data types
     for position in position_list:
-        position_distribution_array[0].append(position)
-
-    for year in range(min_year, actual_year + 1):
+        position_distribution_array[0].append({'label': position.encode('utf-8'), 'type': 'number'})
+    # Filling data into the table
+    for year in years:
         array_row = [str(year)]
         for position in position_list:
             array_row.append(position_distribution[year][slugify(position)])
-
+        # Inserting
         position_distribution_array.append(array_row)
 
     return_dict = {
