@@ -188,9 +188,12 @@ def extract_publications_from_zotero(from_version):
                 parent_id = a['data']['parentItem']
 
                 if parent_id in items_ordered.keys():
-                    # TODO try chatt
-                    items_ordered[parent_id]['attachment'] = a
-
+                    if items_ordered[parent_id].get('attachment', False):
+                        logger.warn(u"")
+                        logger.warn(u"The user has 2 or more attachments in the item called: %s. Only 1 attachment"
+                                    u"is allowed per element" % items_ordered[parent_id]['data'].get('title', 'No title'))
+                    else:
+                        items_ordered[parent_id]['attachment'] = a
                 else:
                     # Only the attachment has been modified
                     parent_publication = zot.item(parent_id)
@@ -733,27 +736,31 @@ def _extract_doi(item):
 ####################################################################################################
 
 def _parse_date(item):
-    try:
-        date_string = item['data']['date']
-        parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
 
-    except ValueError:
+    if item['data'].get('date', False) and item['data'].get('date', False) != '':
         try:
-            date_chunks = date_string.split()
-            parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
-
-        except:
+            date_string = item['data']['date']
+            parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
+        except ValueError:
             try:
-                alternate_date_string = item['meta']['parsedDate']
-                parsed_date = parser.parse(alternate_date_string, fuzzy=True, default=datetime.today())
-
-            except ValueError:
-                try:
-                    date_chunks = alternate_date_string.split()
-                    parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
-
-                except:
+                date_chunks = date_string.split()
+                parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+            except:
+                if item['meta'].get('parsedDate', False) and item['meta'].get('parsedDate', False) != '':
+                    try:
+                        alternate_date_string = item['meta']['parsedDate']
+                        parsed_date = parser.parse(alternate_date_string, fuzzy=True, default=datetime.today())
+                    except ValueError:
+                        try:
+                            date_chunks = alternate_date_string.split()
+                            parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+                        except:
+                            parsed_date = datetime.today()
+                else:
                     parsed_date = datetime.today()
+    else:
+        # The element, has not any date associated. We use the actual date
+        parsed_date = datetime.today()
 
     return parsed_date
 
