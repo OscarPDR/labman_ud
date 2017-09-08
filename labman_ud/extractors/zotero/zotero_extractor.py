@@ -168,6 +168,16 @@ def extract_publications_from_zotero(from_version):
 
             else:
                 item_id = item['key']
+                # Checking if the item has attachments already or not
+                if item.get('meta', False) and item['meta'].get('numChildren', False) \
+                        and item['meta']['numChildren'] > 0 and from_version > 0:
+                    # The item has an attachment, calling to zotero to know it.
+                    attachment = zot.children(item_id)
+                    # Adding this item into attachment
+                    if attachment and len(attachment) == 1 and attachment[0] not in items:
+                        logger.info(u"")
+                        logger.info(u"The item has an attachment already, we are going to re-attach it")
+                        item['attachment'] = attachment[0]
                 items_ordered[item_id] = item
 
         attachment_number = 0
@@ -178,6 +188,7 @@ def extract_publications_from_zotero(from_version):
                 parent_id = a['data']['parentItem']
 
                 if parent_id in items_ordered.keys():
+                    # TODO try chatt
                     items_ordered[parent_id]['attachment'] = a
 
                 else:
@@ -190,6 +201,7 @@ def extract_publications_from_zotero(from_version):
             else:
                 logger.warn(u"%s" % a['data'].get('title', 'The user did not even added a title'))
 
+        # Total number of items to be processed
         number_of_items = len(items_ordered)
 
         logger.info(u"")
