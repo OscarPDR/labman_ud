@@ -31,12 +31,14 @@
         </a>
 
         {% if not is_internal %}
-            <a id="project_funding" href="{% url 'project_funding_details' project.slug %}">
-                <i class="fa fa-money"></i>
-                <span class="hidden-xs hidden-sm">
-                    Funding
-                </span>
-            </a>
+            {% if not project.private_funding_details %}
+                <a id="project_funding" href="{% url 'project_funding_details' project.slug %}">
+                    <i class="fa fa-money"></i>
+                    <span class="hidden-xs hidden-sm">
+                        Funding
+                    </span>
+                </a>
+            {% endif %}
         {% endif %}
 
         {% if not project.private_participant_details %}
