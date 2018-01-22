@@ -37,6 +37,9 @@ urlpatterns = [
     url(r'^members/(?P<person_slug>\S+)/awards/$', views.member_awards, name='member_awards'),
     url(r'^awards/(?P<award_slug>\S+)/$', views.award_info, name='award_info'),
     url(r'^awards/$', views.award_index, name='award_index'),
+    # list of datasets
+    url(r'^members/(?P<person_slug>\S+)/datasets/$', views.member_datasets, name='member_datasets'),
+    url(r'^former_members/(?P<person_slug>\S+)/datasets/$', views.member_datasets, name='former_member_datasets'),
     # list of publications by type
     url(r'^members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', views.member_publications, name='member_publications'),
     url(r'^former_members/(?P<person_slug>\S+)/publications/(?P<publication_type_slug>\S+)/$', views.member_publications, name='former_member_publications'),

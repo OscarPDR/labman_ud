@@ -7,6 +7,7 @@ from entities.projects.models import Project
 from entities.publications.models import Publication
 from entities.persons.models import Person
 from entities.organizations.models import Organization
+from entities.datasets.models import Dataset
 
 register = template.Library()
 
@@ -26,6 +27,9 @@ def rdf_icon(entity_object):
         entity_path = u'people'
     elif isinstance(entity_object, Organization):
         entity_path = u'organizations'
+    elif isinstance(entity_object, Dataset):
+        entity_path = u'datasets'
+
 
     rdf_resource_uri = u'%s/%s/%s' % (
         getattr(settings, 'GRAPH_BASE_URL', ''),

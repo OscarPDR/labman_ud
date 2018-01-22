@@ -23,6 +23,7 @@ from entities.projects.models import AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
 from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
+from entities.datasets.models import Dataset, DatasetAuthor
 
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
@@ -554,6 +555,44 @@ def member_awards(request, person_slug):
 
     return render(request, 'members/awards.html', return_dict)
 
+###		member_datasets(person_slug)
+####################################################################################################
+def member_datasets(request, person_slug):
+    """
+    Creates the member datasets view of the personal datasets
+
+    :param request: the information given in the request
+    :param person_slug: the person slug
+    :return:
+    """
+
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_datasets', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_datasets', kwargs={'person_slug': person_slug}))
+
+    # Obtaining member information
+    member = get_object_or_404(Person, slug=person_slug)
+    # Extracting datasets information
+    dataset_ids = DatasetAuthor.objects.filter(author=member.id).values_list('dataset_id', flat=True)
+    datasets = Dataset.objects.filter(id__in=dataset_ids)
+
+    # Building return dict
+    return_dict = {
+            'web_title': u'%s - Datasets' % member.full_name,
+            'member': member,
+            'datasets': datasets,
+            'current_page': 'datasets',
+            'has_datasets': True if dataset_ids else False,
+        }
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render(request, 'members/datasets.html', return_dict)
+
 
 ###		__get_award_info(award_slug)
 ####################################################################################################
@@ -847,6 +886,9 @@ def __get_job_data(member):
     except:
         pass
 
+    # Extracting datasets information
+    dataset_ids = DatasetAuthor.objects.filter(author=member.id).values_list('dataset_id', flat=True)
+
     project_ids = AssignedPerson.objects.filter(person_id=member.id)
     project_ids = project_ids.order_by('role__relevance_order').values('project_id')
 
@@ -913,7 +955,8 @@ def __get_job_data(member):
     else:
         header_rows = 1
 
-    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 and len(publication_ids) == 0:
+    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 \
+            and len(publication_ids) == 0 and len(dataset_ids) == 0:
         display_bio = False
     else:
         display_bio = True
@@ -938,6 +981,7 @@ def __get_job_data(member):
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': number_of_publications,
+        'number_of_datasets': len(dataset_ids),
         'position': position,
         'pubtype_info': dict(items),
         'role_items': role_items,

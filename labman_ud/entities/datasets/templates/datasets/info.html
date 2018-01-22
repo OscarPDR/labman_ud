@@ -1,0 +1,222 @@
+{% extends "labman_ud/base.html" %}
+{% load staticfiles rdf_link rand_int %}
+
+
+
+{% block content %}
+    <!-- Head Information Datasets/DatasetName -->
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'datasets_index' %}">Datasets</a>
+        </li>
+
+        <li class="active">
+            {% rdf_icon dataset %}
+            {{ dataset.title }}
+        </li>
+    </ol>
+
+    <!-- Info navigation : Overview, extended informaton and so on -->
+    <div class="entity-info-nav">
+        <a id="dataset_overview" class="active" href="{% url 'datasets_info' dataset.slug %}">
+            <i class="fa fa-eye"></i>
+            <span class="hidden-xs hidden-sm">
+                Overview
+            </span>
+        </a>
+
+{#        <a id="dataset_ext_info" class="active" href="{% url 'datasets_ext_info' dataset.slug %}">#}
+{#            <i class="fa fa-info"></i>#}
+{#            <span class="hidden-xs hidden-sm">#}
+{#                Extended information#}
+{#            </span>#}
+{#        </a>#}
+    </div>
+
+    <div class="soften"></div>
+
+    <!-- Content, logo of the dataset and download link -->
+    <div class="entity-info-content">
+        {% block dataset_content %}
+
+            <h3 id="entity-title">
+                <i class="fa fa-quote-left"></i>
+                {{ dataset.title }}
+                <i class="fa fa-quote-right"></i>
+            </h3>
+
+            <div class="row entity-metadata">
+
+{#                {% if logo %}#}
+{#                    <div class="col-md-3 centered">#}
+{#                        <img id="project-logo" class="img-responsive" src="{{ MEDIA_URL }}{{ logo }}"/>#}
+{#                    </div>#}
+{#                {% endif %}#}
+
+                <div class="col-md-3">
+                    <span id="author-list">
+                        <i class="fa fa-users"></i>
+                        Author{{ authors|pluralize }}
+                    </span>
+
+                    <ol>
+                        {% for author in authors %}
+                            <li>
+                                <a href="{% url 'determine_person_info' author.slug %}">
+                                    {{ author.full_name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+
+                    {% if projects %}
+                        <span id="project-list">
+                            <i class="fa fa-flask"></i>
+                            Project{{ projects|pluralize }}
+                        </span>
+
+                        <ol>
+                            {% for project in projects %}
+                                <li>
+                                    <a href="{% url 'project_info' project.slug %}">
+                                        {{ project.short_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-3">
+                    {% if file %}
+                        <div class="centered">
+                            <img id="document-download" src="{% static 'img/document_download.png' %}"/>
+                            <br>
+                            <a target="_blank" class="btn btn-default btn-xs" href="{{ MEDIA_URL }}{{ file }}">
+                                <i class="fa fa-download"></i>
+                                &nbsp;&asymp; {{ file.size|filesizeformat }}
+                            </a>
+                        </div>
+                    {% elif external_download_url %}
+                        <div class="centered">
+                            <img id="document-download" src="{% static 'img/external.png' %}"/>
+                            <br>
+                            <a target="_blank" class="btn btn-default btn-xs" href="{{ external_download_url }}">
+                                <i class="fa fa-external-link-square"></i>
+                                &nbsp;&#8618; External link
+                            </a>
+
+                            {% if doi %}
+                                <br>
+                                <a target="_blank" class="btn btn-link btn-xs" href="http://doi.org/{{ doi }}">
+                                    <i class="fa fa-key"></i>
+                                    &nbsp;&#8618; <strong>DOI:</strong> {{ doi }}
+                                </a>
+                            {% endif %}
+
+                        </div>
+                    {% endif %}
+
+                    {% if license %}
+                        <div class="centered">
+                            <br>
+                            <strong>License:</strong>
+                            <br>
+                            <i class="fa {{ wam_icon }}"></i>
+                            {{ license }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div id="tag-cloud-container" class="col-md-6">
+                    <div id="dataset-tag-cloud" style="width: 100px; height: 50px;"></div>
+                </div>
+            </div>
+
+            <blockquote>
+                <p>Description</p>
+
+                <footer>
+                    {{ dataset.notes|safe }}
+                </footer>
+
+                <br>
+
+                {% if authors %}
+
+                    <p>Citation</p>
+
+                    <footer>
+                        {% for author in authors %}
+                            {{ author.full_name }}{% if not forloop.last %}, {% else %}.{% endif %}
+                        {% endfor %}
+
+                        {% if year %} ({{ year }}){% endif %}
+                        "<em>{{ dataset.title }}.</em>"
+
+                        {% if webpage %}
+                            Available from: {{ webpage }}
+                        {% else %}
+                            Available from: {{ request.get_host }}
+                        {% endif %}
+
+                    </footer>
+
+                {% endif %}
+            </blockquote>
+
+        {% endblock %}
+    </div>
+
+{% endblock %}
+
+
+<!-- Additional scripts in the page (Add tag cloud an so on) -->
+
+{% block scripts %}
+
+    <script>
+        $('#datasets-nav').addClass('active');
+    </script>
+    <!-- To changes the value of the active when you click in the To menu -->
+    <script>
+        $('#dataset_overview').removeClass('active');
+        $('#dataset_ext_info').removeClass('active');
+    </script>
+
+    <!-- Scripts to create the tag cloud -->
+    <script>
+        $('#dataset-tag-cloud').width($('#tag-cloud-container').width() + 'px');
+        var custom_height = $('#dataset-tag-cloud').width() * 0.5;
+
+        if (custom_height > 125) {
+            custom_height = 125;
+        }
+
+        $('#tag-cloud-container').height(custom_height + 'px');
+        $('#dataset-tag-cloud').height(custom_height + 'px');
+    </script>
+
+    <script src="{% static 'js/jqcloud-1.0.4.min.js' %}"></script>
+
+    <script>
+        var word_array = [
+            {% for tag in tags %}
+                {text: "{{ tag }}", weight: "{% randInt 2 8 %}", link:"{% url 'datasets_tag' tag.slug %}"},
+            {% endfor %}
+        ];
+
+        $(function() {
+            $("#dataset-tag-cloud").jQCloud(word_array);
+        });
+    </script>
+
+    {% block dataset_scripts %}
+         <script>
+            $('#dataset_overview').addClass('active');
+        </script>
+    {% endblock %}
+
+{% endblock %}

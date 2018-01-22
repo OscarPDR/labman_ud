@@ -108,6 +108,17 @@ h5, h6 {
     margin-left: 1em;
 }
 
+#project-list {
+    display: block;
+    color: #777;
+    font-weight: bold;
+    padding-bottom: 1em;
+}
+
+#project-list i {
+    margin-left: 1em;
+}
+
 .project-code {
     margin-left: 1.5em;
     font-weight: bold;
@@ -246,7 +257,7 @@ h4 {
     text-align: justify;
 }
 
-#project-tag-cloud, #publication-tag-cloud {
+#project-tag-cloud, #publication-tag-cloud, #dataset-tag-cloud {
     border: 1px solid #ccc;
     border-radius: 0.75em;
 }
@@ -938,6 +949,18 @@ path.color1 {
 
 i.fa-grey {
     color: #999;
+}
+
+i.fa-green {
+    color: #00cc00;
+}
+
+i.fa-red {
+    color: #ff0000;
+}
+
+i.fa-yellow {
+    color: #ffbb33;
 }
 
 blockquote footer {

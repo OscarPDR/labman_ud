@@ -1,0 +1,320 @@
+{% extends "labman_ud/base.html" %}
+{% load pagination_tags staticfiles get_range string_list %}
+
+
+{% block content %}
+
+    <!-- Search bar content -->
+    <div id="form-section">
+        <form class="form-search" action="" method="post">
+            {% csrf_token %}
+
+            <div id="search-text" class="input-group">
+                {{ form.text }}
+
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+
+
+            <div class="btn-group" id="expand-form-panel" role="group">
+                <button id="expand-form-btn" type="button" class="btn btn-default">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Extended form -->
+
+            <h2 id="extended-form-title">Advanced Search</h2>
+
+           <ul class="nav nav-tabs" id="extended-form-tabs">
+                <li class="active"><a data-target="#basic-info-tab" data-toggle="tab">Basic Information <i class="fa"></i></a></li>
+            </ul>
+
+            <div id="extended-form" class="form-horizontal">
+
+                <div class="tab-content">
+                        <div class="tab-pane active" id="basic-info-tab">
+                            <!-- from year -->
+                            <div class="form-group", id="dataset_from_year">
+                                <label for="start_date" id="id_from_year_label" class="control-label col-xs-12 col-sm-2 col-lg-2">Year:</label>
+                                <div class="col-xs-6 col-sm-3">
+                                    <select id="id_from_range" name="from_range" class="selectpicker" data-width="100%">
+                                        <option value="<">Less than</option>
+                                        <option value="<=">Less than or equal to</option>
+                                        <option value=">">Greater than</option>
+                                        <option value=">=">Greater than or equal to</option>
+                                        <option value="==">Equal to</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-6 col-sm-3">
+                                    <div class="input-group date" id="start_date">
+                                        <input name="from_year" type="text" class="form-control" placeholder="YYYY"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- to year -->
+                            <div class="form-group" id="dataset_to_year">
+                                <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">To year:</label>
+                                <div class="col-xs-6 col-sm-3">
+                                    <select name="to_range" class="selectpicker" data-width="100%">
+                                        <option value="<">Less than</option>
+                                        <option value="<=">Less than or equal to</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-6 col-sm-3">
+                                    <div class="input-group date" id="end_date">
+                                        <input name="to_year" type="text" class="form-control" placeholder="YYYY"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- dataset extension -->
+
+                            <div class="form-group">
+                                <label for="end_date" class="control-label col-xs-12 col-sm-2 col-lg-2">File format:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    {{ form.file_format }}
+                                </div>
+                            </div>
+
+                            <!-- Dataset license -->
+
+                            <div class="form-group">
+                                <label for="license" class="control-label col-xs-12 col-sm-2 col-lg-2">License Type:</label>
+                                <div class="col-xs-12 col-sm-6">
+                                    {{ form.license }}
+                                </div>
+                            </div>
+
+                            <!-- Dataset tags -->
+                            {% if dataset_tags_info %}
+                                <div class="form-group">
+                                    <label for="tags" class="control-label col-xs-12 col-sm-2 col-md-2 col-lg-2">Tags:</label>
+                                    <div class="col-xs-12 col-sm-6">
+                                        <input name="tags" data-provide="typeahead" type="text" class="form-control tag-typeahead">
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    <div class="form-group">
+                        <div class="centered col-xs-12 col-sm-8">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- Table TOP title  & Pagination-->
+            <div class="row">
+                <div class="col-md-8">
+                <!-- Number of dataset changed information. This will create the tittle -->
+                    {% if clean_index %}
+                        <h2>{{ dataset_length }} dataset{{ dataset_length|pluralize }}</h2>
+                    {% else %}
+                        {% if tag %}
+                            <h2>{{ dataset_length }} dataset{{ datasets|pluralize }} with tag <em>'{{ tag.name }}'</em>
+                        {% elif query_string %}
+                            <h2>{{ dataset_length }} dataset{{ datasets|pluralize }} found for <em>'{{ query_string }}'</em>
+                        {% else %}
+                            <h2>{{ dataset_length }} dataset{{ datasets|pluralize }} found
+                        {% endif %}
+                        &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'datasets_index' %}">Clean filters</a></small></h2>
+                    {% endif %}
+                </div>
+
+                <!-- This part creates the paginator of different datasets -->
+                {% if datasets %}
+                    <div class="col-md-4">
+                        {% autopaginate datasets %}
+
+                        {% paginate %}
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Table of contents -->
+    <div class="row">
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th class="col-md-8">Title</th>
+                    <th class="col-md-2">Date</th>
+                    <th class="col-md-2">File format</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dataset in datasets %}
+                    <tr class="vertical-alignment">
+                        <td class="col-md-8">
+                            <a href="{% url 'datasets_info' dataset.slug %}">
+                                {{ dataset.title }}
+                            </a>
+
+                            <br>
+
+                            {% include 'datasets/dataset_authors.html' %}
+                        </td>
+
+                        <td class="col-md-2">
+                            {{ dataset.date.year }}
+
+                        </td>
+
+                        <td class="col-md-2">
+                            {{ dataset.get_format_display }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <small class="pull-right">
+        <strong>Last update:</strong>&emsp;{{ last_entry.action_time|date:"F d, Y - H:i" }}
+    </small>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tokenfield.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
+
+
+    <!-- Loading extended information to be used in javascript functions -->
+    <script>
+        var allTags = {{dataset_tags_info|string_list|safe}};
+        {% if form_tags %}
+        var tags = {{form_tags|string_list|safe}};
+        {% endif %}
+    </script>
+
+    <!-- Selecting the from year and to year date pickers dinamically -->
+    <script>
+    //Hidinng by default the yo tear dataset
+        $('#dataset_to_year').hide();
+    {% if form_from_range %}
+        $('#id_from_range').find('[value="{{ form_from_range|safe }}"]').attr('selected', 'true');
+        $('#id_from_range').selectpicker('refresh');
+        if("{{ form_from_range|safe }}" == '>' || "{{ form_from_range|safe }}" == '>=') {
+            $('#publication_to_year').show();
+            $('#id_from_year_label').text('From year:');
+        }
+    {% endif %}
+    </script>
+
+    <!-- Hide some filtering year values -->
+     <script>
+        $('#id_from_range').change(function(e) {
+            value = $('#id_from_range').val();
+            if (value == '>=' || value == '>') {
+                $('#dataset_to_year').show();
+                $('#id_from_year_label').text('From year:');
+            } else {
+                $('#dataset_to_year').hide();
+                $('#id_from_year_label').text('Year:');
+            }
+        });
+    </script>
+
+
+    <!-- Datepicker button -->
+    <script>
+    $(function() {
+        $('.date').datetimepicker({
+            viewMode: 'years',
+            format: 'YYYY',
+            minDate: new Date('{{ request.session.min_dataset_year }}-01-01'),
+            maxDate: new Date('{{ request.session.max_dataset_year }}-12-31')
+        });
+
+        $('#start_date').on('dp.change', function (e) {
+            if(e.date) {
+                $('#end_date').data("DateTimePicker").minDate(e.date);
+            } else
+                $('#end_date').data("DateTimePicker").minDate(new Date('{{ request.session.min_dataset_year }}-01-01'));
+        });
+
+        $('#end_date').on('dp.change', function (e) {
+            if(e.date) {
+                $('#start_date').data("DateTimePicker").maxDate(e.date);
+            } else
+                $('#start_date').data("DateTimePicker").maxDate(new Date('{{ request.session.max_dataset_year }}-12-31'));
+        });
+    });
+    </script>
+
+    <!-- Highlight performed query -->
+    {% if query_string or form_authors_name %}
+        <script src="{% static 'js/jquery-highlight.js' %}"></script>
+
+        {% if query_string %}
+            <script>
+                $('tbody').highlight('{{ query_string }}');
+                $('#id_text').attr('placeholder', '{{ query_string }}');
+                $('#id_text').attr('value', '');
+            </script>
+        {% endif %}
+        {% if form_authors_name %}
+            <script>
+            for(var i = 0; i < authors.length; i++) {
+                $('tbody').highlight(authors[i]);
+            }
+            </script>
+        {% endif %}
+    {% endif %}
+
+
+    <!-- Panel expand -->
+    <script>
+    var populated = false;
+    $('#expand-form-btn').click(function() {
+        $(this).removeClass('hover');
+        var buttonIcon = $(this).children('i');
+        if(buttonIcon.hasClass('fa-plus')) {
+            buttonIcon.removeClass('fa-plus').addClass('fa-minus');
+            $('#extended-form-title, #extended-form-tabs, #extended-form').fadeIn();
+            // Loads tags after advanced search panel is visible to fix wrong width calc.
+            $('.tag-typeahead').tokenfield({
+                autocomplete: {
+                source: allTags,
+                delay: 100
+            },
+                showAutocompleteOnFocus: true
+            });
+            //Loads tags filter values after typeahead is populated.
+            {% if form_tags %}
+            if(!populated) {
+                $('input[name=tags]').tokenfield('setTokens', tags);
+                populated = true;
+            }
+            {% endif %}
+
+        } else {
+            buttonIcon.removeClass('fa-minus').addClass('fa-plus');
+            $('#extended-form-title, #extended-form-tabs, #extended-form').fadeOut();
+        }
+    });
+
+    $('#all-tab').click(function() {
+        $('#extended-form-tabs li.active').removeClass('active');
+        $(this).parent().addClass('active');
+        $('.tab-pane').addClass('active');
+    });
+    </script>
+
+{% endblock %}

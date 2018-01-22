@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^p/$', entities.persons.views.members_redirect, name='members_redirect'),
     url(r'^projects/', include('entities.projects.urls')),
     url(r'^publications/', include('entities.publications.urls')),
+    url(r'^datasets/', include('entities.datasets.urls')),
 
     # Custom app urls
     url(r'^charts/', include('charts.urls')),

@@ -219,20 +219,21 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 projects = []
 
             session_filter_dict = {
-                'form_start_date' : start_date,
-                'form_start_range' : start_range,
-                'form_end_date' : end_date,
-                'form_end_range' : end_range,
+                'form_start_date': start_date,
+                'form_start_range': start_range,
+                'form_end_date': end_date,
+                'form_end_range': end_range,
                 'form_project_types': form_project_types,
-                'form_project_status' : form_project_status,
-                'form_tags' : form_tags,
-                'projects' : serializers.serialize('json', projects),
-                'form_funds_range' : form_funds_range,
-                'form_from_total_funds' : str(form_from_total_funds),
-                'form_to_total_funds' : str(form_to_total_funds),
-                'form_participants_name' : form_participants_name,
-                'form_participants_role' : json.dumps(form_participants_role),
-                'form_member_field_count' : len(form_participants_name),
+                'form_project_status': form_project_status,
+                'form_tags': form_tags,
+                'projects': serializers.serialize('json', projects),
+                'form_funds_range': form_funds_range,
+                'form_from_total_funds': str(form_from_total_funds),
+                'form_to_total_funds': str(form_to_total_funds),
+                'form_participants_name': form_participants_name,
+                'form_participants_role': json.dumps(form_participants_role),
+                'form_member_field_count': len(form_participants_name),
+                'query_string': query_string,
             }
 
             request.session['filtered'] = session_filter_dict
@@ -267,6 +268,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 form_to_total_funds = request.session['filtered']['form_to_total_funds']
                 form_participants_name = request.session['filtered']['form_participants_name']
                 form_participants_role = json.loads(request.session['filtered']['form_participants_role'])
+                query_string = request.session['filtered']['query_string']
                 clean_index = False
         else:
             form = ProjectSearchForm(extra=1)
@@ -309,7 +311,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     roles = Role.objects.filter(id__in=roles_id).order_by('name')
 
     # Retrieves all the full names of authors.
-    participants_info =  AssignedPerson.objects.all() \
+    participants_info = AssignedPerson.objects.all() \
         .distinct('person__full_name').order_by() \
         .values_list('person__full_name', flat=True)
 
@@ -334,7 +336,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'form_end_range' : end_range,
         'form_project_types' : form_project_types,
         'form_project_status' : form_project_status,
-        'form_tags' : form_tags,
+        'form_tags': form_tags,
         'form_funds_range' : form_funds_range,
         'form_from_total_funds' : form_from_total_funds,
         'form_to_total_funds' : form_to_total_funds,

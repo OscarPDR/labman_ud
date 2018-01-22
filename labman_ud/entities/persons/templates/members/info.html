@@ -183,6 +183,16 @@
                 </div>
                 {% endif %}
 
+                {% if number_of_datasets %}
+                <div class="btn-group">
+                    <a href="{% url 'member_datasets' member.slug %}" class="btn {% if current_page == 'datasets' %}btn-primary{% else %}btn-default{% endif %} general-member-button member_datasets">
+                        <i class="fa fa-database fa-large"></i>
+                        &emsp;{{ number_of_datasets }} dataset{{ number_of_datasets|pluralize }}
+                    </a>
+
+                </div>
+                {% endif %}
+
                 {% if header_rows == 1 %}
                     {% if has_talks %}
                         <a href="" class="btn btn-default general-member-button member_talks">
