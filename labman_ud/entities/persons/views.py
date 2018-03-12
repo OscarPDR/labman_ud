@@ -152,9 +152,10 @@ def members(request, organization_slug=None):
 
     for head_id in unit_head_person_ids:
         head = Person.objects.get(id=head_id)
-        heads_of_unit.append(__get_head_data(head))
-        konami_positions.append(head.konami_code_position)
-        konami_profile_pictures.append(head.profile_konami_code_picture)
+        if head.is_active:
+            heads_of_unit.append(__get_head_data(head))
+            konami_positions.append(head.konami_code_position)
+            konami_profile_pictures.append(head.profile_konami_code_picture)
 
     member_list = Person.objects.filter(is_active=True).exclude(id__in=unit_head_person_ids)
 
