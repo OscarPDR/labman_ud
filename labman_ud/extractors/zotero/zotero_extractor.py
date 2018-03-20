@@ -1026,20 +1026,20 @@ def _determine_if_tag_is_special(tag, publication):
         publication_ranking.save()
 
     elif (tag_slug in ['q1', 'q-1']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[0][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[0][0]
+        publication.save()
 
     elif (tag_slug in ['q2', 'q-2']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[1][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[1][0]
+        publication.save()
 
     elif (tag_slug in ['q3', 'q-3']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[3][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[2][0]
+        publication.save()
 
     elif (tag_slug in ['q4', 'q-4']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[3][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[3][0]
+        publication.save()
 
     elif (jcr_match) and (publication.child_type == 'JournalArticle'):
         tag_lower = tag.lower().replace(',', '.')
@@ -1047,8 +1047,8 @@ def _determine_if_tag_is_special(tag, publication):
 
         impact_factor = non_decimal.sub('', tag_lower)
 
-        publication.parent_journal.impact_factor = float(impact_factor)
-        publication.parent_journal.save()
+        publication.impact_factor = float(impact_factor)
+        publication.save()
 
     elif tag_slug in project_slugs:
         project = Project.objects.get(slug=tag_slug)

@@ -427,7 +427,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         elif publication_item.child_type == 'JournalArticle':
             journal_article = publication_item.journalarticle
             parent_title = journal_article.parent_journal.title if journal_article.parent_journal else ''
-            impact_factor = journal_article.parent_journal.impact_factor
+            impact_factor = journal_article.impact_factor
 
         elif publication_item.child_type == 'MagazineArticle':
             magazine_article = publication_item.magazinearticle
@@ -445,7 +445,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         }
 
         if publication_item.child_type == 'JournalArticle':
-            if journal_article.parent_journal.impact_factor is not None:
+            if journal_article.impact_factor is not None:
                 child_type = 'JCR indexed journal article'
             else:
                 child_type = 'JournalArticle'

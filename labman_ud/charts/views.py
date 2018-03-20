@@ -330,7 +330,7 @@ def publications_number_of_publications(request):
 
     for authored_pub in authored_publications:
         pub_type = authored_pub.child_type
-        if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.parent_journal.impact_factor):
+        if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.impact_factor):
             pub_type = 'JCR'
         else:
             pub_type = str(inflection.titleize(pub_type))

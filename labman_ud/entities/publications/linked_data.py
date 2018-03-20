@@ -268,6 +268,14 @@ def save_journal_article_as_rdf(journal_article):
     if journal_article.short_title:
         graph.add((resource_uri, SWRCFE.publicationShortTitle, Literal(journal_article.short_title)))
 
+    # Quartile is optional
+    if journal_article.quartile:
+        graph.add((resource_uri, SWRCFE.quartile, Literal(journal_article.quartile)))
+
+    # Impact factor is optional
+    if journal_article.impact_factor:
+        graph.add((resource_uri, SWRCFE.impactFactor, Literal(journal_article.impact_factor)))
+
     # Parent journal is always present
     graph.add((resource_uri, DCTERMS.isPartOf, resource_uri_for_publication_from_slug(journal_article.parent_journal.slug)))
 
@@ -318,14 +326,6 @@ def save_journal_as_rdf(journal):
     # Journal abbreviation is optional
     if journal.journal_abbreviation:
         graph.add((resource_uri, SWRCFE.journalAbbreviation, Literal(journal.journal_abbreviation)))
-
-    # Quartile is optional
-    if journal.quartile:
-        graph.add((resource_uri, SWRCFE.quartile, Literal(journal.quartile)))
-
-    # Impact factor is optional
-    if journal.impact_factor:
-        graph.add((resource_uri, SWRCFE.impactFactor, Literal(journal.impact_factor)))
 
     insert_by_post(graph)
 

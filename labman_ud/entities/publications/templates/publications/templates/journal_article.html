@@ -4,9 +4,9 @@
         <h3 class="panel-title">
             <strong>Parent journal:</strong>&emsp;{{ parent_publication.title }}
 
-            {% if parent_publication.quartile %}
-                <span class="pull-right label label-quartile label-{{ parent_publication.quartile|slugify }}">
-                    {{ parent_publication.quartile }}
+            {% if publication.quartile %}
+                <span class="pull-right label label-quartile label-{{ publication.quartile|slugify }}">
+                    {{ publication.quartile }}
                 </span>
             {% endif %}
         </h3>
@@ -14,11 +14,11 @@
 
     <div class="panel-body">
         <dl id="pub-child-type-infobox" class="dl-horizontal">
-            {% if parent_publication.impact_factor %}
+            {% if publication.impact_factor %}
                 <dt>Impact factor</dt>
 
                 <dd>
-                    {{ parent_publication.impact_factor|floatformat:3 }} ({{ parent_publication.year }})
+                    {{ publication.impact_factor|floatformat:3 }} ({{ parent_publication.year }})
                 </dd>
             {% endif %}
 
