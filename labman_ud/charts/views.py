@@ -644,7 +644,7 @@ def publications_by_author(request, author_slug):
     for publication in _publications:
         pub_type = publication.child_type
         if pub_type == 'JournalArticle':
-            if publication.journalarticle.parent_journal.impact_factor:
+            if publication.journalarticle.impact_factor:
                 pub_type = 'JCR'
 
         pub_year = publication.year
