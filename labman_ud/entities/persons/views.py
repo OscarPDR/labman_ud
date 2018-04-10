@@ -5,7 +5,7 @@ import weakref
 
 from inflection import titleize
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse, Http404
 from django.shortcuts import render
@@ -315,7 +315,7 @@ def member_projects(request, person_slug, role_slug=None):
     projects = OrderedDict()
 
     if role_slug:
-        roles = [Role.objects.get(slug=role_slug)]
+        roles = get_list_or_404(Role, slug=role_slug)
     else:
         roles = Role.objects.all()
 
