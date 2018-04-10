@@ -707,21 +707,26 @@ def publication_places_by_author(request, author_slug, child_type=None):
 
         list_length = len(place_list)
 
-        for year in range(min_year, max_year + 1):
+        if min_year and max_year:
+            for year in range(min_year, max_year + 1):
+                inner_list = [0] * (len(place_list) + 2)
+                inner_list[0] = str(year)
+
+                for filtered_publication in publications.filter(publication__year=year):
+                    place_str = str(filtered_publication.position) + _author_place_suffix(filtered_publication.position)
+                    index = place_list.index(place_str) + 1
+                    inner_list[index] += 1
+                    inner_list[-1] += 1
+
+                if inner_list[-1] > max_value:
+                    max_value = inner_list[-1]
+
+                full_list.append(inner_list)
+        else:
             inner_list = [0] * (len(place_list) + 2)
-            inner_list[0] = str(year)
-
-            for filtered_publication in publications.filter(publication__year=year):
-                place_str = str(filtered_publication.position) + _author_place_suffix(filtered_publication.position)
-                index = place_list.index(place_str) + 1
-                inner_list[index] += 1
-                inner_list[-1] += 1
-
-            if inner_list[-1] > max_value:
-                max_value = inner_list[-1]
-
+            inner_list[0] = str(0)
+            # Appeding no information to the list
             full_list.append(inner_list)
-
     else:
         publications = PublicationAuthor.objects.filter(author=author)
 
