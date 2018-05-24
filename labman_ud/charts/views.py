@@ -1302,7 +1302,8 @@ def related_persons(request, person_slug, top):
                     significant_tags[tag] = cur_dict[tag]
             persons_dict[person] = significant_tags
 
-    current_person = Person.objects.filter(slug=person_slug)[0]
+    current_person = get_object_or_404(Person, slug=person_slug)
+
     try:
         current_tags = persons_dict[current_person.full_name]
     except:

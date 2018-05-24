@@ -70,6 +70,12 @@ class LabmanDeployGeneralSettings(models.Model):
 
     research_group_description = RedactorField()
 
+    # Legal information details
+    legal_information_url = models.URLField(
+        blank=False,
+        null=True
+    )
+
     # Address details
     address = RedactorField(
         blank=True,
