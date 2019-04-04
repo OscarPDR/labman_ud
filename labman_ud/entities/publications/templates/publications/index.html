@@ -12,7 +12,7 @@
                 {{ form.text }}
 
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">
+                    <button class="btn btn-default search-button" type="submit">
                         <i class="fa fa-search"></i>
                     </button>
                 </span>
@@ -146,12 +146,17 @@
 
                 <div class="form-group">
                     <div class="centered col-xs-12 col-sm-8">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                        <button type="submit" class="btn btn-default search-button"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
 
             </div>
         <form>
+    </div>
+    <div id="loading" style="display: none;">
+            <div class="centered">
+                <img src="/static/img/loading.gif" style="height: 100px; width: 100px;">
+            </div>
     </div>
 
     <div class="row">
@@ -446,6 +451,10 @@
             $('#extended-form-tabs li.active').removeClass('active');
             $(this).parent().addClass('active');
             $('.tab-pane').addClass('active');
+        });
+
+        $('.search-button').click(function() {
+            $('#loading').show();
         });
     </script>
 
