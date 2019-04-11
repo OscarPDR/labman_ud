@@ -44,6 +44,7 @@ def _validate_term(token, name, numeric=False):
 
 
 def publication_index(request, tag_slug=None, publication_type=None, query_string=None):
+
     tag = None
 
     form_from_year = None
@@ -81,7 +82,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         form = PublicationSearchForm(request.POST, extra_author=form_author_field_count,
             extra_editor=form_editor_field_count)
         if form.is_valid():
-            query_string = form.cleaned_data['text']
+            #query_string = form.cleaned_data['text']
 
             query_string = form.cleaned_data['text']
             form_from_year = form.cleaned_data['from_year']
@@ -91,7 +92,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             form_publication_types = form.cleaned_data['publication_types']
             form_tags = form.cleaned_data['tags']
 
-            for my_tuple in form.fields.items():
+            
+            for my_tuple in reversed(form.fields.items()):
                 if my_tuple[0].startswith('editor_name_'):
                     form_editor_name = form.cleaned_data[my_tuple[0]]
                     if form_editor_name:
@@ -100,6 +102,9 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     form_author_name = form.cleaned_data[my_tuple[0]]
                     if form_author_name:
                         form_authors_name.append(form_author_name)
+                elif not my_tuple[0].startswith('editor_name_'):
+                    break
+            
 
             if form_from_year:
                 if form_from_range == '<':
@@ -186,7 +191,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         if 'filtered' in request.session.keys():
             p = re.compile(ur'publications\/filtered(\/\?page=[1-9]+)?')
 
-            if  re.search(p, request.path) == None:
+            if re.search(p, request.path) == None:
                 # IF requested page is not filted, deletes session filter info.
                 del request.session['filtered']
                 # Loads default report.
@@ -258,7 +263,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             'tag:': [],
             'title:': [],
         }
-
+        
         special_tokens = []
         new_tokens = []  # E.g. 'author:"Aitor Almeida"' is converted to 'Aitor Almeida'
         for token in tokens:
@@ -287,31 +292,18 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         search_terms = [token for token in tokens if token not in special_tokens] + new_tokens
 
-        # Filter by publication
-        if special_tokens:
-            sql_query = Publication.objects.exclude(authors=None).all()
+        # Query by author and title
+        
+        # sql_query = Publication.objects.exclude(authors=None).all()
+        sql_query_titles = Publication.objects.filter(title__icontains=query_string).all()
+        author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=query_string).values_list('author__id', flat=True)
+        sql_query_authors = Publication.objects.filter(authors__in=author_ids).all()
 
-            for year in NUMERIC_FILTERS['year:']:
-                sql_query = sql_query.filter(year=int(year))
-
-            for title in FILTERS['title:']:
-                sql_query = sql_query.filter(title__icontains=title)
-
-            if FILTERS['tag:']:
-                for tag in FILTERS['tag:']:
-                    tag_ids = PublicationTag.objects.filter(tag__name__icontains=tag).values('tag__id')
-                    sql_query = sql_query.filter(tags__id__in=tag_ids)
-
-            if FILTERS['author:']:
-                for author in FILTERS['author:']:
-                    author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=author).values('author__id')
-                    sql_query = sql_query.filter(authors__id__in=author_ids)
-        else:
-            sql_query = Publication.objects.exclude(authors=None).all()
-
-        sql_query = sql_query.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
+        # Fix by Unai & Ruben S
+        sql_query_titles = sql_query_titles.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
+        sql_query_authors = sql_query_authors.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
+        sql_query = sql_query_titles | sql_query_authors
         publication_strings = [(publication, publication.display_all_fields().lower()) for publication in sql_query]
-
         publications = []
 
         for publication, publication_string in publication_strings:
