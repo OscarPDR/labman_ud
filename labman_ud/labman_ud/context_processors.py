@@ -98,6 +98,7 @@ def global_vars(request):
 
     about_section_titles = AboutSection.objects.all().order_by('order').values_list('title', flat=True)
 
+
     return_dict = {
         'ADDRESS_DETAILS': address_details,
         'BASE_URL': getattr(settings, 'BASE_URL', None),
@@ -119,6 +120,7 @@ def global_vars(request):
         'THESES': theses,
         'ABOUT_SECTION_TITLES': about_section_titles,
         'BACKGROUND_COLOR': _settings.background_color,
+        'LEGAL_INFORMATION_URL': _settings.legal_information_url
     }
 
     return return_dict

@@ -14,6 +14,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Uploaded file permissions (allow to third parties download documents from web)
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # Application definition
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = (
     'entities.projects',
     'entities.publications',
     'entities.utils',
+    'entities.datasets',
 
     'extractors.zotero',
     'labman_setup',

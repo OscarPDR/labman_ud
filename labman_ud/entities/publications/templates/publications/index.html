@@ -12,7 +12,7 @@
                 {{ form.text }}
 
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">
+                    <button class="btn btn-default search-button" type="submit">
                         <i class="fa fa-search"></i>
                     </button>
                 </span>
@@ -146,13 +146,49 @@
 
                 <div class="form-group">
                     <div class="centered col-xs-12 col-sm-8">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                        <button type="submit" class="btn btn-default search-button"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
 
             </div>
         <form>
     </div>
+    <div id="loading" style="display: none;">
+            <div class="centered">
+                <img src="/static/img/loading.gif">
+            </div>
+    </div>
+
+            <nav>
+            <ul class="pagination">
+            {% if 'filtered' in request.path %}
+                <li><a href="/publications/filtered/1">First</a></li>
+            {% else %}
+                <li><a href="/publications/1">First</a></li>
+            {% endif %}
+            {% if publications.has_previous %}
+                {% if 'filtered' in request.path %}
+                    <li><a href="/publications/filtered/{{ publications.previous_page_number }}">{{ publications.previous_page_number }}</a></li>
+                {% else %}
+                    <li><a href="/publications/{{ publications.previous_page_number }}">{{ publications.previous_page_number }}</a></li>
+                {% endif %}
+            {% endif %}
+            <li class="active"><a href="#">{{ publications.number }}</a></li>
+            {% if publications.has_next %}
+                {% if 'filtered' in request.path %}
+                    <li><a href="/publications/filtered/{{ publications.next_page_number }}">{{ publications.next_page_number }}</a></li>
+                {% else %}
+                    <li><a href="/publications/{{ publications.next_page_number }}">{{ publications.next_page_number }}</a></li>
+                {% endif %}
+            {% endif %}
+            {% if 'filtered' in request.path %}
+                <li><a href="/publications/filtered/{{ publications.paginator.num_pages }}">Last</a></li>
+            {% else %}
+                <li><a href="/publications/{{ publications.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+            </ul>
+            </nav>
+
 
     <div class="row">
         <div class="col-md-8">
@@ -171,17 +207,14 @@
                 {% else %}
                     <h2>{{ publications_length }} publication{{ publications|pluralize }} found
                 {% endif %}
-                &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'publication_index' %}">Clean filters</a></small></h2>
+                &emsp;<small><a class="btn btn-info btn-xs" href="{% url 'publication_index' page=1 %}">Clean filters</a></small></h2>
 
             {% endif %}
         </div>
 
-        <div class="col-md-4">
-            {% autopaginate publications %}
-
-            {% paginate %}
-        </div>
+        
     </div>
+    
 
     <div class="row">
         <table class="table table-striped table-bordered table-hover table-responsive">
@@ -232,6 +265,7 @@
             </tbody>
         </table>
     </div>
+    
 
     <small class="pull-right">
         <strong>Last update:</strong>&emsp;{{ last_entry.action_time|date:"F d, Y - H:i" }}
@@ -259,14 +293,6 @@
         /* Loads information of the author and editor typeahead */
         $('.author-typeahead').typeahead({source: allAuthors });
         $('.editor-typeahead').typeahead({source: allEditors });
-    </script>
-
-    <script>
-        $('#publications-nav').addClass('active');
-    </script>
-
-    <script>
-        $('.pagination').addClass('pagination-sm');
     </script>
 
     <script>
@@ -372,10 +398,13 @@
         {% endif %}
             
         {% if form_publication_types %}
+        
         var type = {{form_publication_types|safe}};
+        console.log(type)
         for(var i = 0; i < type.length; i++) {
             $('select[name=publication_types]').find('[value=' + type[i] + ']').attr('selected', 'true');
             $('select[name=publication_types]').selectpicker('refresh');
+            
         }
         {% endif %}
 
@@ -446,6 +475,10 @@
             $('#extended-form-tabs li.active').removeClass('active');
             $(this).parent().addClass('active');
             $('.tab-pane').addClass('active');
+        });
+
+        $('.search-button').click(function() {
+            $('#loading').show();
         });
     </script>
 

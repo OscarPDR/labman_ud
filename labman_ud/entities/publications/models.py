@@ -459,21 +459,6 @@ class Journal(CollectionPublication):
         null=True,
     )
 
-    quartile = models.CharField(
-        max_length=25,
-        choices=QUARTILE_CHOICES,
-        default=None,
-        blank=True,
-        null=True,
-    )
-
-    impact_factor = models.DecimalField(
-        max_digits=7,
-        decimal_places=5,
-        blank=True,
-        null=True,
-    )
-
     def _generate_slug(self):
         return nslugify(self.title, self.year, self.volume, self.issue)
 
@@ -505,6 +490,21 @@ class Journal(CollectionPublication):
 
 class JournalArticle(PartOfCollectionPublication):
     parent_journal = models.ForeignKey('Journal')
+
+    quartile = models.CharField(
+        max_length=25,
+        choices=QUARTILE_CHOICES,
+        default=None,
+        blank=True,
+        null=True,
+    )
+
+    impact_factor = models.DecimalField(
+        max_digits=7,
+        decimal_places=5,
+        blank=True,
+        null=True,
+    )
 
     individually_published = models.DateField(
         blank=True,

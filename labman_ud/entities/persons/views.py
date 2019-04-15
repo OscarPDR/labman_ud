@@ -5,7 +5,7 @@ import weakref
 
 from inflection import titleize
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse, Http404
 from django.shortcuts import render
@@ -23,6 +23,7 @@ from entities.projects.models import AssignedPerson
 from entities.publications.models import Publication, PublicationAuthor
 from entities.publications.views import *
 from entities.utils.models import Role, Network, PersonRelatedToAward, Award, ProjectRelatedToAward, PublicationRelatedToAward, PersonRelatedToContribution, PersonRelatedToTalkOrCourse
+from entities.datasets.models import Dataset, DatasetAuthor
 
 
 UNIT_ORGANIZATION_IDS = Unit.objects.all().values_list('organization', flat=True)
@@ -107,6 +108,7 @@ def person_index(request, query_string=None):
         'persons': persons,
         'persons_length': persons_length,
         'query_string': query_string,
+        'current_page': 'info',
     }
 
     return render(request, "persons/index.html", return_dict)
@@ -150,9 +152,10 @@ def members(request, organization_slug=None):
 
     for head_id in unit_head_person_ids:
         head = Person.objects.get(id=head_id)
-        heads_of_unit.append(__get_head_data(head))
-        konami_positions.append(head.konami_code_position)
-        konami_profile_pictures.append(head.profile_konami_code_picture)
+        if head.is_active:
+            heads_of_unit.append(__get_head_data(head))
+            konami_positions.append(head.konami_code_position)
+            konami_profile_pictures.append(head.profile_konami_code_picture)
 
     member_list = Person.objects.filter(is_active=True).exclude(id__in=unit_head_person_ids)
 
@@ -286,6 +289,7 @@ def member_info(request, person_slug):
         'web_title': member.full_name,
         'member': member,
         'units': units,
+        'current_page': 'info',
     }
 
     data_dict = __get_job_data(member)
@@ -311,7 +315,7 @@ def member_projects(request, person_slug, role_slug=None):
     projects = OrderedDict()
 
     if role_slug:
-        roles = [Role.objects.get(slug=role_slug)]
+        roles = get_list_or_404(Role, slug=role_slug)
     else:
         roles = Role.objects.all()
 
@@ -342,6 +346,7 @@ def member_projects(request, person_slug, role_slug=None):
         'projects': projects,
         'roles': Role.objects.all(),
         'web_title': u'%s - Projects' % member.full_name,
+        'current_page': 'projects',
     }
 
     data_dict = __get_job_data(member)
@@ -422,7 +427,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         elif publication_item.child_type == 'JournalArticle':
             journal_article = publication_item.journalarticle
             parent_title = journal_article.parent_journal.title if journal_article.parent_journal else ''
-            impact_factor = journal_article.parent_journal.impact_factor
+            impact_factor = journal_article.impact_factor
 
         elif publication_item.child_type == 'MagazineArticle':
             magazine_article = publication_item.magazinearticle
@@ -440,7 +445,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         }
 
         if publication_item.child_type == 'JournalArticle':
-            if journal_article.parent_journal.impact_factor is not None:
+            if journal_article.impact_factor is not None:
                 child_type = 'JCR indexed journal article'
             else:
                 child_type = 'JournalArticle'
@@ -461,6 +466,7 @@ def member_publications(request, person_slug, publication_type_slug=None):
         'publications': publications,
         'thesis': all_thesis,
         'web_title': u'%s - Publications' % member.full_name,
+        'current_page': 'publications',
     }
 
     data_dict = __get_job_data(member)
@@ -516,6 +522,7 @@ def member_news(request, person_slug):
         'web_title': u'%s - News' % member.full_name,
         'member': member,
         'news': news,
+        'current_page': 'news',
     }
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
@@ -542,11 +549,50 @@ def member_awards(request, person_slug):
         'web_title': u'%s - Awards' % member.full_name,
         'member': member,
         'awards': awards,
+        'current_page': 'awards',
     }
     data_dict = __get_job_data(member)
     return_dict.update(data_dict)
 
     return render(request, 'members/awards.html', return_dict)
+
+###		member_datasets(person_slug)
+####################################################################################################
+def member_datasets(request, person_slug):
+    """
+    Creates the member datasets view of the personal datasets
+
+    :param request: the information given in the request
+    :param person_slug: the person slug
+    :return:
+    """
+
+    person_status = __determine_person_status(person_slug)
+
+    # Redirect to correct URL template if concordance doesn't exist
+    if (person_status == MEMBER) and ('/' + MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('member_datasets', kwargs={'person_slug': person_slug}))
+    if (person_status == FORMER_MEMBER) and ('/' + FORMER_MEMBER not in request.path):
+        return HttpResponseRedirect(reverse('former_member_datasets', kwargs={'person_slug': person_slug}))
+
+    # Obtaining member information
+    member = get_object_or_404(Person, slug=person_slug)
+    # Extracting datasets information
+    dataset_ids = DatasetAuthor.objects.filter(author=member.id).values_list('dataset_id', flat=True)
+    datasets = Dataset.objects.filter(id__in=dataset_ids)
+
+    # Building return dict
+    return_dict = {
+            'web_title': u'%s - Datasets' % member.full_name,
+            'member': member,
+            'datasets': datasets,
+            'current_page': 'datasets',
+            'has_datasets': True if dataset_ids else False,
+        }
+    data_dict = __get_job_data(member)
+    return_dict.update(data_dict)
+
+    return render(request, 'members/datasets.html', return_dict)
 
 
 ###		__get_award_info(award_slug)
@@ -841,6 +887,9 @@ def __get_job_data(member):
     except:
         pass
 
+    # Extracting datasets information
+    dataset_ids = DatasetAuthor.objects.filter(author=member.id).values_list('dataset_id', flat=True)
+
     project_ids = AssignedPerson.objects.filter(person_id=member.id)
     project_ids = project_ids.order_by('role__relevance_order').values('project_id')
 
@@ -907,7 +956,8 @@ def __get_job_data(member):
     else:
         header_rows = 1
 
-    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 and len(publication_ids) == 0:
+    if not has_awards and not has_talks and not has_contributions and not has_news and len(project_ids) == 0 \
+            and len(publication_ids) == 0 and len(dataset_ids) == 0:
         display_bio = False
     else:
         display_bio = True
@@ -932,6 +982,7 @@ def __get_job_data(member):
         'last_job': last_job,
         'number_of_projects': len(project_ids),
         'number_of_publications': number_of_publications,
+        'number_of_datasets': len(dataset_ids),
         'position': position,
         'pubtype_info': dict(items),
         'role_items': role_items,

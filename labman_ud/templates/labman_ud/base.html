@@ -194,6 +194,22 @@
                                     </ul>
                                 </li>
 
+
+                                <li id="dataset-nav" class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        <i class="fa fa-database fa-grey"></i>
+                                        Datasets <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href={% url 'datasets_index' %}>
+                                                Overview
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
                                 <li id="charts-nav">
                                     <a href="{% url 'chart_index' %}">
                                         <i class="fa fa-bar-chart fa-grey"></i>
@@ -306,13 +322,22 @@
         </script>
 
         <script>
-            $(window).resize(function() {
+            // This script is used to select the name of the group
+            change_group_name = function () {
                 if ($('#coll-btn').is(":visible")) {
                     $('#brand-text').text('{{ RESEARCH_GROUP_SETTINGS.research_group_short_name }}');
                 }
                 else {
                     $('#brand-text').text('{{ RESEARCH_GROUP_SETTINGS.research_group_full_name }}');
                 };
+            };
+            // Window resize detect
+            $(window).resize(function() {
+                change_group_name();
+            });
+            // Set the name of the group
+            $(document).ready(function() {
+                change_group_name();
             });
         </script>
 

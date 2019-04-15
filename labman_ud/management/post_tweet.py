@@ -34,15 +34,17 @@ def post_tweet(news_instance):
             access_token_secret=tweetpony_config.access_token_secret,
         )
 
-        if (tweetpony_config.karmacracy_username and tweetpony_config.karmacracy_api_key):
-            tweet_url = _get_short_url(news_url, tweetpony_config)
+        # Not needed anymore
 
-        else:
-            tweet_url = news_url
+        # if (tweetpony_config.karmacracy_username and tweetpony_config.karmacracy_api_key):
+        #     tweet_url = _get_short_url(news_url, tweetpony_config)
+        #
+        # else:
+        #     tweet_url = news_url
 
         tweet_text = _generate_tweet_text(news_instance)
 
-        tweet = '%s: %s' % (tweet_text, tweet_url)
+        tweet = '%s: %s' % (tweet_text, news_url)
 
         try:
             tweetpony_api.update_status(status=tweet)
@@ -68,26 +70,28 @@ def _get_base_url():
         return LabmanDeployGeneralSettings.objects.get().base_url
 
 
-def _get_short_url(full_news_url, tweetpony_config):
-    karmacracy_username = tweetpony_config.karmacracy_username
-    karmacracy_api_key = tweetpony_config.karmacracy_api_key
+# Not needed anymore
 
-    karmacracy_base_url = "http://kcy.me/api/?u=%s&key=%s&url=" % (karmacracy_username, karmacracy_api_key)
-
-    full_url = '%s%s' % (karmacracy_base_url, full_news_url)
-
-    if (tweetpony_config.http_proxy and tweetpony_config.https_proxy):
-        proxies = {
-            'http': tweetpony_config.http_proxy,
-            'https': tweetpony_config.https_proxy,
-        }
-
-        request = requests.get(full_url, proxies=proxies)
-
-    else:
-        request = requests.get(full_url)
-
-    return request.text
+# def _get_short_url(full_news_url, tweetpony_config):
+#     karmacracy_username = tweetpony_config.karmacracy_username
+#     karmacracy_api_key = tweetpony_config.karmacracy_api_key
+#
+#     karmacracy_base_url = "http://kcy.me/api/?u=%s&key=%s&url=" % (karmacracy_username, karmacracy_api_key)
+#
+#     full_url = '%s%s' % (karmacracy_base_url, full_news_url)
+#
+#     if (tweetpony_config.http_proxy and tweetpony_config.https_proxy):
+#         proxies = {
+#             'http': tweetpony_config.http_proxy,
+#             'https': tweetpony_config.https_proxy,
+#         }
+#
+#         request = requests.get(full_url, proxies=proxies)
+#
+#     else:
+#         request = requests.get(full_url)
+#
+#     return request.text
 
 
 def _generate_tweet_text(news_instance):

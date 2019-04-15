@@ -31,12 +31,14 @@
         </a>
 
         {% if not is_internal %}
-            <a id="project_funding" href="{% url 'project_funding_details' project.slug %}">
-                <i class="fa fa-money"></i>
-                <span class="hidden-xs hidden-sm">
-                    Funding
-                </span>
-            </a>
+            {% if not project.private_funding_details %}
+                <a id="project_funding" href="{% url 'project_funding_details' project.slug %}">
+                    <i class="fa fa-money"></i>
+                    <span class="hidden-xs hidden-sm">
+                        Funding
+                    </span>
+                </a>
+            {% endif %}
         {% endif %}
 
         {% if not project.private_participant_details %}
@@ -62,6 +64,15 @@
                 <i class="fa fa-file-text"></i>
                 <span class="hidden-xs hidden-sm">
                     {{ related_publications|length }} publication{{ related_publications|pluralize }}
+                </span>
+            </a>
+        {% endif %}
+
+        {% if related_datasets %}
+            <a id="project_related_datasets" href="{% url 'project_related_datasets' project.slug %}">
+                <i class="fa fa-database"></i>
+                <span class="hidden-xs hidden-sm">
+                    {{ related_datasets|length }} dataset{{ related_datasets|pluralize }}
                 </span>
             </a>
         {% endif %}
@@ -147,6 +158,7 @@
         $('#project_people').removeClass('active');
         $('#project_consortium').removeClass('active');
         $('#project_related_pubs').removeClass('active');
+        $('#project_related_datasets').removeClass('active');
     </script>
 
     <script>

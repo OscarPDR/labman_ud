@@ -23,6 +23,7 @@ from entities.persons.models import Person
 from entities.publications.models import Publication
 from entities.utils.models import Role, Tag
 from entities.news.models import ProjectRelatedToNews
+from entities.datasets.models import DatasetProject, Dataset
 
 from labman_setup.models import *
 from labman_ud.util import *
@@ -219,20 +220,21 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 projects = []
 
             session_filter_dict = {
-                'form_start_date' : start_date,
-                'form_start_range' : start_range,
-                'form_end_date' : end_date,
-                'form_end_range' : end_range,
+                'form_start_date': start_date,
+                'form_start_range': start_range,
+                'form_end_date': end_date,
+                'form_end_range': end_range,
                 'form_project_types': form_project_types,
-                'form_project_status' : form_project_status,
-                'form_tags' : form_tags,
-                'projects' : serializers.serialize('json', projects),
-                'form_funds_range' : form_funds_range,
-                'form_from_total_funds' : str(form_from_total_funds),
-                'form_to_total_funds' : str(form_to_total_funds),
-                'form_participants_name' : form_participants_name,
-                'form_participants_role' : json.dumps(form_participants_role),
-                'form_member_field_count' : len(form_participants_name),
+                'form_project_status': form_project_status,
+                'form_tags': form_tags,
+                'projects': serializers.serialize('json', projects),
+                'form_funds_range': form_funds_range,
+                'form_from_total_funds': str(form_from_total_funds),
+                'form_to_total_funds': str(form_to_total_funds),
+                'form_participants_name': form_participants_name,
+                'form_participants_role': json.dumps(form_participants_role),
+                'form_member_field_count': len(form_participants_name),
+                'query_string': query_string,
             }
 
             request.session['filtered'] = session_filter_dict
@@ -267,6 +269,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
                 form_to_total_funds = request.session['filtered']['form_to_total_funds']
                 form_participants_name = request.session['filtered']['form_participants_name']
                 form_participants_role = json.loads(request.session['filtered']['form_participants_role'])
+                query_string = request.session['filtered']['query_string']
                 clean_index = False
         else:
             form = ProjectSearchForm(extra=1)
@@ -309,7 +312,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
     roles = Role.objects.filter(id__in=roles_id).order_by('name')
 
     # Retrieves all the full names of authors.
-    participants_info =  AssignedPerson.objects.all() \
+    participants_info = AssignedPerson.objects.all() \
         .distinct('person__full_name').order_by() \
         .values_list('person__full_name', flat=True)
 
@@ -334,7 +337,7 @@ def project_index(request, tag_slug=None, status_slug=None, project_type_slug=No
         'form_end_range' : end_range,
         'form_project_types' : form_project_types,
         'form_project_status' : form_project_status,
-        'form_tags' : form_tags,
+        'form_tags': form_tags,
         'form_funds_range' : form_funds_range,
         'form_from_total_funds' : form_from_total_funds,
         'form_to_total_funds' : form_to_total_funds,
@@ -503,6 +506,33 @@ def project_related_publications(request, project_slug):
     return render(request, "projects/related_publications.html", return_dict)
 
 
+###     project_related_datasets
+####################################################################################################
+
+def project_related_datasets(request, project_slug):
+    """
+    Obtain the related datasets used in this project
+
+    :param request: Type of the request
+    :param project_slug: project slug to make the search in DB
+    :return:
+    """
+    project = get_object_or_404(Project, slug=project_slug)
+
+    # Extracting datasets information
+    dataset_ids = DatasetProject.objects.filter(project=project.id).values_list('dataset_id', flat=True)
+    datasets = Dataset.objects.filter(id__in=dataset_ids)
+
+    # dictionary to be returned in render(request, )
+    return_dict = __build_project_information(project)
+    return_dict.update({
+        'web_title': u'%s - Related datasets' % project.full_name,
+        'related_datasets': datasets,
+    })
+
+    return render(request, "projects/related_datasets.html", return_dict)
+
+
 ###     project_related_news(project_slug)
 ####################################################################################################
 
@@ -525,8 +555,13 @@ def __build_project_information(project):
     tag_ids = ProjectTag.objects.filter(project=project.id).values('tag_id')
     tags = Tag.objects.filter(id__in=tag_ids).order_by('name')
 
+    # Obtaining related publications
     related_publications_ids = RelatedPublication.objects.filter(project=project.id).values('publication_id')
     related_publications = Publication.objects.filter(id__in=related_publications_ids).order_by('-year')
+
+    # Obtaining related datasets
+    related_datasets_ids = DatasetProject.objects.filter(project=project.id).values_list('dataset_id', flat=True)
+    related_datasets = Dataset.objects.filter(id__in=related_datasets_ids)
 
     related_news = ProjectRelatedToNews.objects.filter(project=project).order_by('-news__created')
 
@@ -536,6 +571,7 @@ def __build_project_information(project):
         'logo': project.logo if project.logo else None,
         'project': project,
         'related_publications': related_publications,
+        'related_datasets': related_datasets,
         'related_news': related_news,
         'tags': tags,
     }

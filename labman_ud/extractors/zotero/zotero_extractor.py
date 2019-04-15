@@ -25,7 +25,6 @@ import re
 import socket
 import time
 
-
 logger = logging.getLogger(__name__)
 
 JCR_PATTERN = r'(jcr|if)(-*)(\d(\.|\,)\d+)'
@@ -36,7 +35,6 @@ ACCEPTED_ATTACHMENT_FORMATS = ('.pdf', '.doc', '.docx')
 ####################################################################################################
 
 def get_zotero_variables():
-
     zot = get_or_default(ZoteroConfiguration)
 
     if zot:
@@ -86,7 +84,6 @@ def get_last_synchronized_zotero_version():
 ####################################################################################################
 
 def extract_publications_from_zotero(from_version):
-
     from_version = int(from_version)
     last_zotero_version = get_last_zotero_version()
 
@@ -97,7 +94,6 @@ def extract_publications_from_zotero(from_version):
 
     else:
         if from_version > last_zotero_version:
-
             # This should never happen, but just in case, we solve the error by syncing the penultimate version in Zotero
             from_version = last_zotero_version - 1
             logger.warn(u"Asked 'from_version' was greater than 'last_zotero_version'. Strange...")
@@ -172,6 +168,16 @@ def extract_publications_from_zotero(from_version):
 
             else:
                 item_id = item['key']
+                # Checking if the item has attachments already or not
+                if item.get('meta', False) and item['meta'].get('numChildren', False) \
+                        and item['meta']['numChildren'] > 0 and from_version > 0:
+                    # The item has an attachment, calling to zotero to know it.
+                    attachment = zot.children(item_id)
+                    # Adding this item into attachment
+                    if attachment and len(attachment) == 1 and attachment[0] not in items:
+                        logger.info(u"")
+                        logger.info(u"The item has an attachment already, we are going to re-attach it")
+                        item['attachment'] = attachment[0]
                 items_ordered[item_id] = item
 
         attachment_number = 0
@@ -182,8 +188,12 @@ def extract_publications_from_zotero(from_version):
                 parent_id = a['data']['parentItem']
 
                 if parent_id in items_ordered.keys():
-                    items_ordered[parent_id]['attachment'] = a
-
+                    if items_ordered[parent_id].get('attachment', False):
+                        logger.warn(u"")
+                        logger.warn(u"The user has 2 or more attachments in the item called: %s. Only 1 attachment"
+                                    u"is allowed per element" % items_ordered[parent_id]['data'].get('title', 'No title'))
+                    else:
+                        items_ordered[parent_id]['attachment'] = a
                 else:
                     # Only the attachment has been modified
                     parent_publication = zot.item(parent_id)
@@ -194,6 +204,7 @@ def extract_publications_from_zotero(from_version):
             else:
                 logger.warn(u"%s" % a['data'].get('title', 'The user did not even added a title'))
 
+        # Total number of items to be processed
         number_of_items = len(items_ordered)
 
         logger.info(u"")
@@ -244,14 +255,14 @@ def extract_publications_from_zotero(from_version):
                 logger.info(u"[%d/%d] Link created" % (index + 1, len(publications_related_to_news)))
 
             else:
-                logger.info(u"[%d/%d] Link NOT created: %s" % (index + 1, len(publications_related_to_news), str(saved_link)))
+                logger.info(
+                    u"[%d/%d] Link NOT created: %s" % (index + 1, len(publications_related_to_news), str(saved_link)))
 
 
 ###     generate_publication(item)
 ####################################################################################################
 
 def generate_publication(item):
-
     existing_publications = Publication.objects.filter(zotero_key=item['key']).all()
 
     for existing_publication in existing_publications:
@@ -265,31 +276,20 @@ def generate_publication(item):
 
     publication_type = item['data']['itemType']
 
-    if publication_type == 'conferencePaper':
-        parse_conference_paper(item)
+    # Declaring different publications procedures with their methods
+    parse_publication = {
+        'conferencePaper': parse_conference_paper,
+        'bookSection': parse_book_section,
+        'book': parse_authored_book,
+        'journalArticle': parse_journal_article,
+        'magazineArticle': parse_magazine_article,
+        'thesis': parse_thesis,
+        'attachment': lambda print_attachment_warm: (logger.warn(u"Publication type is ATTACHMENT"))
+    }
 
-    elif publication_type == 'bookSection':
-        parse_book_section(item)
-
-    elif publication_type == 'book':
-        parse_authored_book(item)
-
-    elif publication_type == 'journalArticle':
-        parse_journal_article(item)
-
-    elif publication_type == 'magazineArticle':
-        parse_magazine_article(item)
-
-    elif publication_type == 'attachment':
-        # this should not happen
-        logger.warn(u"Publication type is ATTACHMENT")
-        pass
-
-    elif publication_type == 'thesis':
-        parse_thesis(item)
-
-    else:
-        logger.warn(u"NOT parsed: %s" % publication_type)
+    # Calling to needed function to parse the required element
+    parse_publication.get(publication_type, lambda print_not_parsed: (logger.warn(u"NOT parsed: %s" % publication_type)
+                                                                      ))(item)
 
 
 ###############################################################################
@@ -337,7 +337,8 @@ def parse_journal_article(item):
 ####################################################################################################
 
 def parse_journal(item):
-    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue'))
+    journal_slug = nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'),
+                            item['data'].get('issue'))
 
     journal = get_or_default(Journal, Journal(), slug=journal_slug)
 
@@ -541,11 +542,11 @@ def parse_book_section(item):
 ####################################################################################################
 
 def parse_book(item):
-
     book = get_or_default(
         Book,
         Book(),
-        slug=nslugify(item['data']['bookTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('series')),
+        slug=nslugify(item['data']['bookTitle'], _parse_date(item).year, item['data'].get('volume'),
+                      item['data'].get('series')),
         year=_parse_date(item).year,
     )
 
@@ -646,11 +647,11 @@ def parse_magazine_article(item):
 ####################################################################################################
 
 def parse_magazine(item):
-
     magazine = get_or_default(
         Magazine,
         Magazine(),
-        slug=nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'), item['data'].get('issue')),
+        slug=nslugify(item['data']['publicationTitle'], _parse_date(item).year, item['data'].get('volume'),
+                      item['data'].get('issue')),
         year=_parse_date(item).year,
     )
 
@@ -725,7 +726,8 @@ def _extract_doi(item):
     elif 'url' in item['data']:
         if item['data']['url'] != '' and DOI_ORG_BASE_URL in item['data']['url']:
             base_url_end_index = len(DOI_ORG_BASE_URL)
-            underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(item['data']['url'])
+            underscore_index = item['data']['url'].find('_') if item['data']['url'].find('_') != -1 else len(
+                item['data']['url'])
 
             return item['data']['url'][base_url_end_index:underscore_index]
 
@@ -735,27 +737,30 @@ def _extract_doi(item):
 
 def _parse_date(item):
 
-    try:
-        date_string = item['data']['date']
-        parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
-
-    except ValueError:
+    if item['data'].get('date', False) and item['data'].get('date', False) != '':
         try:
-            date_chunks = date_string.split()
-            parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
-
-        except:
+            date_string = item['data']['date']
+            parsed_date = parser.parse(date_string, fuzzy=True, default=datetime.today())
+        except ValueError:
             try:
-                alternate_date_string = item['meta']['parsedDate']
-                parsed_date = parser.parse(alternate_date_string, fuzzy=True, default=datetime.today())
-
-            except ValueError:
-                try:
-                    date_chunks = alternate_date_string.split()
-                    parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
-
-                except:
+                date_chunks = date_string.split()
+                parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+            except:
+                if item['meta'].get('parsedDate', False) and item['meta'].get('parsedDate', False) != '':
+                    try:
+                        alternate_date_string = item['meta']['parsedDate']
+                        parsed_date = parser.parse(alternate_date_string, fuzzy=True, default=datetime.today())
+                    except ValueError:
+                        try:
+                            date_chunks = alternate_date_string.split()
+                            parsed_date = parser.parse(date_chunks[0], fuzzy=True, default=datetime.today())
+                        except:
+                            parsed_date = datetime.today()
+                else:
                     parsed_date = datetime.today()
+    else:
+        # The element, has not any date associated. We use the actual date
+        parsed_date = datetime.today()
 
     return parsed_date
 
@@ -859,7 +864,6 @@ def _save_publication_authors(authors, publication):
 ####################################################################################################
 
 def _extract_tags(item, publication):
-
     # Clean ranking and projects so as to ensure that it's correctly synchronized
     PublicationRank.objects.filter(publication=publication).all().delete()
     RelatedPublication.objects.filter(publication=publication).all().delete()
@@ -1022,20 +1026,20 @@ def _determine_if_tag_is_special(tag, publication):
         publication_ranking.save()
 
     elif (tag_slug in ['q1', 'q-1']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[0][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[0][0]
+        publication.save()
 
     elif (tag_slug in ['q2', 'q-2']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[1][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[1][0]
+        publication.save()
 
     elif (tag_slug in ['q3', 'q-3']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[3][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[2][0]
+        publication.save()
 
     elif (tag_slug in ['q4', 'q-4']) and (publication.child_type == 'JournalArticle'):
-        publication.parent_journal.quartile = QUARTILE_CHOICES[3][0]
-        publication.parent_journal.save()
+        publication.quartile = QUARTILE_CHOICES[3][0]
+        publication.save()
 
     elif (jcr_match) and (publication.child_type == 'JournalArticle'):
         tag_lower = tag.lower().replace(',', '.')
@@ -1043,8 +1047,8 @@ def _determine_if_tag_is_special(tag, publication):
 
         impact_factor = non_decimal.sub('', tag_lower)
 
-        publication.parent_journal.impact_factor = float(impact_factor)
-        publication.parent_journal.save()
+        publication.impact_factor = float(impact_factor)
+        publication.save()
 
     elif tag_slug in project_slugs:
         project = Project.objects.get(slug=tag_slug)

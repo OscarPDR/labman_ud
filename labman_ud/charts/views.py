@@ -330,7 +330,7 @@ def publications_number_of_publications(request):
 
     for authored_pub in authored_publications:
         pub_type = authored_pub.child_type
-        if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.parent_journal.impact_factor):
+        if (pub_type == 'JournalArticle') and (authored_pub.journalarticle.impact_factor):
             pub_type = 'JCR'
         else:
             pub_type = str(inflection.titleize(pub_type))
@@ -612,18 +612,19 @@ def publications_egonetwork(request, author_slug):
 ####################################################################################################
 
 def publications_by_author(request, author_slug):
-    publications = {}
+    # Publications dict Ordered
+    publications = OrderedDict()
 
     author = get_object_or_404(Person, slug=author_slug)
 
     publication_ids = PublicationAuthor.objects.filter(author=author.id).values('publication_id')
-    _publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal').filter(id__in=publication_ids)
+    _publications = Publication.objects.select_related('journalarticle', 'journalarticle__parent_journal')\
+        .filter(id__in=publication_ids)
 
-    min_year = _publications.aggregate(Min('year'))
-    max_year = _publications.aggregate(Max('year'))
-
+    # If is not provided a minimum year, the program will pick the last 7 years as min day
+    min_year = _publications.aggregate(Min('year')).get('year__min', False)
     max_year = datetime.date.today().year
-    min_year = min_year.get('year__min')
+
     # At least 7 years must be provided (even if they're 0) to
     # have a nice graph in nvd3. Otherwise, years are repeated in
     # people who published lately
@@ -632,20 +633,18 @@ def publications_by_author(request, author_slug):
     else:
         min_year = max_year - 7
 
-    years = []
-
-    for year in range(min_year, max_year + 1):
-        years.append(year)
-
+    # Generating the range of years
+    years = range(min_year, max_year + 1)
+    # Initializing the publication dicts
     for publication_type in PUBLICATION_TYPES:
-        publications[publication_type] = {}
-        for year in range(min_year, max_year + 1):
+        publications[publication_type] = OrderedDict()
+        for year in years:
             publications[publication_type][year] = 0
-
+    # Filling with slug data
     for publication in _publications:
         pub_type = publication.child_type
         if pub_type == 'JournalArticle':
-            if publication.journalarticle.parent_journal.impact_factor:
+            if publication.journalarticle.impact_factor:
                 pub_type = 'JCR'
 
         pub_year = publication.year
@@ -708,21 +707,26 @@ def publication_places_by_author(request, author_slug, child_type=None):
 
         list_length = len(place_list)
 
-        for year in range(min_year, max_year + 1):
+        if min_year and max_year:
+            for year in range(min_year, max_year + 1):
+                inner_list = [0] * (len(place_list) + 2)
+                inner_list[0] = str(year)
+
+                for filtered_publication in publications.filter(publication__year=year):
+                    place_str = str(filtered_publication.position) + _author_place_suffix(filtered_publication.position)
+                    index = place_list.index(place_str) + 1
+                    inner_list[index] += 1
+                    inner_list[-1] += 1
+
+                if inner_list[-1] > max_value:
+                    max_value = inner_list[-1]
+
+                full_list.append(inner_list)
+        else:
             inner_list = [0] * (len(place_list) + 2)
-            inner_list[0] = str(year)
-
-            for filtered_publication in publications.filter(publication__year=year):
-                place_str = str(filtered_publication.position) + _author_place_suffix(filtered_publication.position)
-                index = place_list.index(place_str) + 1
-                inner_list[index] += 1
-                inner_list[-1] += 1
-
-            if inner_list[-1] > max_value:
-                max_value = inner_list[-1]
-
+            inner_list[0] = str(0)
+            # Appeding no information to the list
             full_list.append(inner_list)
-
     else:
         publications = PublicationAuthor.objects.filter(author=author)
 
@@ -1199,31 +1203,34 @@ def position_distribution(request, organization_slug=None):
                     for year in range(start_year, end_year + 1):
                         position_distribution_sets[year][position_slug].add(job.person.full_name)
 
+    # Defining the total persons across the years
     max_persons = 0
+    years = range(min_year, actual_year + 1)
 
-    for year in range(min_year, actual_year + 1):
+    for year in years:
         total_year = 0
-
         for position in position_list:
             position_slug = slugify(position)
             total_year = total_year + len(position_distribution_sets[year][position_slug])
             position_distribution[year][position_slug] = len(position_distribution_sets[year][position_slug])
-
-        if (total_year > max_persons):
+        if total_year > max_persons:
             max_persons = total_year
 
-    position_distribution_array = []
-
-    position_distribution_array.append(['Year'])
-
+    # Creating the position array list
+    position_distribution_array = list()
+    # Creating the table indices list to specify the data types
+    position_distribution_array.append(list())
+    # Appending the Type of the year
+    position_distribution_array[0].append({'label': 'Year', 'type': 'string'})
+    # Filling position data types
     for position in position_list:
-        position_distribution_array[0].append(position)
-
-    for year in range(min_year, actual_year + 1):
+        position_distribution_array[0].append({'label': position.encode('utf-8'), 'type': 'number'})
+    # Filling data into the table
+    for year in years:
         array_row = [str(year)]
         for position in position_list:
             array_row.append(position_distribution[year][slugify(position)])
-
+        # Inserting
         position_distribution_array.append(array_row)
 
     return_dict = {
@@ -1295,7 +1302,8 @@ def related_persons(request, person_slug, top):
                     significant_tags[tag] = cur_dict[tag]
             persons_dict[person] = significant_tags
 
-    current_person = Person.objects.filter(slug=person_slug)[0]
+    current_person = get_object_or_404(Person, slug=person_slug)
+
     try:
         current_tags = persons_dict[current_person.full_name]
     except:

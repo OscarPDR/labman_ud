@@ -70,6 +70,12 @@ class LabmanDeployGeneralSettings(models.Model):
 
     research_group_description = RedactorField()
 
+    # Legal information details
+    legal_information_url = models.URLField(
+        blank=False,
+        null=True
+    )
+
     # Address details
     address = RedactorField(
         blank=True,
@@ -172,29 +178,31 @@ class TweetPonyConfiguration(models.Model):
         max_length=100,
     )
 
-    http_proxy = models.CharField(
-        max_length=150,
-        blank=True,
-        null=True,
-    )
+    # Not needed anymore since twitter automatically reduce urls when they have more than 23 chars
 
-    https_proxy = models.CharField(
-        max_length=150,
-        blank=True,
-        null=True,
-    )
-
-    karmacracy_username = models.CharField(
-        max_length=75,
-        blank=True,
-        null=True,
-    )
-
-    karmacracy_api_key = models.CharField(
-        max_length=75,
-        blank=True,
-        null=True,
-    )
+    # http_proxy = models.CharField(
+    #     max_length=150,
+    #     blank=True,
+    #     null=True,
+    # )
+    #
+    # https_proxy = models.CharField(
+    #     max_length=150,
+    #     blank=True,
+    #     null=True,
+    # )
+    #
+    # karmacracy_username = models.CharField(
+    #     max_length=75,
+    #     blank=True,
+    #     null=True,
+    # )
+    #
+    # karmacracy_api_key = models.CharField(
+    #     max_length=75,
+    #     blank=True,
+    #     null=True,
+    # )
 
 
 ####################################################################################################

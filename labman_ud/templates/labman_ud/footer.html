@@ -82,4 +82,8 @@
 
 <div id="powered-by-labman" class="row">
     <em>Powered by</em>&emsp;<a target="_blank" href="https://github.com/OscarPDR/labman_ud">labman_ud</a>
+    {% if LEGAL_INFORMATION_URL %}
+        <b>&bull;</b> <em>Read our</em>&emsp;<a target="_blank" href={{ LEGAL_INFORMATION_URL }}>Legal information</a>
+    {% endif %}
 </div>
+r

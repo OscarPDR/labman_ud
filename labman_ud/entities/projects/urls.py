@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^info/(?P<project_slug>\S+)/assigned_persons/$', views.project_assigned_persons, name='project_assigned_persons'),
     url(r'^info/(?P<project_slug>\S+)/consortium_members/$', views.project_consortium_members, name='project_consortium_members'),
     url(r'^info/(?P<project_slug>\S+)/related_publications/$', views.project_related_publications, name='project_related_publications'),
+    url(r'^info/(?P<project_slug>\S+)/related_datasets/$', views.project_related_datasets, name='project_related_datasets'),
     url(r'^info/(?P<project_slug>\S+)/related_news/$', views.project_related_news, name='project_related_news'),
     url(r'^info/(?P<project_slug>\S+)/$', views.project_info, name='project_info'),
 

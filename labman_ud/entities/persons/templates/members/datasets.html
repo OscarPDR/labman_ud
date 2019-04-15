@@ -1,0 +1,65 @@
+{% extends "members/info.html" %}
+{% load staticfiles %}
+{% load sanitize_types %}
+
+
+
+{% block member_content %}
+
+    <div class="tab-pane active">
+        {% if has_datasets %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ datasets.count }} dataset{{ datasets.count|pluralize }}
+
+                    <a href="#panel-datasets" class="pull-right" data-toggle="collapse" aria-expanded="true" aria-controls="panel-datasets">
+                        <span class="badge">
+                            Toggle collapse
+                        </span>
+                    </a>
+                </div>
+
+                <div id="panel-datasets" class="pannel-collapse collapse in panel-body row">
+                    <table class="table table-striped table-bordered table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="col-md-8">Title</th>
+                                <th class="col-md-2">Date</th>
+                                <th class="col-md-2">File Format</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for dataset in datasets %}
+                                <tr class="vertical-alignment">
+                                    <td class="col-md-8">
+                                        <a href="{% url 'datasets_info' dataset.slug %}">
+                                                {{ dataset.title }}
+                                        </a>
+
+                                        <br>
+                                        {% include 'datasets/dataset_authors.html' %}
+                                    </td>
+
+                                    <td class="col-md-1 centered">
+                                        {{ dataset.date.year }}
+                                    </td>
+
+                                    <td class="col-md-1 centered">
+                                        {{ dataset.get_format_display }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% else %}
+            <p>
+                {{ member.full_name }} has not datasets yet.
+            </p>
+        {% endif %}
+    </div>
+
+{% endblock %}
