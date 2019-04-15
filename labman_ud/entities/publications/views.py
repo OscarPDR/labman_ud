@@ -8,8 +8,10 @@ import re
 from django.core import serializers
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 
 from .forms import PublicationSearchForm
 from .models import *
@@ -43,8 +45,10 @@ def _validate_term(token, name, numeric=False):
     return True
 
 
-def publication_index(request, tag_slug=None, publication_type=None, query_string=None):
-
+def publication_index(request, tag_slug=None, publication_type=None, query_string=None, page=1):
+    
+    if page[-1] == '/':
+        page = int(page[:-1])
     tag = None
 
     form_from_year = None
@@ -91,7 +95,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             form_to_range = form.cleaned_data['to_range']
             form_publication_types = form.cleaned_data['publication_types']
             form_tags = form.cleaned_data['tags']
-
             
             for my_tuple in reversed(form.fields.items()):
                 if my_tuple[0].startswith('editor_name_'):
@@ -155,7 +158,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     if person_id and found:
                         person_publications_set = set()
                         for _id in person_id:
-                            print PublicationEditor.objects.all().values_list('editor__full_name', flat=True)
                             person_publications = PublicationEditor.objects.all().filter(editor_id=_id).values_list('publication_id', flat=True)
                             if person_publications:
                                 person_publications_set.update(person_publications)
@@ -185,12 +187,11 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
             request.session['filtered'] = session_filter_dict
 
-            return HttpResponseRedirect(reverse('filtered_publication_query'))
+            return HttpResponseRedirect(reverse('filtered_publication_query', kwargs={'page':'1'}))
 
     else:
         if 'filtered' in request.session.keys():
             p = re.compile(ur'publications\/filtered(\/\?page=[1-9]+)?')
-
             if re.search(p, request.path) == None:
                 # IF requested page is not filted, deletes session filter info.
                 del request.session['filtered']
@@ -292,33 +293,28 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
         search_terms = [token for token in tokens if token not in special_tokens] + new_tokens
 
-        # Query by author and title
-        
-        # sql_query = Publication.objects.exclude(authors=None).all()
-        sql_query_titles = Publication.objects.filter(title__icontains=query_string).all()
+        # Query by author and title. Fix by Unai Z & Ruben S
         author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=query_string).values_list('author__id', flat=True)
-        sql_query_authors = Publication.objects.filter(authors__in=author_ids).all()
+        sql_query = Publication.objects.filter(Q(authors__in=author_ids) | Q(title__icontains=query_string)).exclude(authors=None).all().order_by('-year')
+        paginator = Paginator(sql_query, 10)
+        
 
-        # Fix by Unai & Ruben S
-        sql_query_titles = sql_query_titles.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
-        sql_query_authors = sql_query_authors.prefetch_related('authors', 'tags', 'publicationauthor_set', 'publicationauthor_set__author')
-        sql_query = sql_query_titles | sql_query_authors
-        publication_strings = [(publication, publication.display_all_fields().lower()) for publication in sql_query]
-        publications = []
+        if page == 'filtered':
+            page = 1
 
-        for publication, publication_string in publication_strings:
-            matches = True
-
-            for search_term in search_terms:
-                if search_term not in publication_string:
-                    matches = False
-                    break
-
-            if matches:
-                publications.append(publication)
-
+        
         clean_index = False
+        
+    else:
+        if page == None:
+            page = 1
+        if not 'filtered' in request.session.keys():
+            sql_query = Publication.objects.exclude(authors=None).all().prefetch_related('authors').order_by('-year')
+            paginator = Paginator(sql_query, 10)
+        else:
+            paginator =Paginator(publications, 10)
 
+    
     # Retrieves all the publication types.
     publications_ids = PublicationAuthor.objects.values_list('publication',
         flat=True)
@@ -359,7 +355,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
     except:
         theses = None
-
     # dictionary to be returned in render(request, )
     return_dict = {
         'clean_index': clean_index,
@@ -369,8 +364,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'editor_info': editor_info,
         'publication_type': publication_type,
         'publication_types_info' : publication_types_info,
-        'publications': publications,
-        'publications_length': len(publications),
+        'publications': paginator.page(page),
+        'publications_length': paginator.count,
         'query_string': query_string,
         'tag': tag,
         'publication_tags_info' : tags_info,
@@ -385,7 +380,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         'form_editors_name' : form_editors_name,
         'web_title': u'Publications',
     }
-
+    
     return render(request, 'publications/index.html', return_dict)
 
 ###		publication_info
@@ -574,3 +569,25 @@ def phd_dissertations_index(request):
     }
 
     return render(request, 'publications/phd_dissertations_index.html', return_dict)
+
+def pretty_request(request):
+    headers = ''
+    for header, value in request.META.items():
+        if not header.startswith('HTTP'):
+            continue
+        header = '-'.join([h.capitalize() for h in header[5:].lower().split('_')])
+        headers += '{}: {}\n'.format(header, value)
+
+    return (
+        '{method} HTTP/1.1\n'
+        'Content-Length: {content_length}\n'
+        'Content-Type: {content_type}\n'
+        '{headers}\n\n'
+        '{body}'
+    ).format(
+        method=request.method,
+        content_length=request.META['CONTENT_LENGTH'],
+        content_type=request.META['CONTENT_TYPE'],
+        headers=headers,
+        body=request.body,
+    )

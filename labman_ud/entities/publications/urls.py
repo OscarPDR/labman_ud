@@ -2,6 +2,7 @@
 
 from django.conf.urls import url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic.base import RedirectView
 
 from labman_ud.util import FeedWrapper
 from entities.publications.views import LatestPublicationsFeed
@@ -10,7 +11,9 @@ import entities.publications.views as views
 
 urlpatterns = [
     url(r'^$', views.publication_index, name='publication_index'),
-    url(r'^filtered/$', views.publication_index, name='filtered_publication_query'),
+    url(r'^$', RedirectView.as_view(url='1/', permanent=False)),
+    url(r'^filtered/(?P<page>\d+)/$', views.publication_index, name='filtered_publication_query'),
+    url(r'^(?P<page>\d+)/$', views.publication_index, name='publication_index'),
 
     url(r'^info/(?P<publication_slug>\S+)/related_projects/$', views.publication_related_projects, name='publication_related_projects'),
     url(r'^info/(?P<publication_slug>\S+)/related_publications/$', views.publication_related_publications, name='publication_related_publications'),
