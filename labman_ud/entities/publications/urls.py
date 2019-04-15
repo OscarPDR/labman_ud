@@ -10,10 +10,8 @@ from entities.publications.views import LatestPublicationsFeed
 import entities.publications.views as views
 
 urlpatterns = [
-    url(r'^$', views.publication_index, name='publication_index'),
-    url(r'^$', RedirectView.as_view(url='1/', permanent=False)),
+
     url(r'^filtered/(?P<page>\d+)/$', views.publication_index, name='filtered_publication_query'),
-    url(r'^(?P<page>\d+)/$', views.publication_index, name='publication_index'),
 
     url(r'^info/(?P<publication_slug>\S+)/related_projects/$', views.publication_related_projects, name='publication_related_projects'),
     url(r'^info/(?P<publication_slug>\S+)/related_publications/$', views.publication_related_publications, name='publication_related_publications'),
@@ -23,11 +21,16 @@ urlpatterns = [
     url(r'^feed/$', FeedWrapper(LatestPublicationsFeed()), name='publication_feed'),
 
     url(r'^tag/(?P<tag_slug>\S+)/$', views.publication_index, name='view_publication_tag'),
-    url(r'^publication_type/(?P<publication_type>\S+)/$', views.publication_index, name='view_publication_type'),
+    url(r'^publication_type/(?P<publication_type>\S+)/(?P<page>\d+)$', views.publication_index, name='view_publication_type'),
 
     url(r'^phd_dissertations/$', views.phd_dissertations_index, name='phd_dissertations_index'),
 
     url(r'^query/(?P<query_string>.+)/$', views.publication_index, name='view_publication_query'),
+
+
+    url(r'^(?P<page>\d+)/$', views.publication_index, name='publication_index'),
+    url(r'^$', RedirectView.as_view(url='1/', permanent=False)),
+    
 ]
 
 urlpatterns += staticfiles_urlpatterns()

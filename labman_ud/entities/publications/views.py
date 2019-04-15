@@ -47,8 +47,7 @@ def _validate_term(token, name, numeric=False):
 
 def publication_index(request, tag_slug=None, publication_type=None, query_string=None, page=1):
     
-    if page[-1] == '/':
-        page = int(page[:-1])
+
     tag = None
 
     form_from_year = None
@@ -86,7 +85,6 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         form = PublicationSearchForm(request.POST, extra_author=form_author_field_count,
             extra_editor=form_editor_field_count)
         if form.is_valid():
-            #query_string = form.cleaned_data['text']
 
             query_string = form.cleaned_data['text']
             form_from_year = form.cleaned_data['from_year']
@@ -129,7 +127,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
 
             if form_publication_types:
                 publications = publications.filter(child_type__in=form_publication_types)
-
+                print("LEN")
+                print(len(publications))
             if form_tags:
                 publications = publications.filter(publicationtag__tag__name__in=form_tags)
 
@@ -158,6 +157,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                     if person_id and found:
                         person_publications_set = set()
                         for _id in person_id:
+                            print PublicationEditor.objects.all().values_list('editor__full_name', flat=True)
                             person_publications = PublicationEditor.objects.all().filter(editor_id=_id).values_list('publication_id', flat=True)
                             if person_publications:
                                 person_publications_set.update(person_publications)
@@ -184,7 +184,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 'form_author_field_count' : len(form_authors_name),
                 'form_editor_field_count' : len(form_editors_name),
             }
-
+            print('BUSQUEDA AVANZADA')
             request.session['filtered'] = session_filter_dict
 
             return HttpResponseRedirect(reverse('filtered_publication_query', kwargs={'page':'1'}))
@@ -219,6 +219,8 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
                 form_publication_types = []
                 for utf8type in request.session['filtered']['form_publication_types']:
                     form_publication_types.append(utf8type.encode('utf8'))
+                print("PUBTYPES")
+                print(form_publication_types)
                 form_tags = request.session['filtered']['form_tags']
                 form_authors_name = []
                 for utf8type in request.session['filtered']['form_authors_name']:
@@ -294,17 +296,17 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
         search_terms = [token for token in tokens if token not in special_tokens] + new_tokens
 
         # Query by author and title. Fix by Unai Z & Ruben S
+        
         author_ids = PublicationAuthor.objects.filter(author__full_name__icontains=query_string).values_list('author__id', flat=True)
         sql_query = Publication.objects.filter(Q(authors__in=author_ids) | Q(title__icontains=query_string)).exclude(authors=None).all().order_by('-year')
+
         paginator = Paginator(sql_query, 10)
-        
 
         if page == 'filtered':
             page = 1
 
-        
         clean_index = False
-        
+        print('FILTRO')
     else:
         if page == None:
             page = 1
@@ -312,6 +314,7 @@ def publication_index(request, tag_slug=None, publication_type=None, query_strin
             sql_query = Publication.objects.exclude(authors=None).all().prefetch_related('authors').order_by('-year')
             paginator = Paginator(sql_query, 10)
         else:
+            print("LOCOOOO")
             paginator =Paginator(publications, 10)
 
     
@@ -390,6 +393,7 @@ def publication_info(request, publication_slug):
     publication = get_object_or_404(Publication, slug=publication_slug)
     return_dict = __build_publication_return_dict(publication)
     return_dict['web_title'] = publication.title
+    print(request)
     return render(request, 'publications/info.html', return_dict)
 
 
@@ -522,7 +526,7 @@ class LatestPublicationsFeed(Feed):
         return super(LatestPublicationsFeed, self).get_object(request)
 
     def link(self, obj):
-        url = reverse('publication_index')
+        url = reverse('publication_indexs')
         return self.__request.request.build_absolute_uri(url)
 
     def items(self):
