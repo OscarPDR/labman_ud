@@ -61,7 +61,6 @@ class PublicationSearchForm(forms.Form):
     editor_field_count = forms.CharField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
-
         publication_types_tuple = (())
         types = Publication.objects.all().values_list('child_type', flat=True).order_by('child_type').distinct()
         for choice in types:
